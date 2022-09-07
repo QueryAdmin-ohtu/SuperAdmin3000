@@ -143,3 +143,6 @@ dmypy.json
 log.html
 output.xml
 report.html
+selenium-screenshot-*.png
+
+.DS_Store
