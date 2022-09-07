@@ -33,7 +33,6 @@ jobs:
     # Add dependencies with 'poetry add <dependency>'
     - name: Install Dependencies using Poetry
       run: |
-        poetry add Flask
         run: poetry install
       
 #    - name: Test with pytest
