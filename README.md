@@ -9,13 +9,21 @@ $ flask run
 ```
 - Go to http://127.0.0.1:5000/
 
-## Running tests
+## Tests
+### End-to-End
 RobotFramework End-to-End tests can be run by starting the server and running:
 ```
 $ poetry shell
 $ robot tests/robot_tests/
 ```
 These tests require ChromeDriver. Instructions on installation [here](https://ohjelmistotuotanto-hy.github.io/chromedriver_asennusohjeet/).
+
+### Unit
+
+From `poetry shell` run:
+```
+$ pytest
+```
 
 ## Instructions/resources/support for developers
 - Poetry quick guide from the [Ohjelmistotekniikka](https://ohjelmistotekniikka-hy.github.io/python/viikko2#poetry-ja-riippuvuuksien-hallinta) course
