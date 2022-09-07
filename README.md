@@ -1,7 +1,12 @@
 # SuperAdmin3000
 ## Starting the application
 - Activate poetry environment: `poetry install`
-- Start flask: `flask run`
+- Start flask: `poetry run flask run`
+- Or start Poetry shell first and run Flask from within the environment:
+```
+$ poetry shell
+$ flask run
+```
 - Go to http://127.0.0.1:5000/
 
 ## Instructions/resources/support for developers
