@@ -31,9 +31,14 @@ jobs:
       uses: snok/install-poetry@v1
       
     # Add dependencies with 'poetry add <dependency>'
+    # For example:
+    #  run: |
+    #    poetry add a_dependency
+    #    poetry install
+    
     - name: Install Dependencies using Poetry
       run: |
-        run: poetry install
+          poetry install
       
 #    - name: Test with pytest
 #      run: |
