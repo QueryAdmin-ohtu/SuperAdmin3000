@@ -24,6 +24,18 @@ From `poetry shell` run:
 ```
 $ pytest
 ```
+To gather test coverage staistics, run the following command inside poetry shell:
+```
+$ coverage run --branch -m pytest
+```
+The coverage report can be shown on command line with:
+```
+$ coverage report -m
+```
+A HTML report will be created to `htmlcov` subdirectory with command: (this can be viewed by opening the `index.html` file in a browser)
+```
+$ coverage html
+```
 
 ## Instructions/resources/support for developers
 - Poetry quick guide from the [Ohjelmistotekniikka](https://ohjelmistotekniikka-hy.github.io/python/viikko2#poetry-ja-riippuvuuksien-hallinta) course
