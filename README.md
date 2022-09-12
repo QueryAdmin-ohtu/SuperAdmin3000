@@ -42,10 +42,12 @@ $ coverage html
 - Flask and PostGreSQL material from the [Tietokantasovellus](https://hy-tsoha.github.io/materiaali/osa-1/#johdatus-web-sovelluksiin) course
 
 ## Definition of done
+
 The definition of done for sprint 1 or until the minimum viable product (MVP) has been developed is as follows:
 - The source code is peer reviewed and linted
 - The source code is deployed onto the ‘master’ branch 
 - The source code is unit tested with a code coverage of 70%
+
 Sprint 2 / MVP onwards:
 
 Every developer commits to creating unit tests and E2E-tests using robot framework (when applicable) before deployment. Also all code submitted to the main branch should be peer reviewed utilising pull requests. The automated tests should reach a code coverage of 75%
