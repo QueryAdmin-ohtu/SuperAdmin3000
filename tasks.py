@@ -15,3 +15,7 @@ def tests(ctx):
 @task
 def e2etests(ctx):
     ctx.run("robot src/tests/robot_tests/")
+
+@task
+def format(ctx):
+    ctx.run("autopep8 --in-place --recursive src")
