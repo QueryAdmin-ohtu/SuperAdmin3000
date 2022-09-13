@@ -1,3 +1,12 @@
 <title>SuperAdmin3000</title>
 <h1>Test page</h1>
 <p>Hi there! :)</p>
+This page should not be shown, if you are not logged in.
+
+<h2>Test form</h2>
+
+<form action="/testform" method="POST">
+  <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
+  Some data: <input type="text" name="testdata">
+  <input type="submit" value="Submit">
+</form>
