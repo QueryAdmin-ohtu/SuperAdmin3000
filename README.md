@@ -1,6 +1,7 @@
 # SuperAdmin3000
 ## Starting the application
 - Activate poetry environment: `poetry install`
+- Move to the `src` directory
 - Start flask: `poetry run flask run`
 - Or start Poetry shell first and run Flask from within the environment:
 ```
@@ -14,7 +15,7 @@ $ flask run
 RobotFramework End-to-End tests can be run by starting the server and running:
 ```
 $ poetry shell
-$ robot tests/robot_tests/
+$ robot src/tests/robot_tests/
 ```
 These tests require ChromeDriver. Instructions on installation [here](https://ohjelmistotuotanto-hy.github.io/chromedriver_asennusohjeet/).
 
