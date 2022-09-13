@@ -52,3 +52,52 @@ Sprint 2 / MVP onwards:
 
 Every developer commits to creating unit tests and E2E-tests using robot framework (when applicable) before deployment. The deployed code should be documented. Also all code submitted to the main branch should be peer reviewed utilising pull requests. The automated tests should reach a code coverage of 75%. 
 
+## Login and session control
+
+The secret key is stored to an environment variable `SECRET KEY`
+
+Username and session token are store in Flask `session` dictionary.
+
+In route functions the existence of current session should be checked before returning the page to user. If there's no current session, an abort error could be given, or a different page returned. A specified function `_logged_in()`exists for this.
+
+Example:
+```
+@app.route("/test")
+def test_page():
+    """ The test page should only be shown if the user has logged in
+    """
+    if not _logged_in():
+        abort(401)
+        
+    return render_template("test.html")
+```
+
+Every form should include hidden field containing the session token, so the route can compare it to the valid token:
+
+Token in the template file:
+```
+<form action="/testform" method="POST">
+  <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
+  Some data: <input type="text" name="testdata">
+  <input type="submit" value="Submit">
+</form>
+```
+
+And in the route:
+```
+@app.route("/testform", methods=["POST"])
+def test_form():
+    """ All forms should include the hidden csrf_token field, so the
+    session can be validated
+    """
+
+    if not _logged_in():
+        abort(401)
+
+    if not _valid_token(request.form):
+        abort(403)
+
+    return render_template("testdata.html", testdata=request.form["testdata"])
+```
+
+During logout, the `_clear_session()` function should be called, which removes username and token variables from the session dictionary.

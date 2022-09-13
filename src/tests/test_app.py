@@ -1,5 +1,5 @@
 def test_index(app, client):
-    expected = "Hello world!"
+    expected = "You are not logged in"
 
     result = client.get("/")
 
