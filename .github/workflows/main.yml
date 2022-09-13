@@ -5,14 +5,15 @@ name: Python application
 
 on:
   push:
-    branches: 
-    - main
+    branches:
+      - main
 # Brances can be added as follows:
 #   - olenleo-actions
     
     
   pull_request:
-    branches: [ "main" ]
+    branches:
+      - main
 
 permissions:
   contents: read
@@ -45,3 +46,15 @@ jobs:
 #    - name: Test with pytest
 #      run: |
 #        pytest
+
+  staging_deployment:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: akhileshns/heroku-deploy@v3.12.12
+        with:
+          heroku_api_key: ${{secrets.HEROKU_API_KEY}}
+          heroku_app_name: "superadmin3000"
+          heroku_email: ${{secrets.HEROKU_USER_EMAIL}}
+          
