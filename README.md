@@ -1,11 +1,11 @@
 # SuperAdmin3000
 ## Starting the application
 - Activate poetry environment: `poetry install`
-- Start flask: `poetry run flask run`
+- Start flask: `poetry run invoke start`
 - Or start Poetry shell first and run Flask from within the environment:
 ```
 $ poetry shell
-$ flask run
+$ invoke start
 ```
 - Go to http://127.0.0.1:5000/
 
@@ -14,7 +14,7 @@ $ flask run
 RobotFramework End-to-End tests can be run by starting the server and running:
 ```
 $ poetry shell
-$ robot tests/robot_tests/
+$ invoke e2etests
 ```
 These tests require ChromeDriver. Instructions on installation [here](https://ohjelmistotuotanto-hy.github.io/chromedriver_asennusohjeet/).
 
@@ -22,7 +22,7 @@ These tests require ChromeDriver. Instructions on installation [here](https://oh
 
 From `poetry shell` run:
 ```
-$ pytest
+$ invoke tests
 ```
 To gather test coverage statistics, run the following command inside poetry shell:
 ```
