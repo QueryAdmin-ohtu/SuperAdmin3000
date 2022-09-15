@@ -1,12 +1,29 @@
-<title>SuperAdmin3000</title>
-
-<h2>You are not logged in, please login:</h2>
-
-Test username: rudolf<br>
-Test password: secret<br>
-
-<form action ="/login" method="POST">
-  Username: <input type="text" name="username"><br>
-  Password: <input type="password" name="password"><br>
-  <input type="submit" value="Login">
-</form>
+<html>
+  <head>
+    <title>SuperAdmin3000</title>
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+  </head>
+  <body>
+    <h2>You are not logged in, please login:</h2>
+    Test username: rudolf<br>
+    Test password: secret<br>
+    <form action ="/login" method="POST">
+      Username: <input type="text" name="username"><br>
+      Password: <input type="password" name="password"><br>
+      <input type="submit" value="Login">
+    </form>
+    <div id="g_id_onload"
+      data-client_id="210669772745-35ee1vb4rv29ss1v6c6ea9gd57ies2oi.apps.googleusercontent.com"
+      data-login_uri="http://localhost:5000/logintest"
+      data-auto_prompt="false">
+    </div>
+    <div class="g_id_signin"
+      data-type="standard"
+      data-size="large"
+      data-theme="outline"
+      data-text="sign_in_with"
+      data-shape="rectangular"
+      data-logo_alignment="left">
+    </div>
+  </body>
+</html>

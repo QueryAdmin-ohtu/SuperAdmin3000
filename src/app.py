@@ -1,16 +1,18 @@
 from flask import Flask
 from flask import render_template, redirect, session, request, abort
-
+from google.oauth2 import id_token
+from google.auth.transport import requests
+# from flask_cors import CORS
 from os import getenv
-
 import secrets
 
-
 app = Flask(__name__)
+# CORS(app)
 
 app.secret_key = "ffobar" #getenv("SECRET_KEY")
+CLIENT_ID="210669772745-35ee1vb4rv29ss1v6c6ea9gd57ies2oi.apps.googleusercontent.com"  #Google cloud id
 
-@app.route("/")
+@app.route("/", methods=["GET"])
 def index():
     """ Main page
 
@@ -21,7 +23,7 @@ def index():
         return render_template("index.html")
     else:
         return render_template("login.html")
-
+    
 @app.route("/login", methods=["POST"])
 def login():
     """ Receive and process the login form
@@ -50,6 +52,34 @@ def test_page():
         abort(401)
         
     return render_template("test.html")
+
+@app.route("/logintest", methods=["POST"])
+def logintest():
+    token=request.form["credential"]
+    try:
+        idinfo = id_token.verify_oauth2_token(token, requests.Request(), CLIENT_ID)
+        email=idinfo['email']
+        email_verified=idinfo['email_verified']
+        first_name=idinfo['given_name']
+        print("email:", email)
+        print("email verified:", email_verified)
+        print("first name:", first_name)
+
+        csrf_token_cookie = request.cookies.get('g_csrf_token')
+        if not csrf_token_cookie:
+            abort(400, 'No CSRF token in Cookie.')
+        csrf_token_body = request.form['g_csrf_token']
+        if not csrf_token_body:
+            abort(400, 'No CSRF token in post body.')
+        if csrf_token_cookie != csrf_token_body:
+            abort(400, 'Failed to verify double submit cookie.')
+        print("CSRF token verified")
+
+    except ValueError:
+        # Invalid token
+        pass
+    return render_template("logintest.html")
+
 
 @app.route("/testform", methods=["POST"])
 def test_form():
@@ -108,6 +138,5 @@ def _remove_from_session(property):
 def _logged_in():
     """ Check if the session is active. This should be allways used before
     rendering pages.
-    """
+    """ 
     return "username" in session
-        
