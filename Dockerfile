@@ -9,7 +9,7 @@ RUN pip install -U pip \
 ENV PATH="${PATH}:/root/.local/bin"
 # Application work directory inside container as per convention:
 WORKDIR /usr/src/app
-# Copy configuraiton files for '$ poetry install' before copying the rest of the repository to container for caching purposes
+# Copy configuration files for '$ poetry install' before copying the rest of the repository to container for caching purposes
 COPY poetry* .
 
 COPY pyproject.toml .
