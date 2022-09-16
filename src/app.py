@@ -12,6 +12,7 @@ app = Flask(__name__)
 app.secret_key = "ffobar" #getenv("SECRET_KEY")
 CLIENT_ID="210669772745-35ee1vb4rv29ss1v6c6ea9gd57ies2oi.apps.googleusercontent.com"  #Google cloud id
 
+
 @app.route("/", methods=["GET"])
 def index():
     """ Main page
@@ -54,18 +55,9 @@ def test_page():
     return render_template("test.html")
 
 @app.route("/logintest", methods=["POST"])
-def logintest():
-    token=request.form["credential"]
+def google_login():
     try:
-        idinfo = id_token.verify_oauth2_token(token, requests.Request(), CLIENT_ID)
-        email=idinfo['email']
-        email_verified=idinfo['email_verified']
-        first_name=idinfo['given_name']
-        print("email:", email)
-        print("email verified:", email_verified)
-        print("first name:", first_name)
-
-        csrf_token_cookie = request.cookies.get('g_csrf_token')
+        csrf_token_cookie = request.cookies.get('g_csrf_token')      
         if not csrf_token_cookie:
             abort(400, 'No CSRF token in Cookie.')
         csrf_token_body = request.form['g_csrf_token']
@@ -74,10 +66,25 @@ def logintest():
         if csrf_token_cookie != csrf_token_body:
             abort(400, 'Failed to verify double submit cookie.')
         print("CSRF token verified")
-
+        
+        token=request.form["credential"]
+        if not token:
+            abort(400, 'No token found.')
+        idinfo = id_token.verify_oauth2_token(token, requests.Request(), CLIENT_ID)
+        email=idinfo['email']
+        email_verified=idinfo['email_verified']
+        first_name=idinfo['given_name']
+        print("email:", email)
+        print("email verified:", email_verified)
+        print("first name:", first_name)
     except ValueError:
         # Invalid token
         pass
+    
+    if _google_login_authorize(email):
+        return render_template ("test.html")
+    return "You are not authorized to use the service. Please contact your administrator."
+
     return render_template("logintest.html")
 
 
@@ -112,6 +119,15 @@ def _validate_and_login(username, password):
     session["username"] = username
     
     return True
+
+def _google_login_authorize(email):
+    """ Checks whether an authenticated Google account is authorized to access the service.
+    """
+    #TODO: Create a proper storage for the authorized users
+    users=["antti.vainikka36@gmail.com", "jatufin@gmail.com","me@juan.fi", "niemi.leo@gmail.com", "oskar.sjolund93@gmail.com", "rami.piik@gmail.com", "siljaorvokki@gmail.com"]
+    if email in users:
+        return True
+    return False
 
 def _valid_token(form):
     """ Check if the token send with the form matches with the current
