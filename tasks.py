@@ -19,3 +19,7 @@ def e2etests(ctx):
 @task
 def format(ctx):
     ctx.run("autopep8 --in-place --recursive src")
+
+@task
+def tailwindcss(ctx):
+    ctx.run("tailwindcss -c src/static/tailwind.config.js -i src/static/src/style.css -o src/static/css/main.css --watch")
