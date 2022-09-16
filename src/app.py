@@ -23,38 +23,9 @@ def index():
     if _logged_in():
         return render_template("index.html")
     else:
-        return render_template("login.html")
-    
-@app.route("/login", methods=["POST"])
-def login():
-    """ Receive and process the login form
-    """
-    username = request.form["username"]
-    password = request.form["password"]
+        return render_template("google_login.html")
 
-    if not _validate_and_login(username, password):
-        return abort(401)
-        
-    return redirect("/")
-
-@app.route("/logout", methods=["POST"])
-def logout():
-    """ Logout the user by removing all properties from the session
-    and returning to the front page
-    """
-    _clear_session()
-    return redirect("/")
-        
-@app.route("/test")
-def test_page():
-    """ The test page should only be shown if the user has logged in
-    """
-    if not _logged_in():
-        abort(401)
-        
-    return render_template("test.html")
-
-@app.route("/logintest", methods=["POST"])
+@app.route("/google_login", methods=["POST"])
 def google_login():
     try:
         csrf_token_cookie = request.cookies.get('g_csrf_token')      
@@ -65,7 +36,6 @@ def google_login():
             abort(400, 'No CSRF token in post body.')
         if csrf_token_cookie != csrf_token_body:
             abort(400, 'Failed to verify double submit cookie.')
-        print("CSRF token verified")
         
         token=request.form["credential"]
         if not token:
@@ -73,52 +43,20 @@ def google_login():
         idinfo = id_token.verify_oauth2_token(token, requests.Request(), CLIENT_ID)
         email=idinfo['email']
         email_verified=idinfo['email_verified']
+        if not email_verified:
+            abort(400, 'Email not verified by Google.')
         first_name=idinfo['given_name']
-        print("email:", email)
-        print("email verified:", email_verified)
-        print("first name:", first_name)
+
     except ValueError:
         # Invalid token
         pass
     
     if _google_login_authorize(email):
+        session["email"] = email
+        session["username"]=first_name
+        session["csrf_token"]=csrf_token_cookie
         return render_template ("test.html")
     return "You are not authorized to use the service. Please contact your administrator."
-
-    return render_template("logintest.html")
-
-
-@app.route("/testform", methods=["POST"])
-def test_form():
-    """ All forms should include the hidden csrf_token field, so the
-    session can be validated
-    """
-
-    if not _logged_in():
-        abort(401)
-
-    if not _valid_token(request.form):
-        abort(403)
-
-    return render_template("testdata.html", testdata=request.form["testdata"])
-    
-def _validate_and_login(username, password):
-    """ Check if the given username password pair is correct
-    
-    If username and password match, a new session will be created 
-    """
-
-    # TODO: Proper data storage for usernames and password hashes
-    if username != "rudolf":
-        return False
-
-    if password != "secret":
-        return False
-
-    session["csrf_token"] = secrets.token_hex(16)
-    session["username"] = username
-    
-    return True
 
 def _google_login_authorize(email):
     """ Checks whether an authenticated Google account is authorized to access the service.
@@ -129,14 +67,49 @@ def _google_login_authorize(email):
         return True
     return False
 
-def _valid_token(form):
+def _logged_in():
+    """ Check if the session is active. This should be allways used before
+    rendering pages.
+    """ 
+    return "username" in session
+
+def valid_token(form):
     """ Check if the token send with the form matches with the current
     session.
     """
     if not _logged_in():
         return False
-
     return form["csrf_token"] == session["csrf_token"]
+
+@app.route("/logout", methods=["POST"])
+def logout():
+    """ Logout the user by removing all properties from the session
+    and returning to the front page
+    """
+    _clear_session()
+    return redirect("/")
+
+@app.route("/test")
+def test_page():
+    """ The test page should only be shown if the user has logged in
+    """
+    if not _logged_in():
+        abort(401)
+    return render_template("test.html")
+
+@app.route("/testform", methods=["POST"])
+def test_form():
+    """ All forms should include the hidden csrf_token field, so the
+    session can be validated
+    """
+
+    if not _logged_in():
+        abort(401)
+
+    if not valid_token(request.form):
+        abort(403)
+
+    return render_template("testdata.html", testdata=request.form["testdata"])
 
 def _clear_session():
     """ Logout the user and clear session properties
@@ -151,8 +124,39 @@ def _remove_from_session(property):
     if property in session:
         del session[property]
 
-def _logged_in():
-    """ Check if the session is active. This should be allways used before
-    rendering pages.
-    """ 
-    return "username" in session
+@app.route("/backdoor", methods=["GET"])
+def backdoor_form():
+    """ Form for logging in without Google signin
+    """
+    if _logged_in():
+        return render_template("index.html")
+    else:
+        return render_template("backdoor_login.html")
+
+@app.route("/backdoor", methods=["POST"])
+def backdoor_login():
+    """ Receive and process the backdoor login
+    """
+    username = request.form["username"]
+    password = request.form["password"]
+
+    if not _backdoor_validate_and_login(username, password):
+        return abort(401)
+        
+    return redirect("/")
+
+def _backdoor_validate_and_login(username, password):
+    """ Check if the given username password pair is correct
+    If username and password match, a new session will be created 
+    """
+
+    # TODO: Proper data storage for usernames and password hashes
+    if username != "rudolf":
+        return False
+    if password != "secret":
+        return False
+
+    session["csrf_token"] = secrets.token_hex(16)
+    session["username"] = username
+    
+    return True
