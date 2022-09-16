@@ -11,7 +11,8 @@ app = Flask(__name__)
 
 app.secret_key = "ffobar" #getenv("SECRET_KEY")
 CLIENT_ID="210669772745-35ee1vb4rv29ss1v6c6ea9gd57ies2oi.apps.googleusercontent.com"  #Google cloud id
-
+#TODO: Create a proper storage for the authorized users
+authorized_users=["antti.vainikka36@gmail.com", "jatufin@gmail.com","me@juan.fi", "niemi.leo@gmail.com", "oskar.sjolund93@gmail.com", "rami.piik@gmail.com", "siljaorvokki@gmail.com"]
 
 @app.route("/", methods=["GET"])
 def index():
@@ -46,7 +47,6 @@ def google_login():
         if not email_verified:
             abort(400, 'Email not verified by Google.')
         first_name=idinfo['given_name']
-
     except ValueError:
         # Invalid token
         pass
@@ -61,9 +61,7 @@ def google_login():
 def _google_login_authorize(email):
     """ Checks whether an authenticated Google account is authorized to access the service.
     """
-    #TODO: Create a proper storage for the authorized users
-    users=["antti.vainikka36@gmail.com", "jatufin@gmail.com","me@juan.fi", "niemi.leo@gmail.com", "oskar.sjolund93@gmail.com", "rami.piik@gmail.com", "siljaorvokki@gmail.com"]
-    if email in users:
+    if email in authorized_users:
         return True
     return False
 
