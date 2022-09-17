@@ -21,7 +21,7 @@ def index():
     """ Main page
 
     If there's active session, index.html will be rendered,
-    otherwise the login page will be displaye.
+    otherwise the login page will be displayed.
     """
     if _logged_in():
         return render_template("index.html")
@@ -49,14 +49,14 @@ def google_login():
         if not email_verified:
             abort(400, 'Email not verified by Google.')
         first_name=idinfo['given_name']
+        if _google_login_authorize(email):
+            session["email"] = email
+            session["username"]=first_name
+            session["csrf_token"]=csrf_token_cookie
+            return render_template ("test.html")
     except ValueError:
         # Invalid token
         pass
-    if _google_login_authorize(email):
-        session["email"] = email
-        session["username"]=first_name
-        session["csrf_token"]=csrf_token_cookie
-        return render_template ("test.html")
     return "You are not authorized to use the service. Please contact your administrator."
 
 def _google_login_authorize(email):
