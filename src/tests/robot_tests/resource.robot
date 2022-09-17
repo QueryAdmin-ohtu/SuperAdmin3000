@@ -2,10 +2,11 @@
 Library  SeleniumLibrary
 
 *** Variables ***
-${SERVER}  127.0.0.1:5000
+${SERVER}  localhost:5000
 ${BROWSER}  headlesschrome
 ${DELAY}  0 seconds
 ${HOME URL}  http://${SERVER}
+${BACKDOOR URL}  http://${SERVER}/backdoor
 
 *** Keywords ***
 Open And Configure Browser
@@ -15,3 +16,6 @@ Open And Configure Browser
 
 Go To Home Page
     Go To  ${HOME URL}
+
+Go To Backdoor Login Page
+    Go To  ${BACKDOOR URL}
