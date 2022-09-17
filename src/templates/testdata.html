@@ -1,13 +1,10 @@
 {% extends "layout.html" %}
 {% block content %}
 <h1>Test data</h1>
-
-This page should not be shown, if you are not logged in.
-
+<i><small>(This page should not be shown, if you are not logged in.)</small></i>
+<br><br>
+<p>You submitted: {{ testdata }}</p>
 <br>
-
-You submitted: {{ testdata }}
-
 <p><a href="/">Main page</test></p>
 <a href="test">Test page</test>
 {% endblock %}
