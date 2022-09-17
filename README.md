@@ -8,7 +8,7 @@ Further documentation can be found [here](https://github.com/QueryAdmin-ohtu/Sup
 $ poetry shell
 $ invoke start
 ```
-- Go to http://127.0.0.1:5000/
+- Go to http://localhost:5000/
 
 ## Definition of done
 
