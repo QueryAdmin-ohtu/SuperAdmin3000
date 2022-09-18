@@ -9,3 +9,6 @@ Set Password
 
 Submit Credentials
     Click Button  Login
+
+Logout
+    Click Button  Logout
