@@ -11,7 +11,7 @@ $ invoke start
 
 To generate `requirements.txt` file for Heroku deployment, run from with in Poetry shell:
 ```
-pip list -format freeze > requirements.txt
+pip freeze > requirements.txt
 ```
 
 - Go to http://localhost:5000/
