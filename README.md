@@ -8,6 +8,12 @@ Further documentation can be found [here](https://github.com/QueryAdmin-ohtu/Sup
 $ poetry shell
 $ invoke start
 ```
+
+To generate `requirements.txt` file for Heroku deployment, run from with in Poetry shell:
+```
+pip list -format freeze > requirements.txt
+```
+
 - Go to http://localhost:5000/
 
 ## Definition of done
