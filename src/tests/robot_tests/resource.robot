@@ -7,6 +7,9 @@ ${BROWSER}  headlesschrome
 ${DELAY}  0 seconds
 ${HOME URL}  http://${SERVER}
 ${BACKDOOR URL}  http://${SERVER}/backdoor
+${EDIT URL}  http://${SERVER}/edit
+${NEW URL}  http://${SERVER}/new
+
 
 *** Keywords ***
 Open And Configure Browser
@@ -19,3 +22,9 @@ Go To Home Page
 
 Go To Backdoor Login Page
     Go To  ${BACKDOOR URL}
+
+Go To Edit Questionnaires Page
+    Go To  ${EDIT}
+
+Go To Create New Questionnaire Page
+    Go To  ${NEW}

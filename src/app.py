@@ -67,7 +67,7 @@ def _google_login_authorize(email):
     return False
 
 def _logged_in():
-    """ Check if the session is active. This should be allways used before
+    """ Check if the session is active. This should be always used before
     rendering pages.
     """
     return "username" in session
@@ -88,6 +88,24 @@ def logout():
     _clear_session()
     return redirect("/")
 
+@app.route("/new")
+def new():
+    """Renders the new questionnaire page
+    """
+    if not _logged_in():
+        abort(401)
+
+    return render_template("new.html")
+
+@app.route("/edit")
+def edit():
+    """Renders the edit questionnaire page
+    """
+    if not _logged_in():
+        abort(401)
+
+    return render_template("edit.html")
+        
 @app.route("/test")
 def test_page():
     """ The test page should only be shown if the user has logged in
