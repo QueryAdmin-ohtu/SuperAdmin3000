@@ -1,4 +1,3 @@
-from os import getenv
 import secrets
 from flask import Flask
 from flask import render_template, redirect, session, request, abort
