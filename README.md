@@ -1,4 +1,6 @@
 # SuperAdmin3000
+[App on Heroku](https://superadmin3000.herokuapp.com/)
+
 Further documentation can be found [here](https://github.com/QueryAdmin-ohtu/SuperAdmin3000/blob/main/docs/docs.md).
 ## Starting the application
 - Activate poetry environment: `poetry install`
