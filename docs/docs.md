@@ -86,3 +86,17 @@ This project uses TailwindCSS. To create a CSS file with the needed TailwindCSS 
 tailwindcss -c src/static/tailwind.config.js -i src/static/src/style.css -o src/static/css/main.css --watch
 ````
 Tailwind now watches the HTML template files and creates a new css file when it is needed.
+
+## Docker
+The preliminary docker image can be built with
+````
+$ (sudo) docker build . -t superadmin3000
+````
+
+To run the container locally:
+````
+ $ (sudo) docker run -p 3000:5000 superadmin
+
+````
+When the container is succesfully running the application can be accessed at [http://localhost:3000](http://localhost:3000)
+
