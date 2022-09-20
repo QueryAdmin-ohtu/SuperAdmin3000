@@ -26,3 +26,9 @@ The definition of done for sprint 1 or until the minimum viable product (MVP) ha
 Sprint 2 / MVP onwards:
 
 Every developer commits to creating unit tests and E2E-tests using robot framework (when applicable) before deployment. The deployed code should be documented. Also all code submitted to the main branch should be peer reviewed utilising pull requests. The automated tests should reach a code coverage of 75%. 
+
+## Documentation
+
+* [Architecture](Documentation/Architecture.md)
+* [Testing](Documentation/Tests.md)
+* [Deployment](Documentation/Deployment.md)
