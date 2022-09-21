@@ -18,3 +18,7 @@
 
 ## Packaging
 - The software is deployed as a Docker image
+
+## Launching the application
+
+Poetry Invoke mechanism is used. Available commands are defined in the `tasks.py` file.

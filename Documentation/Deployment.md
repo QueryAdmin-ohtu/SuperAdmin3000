@@ -34,3 +34,5 @@ pip list --format freeze > requirements.txt
 1. Github build Docker image
 1. Pull request is accepted and merged
 1. Github pushes the docker image to the server (Heroku)
+
+As from the above can be seen, the Docker image is deployed to the server only after a main branch push/merge. Only tests are run for pull requests.
