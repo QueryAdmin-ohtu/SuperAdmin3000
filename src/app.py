@@ -161,7 +161,7 @@ def backdoor_form():
         if _logged_in():
             return render_template("index.html", ENV=ENV)
         return render_template("backdoor_login.html", ENV=ENV)
-    return redirect("/")
+    abort(404)
 
 @app.route("/backdoor", methods=["POST"])
 def backdoor_login():
@@ -173,7 +173,7 @@ def backdoor_login():
 
         if not _backdoor_validate_and_login(username, password):
             return abort(401)
-    return redirect("/")
+    return abort(404)
 
 def _backdoor_validate_and_login(username, password):
     """ Check if the given username password pair is correct
