@@ -9,7 +9,10 @@ permissions:
   contents: read
 
 jobs:
+  build:
+    uses: ./.github/workflows/main.yml
   heroku:
+    needs: [build]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
