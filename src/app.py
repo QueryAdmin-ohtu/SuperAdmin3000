@@ -161,7 +161,7 @@ def backdoor_form():
         if _logged_in():
             return render_template("index.html", ENV=ENV)
         return render_template("backdoor_login.html", ENV=ENV)
-    abort(404)
+    return abort(404)
 
 @app.route("/backdoor", methods=["POST"])
 def backdoor_login():
