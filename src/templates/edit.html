@@ -1,6 +1,6 @@
+<p style="color: red"><i><small>Environment: {{ENV}}</small></i></p>
 {% extends "layout.html" %}
 {% block content %}
-
 You are logged in as {{ session.username }}
 <form action="/logout" method="POST">
   <div class="flex items-start">
