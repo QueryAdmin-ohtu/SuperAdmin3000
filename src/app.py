@@ -53,7 +53,7 @@ def google_login():
             session["email"] = email
             session["username"]=first_name
             session["csrf_token"]=csrf_token_cookie
-            return render_template ("test.html")
+            return redirect("/")
     except ValueError:
         # Invalid token
         pass
