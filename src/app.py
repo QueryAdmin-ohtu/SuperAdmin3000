@@ -93,7 +93,7 @@ def new():
     """Renders the new questionnaire page
     """
     if not _logged_in():
-        abort(401)
+        return redirect("/")
 
     return render_template("new.html")
 
@@ -102,7 +102,7 @@ def edit():
     """Renders the edit questionnaire page
     """
     if not _logged_in():
-        abort(401)
+        return redirect("/")
 
     return render_template("edit.html")
         

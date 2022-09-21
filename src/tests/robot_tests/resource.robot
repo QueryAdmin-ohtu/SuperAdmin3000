@@ -24,7 +24,7 @@ Go To Backdoor Login Page
     Go To  ${BACKDOOR URL}
 
 Go To Edit Questionnaires Page
-    Go To  ${EDIT}
+    Go To  ${EDIT URL}
 
 Go To Create New Questionnaire Page
-    Go To  ${NEW}
+    Go To  ${NEW URL}
