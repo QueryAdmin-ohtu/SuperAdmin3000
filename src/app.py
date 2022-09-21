@@ -1,16 +1,32 @@
+from os import getenv
 import secrets
 from flask import Flask
 from flask import render_template, redirect, session, request, abort
 from config import PORT
 from google.oauth2 import id_token
 from google.auth.transport import requests
-# from flask_cors import CORS
 
 app = Flask(__name__)
-# CORS(app)
 
-app.secret_key = "ffobar" #getenv("SECRET_KEY")
-CLIENT_ID="210669772745-35ee1vb4rv29ss1v6c6ea9gd57ies2oi.apps.googleusercontent.com"  #Google cloud id
+app.secret_key = getenv("SECRET_KEY")
+CLIENT_ID = getenv("GOOGLE_CLIENT_ID")
+
+# app.config.from_prefixed_env()
+# ENV=app.config["env"]
+ENV=getenv("ENVIRONMENT")
+
+# GOOGLE_URI="http://localhost:5000/google_login"
+
+match ENV:
+    case 'local':
+        print("ENV: local")
+        GOOGLE_URI="http://localhost:5000/google_login"
+    case 'test':
+        print("ENV: test")
+        GOOGLE_URI="TO BE DEFINED"
+    case 'prod':
+        print("ENV: prod")
+        GOOGLE_URI="https://superadmin3000.herokuapp.com/google_login"
 
 # TODO: Create a proper storage for the authorized users
 authorized_google_accounts=["antti.vainikka36@gmail.com", "jatufin@gmail.com","me@juan.fi",
@@ -25,7 +41,7 @@ def index():
     """
     if _logged_in():
         return render_template("index.html")
-    return render_template("google_login.html")
+    return render_template("google_login.html", URI=GOOGLE_URI)
 
 @app.route("/google_login", methods=["POST"])
 def google_login():
@@ -145,20 +161,22 @@ def _remove_from_session(property_key):
 def backdoor_form():
     """ Form for logging in without Google
     """
-    if _logged_in():
-        return render_template("index.html")
-    return render_template("backdoor_login.html")
+    if ENV=="local" or ENV=="test":
+        if _logged_in():
+            return render_template("index.html")
+        return render_template("backdoor_login.html")
 
 @app.route("/backdoor", methods=["POST"])
 def backdoor_login():
     """ Receive and process the backdoor login
     """
-    username = request.form["username"]
-    password = request.form["password"]
+    if ENV=="local" or ENV=="test":
+        username = request.form["username"]
+        password = request.form["password"]
 
-    if not _backdoor_validate_and_login(username, password):
-        return abort(401)
-    return redirect("/")
+        if not _backdoor_validate_and_login(username, password):
+            return abort(401)
+        return redirect("/")
 
 def _backdoor_validate_and_login(username, password):
     """ Check if the given username password pair is correct

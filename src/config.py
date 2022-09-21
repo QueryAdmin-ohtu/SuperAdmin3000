@@ -11,5 +11,5 @@ try:
 except FileNotFoundError:
     pass
 
-ENVIRONMENT = os.getenv("ENVIRONMENT") or "production" # If environment variable is not defined it defaults to production
+# ENVIRONMENT = os.getenv("ENVIRONMENT") or "production" # If environment variable is not defined it defaults to production
 PORT = os.environ.get("PORT", 5000)

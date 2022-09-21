@@ -1,6 +1,18 @@
 from invoke import task
 
 @task
+def start_local(ctx):
+    ctx.run("export FLASK_env='local' && python3 src/app.py")
+
+@task
+def start_test(ctx):
+    ctx.run("export FLASK_env='test' && python3 src/app.py")
+
+@task
+def start_prod(ctx):
+    ctx.run("export FLASK_env='prod' && python3 src/app.py")
+
+@task
 def start(ctx):
     ctx.run("python3 src/app.py")
 
