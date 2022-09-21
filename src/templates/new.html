@@ -1,11 +1,14 @@
-<title>SuperAdmin3000 New</title>
-<h1>SuperAdmin3000</h1>
+{% extends "layout.html" %}
+{% block content %}
 
 You are logged in as {{ session.username }}
 <form action="/logout" method="POST">
-  <input type="submit" value="Logout">
+  <div class="flex items-start">
+      <button type="submit" class="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 w-fit">Logout</button>
+  </div>
 </form>
 
 <p>Here you can eventually create new questionnaires</p>
 
 <p><a href="/">Return</a></p>
+{% endblock %}

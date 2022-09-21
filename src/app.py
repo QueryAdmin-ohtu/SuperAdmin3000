@@ -43,7 +43,7 @@ def google_login():
         token=request.form["credential"]
         if not token:
             abort(400, 'No token found.')
-        idinfo = id_token.verify_oauth2_token(token, requests.Request(), CLIENT_ID)
+        idinfo = id_token.verify_oauth2_token(token, requests.Request(), CLIENT_ID, clock_skew_in_seconds=10)
         email=idinfo['email']
         email_verified=idinfo['email_verified']
         if not email_verified:
@@ -53,7 +53,7 @@ def google_login():
             session["email"] = email
             session["username"]=first_name
             session["csrf_token"]=csrf_token_cookie
-            return render_template ("test.html")
+            return redirect("/")
     except ValueError:
         # Invalid token
         pass
@@ -93,7 +93,7 @@ def new():
     """Renders the new questionnaire page
     """
     if not _logged_in():
-        abort(401)
+        return redirect("/")
 
     return render_template("new.html")
 
@@ -102,7 +102,7 @@ def edit():
     """Renders the edit questionnaire page
     """
     if not _logged_in():
-        abort(401)
+        return redirect("/")
 
     return render_template("edit.html")
         
