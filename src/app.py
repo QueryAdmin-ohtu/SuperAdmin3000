@@ -1,6 +1,7 @@
 import secrets
 from flask import Flask
 from flask import render_template, redirect, session, request, abort
+from config import PORT
 from google.oauth2 import id_token
 from google.auth.transport import requests
 # from flask_cors import CORS
@@ -172,3 +173,6 @@ def _backdoor_validate_and_login(username, password):
     session["csrf_token"] = secrets.token_hex(16)
     session["username"] = username
     return True
+
+if __name__ == "__main__":
+    app.run(debug=False, host="0.0.0.0", port=PORT)

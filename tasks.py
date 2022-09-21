@@ -2,7 +2,7 @@ from invoke import task
 
 @task
 def start(ctx):
-    ctx.run("cd src; flask run --host=0.0.0.0")
+    ctx.run("python3 src/app.py")
 
 @task
 def lint(ctx):
