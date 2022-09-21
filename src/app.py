@@ -41,7 +41,7 @@ def index():
     """
     if _logged_in():
         return render_template("index.html")
-    return render_template("google_login.html", URI=GOOGLE_URI)
+    return render_template("google_login.html", URI=GOOGLE_URI, ENV=ENV)
 
 @app.route("/google_login", methods=["POST"])
 def google_login():
