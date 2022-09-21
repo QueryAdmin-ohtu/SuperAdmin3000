@@ -43,7 +43,7 @@ def google_login():
         token=request.form["credential"]
         if not token:
             abort(400, 'No token found.')
-        idinfo = id_token.verify_oauth2_token(token, requests.Request(), CLIENT_ID)
+        idinfo = id_token.verify_oauth2_token(token, requests.Request(), CLIENT_ID, clock_skew_in_seconds=10)
         email=idinfo['email']
         email_verified=idinfo['email_verified']
         if not email_verified:
