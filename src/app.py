@@ -194,7 +194,7 @@ def _remove_from_session(property_key):
 def backdoor_form():
     """ Form for logging in without Google
     """
-    if ENV in ["local", "test"]:
+    if ENV not in ["prod"]:
         if _logged_in():
             return render_template("index.html", ENV=ENV)
         return render_template("backdoor_login.html", ENV=ENV)
@@ -204,7 +204,7 @@ def backdoor_form():
 def backdoor_login():
     """ Receive and process the backdoor login
     """
-    if ENV in ["local", "test"]:
+    if ENV not in ["prod"]:
         username = request.form["username"]
         password = request.form["password"]
 
