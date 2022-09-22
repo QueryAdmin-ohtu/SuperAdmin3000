@@ -219,10 +219,9 @@ def backdoor_login():
     if ENV not in ["prod"]:
         username = request.form["username"]
         password = request.form["password"]
-
         if not _backdoor_validate_and_login(username, password):
             return abort(401)
-    return abort(404)
+    return redirect("/")
 
 
 def _backdoor_validate_and_login(username, password):
