@@ -1,11 +1,13 @@
 <p style="color: red"><i><small>Environment: {{ENV}}</small></i></p>
 {% extends "layout.html" %}
 {% block content %}
-Viestien määrä: {{ count }}
+Kysymysten määrä: {{ count }}
+<br><br>
 <hr>
-{% for message in messages %}
-{{ message.content }}
+{% for question in questions %}
+{{ question[0]}}
 <hr>
 {% endfor %}
-<a href="/testdb/new">Lähetä viesti</a>
+<br>
+<a href="/testdb/new">Lisää kysymys</a>
 {% endblock %}

@@ -1,9 +1,10 @@
 <p style="color: red"><i><small>Environment: {{ENV}}</small></i></p>
+
 {% extends "layout.html" %}
 {% block content %}
-<form action="/testdb/send" method="POST">
-    Viesti: <br>
-    <textarea name="content" rows="3" cols="40"></textarea>
+<form action="/testdb/add_question" method="POST">
+    Kysymys: <br>
+    <textarea name="content" rows="3" cols="40" style="border:solid 1px black"></textarea>
     <br>
     <input type="submit" value="Lähetä">
 </form>

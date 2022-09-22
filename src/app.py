@@ -16,39 +16,36 @@ app.config["SQLALCHEMY_DATABASE_URI"] = getenv("DATABASE_URI")
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 db = SQLAlchemy(app)
 
-# -------------------
-
 
 @app.route("/testdb/new")
 def new_message():
-    return render_template("testdb_new.html")
+    return render_template("testdb_new.html", ENV=ENV)
 
-@app.route("/testdb/send", methods=["POST"])
+@app.route("/testdb/add_question", methods=["POST"])
 def send_message():
-    content = request.form["content"]
-    sql = "INSERT INTO messages (content) VALUES (:content)"
-    db.session.execute(sql, {"content":content})
+    question = request.form["content"]
+    sql = "INSERT INTO \"Questions\" (\"text\", \"surveyId\", \"createdAt\", \"updatedAt\") VALUES (:question, '1', (select CURRENT_TIMESTAMP), (select CURRENT_TIMESTAMP))"
+    db.session.execute(sql, {"question":question})
     db.session.commit()
     return redirect("/testdb")
 
 @app.route("/testdb")
 def testdb():
-    result = db.session.execute("SELECT content FROM messages")
-    messages = result.fetchall()
-    return render_template("testdb.html", count=len(messages), messages=messages) 
+    result = db.session.execute("SELECT text FROM \"Questions\"")
+    questions = result.fetchall()
+    return render_template("testdb.html", count=len(questions), questions=questions, ENV=ENV) 
 
 
 def _google_login_db_authorize(email):
     """ Checks whether a Google account is authorized to access the app.
     """
-    sql = "SELECT id FROM users WHERE email=:email"
+    sql = "SELECT id FROM \"Admins\" WHERE email=:email"
     result = db.session.execute(sql, {"email":email})
     user = result.fetchone()    
     if user:
         return True
     return False
 
-# -----------------------
 
 match ENV:
     case 'local':
