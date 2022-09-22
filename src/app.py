@@ -206,6 +206,10 @@ def _backdoor_validate_and_login(username, password):
     session["username"] = username
     return True
 
+@app.route("/ping")
+def ping():
+    return "pong"
+
 
 if __name__ == "__main__":
     app.run(debug=False, host="0.0.0.0", port=PORT)

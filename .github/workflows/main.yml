@@ -56,7 +56,7 @@ jobs:
     - name: Run robot tests
       run: bash run_robot_tests.sh
       env:
-        ENVIRONMENT: test
+        ENVIRONMENT: local
         GOOGLE_CLIENT_ID: fakegoogleid
         SECRET_KEY: secretkey
         
