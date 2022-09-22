@@ -23,7 +23,7 @@ elif ENV =='prod':
     print("ENV: prod")
     GOOGLE_URI="https://superadmin3000.herokuapp.com/google_login"
 else:
-    print("ENV:", env) # Should this throw an error?
+    print("ENV:", ENV) # Should this throw an error?
 
 # TODO: Create a proper storage for the authorized users
 authorized_google_accounts=["antti.vainikka36@gmail.com", "jatufin@gmail.com","me@juan.fi",
