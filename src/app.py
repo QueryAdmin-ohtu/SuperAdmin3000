@@ -4,14 +4,48 @@ from flask import Flask
 from flask import render_template, redirect, session, request, abort
 from google.oauth2 import id_token
 from google.auth.transport import requests
+from flask_sqlalchemy import SQLAlchemy
 from config import PORT
 
 app = Flask(__name__)
 
 app.secret_key = getenv("SECRET_KEY")
 CLIENT_ID = getenv("GOOGLE_CLIENT_ID")
+ENV=getenv("ENVIRONMENT")
+app.config["SQLALCHEMY_DATABASE_URI"] = getenv("DATABASE_URI")
+app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+db = SQLAlchemy(app)
 
-ENV = getenv("ENVIRONMENT")
+
+@app.route("/testdb/new")
+def new_message():
+    return render_template("testdb_new.html", ENV=ENV)
+
+@app.route("/testdb/add_question", methods=["POST"])
+def send_message():
+    question = request.form["content"]
+    sql = "INSERT INTO \"Questions\" (\"text\", \"surveyId\", \"createdAt\", \"updatedAt\") VALUES (:question, '1', (select CURRENT_TIMESTAMP), (select CURRENT_TIMESTAMP))"
+    db.session.execute(sql, {"question":question})
+    db.session.commit()
+    return redirect("/testdb")
+
+@app.route("/testdb")
+def testdb():
+    result = db.session.execute("SELECT text FROM \"Questions\"")
+    questions = result.fetchall()
+    return render_template("testdb.html", count=len(questions), questions=questions, ENV=ENV) 
+
+
+def _google_login_db_authorize(email):
+    """ Checks whether a Google account is authorized to access the app.
+    """
+    sql = "SELECT id FROM \"Admins\" WHERE email=:email"
+    result = db.session.execute(sql, {"email":email})
+    user = result.fetchone()    
+    if user:
+        return True
+    return False
+
 
 if ENV == 'local':
     print("ENV: local")
@@ -74,7 +108,6 @@ def google_login():
         # Invalid token
         pass
     return "You are not authorized to use the service. Please contact your administrator."
-
 
 def _google_login_authorize(email):
     """ Checks whether a Google account is authorized to access the app.
@@ -172,7 +205,7 @@ def _remove_from_session(property_key):
 def backdoor_form():
     """ Form for logging in without Google
     """
-    if ENV in ["local", "test"]:
+    if ENV not in ["prod"]:
         if _logged_in():
             return render_template("index.html", ENV=ENV)
         return render_template("backdoor_login.html", ENV=ENV)
@@ -183,13 +216,12 @@ def backdoor_form():
 def backdoor_login():
     """ Receive and process the backdoor login
     """
-    if ENV in ["local", "test"]:
+    if ENV not in ["prod"]:
         username = request.form["username"]
         password = request.form["password"]
-
         if not _backdoor_validate_and_login(username, password):
             return abort(401)
-    return abort(404)
+    return redirect("/")
 
 
 def _backdoor_validate_and_login(username, password):
