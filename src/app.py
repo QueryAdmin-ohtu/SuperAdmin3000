@@ -4,14 +4,51 @@ from flask import Flask
 from flask import render_template, redirect, session, request, abort
 from google.oauth2 import id_token
 from google.auth.transport import requests
+from flask_sqlalchemy import SQLAlchemy
 from config import PORT
 
 app = Flask(__name__)
 
 app.secret_key = getenv("SECRET_KEY")
 CLIENT_ID = getenv("GOOGLE_CLIENT_ID")
-
 ENV=getenv("ENVIRONMENT")
+app.config["SQLALCHEMY_DATABASE_URI"] = getenv("DATABASE_URI")
+app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+db = SQLAlchemy(app)
+
+# -------------------
+
+
+@app.route("/testdb/new")
+def new_message():
+    return render_template("testdb_new.html")
+
+@app.route("/testdb/send", methods=["POST"])
+def send_message():
+    content = request.form["content"]
+    sql = "INSERT INTO messages (content) VALUES (:content)"
+    db.session.execute(sql, {"content":content})
+    db.session.commit()
+    return redirect("/testdb")
+
+@app.route("/testdb")
+def testdb():
+    result = db.session.execute("SELECT content FROM messages")
+    messages = result.fetchall()
+    return render_template("testdb.html", count=len(messages), messages=messages) 
+
+
+def _google_login_db_authorize(email):
+    """ Checks whether a Google account is authorized to access the app.
+    """
+    sql = "SELECT id FROM users WHERE email=:email"
+    result = db.session.execute(sql, {"email":email})
+    user = result.fetchone()    
+    if user:
+        return True
+    return False
+
+# -----------------------
 
 match ENV:
     case 'local':
@@ -61,7 +98,8 @@ def google_login():
         if not email_verified:
             abort(400, 'Email not verified by Google.')
         first_name=idinfo['given_name']
-        if _google_login_authorize(email):
+        # if _google_login_authorize(email):
+        if _google_login_db_authorize(email):
             session["email"] = email
             session["username"]=first_name
             session["csrf_token"]=csrf_token_cookie
@@ -70,6 +108,8 @@ def google_login():
         # Invalid token
         pass
     return "You are not authorized to use the service. Please contact your administrator."
+
+
 
 def _google_login_authorize(email):
     """ Checks whether a Google account is authorized to access the app.
