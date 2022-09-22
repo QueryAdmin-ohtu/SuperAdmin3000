@@ -13,16 +13,17 @@ CLIENT_ID = getenv("GOOGLE_CLIENT_ID")
 
 ENV=getenv("ENVIRONMENT")
 
-match ENV:
-    case 'local':
-        print("ENV: local")
-        GOOGLE_URI="http://localhost:5000/google_login"
-    case 'test':
-        print("ENV: test")
-        GOOGLE_URI="TO BE DEFINED"
-    case 'prod':
-        print("ENV: prod")
-        GOOGLE_URI="https://superadmin3000.herokuapp.com/google_login"
+if ENV=='local':
+    print("ENV: local")
+    GOOGLE_URI="http://localhost:5000/google_login"
+elif ENV=='test':
+    print("ENV: test")
+    GOOGLE_URI="TO BE DEFINED"
+elif ENV =='prod':
+    print("ENV: prod")
+    GOOGLE_URI="https://superadmin3000.herokuapp.com/google_login"
+else:
+    print("ENV:", env) # Should this throw an error?
 
 # TODO: Create a proper storage for the authorized users
 authorized_google_accounts=["antti.vainikka36@gmail.com", "jatufin@gmail.com","me@juan.fi",
