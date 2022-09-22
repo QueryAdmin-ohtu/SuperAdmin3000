@@ -1,5 +1,5 @@
 # This Python package should include most dependencies for our purposes.
-FROM python:3.10-slim-bullseye
+FROM python:3.8-slim-bullseye
 # Install curl and netcat => Install poetry
 RUN pip install -U pip \
     && apt-get update \
