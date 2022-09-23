@@ -238,6 +238,7 @@ def _backdoor_validate_and_login(username, password):
     session["username"] = username
     return True
 
+# TODO: Remove if not needed
 @app.route("/ping")
 def ping():
     return "pong"
