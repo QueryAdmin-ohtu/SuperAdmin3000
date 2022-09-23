@@ -29,11 +29,11 @@ Logged Out User Cannot Access Questionnaires
 
 Logged Out User Cannot Edit Questionnaires
     Go To Edit Questionnaires Page
-    Page Should Contain  You are not logged in
+    Page Should Contain  Please login 
 
 Logged Out User Cannot Create Questionnaires
     Go To Create New Questionnaire Page
-    Page Should Contain  You are not logged in
+    Page Should Contain  Please login 
 
 *** Keywords ***
 Login With Correct Credentials

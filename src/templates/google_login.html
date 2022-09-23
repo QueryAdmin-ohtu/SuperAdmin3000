@@ -1,23 +1,19 @@
-<html>
-  <head>
-    <title>SuperAdmin3000</title>
-    <script src="https://accounts.google.com/gsi/client" async defer></script>
-  </head>
-  <body>
-    <p style="color: red"><i><small>Environment: {{ENV}}</small></i></p>
-    <h2>You are not logged in, please login with your Google account:</h2>
-    <div id="g_id_onload"
-      data-client_id="210669772745-35ee1vb4rv29ss1v6c6ea9gd57ies2oi.apps.googleusercontent.com"
-      data-login_uri={{URI}}
-      data-auto_prompt="false">
+{% extends "layout.html" %}
+{% block head %}
+<script src="https://accounts.google.com/gsi/client" async defer></script>
+{% endblock %}
+{% block content %}
+<div
+    class="bg-white shadow-md border border-gray-200 rounded-lg max-w-sm p-4 sm:p-6 lg:p-8 dark:bg-gray-800 dark:border-gray-700">
+    <div class="flex flex-col gap-4 items-center">
+        <p class="text-center">Please login with your Google account:</p>
+        <div id="g_id_onload" data-client_id="210669772745-35ee1vb4rv29ss1v6c6ea9gd57ies2oi.apps.googleusercontent.com"
+            data-login_uri={{URI}} data-auto_prompt="false">
+        </div>
+        <div class="g_id_signin" data-type="standard" data-size="large" data-theme="outline" data-text="sign_in_with"
+            data-shape="rectangular" data-logo_alignment="left">
+        </div>
     </div>
-    <div class="g_id_signin"
-      data-type="standard"
-      data-size="large"
-      data-theme="outline"
-      data-text="sign_in_with"
-      data-shape="rectangular"
-      data-logo_alignment="left">
-    </div>
-  </body>
-</html>
+</div>
+
+{% endblock %}
