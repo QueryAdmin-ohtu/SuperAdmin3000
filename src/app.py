@@ -8,7 +8,6 @@ from flask_sqlalchemy import SQLAlchemy
 from config import PORT
 
 app = Flask(__name__)
-# app.config['TEMPLATES_AUTO_RELOAD'] = True
 
 app.secret_key = getenv("SECRET_KEY")
 CLIENT_ID = getenv("GOOGLE_CLIENT_ID")
@@ -267,4 +266,4 @@ def ping():
 
 
 if __name__ == "__main__":
-    app.run(debug=True, host="0.0.0.0", port=PORT)
+    app.run(debug=False, host="0.0.0.0", port=PORT)
