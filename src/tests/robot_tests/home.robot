@@ -7,12 +7,12 @@ Test Setup  Go To Home Page
 
 *** Test Cases ***
 Home Page Should Be Open
-    Title Should Be  SuperAdmin3000
+    Title Should Be  Super Admin 3000
 
 User Logged In With Correct Credentials
     Go To Backdoor Login Page
     Login With Correct Credentials
-    Page Should Contain  You are logged in as
+    Page Should Contain  Hello rudolf!
 
 Logged In User Can Edit Questionnaires
     Click Link  Edit existing questionnaire

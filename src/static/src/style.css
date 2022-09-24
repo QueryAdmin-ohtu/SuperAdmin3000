@@ -4,21 +4,24 @@
 
 @layer base {
     body {
-        @apply bg-gray-50;
+        @apply bg-white;
+        @apply bg-gradient-to-t; 
+        @apply from-white; 
+        @apply to-slate-50;
     }
     h1 {
         @apply text-2xl;
-        @apply font-mono;
+        @apply font-sans;
         @apply font-bold;
     }
     h2 {
         @apply text-xl;
-        @apply font-mono;
+        @apply font-sans;
         @apply font-bold;
     }
     h3 {
         @apply text-lg;
-        @apply font-mono;
+        @apply font-sans;
         @apply font-bold;
     }
     p {
