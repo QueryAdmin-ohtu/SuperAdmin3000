@@ -19,20 +19,31 @@ db = SQLAlchemy(app)
 
 @app.route("/testdb/new")
 def new_message():
+<<<<<<< HEAD
     """  Create new message to test database
+=======
+    """ Test view with form to post questions to DB
+>>>>>>> cd5a6b6 (Added docstrings to DB test pages)
     """
     return render_template("testdb_new.html", ENV=ENV)
 
 
 @app.route("/testdb/add_question", methods=["POST"])
 def send_message():
+<<<<<<< HEAD
     """ Add a question to the database
+=======
+    """ Submits given question to DB
+>>>>>>> cd5a6b6 (Added docstrings to DB test pages)
     """
     question = request.form["content"]
 
     # pylint: disable-next=line-too-long
     sql = "INSERT INTO \"Questions\" (\"text\", \"surveyId\", \"createdAt\", \"updatedAt\") VALUES (:question, '1', (select CURRENT_TIMESTAMP), (select CURRENT_TIMESTAMP))"
+<<<<<<< HEAD
 
+=======
+>>>>>>> cd5a6b6 (Added docstrings to DB test pages)
     db.session.execute(sql, {"question": question})
     db.session.commit()
 
@@ -42,7 +53,11 @@ def send_message():
 @app.route("/testdb")
 
 def testdb():
+<<<<<<< HEAD
     """ Open the test database
+=======
+    """ Test view displaying questions in the DB
+>>>>>>> cd5a6b6 (Added docstrings to DB test pages)
     """
     result = db.session.execute("SELECT text FROM \"Questions\"")
     questions = result.fetchall()
@@ -54,9 +69,13 @@ def _google_login_db_authorize(email):
     """
     sql = "SELECT id FROM \"Admins\" WHERE email=:email"
     result = db.session.execute(sql, {"email": email})
+<<<<<<< HEAD
 
     user = result.fetchone()
 
+=======
+    user = result.fetchone()
+>>>>>>> cd5a6b6 (Added docstrings to DB test pages)
     if user:
         return True
 
@@ -257,7 +276,13 @@ def _backdoor_validate_and_login(username, password):
     session["username"] = username
     return True
 
+<<<<<<< HEAD
 # TODO: Remove when not needed
+=======
+# TODO: Remove if not needed
+
+
+>>>>>>> cd5a6b6 (Added docstrings to DB test pages)
 @app.route("/ping")
 def ping():
     """ Test function for general testing
