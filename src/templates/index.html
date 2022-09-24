@@ -1,24 +1,7 @@
 {% extends "layout.html" %}
 {% block content %}
-<div class="container mx-auto bg-white p-8">
-    <container class="flex flex-col gap-4">
-        <nav class="flex flex-row gap-4">
-            <a href="new" class=" text-blue-700 hover:text-blue-500 hover:underline focus:ring-4 font-medium rounded-lg text-sm">Create a new questionnaire</a>
-            <a href="edit" class=" text-blue-700 hover:text-blue-500 hover:underline focus:ring-4 font-medium rounded-lg text-sm">Edit existing questionnaire</a>
-            <div class="justify-self-end">
-                <form action="/logout" method="POST">
-                    <div class="flex items-start">
-                        <button type="submit"
-                            class=" text-blue-700 hover:text-blue-500 hover:underline focus:ring-4 font-medium rounded-lg text-sm">Logout</button>
-                    </div>
-                </form>
-            </div>
-        </nav>
-        <p>
-            Hello world!<br />
-            You are logged in as {{ session.username }}
-        </p>
-        <br>
-    </container>
-</div>
+<container class="flex flex-col gap-4">
+    <h3>Hello {{ session.username }}! 👋</h3>
+    <p>Welcome to the Super Admin 3000 experience.</p>
+</container>
 {% endblock %}

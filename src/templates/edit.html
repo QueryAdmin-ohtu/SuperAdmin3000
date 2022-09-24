@@ -1,18 +1,7 @@
 {% extends "layout.html" %}
 {% block content %}
-<div class="container mx-auto bg-white p-8">
-    <container class="flex flex-col gap-4">
-        <nav class="flex flex-row-reverse gap-4">
-            <div class="self-end">
-                <form action="/logout" method="POST">
-                    <div class="flex items-start">
-                        <button type="submit"
-                            class="w-full text-blue-700 hover:text-blue-500 hover:underline focus:ring-4 font-medium rounded-lg text-sm px-5">Logout</button>
-                    </div>
-                </form>
-            </div>
-        </nav>
-        <p>Here you can eventually edit or delete existing questionnaires</p>
-    </container>
-</div>
+<container class="flex flex-col gap-4">
+    <h3>Edit questionnaires</h3>
+    <p>Here you can eventually edit or delete existing questionnaires</p>
+</container>
 {% endblock %}
