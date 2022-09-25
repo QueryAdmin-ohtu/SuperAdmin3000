@@ -1,7 +1,11 @@
 # SuperAdmin3000
+
 [App on Heroku](https://superadmin3000.herokuapp.com/)
 
 Further documentation can be found [here](https://github.com/QueryAdmin-ohtu/SuperAdmin3000/blob/main/docs/docs.md).
+
+[![codecov](https://codecov.io/gh/QueryAdmin-ohtu/SuperAdmin3000/branch/main/graph/badge.svg?token=N3ODFPVKZB)](https://codecov.io/gh/QueryAdmin-ohtu/SuperAdmin3000)
+
 ## Starting the application
 - Activate poetry environment: `poetry install`
 - Start flask: `poetry run invoke start`
