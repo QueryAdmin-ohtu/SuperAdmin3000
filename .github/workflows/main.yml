@@ -51,7 +51,9 @@ jobs:
           poetry run invoke tests
           
     - name: Coverage report
-      run: poetry run coverage xml
+      run: |
+          poetry run coverage run --branch -m pytest
+          poetry run coverage xml
     - name: Coverage report to Codecov
       uses: codecov/codecov-action@v2
 
