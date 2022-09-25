@@ -32,7 +32,6 @@ def send_message():
 
     # pylint: disable-next=line-too-long
     sql = "INSERT INTO \"Questions\" (\"text\", \"surveyId\", \"createdAt\", \"updatedAt\") VALUES (:question, '1', (select CURRENT_TIMESTAMP), (select CURRENT_TIMESTAMP))"
-
     db.session.execute(sql, {"question": question})
     db.session.commit()
 
@@ -257,7 +256,9 @@ def _backdoor_validate_and_login(username, password):
     session["username"] = username
     return True
 
-# TODO: Remove when not needed
+# TODO: Remove if not needed
+
+
 @app.route("/ping")
 def ping():
     """ Test function for general testing

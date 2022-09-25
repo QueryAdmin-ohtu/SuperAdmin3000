@@ -2,16 +2,38 @@
 
 <head>
     <meta charset="utf-8">
-    <title>SuperAdmin3000</title>
+    <title>Super Admin 3000</title>
     <link rel="stylesheet" href="/static/css/main.css">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     {% block head %}{% endblock %}
 </head>
 
 <body>
-    <div class="container mx-auto p-4">
-        <h1 class="py-4">SuperAdmin3000</h1>
-        {% block content %}{% endblock %}
+    <div class="p-4 border-b border-slate-200 bg-slate-100 content-center">
+        <div class="mx-auto container grid grid-cols-2">
+            <header class="flex flex-col">
+                <h1 class="text-slate-800"><a href="/">🤖 Super Admin 3000</a></h1>
+                <p class="text-slate-400 font-mono"><i><small>Environment: {{ENV}}</small></i></p>
+            </header>
+            <nav class="flex flex-row gap-4 items-center justify-end">
+                <a href="new"
+                    class=" text-sky-600 hover:text-sky-700 hover:underline font-medium rounded-lg text-sm">Create
+                    a new questionnaire</a>
+                <a href="edit"
+                    class=" text-sky-600 hover:text-sky-700 hover:underline font-medium rounded-lg text-sm">Edit
+                    existing questionnaire</a>
+                <form action="/logout" method="POST" class="m-1">
+                    <button type="submit"
+                        class=" text-sky-600 hover:text-sky-700 hover:underline focus:ring-4 font-medium rounded-lg text-sm">Logout</button>
+                </form>
+    
+            </nav>
+        </div>
+    </div>
+    <div class="w-full flex flex-col">
+        <div class="container mx-auto py-8">
+            {% block content %}{% endblock %}
+        </div>
     </div>
 </body>
 
