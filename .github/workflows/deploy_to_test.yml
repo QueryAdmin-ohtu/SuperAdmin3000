@@ -1,0 +1,28 @@
+name: Heroku deployment
+
+on:
+  push:
+    branches: 
+    - test
+    paths-ignore:
+      - 'docs/**'
+      - 'Documentation/**'
+      - 'README.md'
+    
+permissions:
+  contents: read
+
+jobs:
+  build:
+    uses: ./.github/workflows/test_build.yml
+  heroku:
+    needs: [build]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: akhileshns/heroku-deploy@v3.12.12 # This is the action
+        with:
+          heroku_api_key: ${{secrets.TEST_HEROKU_API_KEY}}
+          heroku_app_name: "test-superadmin3000" #Must be unique in Heroku
+          heroku_email: ${{secrets.TEST_HEROKU_EMAIL}}
+          usedocker: true

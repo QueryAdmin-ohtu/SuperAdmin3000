@@ -67,7 +67,7 @@ if ENV == 'local':
     GOOGLE_URI = "http://localhost:5000/google_login"
 elif ENV == 'test':
     print("ENV: test")
-    GOOGLE_URI = "TO BE DEFINED"
+    GOOGLE_URI = "https://test-superadmin3000.herokuapp.com/google_login"
 elif ENV == 'prod':
     print("ENV: prod")
     GOOGLE_URI = "https://superadmin3000.herokuapp.com/google_login"
