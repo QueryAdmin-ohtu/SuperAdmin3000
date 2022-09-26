@@ -7,12 +7,12 @@ Test Setup  Go To Home Page
 
 *** Test Cases ***
 Home Page Should Be Open
-    Title Should Be  SuperAdmin3000
+    Title Should Be  Super Admin 3000
 
 User Logged In With Correct Credentials
     Go To Backdoor Login Page
     Login With Correct Credentials
-    Page Should Contain  You are logged in as
+    Page Should Contain  Hello rudolf!
 
 Logged In User Can Edit Questionnaires
     Click Link  Edit existing questionnaire
@@ -29,11 +29,11 @@ Logged Out User Cannot Access Questionnaires
 
 Logged Out User Cannot Edit Questionnaires
     Go To Edit Questionnaires Page
-    Page Should Contain  You are not logged in
+    Page Should Contain  Please login 
 
 Logged Out User Cannot Create Questionnaires
     Go To Create New Questionnaire Page
-    Page Should Contain  You are not logged in
+    Page Should Contain  Please login 
 
 *** Keywords ***
 Login With Correct Credentials

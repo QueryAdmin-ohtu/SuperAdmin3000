@@ -4,6 +4,10 @@ on:
   push:
     branches: 
     - main
+    paths-ignore:
+      - 'docs/**'
+      - 'Documentation/**'
+      - 'README.md'
     
 permissions:
   contents: read
