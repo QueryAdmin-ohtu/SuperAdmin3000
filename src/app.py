@@ -39,7 +39,6 @@ def send_message():
 
 
 @app.route("/testdb")
-
 def testdb():
     """ Open the test database
     """
