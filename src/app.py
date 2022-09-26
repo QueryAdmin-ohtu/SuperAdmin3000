@@ -30,7 +30,7 @@ authorized_google_accounts = ["antti.vainikka36@gmail.com", "jatufin@gmail.com",
 # pylint: disable-next=line-too-long
                               "niemi.leo@gmail.com", "oskar.sjolund93@gmail.com", "rami.piik@gmail.com", "siljaorvokki@gmail.com"]
 
-from routes import *
+from views import *
 
 if __name__ == "__main__":
     app.run(debug=False, host="0.0.0.0", port=PORT)
