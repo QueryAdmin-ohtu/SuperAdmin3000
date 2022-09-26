@@ -34,7 +34,7 @@ SET default_table_access_method = heap;
 --
 
 CREATE TABLE public."Admins" (
-    id SERIAL PRIMARY KEY,
+    id integer NOT NULL,
     email text
 );
 
@@ -69,7 +69,7 @@ ALTER SEQUENCE public."Admins_id_seq" OWNED BY public."Admins".id;
 
 CREATE TABLE public."Categories" (
     id integer NOT NULL,
-    name character varying(255) NOT NULL,
+    name text NOT NULL,
     description text NOT NULL,
     content_links json,
     "createdAt" timestamp with time zone NOT NULL,
@@ -108,7 +108,7 @@ ALTER SEQUENCE public."Categories_id_seq" OWNED BY public."Categories".id;
 CREATE TABLE public."Category_results" (
     id integer NOT NULL,
     "categoryId" integer NOT NULL,
-    text character varying(255),
+    text text,
     cutoff_from_maxpoints double precision,
     "createdAt" timestamp with time zone NOT NULL,
     "updatedAt" timestamp with time zone NOT NULL
@@ -145,7 +145,7 @@ ALTER SEQUENCE public."Category_results_id_seq" OWNED BY public."Category_result
 
 CREATE TABLE public."Industries" (
     id integer NOT NULL,
-    name character varying(255) NOT NULL,
+    name text NOT NULL,
     "createdAt" timestamp with time zone NOT NULL,
     "updatedAt" timestamp with time zone NOT NULL
 );
@@ -195,7 +195,7 @@ ALTER TABLE public."Organizations" OWNER TO wylkhmgvtlywtp;
 
 CREATE TABLE public."Question_answers" (
     id integer NOT NULL,
-    text character varying(255) NOT NULL,
+    text text NOT NULL,
     points integer NOT NULL,
     "questionId" integer NOT NULL,
     "createdAt" timestamp with time zone NOT NULL,
@@ -233,7 +233,7 @@ ALTER SEQUENCE public."Question_answers_id_seq" OWNED BY public."Question_answer
 
 CREATE TABLE public."Questions" (
     id integer NOT NULL,
-    text character varying(255) NOT NULL,
+    text text NOT NULL,
     "surveyId" integer NOT NULL,
     category_weights jsonb,
     "createdAt" timestamp with time zone NOT NULL,
@@ -272,7 +272,7 @@ ALTER SEQUENCE public."Questions_id_seq" OWNED BY public."Questions".id;
 CREATE TABLE public."Survey_results" (
     id integer NOT NULL,
     "surveyId" integer NOT NULL,
-    text character varying(255) NOT NULL,
+    text text NOT NULL,
     cutoff_from_maxpoints double precision,
     "createdAt" timestamp with time zone NOT NULL,
     "updatedAt" timestamp with time zone NOT NULL
@@ -327,7 +327,9 @@ CREATE TABLE public."Surveys" (
     id integer NOT NULL,
     name character varying(255) NOT NULL,
     "createdAt" timestamp with time zone NOT NULL,
-    "updatedAt" timestamp with time zone NOT NULL
+    "updatedAt" timestamp with time zone NOT NULL,
+    title_text text,
+    survey_text text
 );
 
 
@@ -521,6 +523,11 @@ COPY public."Admins" (id, email) FROM stdin;
 --
 
 COPY public."Categories" (id, name, description, content_links, "createdAt", "updatedAt") FROM stdin;
+1	Category 1	Static descriptive text about the category 1.	[{"url":"https://www.eficode.com/cases/hansen","type":"Case Study"},{"url":"https://www.eficode.com/cases/basware","type":"Case Study"}]	2022-09-26 14:03:28.613+00	2022-09-26 14:03:28.613+00
+2	Category 2	Static descriptive text about the category 2.	[{"url":"https://www.eficode.com/cases/hansen","type":"Case Study"},{"url":"https://www.eficode.com/cases/basware","type":"Case Study"}]	2022-09-26 14:03:28.613+00	2022-09-26 14:03:28.613+00
+3	Category 3	Static descriptive text about the category 3.	[{"url":"https://www.eficode.com/cases/hansen","type":"Case Study"},{"url":"https://www.eficode.com/cases/basware","type":"Case Study"}]	2022-09-26 14:03:28.613+00	2022-09-26 14:03:28.613+00
+4	Category 4	Static descriptive text about the category 4.	[{"url":"https://www.eficode.com/cases/hansen","type":"Case Study"},{"url":"https://www.eficode.com/cases/basware","type":"Case Study"}]	2022-09-26 14:03:28.613+00	2022-09-26 14:03:28.613+00
+5	Category 5	Static descriptive text about the category 5.	[{"url":"https://www.eficode.com/cases/hansen","type":"Case Study"},{"url":"https://www.eficode.com/cases/basware","type":"Case Study"}]	2022-09-26 14:03:28.613+00	2022-09-26 14:03:28.613+00
 \.
 
 
@@ -529,6 +536,21 @@ COPY public."Categories" (id, name, description, content_links, "createdAt", "up
 --
 
 COPY public."Category_results" (id, "categoryId", text, cutoff_from_maxpoints, "createdAt", "updatedAt") FROM stdin;
+1	1	Dynamically fetched feedback text for category score.	0.4	2022-09-26 14:17:29.755+00	2022-09-26 14:17:29.755+00
+2	1	Dynamically fetched feedback text for category score.	0.8	2022-09-26 14:17:29.755+00	2022-09-26 14:17:29.755+00
+3	1	Dynamically fetched feedback text for category score.	1	2022-09-26 14:17:29.755+00	2022-09-26 14:17:29.755+00
+4	2	Dynamically fetched feedback text for category score.	0.4	2022-09-26 14:17:29.755+00	2022-09-26 14:17:29.755+00
+5	2	Dynamically fetched feedback text for category score.	0.8	2022-09-26 14:17:29.755+00	2022-09-26 14:17:29.755+00
+6	2	Dynamically fetched feedback text for category score.	1	2022-09-26 14:17:29.755+00	2022-09-26 14:17:29.755+00
+7	3	Dynamically fetched feedback text for category score.	0.4	2022-09-26 14:17:29.755+00	2022-09-26 14:17:29.755+00
+8	3	Dynamically fetched feedback text for category score.	0.8	2022-09-26 14:17:29.755+00	2022-09-26 14:17:29.755+00
+9	3	Dynamically fetched feedback text for category score.	1	2022-09-26 14:17:29.755+00	2022-09-26 14:17:29.755+00
+10	4	Dynamically fetched feedback text for category score.	0.4	2022-09-26 14:17:29.755+00	2022-09-26 14:17:29.755+00
+11	4	Dynamically fetched feedback text for category score.	0.8	2022-09-26 14:17:29.755+00	2022-09-26 14:17:29.755+00
+12	4	Dynamically fetched feedback text for category score.	1	2022-09-26 14:17:29.755+00	2022-09-26 14:17:29.755+00
+13	5	Dynamically fetched feedback text for category score.	0.4	2022-09-26 14:17:29.755+00	2022-09-26 14:17:29.755+00
+14	5	Dynamically fetched feedback text for category score.	0.8	2022-09-26 14:17:29.755+00	2022-09-26 14:17:29.755+00
+15	5	Dynamically fetched feedback text for category score.	1	2022-09-26 14:17:29.755+00	2022-09-26 14:17:29.755+00
 \.
 
 
@@ -537,6 +559,16 @@ COPY public."Category_results" (id, "categoryId", text, cutoff_from_maxpoints, "
 --
 
 COPY public."Industries" (id, name, "createdAt", "updatedAt") FROM stdin;
+1	IT/Software development	2022-09-26 14:03:28.604+00	2022-09-26 14:03:28.604+00
+2	Financial services	2022-09-26 14:03:28.604+00	2022-09-26 14:03:28.604+00
+3	Telecommunications	2022-09-26 14:03:28.604+00	2022-09-26 14:03:28.604+00
+4	Insurance	2022-09-26 14:03:28.604+00	2022-09-26 14:03:28.604+00
+5	Automotive	2022-09-26 14:03:28.604+00	2022-09-26 14:03:28.604+00
+6	Business services	2022-09-26 14:03:28.604+00	2022-09-26 14:03:28.604+00
+7	Manufacturing	2022-09-26 14:03:28.604+00	2022-09-26 14:03:28.604+00
+8	Retail	2022-09-26 14:03:28.604+00	2022-09-26 14:03:28.604+00
+9	Oil & energy	2022-09-26 14:03:28.604+00	2022-09-26 14:03:28.604+00
+10	Logistics & supply chain	2022-09-26 14:03:28.604+00	2022-09-26 14:03:28.604+00
 \.
 
 
@@ -553,6 +585,36 @@ COPY public."Organizations" (id, name, "createdAt", "updatedAt") FROM stdin;
 --
 
 COPY public."Question_answers" (id, text, points, "questionId", "createdAt", "updatedAt") FROM stdin;
+1	Strongly Disagree	0	1	2022-09-26 14:17:29.764+00	2022-09-26 14:17:29.764+00
+2	Disagree	1	1	2022-09-26 14:17:29.764+00	2022-09-26 14:17:29.764+00
+3	Do not disagree or agree	2	1	2022-09-26 14:17:29.764+00	2022-09-26 14:17:29.764+00
+4	Agree	3	1	2022-09-26 14:17:29.764+00	2022-09-26 14:17:29.764+00
+5	Strongly Agree	4	1	2022-09-26 14:17:29.764+00	2022-09-26 14:17:29.764+00
+6	Strongly Disagree	0	2	2022-09-26 14:17:29.764+00	2022-09-26 14:17:29.764+00
+7	Disagree	1	2	2022-09-26 14:17:29.764+00	2022-09-26 14:17:29.764+00
+8	Do not disagree or agree	2	2	2022-09-26 14:17:29.764+00	2022-09-26 14:17:29.764+00
+9	Agree	3	2	2022-09-26 14:17:29.764+00	2022-09-26 14:17:29.764+00
+10	Strongly Agree	4	2	2022-09-26 14:17:29.764+00	2022-09-26 14:17:29.764+00
+11	Strongly Disagree	0	3	2022-09-26 14:17:29.764+00	2022-09-26 14:17:29.764+00
+12	Disagree	1	3	2022-09-26 14:17:29.764+00	2022-09-26 14:17:29.764+00
+13	Do not disagree or agree	2	3	2022-09-26 14:17:29.764+00	2022-09-26 14:17:29.764+00
+14	Agree	3	3	2022-09-26 14:17:29.764+00	2022-09-26 14:17:29.764+00
+15	Strongly Agree	4	3	2022-09-26 14:17:29.764+00	2022-09-26 14:17:29.764+00
+16	Strongly Disagree	0	4	2022-09-26 14:17:29.764+00	2022-09-26 14:17:29.764+00
+17	Disagree	1	4	2022-09-26 14:17:29.764+00	2022-09-26 14:17:29.764+00
+18	Do not disagree or agree	2	4	2022-09-26 14:17:29.764+00	2022-09-26 14:17:29.764+00
+19	Agree	3	4	2022-09-26 14:17:29.764+00	2022-09-26 14:17:29.764+00
+20	Strongly Agree	4	4	2022-09-26 14:17:29.764+00	2022-09-26 14:17:29.764+00
+21	Strongly Disagree	0	5	2022-09-26 14:17:29.764+00	2022-09-26 14:17:29.764+00
+22	Disagree	1	5	2022-09-26 14:17:29.764+00	2022-09-26 14:17:29.764+00
+23	Do not disagree or agree	2	5	2022-09-26 14:17:29.764+00	2022-09-26 14:17:29.764+00
+24	Agree	3	5	2022-09-26 14:17:29.764+00	2022-09-26 14:17:29.764+00
+25	Strongly Agree	4	5	2022-09-26 14:17:29.764+00	2022-09-26 14:17:29.764+00
+26	Strongly Disagree	0	6	2022-09-26 14:17:29.764+00	2022-09-26 14:17:29.764+00
+27	Disagree	1	6	2022-09-26 14:17:29.764+00	2022-09-26 14:17:29.764+00
+28	Do not disagree or agree	2	6	2022-09-26 14:17:29.764+00	2022-09-26 14:17:29.764+00
+29	Agree	3	6	2022-09-26 14:17:29.764+00	2022-09-26 14:17:29.764+00
+30	Strongly Agree	4	6	2022-09-26 14:17:29.764+00	2022-09-26 14:17:29.764+00
 \.
 
 
@@ -561,6 +623,14 @@ COPY public."Question_answers" (id, text, points, "questionId", "createdAt", "up
 --
 
 COPY public."Questions" (id, text, "surveyId", category_weights, "createdAt", "updatedAt") FROM stdin;
+1	Question 1	1	[{"category": "Category 1", "multiplier": 1}, {"category": "Category 2", "multiplier": 1}, {"category": "Category 3", "multiplier": 0}, {"category": "Category 4", "multiplier": 0}, {"category": "Category 5", "multiplier": 0}]	2022-09-26 14:17:29.76+00	2022-09-26 14:17:29.76+00
+2	Question 2	1	[{"category": "Category 1", "multiplier": 0}, {"category": "Category 2", "multiplier": 1}, {"category": "Category 3", "multiplier": 1}, {"category": "Category 4", "multiplier": 0}, {"category": "Category 5", "multiplier": 0}]	2022-09-22 21:03:09.628167+00	2022-09-22 21:03:09.628167+00
+3	Question 3	1	[{"category": "Category 1", "multiplier": 0}, {"category": "Category 2", "multiplier": 0}, {"category": "Category 3", "multiplier": 1}, {"category": "Category 4", "multiplier": 1}, {"category": "Category 5", "multiplier": 0}]	2022-09-22 21:03:22.124125+00	2022-09-22 21:03:22.124125+00
+4	Question 4	1	[{"category": "Category 1", "multiplier": 0}, {"category": "Category 2", "multiplier": 0}, {"category": "Category 3", "multiplier": 0}, {"category": "Category 4", "multiplier": 1}, {"category": "Category 5", "multiplier": 1}]	2022-09-22 21:31:09.984421+00	2022-09-22 21:31:09.984421+00
+5	Question 5	1	[{"category": "Category 1", "multiplier": 1}, {"category": "Category 2", "multiplier": 0}, {"category": "Category 3", "multiplier": 0}, {"category": "Category 4", "multiplier": 0}, {"category": "Category 5", "multiplier": 1}]	2022-09-26 14:17:29.76+00	2022-09-26 14:17:29.76+00
+6	Question 6	1	[{"category": "Category 1", "multiplier": 1}, {"category": "Category 2", "multiplier": 1}, {"category": "Category 3", "multiplier": 1}, {"category": "Category 4", "multiplier": 1}, {"category": "Category 5", "multiplier": 1}]	2022-09-26 14:17:29.76+00	2022-09-26 14:17:29.76+00
+7	Question7	1	\N	2022-09-26 19:16:45.279882+00	2022-09-26 19:16:45.279882+00
+8	Question 8	1	\N	2022-09-26 19:33:13.8708+00	2022-09-26 19:33:13.8708+00
 \.
 
 
@@ -569,6 +639,9 @@ COPY public."Questions" (id, text, "surveyId", category_weights, "createdAt", "u
 --
 
 COPY public."Survey_results" (id, "surveyId", text, cutoff_from_maxpoints, "createdAt", "updatedAt") FROM stdin;
+1	1	Dynamically fetched result text 1	0.5	2022-09-26 14:03:28.609+00	2022-09-26 14:03:28.609+00
+2	1	Dynamically fetched result text 2	1	2022-09-26 14:03:28.609+00	2022-09-26 14:03:28.609+00
+3	1	Dynamically fetched result text 3	0.7	2022-09-26 14:03:28.609+00	2022-09-26 14:03:28.609+00
 \.
 
 
@@ -584,9 +657,9 @@ COPY public."Survey_user_groups" (id, group_name, "surveyId", "organizationId", 
 -- Data for Name: Surveys; Type: TABLE DATA; Schema: public; Owner: wylkhmgvtlywtp
 --
 
-COPY public."Surveys" (id, name, "createdAt", "updatedAt") FROM stdin;
-1	Survey 1	2022-09-20 12:28:09.613+00	2022-09-20 12:28:09.613+00
-2	Survey 2	2022-09-20 12:36:57.525+00	2022-09-20 12:36:57.525+00
+COPY public."Surveys" (id, name, "createdAt", "updatedAt", title_text, survey_text) FROM stdin;
+1	Survey 1	2022-09-20 12:28:09.613+00	2022-09-20 12:28:09.613+00	This will be survey title text	This will be survey flavor text
+2	Survey 2	2022-09-20 12:36:57.525+00	2022-09-20 12:36:57.525+00	This will be survey title text	This will be survey flavor text
 \.
 
 
@@ -645,7 +718,7 @@ SELECT pg_catalog.setval('public."Question_answers_id_seq"', 1, false);
 -- Name: Questions_id_seq; Type: SEQUENCE SET; Schema: public; Owner: wylkhmgvtlywtp
 --
 
-SELECT pg_catalog.setval('public."Questions_id_seq"', 1, false);
+SELECT pg_catalog.setval('public."Questions_id_seq"', 8, true);
 
 
 --
