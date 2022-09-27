@@ -57,6 +57,9 @@ jobs:
     - name: Install robot
       run: |
           pip install robotframework
+    - name: Install selenium
+      run: |
+          pip install --upgrade robotframework-seleniumlibrary
     - name: Run e2e tests
       run: |
           robot src/tests/robot_tests/         

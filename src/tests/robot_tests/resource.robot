@@ -2,8 +2,10 @@
 Library  SeleniumLibrary
 
 *** Variables ***
-${SERVER}  localhost:5000
+# ${SERVER}  localhost:5000
+${SERVER}  https://test-superadmin3000.herokuapp.com/
 ${BROWSER}  headlesschrome
+# ${BROWSER}  chrome
 ${DELAY}  0 seconds
 ${HOME URL}  http://${SERVER}
 ${BACKDOOR URL}  http://${SERVER}/backdoor
