@@ -1,28 +1,55 @@
-name: Heroku deployment
+# For more information see: https://help.github.com/actions/language-and-framework-guides/using-python-with-github-actions
+
+name: Deploy_to_test
 
 on:
   push:
     branches: 
-    - test
+    - dev_rami, dev_antti, dev_janne, dev_silja, dev_juan, dev_leo, dev_oskar
     paths-ignore:
       - 'docs/**'
       - 'Documentation/**'
       - 'README.md'
-    
+
 permissions:
   contents: read
 
 jobs:
   build:
-    uses: ./.github/workflows/test_build.yml
-  heroku:
-    needs: [build]
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Set up Python 3.8
+      uses: actions/setup-python@v3
+      with:
+        python-version: "3.8"   
+    - name: Install Poetry
+      uses: snok/install-poetry@v1
+    - name: Install Dependencies using Poetry
+      run: |
+          poetry install
+  run_unit_tests:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Run style checks # To-do: Add a minimum threshold
+      run: |
+          poetry run invoke lint
+    - name: Run unit tests
+      run: |
+          poetry run invoke tests
+  deploy_to_heroku_test:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
       - uses: akhileshns/heroku-deploy@v3.12.12 # This is the action
         with:
           heroku_api_key: ${{secrets.TEST_HEROKU_API_KEY}}
-          heroku_app_name: "test-superadmin3000" #Must be unique in Heroku
+          heroku_app_name: "test-superadmin3000"
           heroku_email: ${{secrets.TEST_HEROKU_EMAIL}}
           usedocker: true
+  # robot_tests:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #   - name: Run robot tests
+  #     run: |
+  #         poetry run invoke e2etests        
