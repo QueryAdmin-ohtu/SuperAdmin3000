@@ -35,6 +35,7 @@ jobs:
       run: |
           poetry run invoke tests
   deploy_to_heroku_test:
+    needs: [build_and_test]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -45,6 +46,7 @@ jobs:
           heroku_email: ${{secrets.TEST_HEROKU_EMAIL}}
           usedocker: true
   e2e_tests_on_heroku_test_environment:
+    needs: [deploy_to_heroku_test]
     runs-on: ubuntu-latest
     steps:
     - name: Run robot tests
