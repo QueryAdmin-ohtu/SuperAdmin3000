@@ -17,6 +17,10 @@ def e2etests(ctx):
     ctx.run("robot src/tests/robot_tests/")
 
 @task
+def e2etestsheroku(ctx):
+    ctx.run("robot -v URL:https://test-superadmin3000.herokuapp.com/ src/tests/robot_tests/")
+
+@task
 def format(ctx):
     ctx.run("autopep8 --in-place --recursive src")
 
