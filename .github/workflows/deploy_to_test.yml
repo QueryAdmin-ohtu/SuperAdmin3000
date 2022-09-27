@@ -5,7 +5,14 @@ name: Deploy_to_test
 on:
   push:
     branches: 
-    - dev_rami, dev_antti, dev_janne, dev_silja, dev_juan, dev_leo, dev_oskar
+      - dev_*
+    # - dev_rami
+    # - dev_antti
+    # - dev_janne
+    # - dev_silja
+    # - dev_juan
+    # - dev_leo
+    # - dev_oskar
     paths-ignore:
       - 'docs/**'
       - 'Documentation/**'
