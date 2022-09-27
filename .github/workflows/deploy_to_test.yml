@@ -15,7 +15,7 @@ permissions:
   contents: read
 
 jobs:
-  build_and_test:
+  build_and_unit_test:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
@@ -35,7 +35,7 @@ jobs:
       run: |
           poetry run invoke tests
   deploy_to_heroku_test:
-    needs: [build_and_test]
+    needs: [build_and_unit_test]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -49,6 +49,14 @@ jobs:
     needs: [deploy_to_heroku_test]
     runs-on: ubuntu-latest
     steps:
-    - name: Run robot tests
+    - uses: actions/checkout@v3
+    - name: Set up Python 3.8
+      uses: actions/setup-python@v3
+      with:
+        python-version: "3.8"  
+    - name: Install robot
       run: |
-          poetry run invoke e2etests        
+          pip install robot framework
+    - name: Run e2e tests
+      run: |
+          robot src/tests/robot_tests/         
