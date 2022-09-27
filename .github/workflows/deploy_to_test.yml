@@ -6,13 +6,6 @@ on:
   push:
     branches: 
       - dev_*
-    # - dev_rami
-    # - dev_antti
-    # - dev_janne
-    # - dev_silja
-    # - dev_juan
-    # - dev_leo
-    # - dev_oskar
     paths-ignore:
       - 'docs/**'
       - 'Documentation/**'
@@ -22,7 +15,7 @@ permissions:
   contents: read
 
 jobs:
-  build:
+  build_and_test:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
@@ -35,9 +28,6 @@ jobs:
     - name: Install Dependencies using Poetry
       run: |
           poetry install
-  run_unit_tests:
-    runs-on: ubuntu-latest
-    steps:
     - name: Run style checks # To-do: Add a minimum threshold
       run: |
           poetry run invoke lint
