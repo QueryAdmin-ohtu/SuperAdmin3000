@@ -44,9 +44,9 @@ jobs:
           heroku_app_name: "test-superadmin3000"
           heroku_email: ${{secrets.TEST_HEROKU_EMAIL}}
           usedocker: true
-  # robot_tests:
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #   - name: Run robot tests
-  #     run: |
-  #         poetry run invoke e2etests        
+  e2e_tests_on_heroku_test_environment:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Run robot tests
+      run: |
+          poetry run invoke e2etests        
