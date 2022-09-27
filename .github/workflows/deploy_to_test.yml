@@ -56,7 +56,7 @@ jobs:
         python-version: "3.8"  
     - name: Install robot
       run: |
-          pip install robot framework
+          pip install robotframework
     - name: Run e2e tests
       run: |
           robot src/tests/robot_tests/         
