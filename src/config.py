@@ -1,17 +1,24 @@
-import os
+from os import path, getenv, environ
 from dotenv import load_dotenv
 
-dirname = os.path.dirname(__file__)
+dirname = path.dirname(__file__)
 
 """
 Load .env file if one is found. Create variables that can be used in the project.
 """
 try:
-    load_dotenv(dotenv_path=os.path.join(dirname, "..", ".env"))
+    load_dotenv(dotenv_path=path.join(dirname, "..", ".env"))
 except FileNotFoundError:
     pass
 
-# ENVIRONMENT = os.getenv("ENVIRONMENT") or "production"
+# ENVIRONMENT = getenv("ENVIRONMENT") or "production"
 # If environment variable is not defined it defaults to production
 
-PORT = os.environ.get("PORT", 5000)
+PORT = environ.get("PORT", 5000)
+
+SECRET_KEY = getenv("SECRET_KEY")
+CLIENT_ID = getenv("GOOGLE_CLIENT_ID")
+ENV = getenv("ENVIRONMENT")
+
+SQLALCHEMY_DATABASE_URI = getenv("DATABASE_URI")
+SQLALCHEMY_TRACK_MODIFICATIONS = False

@@ -2,7 +2,8 @@ from flask import render_template, redirect, session, request, abort
 import secrets
 from google.oauth2 import id_token
 from google.auth.transport import requests
-from app import app, CLIENT_ID, ENV, db
+from app import app, db
+from config import ENV, CLIENT_ID
 
 if ENV == 'local':
     print("ENV: local")
