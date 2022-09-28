@@ -1,8 +1,9 @@
-from flask import render_template, redirect, session, request, abort
-import secrets
+from flask import render_template, redirect, request, abort
 from google.oauth2 import id_token
 from google.auth.transport import requests
 from app import app, CLIENT_ID, ENV, db
+import helper
+import db_queries as queries
 
 if ENV == 'local':
     print("ENV: local")
@@ -16,11 +17,6 @@ elif ENV == 'prod':
 else:
     print("ENV:", ENV)  # Should this throw an error?
 
-# TODO: Create a proper storage for the authorized users
-# pylint: disable-next=line-too-long
-authorized_google_accounts = ["antti.vainikka36@gmail.com", "jatufin@gmail.com", "me@juan.fi",
-# pylint: disable-next=line-too-long
-                              "niemi.leo@gmail.com", "oskar.sjolund93@gmail.com", "rami.piik@gmail.com", "siljaorvokki@gmail.com"]
 
 @app.route("/testdb/new")
 def new_message():
@@ -52,20 +48,6 @@ def testdb():
     return render_template("testdb.html", count=len(questions), questions=questions, ENV=ENV)
 
 
-def _google_login_db_authorize(email):
-    """ Checks whether a Google account is authorized to access the app.
-    """
-    sql = "SELECT id FROM \"Admins\" WHERE email=:email"
-    result = db.session.execute(sql, {"email": email})
-
-    user = result.fetchone()
-
-    if user:
-        return True
-
-    return False
-
-
 @app.route("/", methods=["GET"])
 def index():
     """ Main page
@@ -73,7 +55,7 @@ def index():
     If there's active session, index.html will be rendered,
     otherwise the login page will be displayed.
     """
-    if _logged_in():
+    if helper.logged_in():
         return render_template("index.html", ENV=ENV)
     return render_template("google_login.html", URI=GOOGLE_URI, ENV=ENV)
 
@@ -101,10 +83,8 @@ def google_login():
         if not email_verified:
             abort(400, 'Email not verified by Google.')
         first_name = idinfo['given_name']
-        if _google_login_authorize(email):
-            session["email"] = email
-            session["username"] = first_name
-            session["csrf_token"] = csrf_token_cookie
+        if queries.google_login_authorize(email):
+            helper.update_session(email, first_name, csrf_token_cookie)
             return redirect("/")
     except ValueError:
         # Invalid token
@@ -112,36 +92,12 @@ def google_login():
     return "You are not authorized to use the service. Please contact your administrator."
 
 
-def _google_login_authorize(email):
-    """ Checks whether a Google account is authorized to access the app.
-    """
-    if email in authorized_google_accounts:
-        return True
-    return False
-
-
-def _logged_in():
-    """ Check if the session is active. This should be always used before
-    rendering pages.
-    """
-    return "username" in session
-
-
-def valid_token(form):
-    """ Check if the token send with the form matches with the current
-    session.
-    """
-    if not _logged_in():
-        return False
-    return form["csrf_token"] == session["csrf_token"]
-
-
 @app.route("/logout", methods=["POST"])
 def logout():
     """ Logout the user by removing all properties from the session
     and returning to the front page
     """
-    _clear_session()
+    helper.clear_session()
     return redirect("/")
 
 
@@ -149,7 +105,7 @@ def logout():
 def new():
     """Renders the new questionnaire page
     """
-    if not _logged_in():
+    if not helper.logged_in():
         return redirect("/")
 
     return render_template("new.html", ENV=ENV)
@@ -159,7 +115,7 @@ def new():
 def edit():
     """Renders the edit questionnaire page
     """
-    if not _logged_in():
+    if not helper.logged_in():
         return redirect("/")
 
     return render_template("edit.html", ENV=ENV)
@@ -169,7 +125,7 @@ def edit():
 def test_page():
     """ The test page should only be shown if the user has logged in
     """
-    if not _logged_in():
+    if not helper.logged_in():
         abort(401)
     return render_template("test.html", ENV=ENV)
 
@@ -180,28 +136,13 @@ def test_form():
     session can be validated
     """
 
-    if not _logged_in():
+    if not helper.logged_in():
         abort(401)
 
-    if not valid_token(request.form):
+    if not helper.valid_token(request.form):
         abort(403)
 
     return render_template("testdata.html", testdata=request.form["testdata"], ENV=ENV)
-
-
-def _clear_session():
-    """ Logout the user and clear session properties
-    """
-    _remove_from_session("csrf_token")
-    _remove_from_session("username")
-
-
-def _remove_from_session(property_key):
-    """ Checks if the given property name can be found in the session
-    and removes it
-    """
-    if property_key in session:
-        del session[property_key]
 
 
 @app.route("/backdoor", methods=["GET"])
@@ -209,7 +150,7 @@ def backdoor_form():
     """ Form for logging in without Google
     """
     if ENV not in ["prod"]:
-        if _logged_in():
+        if helper.logged_in():
             return render_template("index.html", ENV=ENV)
         return render_template("backdoor_login.html", ENV=ENV)
     return abort(404)
@@ -222,26 +163,9 @@ def backdoor_login():
     if ENV not in ["prod"]:
         username = request.form["username"]
         password = request.form["password"]
-        if not _backdoor_validate_and_login(username, password):
+        if not helper.backdoor_validate_and_login(username, password):
             return abort(401)
     return redirect("/")
-
-
-def _backdoor_validate_and_login(username, password):
-    """ Check if the given username password pair is correct
-    If username and password match, a new session will be created
-    """
-    # TODO: Proper data storage for usernames and password hashes
-    if username != "rudolf":
-        return False
-    if password != "secret":
-        return False
-
-    session["csrf_token"] = secrets.token_hex(16)
-    session["username"] = username
-    return True
-
-# TODO: Remove if not needed
 
 
 @app.route("/ping")
