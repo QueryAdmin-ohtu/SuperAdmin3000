@@ -16,9 +16,16 @@ except FileNotFoundError:
 
 PORT = environ.get("PORT", 5000)
 
-SECRET_KEY = getenv("SECRET_KEY")
-CLIENT_ID = getenv("GOOGLE_CLIENT_ID")
-ENV = getenv("ENVIRONMENT")
+class Config:
+    SECRET_KEY = getenv("SECRET_KEY")
+    CLIENT_ID = getenv("GOOGLE_CLIENT_ID")
+    ENV = getenv("ENVIRONMENT")
 
-SQLALCHEMY_DATABASE_URI = getenv("DATABASE_URI")
-SQLALCHEMY_TRACK_MODIFICATIONS = False
+    SQLALCHEMY_DATABASE_URI = getenv("DATABASE_URI")
+    SQLALCHEMY_TRACK_MODIFICATIONS = False
+
+class ProdConfig(Config):
+    GOOGLE_URI = getenv("PROD_GOOGLE_URI")
+
+class DevConfig(Config):
+    GOOGLE_URI = getenv("DEV_GOOGLE_URI")

@@ -3,19 +3,21 @@ import secrets
 from google.oauth2 import id_token
 from google.auth.transport import requests
 from app import app, db
-from config import ENV, CLIENT_ID
+# from config import ENV, CLIENT_ID
 
-if ENV == 'local':
-    print("ENV: local")
-    GOOGLE_URI = "http://localhost:5000/google_login"
-elif ENV == 'test':
-    print("ENV: test")
-    GOOGLE_URI = "TO BE DEFINED"
-elif ENV == 'prod':
-    print("ENV: prod")
-    GOOGLE_URI = "https://superadmin3000.herokuapp.com/google_login"
-else:
-    print("ENV:", ENV)  # Should this throw an error?
+# if ENV == 'local':
+#     print("ENV: local")
+#     GOOGLE_URI = "http://localhost:5000/google_login"
+# elif ENV == 'test':
+#     print("ENV: test")
+#     GOOGLE_URI = "TO BE DEFINED"
+# elif ENV == 'prod':
+#     print("ENV: prod")
+#     GOOGLE_URI = "https://superadmin3000.herokuapp.com/google_login"
+# else:
+#     print("ENV:", ENV)  # Should this throw an error?
+
+print("ENV:", app.config["ENV"])
 
 # TODO: Create a proper storage for the authorized users
 # pylint: disable-next=line-too-long
@@ -27,7 +29,7 @@ authorized_google_accounts = ["antti.vainikka36@gmail.com", "jatufin@gmail.com",
 def new_message():
     """  Create new message to test database
     """
-    return render_template("testdb_new.html", ENV=ENV)
+    return render_template("testdb_new.html", ENV=app.config["ENV"])
 
 
 @app.route("/testdb/add_question", methods=["POST"])
@@ -50,7 +52,7 @@ def testdb():
     """
     result = db.session.execute("SELECT text FROM \"Questions\"")
     questions = result.fetchall()
-    return render_template("testdb.html", count=len(questions), questions=questions, ENV=ENV)
+    return render_template("testdb.html", count=len(questions), questions=questions, ENV=app.config["ENV"])
 
 
 def _google_login_db_authorize(email):
@@ -75,8 +77,8 @@ def index():
     otherwise the login page will be displayed.
     """
     if _logged_in():
-        return render_template("index.html", ENV=ENV)
-    return render_template("google_login.html", URI=GOOGLE_URI, ENV=ENV)
+        return render_template("index.html", ENV=app.config["ENV"])
+    return render_template("google_login.html", URI=app.config["GOOGLE_URI"], ENV=app.config["ENV"])
 
 
 @app.route("/google_login", methods=["POST"])
@@ -96,7 +98,7 @@ def google_login():
         if not token:
             abort(400, 'No token found.')
         idinfo = id_token.verify_oauth2_token(
-            token, requests.Request(), CLIENT_ID, clock_skew_in_seconds=10)
+            token, requests.Request(), app.config["CLIENT_ID"], clock_skew_in_seconds=10)
         email = idinfo['email']
         email_verified = idinfo['email_verified']
         if not email_verified:
@@ -153,7 +155,7 @@ def new():
     if not _logged_in():
         return redirect("/")
 
-    return render_template("new.html", ENV=ENV)
+    return render_template("new.html", ENV=app.config["ENV"])
 
 
 @app.route("/edit")
@@ -163,7 +165,7 @@ def edit():
     if not _logged_in():
         return redirect("/")
 
-    return render_template("edit.html", ENV=ENV)
+    return render_template("edit.html", ENV=app.config["ENV"])
 
 
 @app.route("/test")
@@ -172,7 +174,7 @@ def test_page():
     """
     if not _logged_in():
         abort(401)
-    return render_template("test.html", ENV=ENV)
+    return render_template("test.html", ENV=app.config["ENV"])
 
 
 @app.route("/testform", methods=["POST"])
@@ -187,7 +189,7 @@ def test_form():
     if not valid_token(request.form):
         abort(403)
 
-    return render_template("testdata.html", testdata=request.form["testdata"], ENV=ENV)
+    return render_template("testdata.html", testdata=request.form["testdata"], ENV=app.config["ENV"])
 
 
 def _clear_session():
@@ -209,10 +211,10 @@ def _remove_from_session(property_key):
 def backdoor_form():
     """ Form for logging in without Google
     """
-    if ENV not in ["prod"]:
+    if app.config["ENV"] not in ["prod"]:
         if _logged_in():
-            return render_template("index.html", ENV=ENV)
-        return render_template("backdoor_login.html", ENV=ENV)
+            return render_template("index.html", ENV=app.config["ENV"])
+        return render_template("backdoor_login.html", ENV=app.config["ENV"])
     return abort(404)
 
 
@@ -220,7 +222,7 @@ def backdoor_form():
 def backdoor_login():
     """ Receive and process the backdoor login
     """
-    if ENV not in ["prod"]:
+    if app.config["ENV"] not in ["prod"]:
         username = request.form["username"]
         password = request.form["password"]
         if not _backdoor_validate_and_login(username, password):
