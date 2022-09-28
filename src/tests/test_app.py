@@ -2,7 +2,7 @@ from app import ping
 
 
 def test_ping(app):
-    expected = "pong"
+    expected = "pong!"
     result = ping()
     assert expected in result
 
