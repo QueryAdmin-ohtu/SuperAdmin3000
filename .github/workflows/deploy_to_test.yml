@@ -66,6 +66,9 @@ jobs:
           export DISPLAY=:99
           chromedriver --url-base=/wd/hub &
           sudo Xvfb -ac :99 -screen 0 1280x1024x24 > /dev/null 2>&1 &
+    - name: Initialize test database
+      run: |
+          invoke init-db ${{secrets.TEST_DB_URI}}
     - name: Run e2e tests
       run: |
           robot -v URL:https://test-superadmin3000.herokuapp.com/ src/tests/robot_tests/

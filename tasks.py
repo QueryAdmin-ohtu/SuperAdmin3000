@@ -1,5 +1,6 @@
 from invoke import task
 
+
 @task
 def start(ctx):
     ctx.run("python3 src/app.py")
@@ -27,3 +28,16 @@ def format(ctx):
 @task
 def tailwindcss(ctx):
     ctx.run("tailwindcss -c src/static/tailwind.config.js -i src/static/src/style.css -o src/static/css/main.css --watch")
+
+@task
+def init_db(ctx, db):
+    beginning1="psql -d"
+    end1="-c 'drop table if exists \"Admins\", \"Categories\", \"Category_results\", \"Industries\", \"Organizations\", \"Question_answers\",   \"Questions\", \"Survey_results\", \"Survey_user_groups\", \"Surveys\", \"User_answers\", \"Users\" cascade;'"
+    drop_tables=' '.join([beginning1,db,end1])
+    ctx.run(drop_tables)
+
+    beginning2="psql -d"
+    end2="-f schema.sql"
+    create_tables=' '.join([beginning2,db,end2])
+    ctx.run(create_tables)
+

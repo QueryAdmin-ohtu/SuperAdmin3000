@@ -30,7 +30,7 @@ SET default_tablespace = '';
 SET default_table_access_method = heap;
 
 --
--- Name: Admins; Type: TABLE; Schema: public; Owner: wylkhmgvtlywtp
+-- Name: Admins; Type: TABLE; Schema: public; Owner: kaeglmkspezpcf
 --
 
 CREATE TABLE public."Admins" (
@@ -39,10 +39,10 @@ CREATE TABLE public."Admins" (
 );
 
 
-ALTER TABLE public."Admins" OWNER TO wylkhmgvtlywtp;
+ALTER TABLE public."Admins" OWNER TO kaeglmkspezpcf;
 
 --
--- Name: Admins_id_seq; Type: SEQUENCE; Schema: public; Owner: wylkhmgvtlywtp
+-- Name: Admins_id_seq; Type: SEQUENCE; Schema: public; Owner: kaeglmkspezpcf
 --
 
 CREATE SEQUENCE public."Admins_id_seq"
@@ -54,17 +54,17 @@ CREATE SEQUENCE public."Admins_id_seq"
     CACHE 1;
 
 
-ALTER TABLE public."Admins_id_seq" OWNER TO wylkhmgvtlywtp;
+ALTER TABLE public."Admins_id_seq" OWNER TO kaeglmkspezpcf;
 
 --
--- Name: Admins_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: wylkhmgvtlywtp
+-- Name: Admins_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: kaeglmkspezpcf
 --
 
 ALTER SEQUENCE public."Admins_id_seq" OWNED BY public."Admins".id;
 
 
 --
--- Name: Categories; Type: TABLE; Schema: public; Owner: wylkhmgvtlywtp
+-- Name: Categories; Type: TABLE; Schema: public; Owner: kaeglmkspezpcf
 --
 
 CREATE TABLE public."Categories" (
@@ -77,10 +77,10 @@ CREATE TABLE public."Categories" (
 );
 
 
-ALTER TABLE public."Categories" OWNER TO wylkhmgvtlywtp;
+ALTER TABLE public."Categories" OWNER TO kaeglmkspezpcf;
 
 --
--- Name: Categories_id_seq; Type: SEQUENCE; Schema: public; Owner: wylkhmgvtlywtp
+-- Name: Categories_id_seq; Type: SEQUENCE; Schema: public; Owner: kaeglmkspezpcf
 --
 
 CREATE SEQUENCE public."Categories_id_seq"
@@ -92,17 +92,17 @@ CREATE SEQUENCE public."Categories_id_seq"
     CACHE 1;
 
 
-ALTER TABLE public."Categories_id_seq" OWNER TO wylkhmgvtlywtp;
+ALTER TABLE public."Categories_id_seq" OWNER TO kaeglmkspezpcf;
 
 --
--- Name: Categories_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: wylkhmgvtlywtp
+-- Name: Categories_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: kaeglmkspezpcf
 --
 
 ALTER SEQUENCE public."Categories_id_seq" OWNED BY public."Categories".id;
 
 
 --
--- Name: Category_results; Type: TABLE; Schema: public; Owner: wylkhmgvtlywtp
+-- Name: Category_results; Type: TABLE; Schema: public; Owner: kaeglmkspezpcf
 --
 
 CREATE TABLE public."Category_results" (
@@ -115,10 +115,10 @@ CREATE TABLE public."Category_results" (
 );
 
 
-ALTER TABLE public."Category_results" OWNER TO wylkhmgvtlywtp;
+ALTER TABLE public."Category_results" OWNER TO kaeglmkspezpcf;
 
 --
--- Name: Category_results_id_seq; Type: SEQUENCE; Schema: public; Owner: wylkhmgvtlywtp
+-- Name: Category_results_id_seq; Type: SEQUENCE; Schema: public; Owner: kaeglmkspezpcf
 --
 
 CREATE SEQUENCE public."Category_results_id_seq"
@@ -130,17 +130,17 @@ CREATE SEQUENCE public."Category_results_id_seq"
     CACHE 1;
 
 
-ALTER TABLE public."Category_results_id_seq" OWNER TO wylkhmgvtlywtp;
+ALTER TABLE public."Category_results_id_seq" OWNER TO kaeglmkspezpcf;
 
 --
--- Name: Category_results_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: wylkhmgvtlywtp
+-- Name: Category_results_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: kaeglmkspezpcf
 --
 
 ALTER SEQUENCE public."Category_results_id_seq" OWNED BY public."Category_results".id;
 
 
 --
--- Name: Industries; Type: TABLE; Schema: public; Owner: wylkhmgvtlywtp
+-- Name: Industries; Type: TABLE; Schema: public; Owner: kaeglmkspezpcf
 --
 
 CREATE TABLE public."Industries" (
@@ -151,10 +151,10 @@ CREATE TABLE public."Industries" (
 );
 
 
-ALTER TABLE public."Industries" OWNER TO wylkhmgvtlywtp;
+ALTER TABLE public."Industries" OWNER TO kaeglmkspezpcf;
 
 --
--- Name: Industries_id_seq; Type: SEQUENCE; Schema: public; Owner: wylkhmgvtlywtp
+-- Name: Industries_id_seq; Type: SEQUENCE; Schema: public; Owner: kaeglmkspezpcf
 --
 
 CREATE SEQUENCE public."Industries_id_seq"
@@ -166,17 +166,17 @@ CREATE SEQUENCE public."Industries_id_seq"
     CACHE 1;
 
 
-ALTER TABLE public."Industries_id_seq" OWNER TO wylkhmgvtlywtp;
+ALTER TABLE public."Industries_id_seq" OWNER TO kaeglmkspezpcf;
 
 --
--- Name: Industries_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: wylkhmgvtlywtp
+-- Name: Industries_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: kaeglmkspezpcf
 --
 
 ALTER SEQUENCE public."Industries_id_seq" OWNED BY public."Industries".id;
 
 
 --
--- Name: Organizations; Type: TABLE; Schema: public; Owner: wylkhmgvtlywtp
+-- Name: Organizations; Type: TABLE; Schema: public; Owner: kaeglmkspezpcf
 --
 
 CREATE TABLE public."Organizations" (
@@ -187,10 +187,10 @@ CREATE TABLE public."Organizations" (
 );
 
 
-ALTER TABLE public."Organizations" OWNER TO wylkhmgvtlywtp;
+ALTER TABLE public."Organizations" OWNER TO kaeglmkspezpcf;
 
 --
--- Name: Question_answers; Type: TABLE; Schema: public; Owner: wylkhmgvtlywtp
+-- Name: Question_answers; Type: TABLE; Schema: public; Owner: kaeglmkspezpcf
 --
 
 CREATE TABLE public."Question_answers" (
@@ -203,10 +203,10 @@ CREATE TABLE public."Question_answers" (
 );
 
 
-ALTER TABLE public."Question_answers" OWNER TO wylkhmgvtlywtp;
+ALTER TABLE public."Question_answers" OWNER TO kaeglmkspezpcf;
 
 --
--- Name: Question_answers_id_seq; Type: SEQUENCE; Schema: public; Owner: wylkhmgvtlywtp
+-- Name: Question_answers_id_seq; Type: SEQUENCE; Schema: public; Owner: kaeglmkspezpcf
 --
 
 CREATE SEQUENCE public."Question_answers_id_seq"
@@ -218,17 +218,17 @@ CREATE SEQUENCE public."Question_answers_id_seq"
     CACHE 1;
 
 
-ALTER TABLE public."Question_answers_id_seq" OWNER TO wylkhmgvtlywtp;
+ALTER TABLE public."Question_answers_id_seq" OWNER TO kaeglmkspezpcf;
 
 --
--- Name: Question_answers_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: wylkhmgvtlywtp
+-- Name: Question_answers_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: kaeglmkspezpcf
 --
 
 ALTER SEQUENCE public."Question_answers_id_seq" OWNED BY public."Question_answers".id;
 
 
 --
--- Name: Questions; Type: TABLE; Schema: public; Owner: wylkhmgvtlywtp
+-- Name: Questions; Type: TABLE; Schema: public; Owner: kaeglmkspezpcf
 --
 
 CREATE TABLE public."Questions" (
@@ -241,10 +241,10 @@ CREATE TABLE public."Questions" (
 );
 
 
-ALTER TABLE public."Questions" OWNER TO wylkhmgvtlywtp;
+ALTER TABLE public."Questions" OWNER TO kaeglmkspezpcf;
 
 --
--- Name: Questions_id_seq; Type: SEQUENCE; Schema: public; Owner: wylkhmgvtlywtp
+-- Name: Questions_id_seq; Type: SEQUENCE; Schema: public; Owner: kaeglmkspezpcf
 --
 
 CREATE SEQUENCE public."Questions_id_seq"
@@ -256,17 +256,17 @@ CREATE SEQUENCE public."Questions_id_seq"
     CACHE 1;
 
 
-ALTER TABLE public."Questions_id_seq" OWNER TO wylkhmgvtlywtp;
+ALTER TABLE public."Questions_id_seq" OWNER TO kaeglmkspezpcf;
 
 --
--- Name: Questions_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: wylkhmgvtlywtp
+-- Name: Questions_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: kaeglmkspezpcf
 --
 
 ALTER SEQUENCE public."Questions_id_seq" OWNED BY public."Questions".id;
 
 
 --
--- Name: Survey_results; Type: TABLE; Schema: public; Owner: wylkhmgvtlywtp
+-- Name: Survey_results; Type: TABLE; Schema: public; Owner: kaeglmkspezpcf
 --
 
 CREATE TABLE public."Survey_results" (
@@ -279,10 +279,10 @@ CREATE TABLE public."Survey_results" (
 );
 
 
-ALTER TABLE public."Survey_results" OWNER TO wylkhmgvtlywtp;
+ALTER TABLE public."Survey_results" OWNER TO kaeglmkspezpcf;
 
 --
--- Name: Survey_results_id_seq; Type: SEQUENCE; Schema: public; Owner: wylkhmgvtlywtp
+-- Name: Survey_results_id_seq; Type: SEQUENCE; Schema: public; Owner: kaeglmkspezpcf
 --
 
 CREATE SEQUENCE public."Survey_results_id_seq"
@@ -294,17 +294,17 @@ CREATE SEQUENCE public."Survey_results_id_seq"
     CACHE 1;
 
 
-ALTER TABLE public."Survey_results_id_seq" OWNER TO wylkhmgvtlywtp;
+ALTER TABLE public."Survey_results_id_seq" OWNER TO kaeglmkspezpcf;
 
 --
--- Name: Survey_results_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: wylkhmgvtlywtp
+-- Name: Survey_results_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: kaeglmkspezpcf
 --
 
 ALTER SEQUENCE public."Survey_results_id_seq" OWNED BY public."Survey_results".id;
 
 
 --
--- Name: Survey_user_groups; Type: TABLE; Schema: public; Owner: wylkhmgvtlywtp
+-- Name: Survey_user_groups; Type: TABLE; Schema: public; Owner: kaeglmkspezpcf
 --
 
 CREATE TABLE public."Survey_user_groups" (
@@ -317,10 +317,10 @@ CREATE TABLE public."Survey_user_groups" (
 );
 
 
-ALTER TABLE public."Survey_user_groups" OWNER TO wylkhmgvtlywtp;
+ALTER TABLE public."Survey_user_groups" OWNER TO kaeglmkspezpcf;
 
 --
--- Name: Surveys; Type: TABLE; Schema: public; Owner: wylkhmgvtlywtp
+-- Name: Surveys; Type: TABLE; Schema: public; Owner: kaeglmkspezpcf
 --
 
 CREATE TABLE public."Surveys" (
@@ -333,10 +333,10 @@ CREATE TABLE public."Surveys" (
 );
 
 
-ALTER TABLE public."Surveys" OWNER TO wylkhmgvtlywtp;
+ALTER TABLE public."Surveys" OWNER TO kaeglmkspezpcf;
 
 --
--- Name: Surveys_id_seq; Type: SEQUENCE; Schema: public; Owner: wylkhmgvtlywtp
+-- Name: Surveys_id_seq; Type: SEQUENCE; Schema: public; Owner: kaeglmkspezpcf
 --
 
 CREATE SEQUENCE public."Surveys_id_seq"
@@ -348,17 +348,17 @@ CREATE SEQUENCE public."Surveys_id_seq"
     CACHE 1;
 
 
-ALTER TABLE public."Surveys_id_seq" OWNER TO wylkhmgvtlywtp;
+ALTER TABLE public."Surveys_id_seq" OWNER TO kaeglmkspezpcf;
 
 --
--- Name: Surveys_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: wylkhmgvtlywtp
+-- Name: Surveys_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: kaeglmkspezpcf
 --
 
 ALTER SEQUENCE public."Surveys_id_seq" OWNED BY public."Surveys".id;
 
 
 --
--- Name: User_answers; Type: TABLE; Schema: public; Owner: wylkhmgvtlywtp
+-- Name: User_answers; Type: TABLE; Schema: public; Owner: kaeglmkspezpcf
 --
 
 CREATE TABLE public."User_answers" (
@@ -371,10 +371,10 @@ CREATE TABLE public."User_answers" (
 );
 
 
-ALTER TABLE public."User_answers" OWNER TO wylkhmgvtlywtp;
+ALTER TABLE public."User_answers" OWNER TO kaeglmkspezpcf;
 
 --
--- Name: User_answers_id_seq; Type: SEQUENCE; Schema: public; Owner: wylkhmgvtlywtp
+-- Name: User_answers_id_seq; Type: SEQUENCE; Schema: public; Owner: kaeglmkspezpcf
 --
 
 CREATE SEQUENCE public."User_answers_id_seq"
@@ -386,17 +386,17 @@ CREATE SEQUENCE public."User_answers_id_seq"
     CACHE 1;
 
 
-ALTER TABLE public."User_answers_id_seq" OWNER TO wylkhmgvtlywtp;
+ALTER TABLE public."User_answers_id_seq" OWNER TO kaeglmkspezpcf;
 
 --
--- Name: User_answers_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: wylkhmgvtlywtp
+-- Name: User_answers_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: kaeglmkspezpcf
 --
 
 ALTER SEQUENCE public."User_answers_id_seq" OWNED BY public."User_answers".id;
 
 
 --
--- Name: Users; Type: TABLE; Schema: public; Owner: wylkhmgvtlywtp
+-- Name: Users; Type: TABLE; Schema: public; Owner: kaeglmkspezpcf
 --
 
 CREATE TABLE public."Users" (
@@ -409,10 +409,10 @@ CREATE TABLE public."Users" (
 );
 
 
-ALTER TABLE public."Users" OWNER TO wylkhmgvtlywtp;
+ALTER TABLE public."Users" OWNER TO kaeglmkspezpcf;
 
 --
--- Name: Users_id_seq; Type: SEQUENCE; Schema: public; Owner: wylkhmgvtlywtp
+-- Name: Users_id_seq; Type: SEQUENCE; Schema: public; Owner: kaeglmkspezpcf
 --
 
 CREATE SEQUENCE public."Users_id_seq"
@@ -424,102 +424,102 @@ CREATE SEQUENCE public."Users_id_seq"
     CACHE 1;
 
 
-ALTER TABLE public."Users_id_seq" OWNER TO wylkhmgvtlywtp;
+ALTER TABLE public."Users_id_seq" OWNER TO kaeglmkspezpcf;
 
 --
--- Name: Users_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: wylkhmgvtlywtp
+-- Name: Users_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: kaeglmkspezpcf
 --
 
 ALTER SEQUENCE public."Users_id_seq" OWNED BY public."Users".id;
 
 
 --
--- Name: Admins id; Type: DEFAULT; Schema: public; Owner: wylkhmgvtlywtp
+-- Name: Admins id; Type: DEFAULT; Schema: public; Owner: kaeglmkspezpcf
 --
 
 ALTER TABLE ONLY public."Admins" ALTER COLUMN id SET DEFAULT nextval('public."Admins_id_seq"'::regclass);
 
 
 --
--- Name: Categories id; Type: DEFAULT; Schema: public; Owner: wylkhmgvtlywtp
+-- Name: Categories id; Type: DEFAULT; Schema: public; Owner: kaeglmkspezpcf
 --
 
 ALTER TABLE ONLY public."Categories" ALTER COLUMN id SET DEFAULT nextval('public."Categories_id_seq"'::regclass);
 
 
 --
--- Name: Category_results id; Type: DEFAULT; Schema: public; Owner: wylkhmgvtlywtp
+-- Name: Category_results id; Type: DEFAULT; Schema: public; Owner: kaeglmkspezpcf
 --
 
 ALTER TABLE ONLY public."Category_results" ALTER COLUMN id SET DEFAULT nextval('public."Category_results_id_seq"'::regclass);
 
 
 --
--- Name: Industries id; Type: DEFAULT; Schema: public; Owner: wylkhmgvtlywtp
+-- Name: Industries id; Type: DEFAULT; Schema: public; Owner: kaeglmkspezpcf
 --
 
 ALTER TABLE ONLY public."Industries" ALTER COLUMN id SET DEFAULT nextval('public."Industries_id_seq"'::regclass);
 
 
 --
--- Name: Question_answers id; Type: DEFAULT; Schema: public; Owner: wylkhmgvtlywtp
+-- Name: Question_answers id; Type: DEFAULT; Schema: public; Owner: kaeglmkspezpcf
 --
 
 ALTER TABLE ONLY public."Question_answers" ALTER COLUMN id SET DEFAULT nextval('public."Question_answers_id_seq"'::regclass);
 
 
 --
--- Name: Questions id; Type: DEFAULT; Schema: public; Owner: wylkhmgvtlywtp
+-- Name: Questions id; Type: DEFAULT; Schema: public; Owner: kaeglmkspezpcf
 --
 
 ALTER TABLE ONLY public."Questions" ALTER COLUMN id SET DEFAULT nextval('public."Questions_id_seq"'::regclass);
 
 
 --
--- Name: Survey_results id; Type: DEFAULT; Schema: public; Owner: wylkhmgvtlywtp
+-- Name: Survey_results id; Type: DEFAULT; Schema: public; Owner: kaeglmkspezpcf
 --
 
 ALTER TABLE ONLY public."Survey_results" ALTER COLUMN id SET DEFAULT nextval('public."Survey_results_id_seq"'::regclass);
 
 
 --
--- Name: Surveys id; Type: DEFAULT; Schema: public; Owner: wylkhmgvtlywtp
+-- Name: Surveys id; Type: DEFAULT; Schema: public; Owner: kaeglmkspezpcf
 --
 
 ALTER TABLE ONLY public."Surveys" ALTER COLUMN id SET DEFAULT nextval('public."Surveys_id_seq"'::regclass);
 
 
 --
--- Name: User_answers id; Type: DEFAULT; Schema: public; Owner: wylkhmgvtlywtp
+-- Name: User_answers id; Type: DEFAULT; Schema: public; Owner: kaeglmkspezpcf
 --
 
 ALTER TABLE ONLY public."User_answers" ALTER COLUMN id SET DEFAULT nextval('public."User_answers_id_seq"'::regclass);
 
 
 --
--- Name: Users id; Type: DEFAULT; Schema: public; Owner: wylkhmgvtlywtp
+-- Name: Users id; Type: DEFAULT; Schema: public; Owner: kaeglmkspezpcf
 --
 
 ALTER TABLE ONLY public."Users" ALTER COLUMN id SET DEFAULT nextval('public."Users_id_seq"'::regclass);
 
 
 --
--- Data for Name: Admins; Type: TABLE DATA; Schema: public; Owner: wylkhmgvtlywtp
+-- Data for Name: Admins; Type: TABLE DATA; Schema: public; Owner: kaeglmkspezpcf
 --
 
 COPY public."Admins" (id, email) FROM stdin;
-2	rami.piik@gmail.com
-3	antti.vainikka36@gmail.com
-4	jatufin@gmail.com
-5	me@juan.fi
-6	niemi.leo@gmail.com
-7	oskar.sjolund93@gmail.com
-8	siljaorvokki@gmail.com
+1	rami.piik@gmail.com
+2	antti.vainikka36@gmail.com
+3	jatufin@gmail.com
+4	me@juan.fi
+5	niemi.leo@gmail.com
+6	oskar.sjolund93@gmail.com
+7	siljaorvokki@gmail.com
 \.
 
 
 --
--- Data for Name: Categories; Type: TABLE DATA; Schema: public; Owner: wylkhmgvtlywtp
+-- Data for Name: Categories; Type: TABLE DATA; Schema: public; Owner: kaeglmkspezpcf
 --
 
 COPY public."Categories" (id, name, description, content_links, "createdAt", "updatedAt") FROM stdin;
@@ -532,7 +532,7 @@ COPY public."Categories" (id, name, description, content_links, "createdAt", "up
 
 
 --
--- Data for Name: Category_results; Type: TABLE DATA; Schema: public; Owner: wylkhmgvtlywtp
+-- Data for Name: Category_results; Type: TABLE DATA; Schema: public; Owner: kaeglmkspezpcf
 --
 
 COPY public."Category_results" (id, "categoryId", text, cutoff_from_maxpoints, "createdAt", "updatedAt") FROM stdin;
@@ -555,7 +555,7 @@ COPY public."Category_results" (id, "categoryId", text, cutoff_from_maxpoints, "
 
 
 --
--- Data for Name: Industries; Type: TABLE DATA; Schema: public; Owner: wylkhmgvtlywtp
+-- Data for Name: Industries; Type: TABLE DATA; Schema: public; Owner: kaeglmkspezpcf
 --
 
 COPY public."Industries" (id, name, "createdAt", "updatedAt") FROM stdin;
@@ -573,7 +573,7 @@ COPY public."Industries" (id, name, "createdAt", "updatedAt") FROM stdin;
 
 
 --
--- Data for Name: Organizations; Type: TABLE DATA; Schema: public; Owner: wylkhmgvtlywtp
+-- Data for Name: Organizations; Type: TABLE DATA; Schema: public; Owner: kaeglmkspezpcf
 --
 
 COPY public."Organizations" (id, name, "createdAt", "updatedAt") FROM stdin;
@@ -581,7 +581,7 @@ COPY public."Organizations" (id, name, "createdAt", "updatedAt") FROM stdin;
 
 
 --
--- Data for Name: Question_answers; Type: TABLE DATA; Schema: public; Owner: wylkhmgvtlywtp
+-- Data for Name: Question_answers; Type: TABLE DATA; Schema: public; Owner: kaeglmkspezpcf
 --
 
 COPY public."Question_answers" (id, text, points, "questionId", "createdAt", "updatedAt") FROM stdin;
@@ -619,7 +619,7 @@ COPY public."Question_answers" (id, text, points, "questionId", "createdAt", "up
 
 
 --
--- Data for Name: Questions; Type: TABLE DATA; Schema: public; Owner: wylkhmgvtlywtp
+-- Data for Name: Questions; Type: TABLE DATA; Schema: public; Owner: kaeglmkspezpcf
 --
 
 COPY public."Questions" (id, text, "surveyId", category_weights, "createdAt", "updatedAt") FROM stdin;
@@ -629,13 +629,11 @@ COPY public."Questions" (id, text, "surveyId", category_weights, "createdAt", "u
 4	Question 4	1	[{"category": "Category 1", "multiplier": 0}, {"category": "Category 2", "multiplier": 0}, {"category": "Category 3", "multiplier": 0}, {"category": "Category 4", "multiplier": 1}, {"category": "Category 5", "multiplier": 1}]	2022-09-22 21:31:09.984421+00	2022-09-22 21:31:09.984421+00
 5	Question 5	1	[{"category": "Category 1", "multiplier": 1}, {"category": "Category 2", "multiplier": 0}, {"category": "Category 3", "multiplier": 0}, {"category": "Category 4", "multiplier": 0}, {"category": "Category 5", "multiplier": 1}]	2022-09-26 14:17:29.76+00	2022-09-26 14:17:29.76+00
 6	Question 6	1	[{"category": "Category 1", "multiplier": 1}, {"category": "Category 2", "multiplier": 1}, {"category": "Category 3", "multiplier": 1}, {"category": "Category 4", "multiplier": 1}, {"category": "Category 5", "multiplier": 1}]	2022-09-26 14:17:29.76+00	2022-09-26 14:17:29.76+00
-7	Question7	1	\N	2022-09-26 19:16:45.279882+00	2022-09-26 19:16:45.279882+00
-8	Question 8	1	\N	2022-09-26 19:33:13.8708+00	2022-09-26 19:33:13.8708+00
 \.
 
 
 --
--- Data for Name: Survey_results; Type: TABLE DATA; Schema: public; Owner: wylkhmgvtlywtp
+-- Data for Name: Survey_results; Type: TABLE DATA; Schema: public; Owner: kaeglmkspezpcf
 --
 
 COPY public."Survey_results" (id, "surveyId", text, cutoff_from_maxpoints, "createdAt", "updatedAt") FROM stdin;
@@ -646,7 +644,7 @@ COPY public."Survey_results" (id, "surveyId", text, cutoff_from_maxpoints, "crea
 
 
 --
--- Data for Name: Survey_user_groups; Type: TABLE DATA; Schema: public; Owner: wylkhmgvtlywtp
+-- Data for Name: Survey_user_groups; Type: TABLE DATA; Schema: public; Owner: kaeglmkspezpcf
 --
 
 COPY public."Survey_user_groups" (id, group_name, "surveyId", "organizationId", "createdAt", "updatedAt") FROM stdin;
@@ -654,7 +652,7 @@ COPY public."Survey_user_groups" (id, group_name, "surveyId", "organizationId", 
 
 
 --
--- Data for Name: Surveys; Type: TABLE DATA; Schema: public; Owner: wylkhmgvtlywtp
+-- Data for Name: Surveys; Type: TABLE DATA; Schema: public; Owner: kaeglmkspezpcf
 --
 
 COPY public."Surveys" (id, name, "createdAt", "updatedAt", title_text, survey_text) FROM stdin;
@@ -664,7 +662,7 @@ COPY public."Surveys" (id, name, "createdAt", "updatedAt", title_text, survey_te
 
 
 --
--- Data for Name: User_answers; Type: TABLE DATA; Schema: public; Owner: wylkhmgvtlywtp
+-- Data for Name: User_answers; Type: TABLE DATA; Schema: public; Owner: kaeglmkspezpcf
 --
 
 COPY public."User_answers" (id, "userId", "questionAnswerId", "createdAt", "updatedAt", "QuestionAnswerId") FROM stdin;
@@ -672,7 +670,7 @@ COPY public."User_answers" (id, "userId", "questionAnswerId", "createdAt", "upda
 
 
 --
--- Data for Name: Users; Type: TABLE DATA; Schema: public; Owner: wylkhmgvtlywtp
+-- Data for Name: Users; Type: TABLE DATA; Schema: public; Owner: kaeglmkspezpcf
 --
 
 COPY public."Users" (id, email, "groupId", "industryId", "createdAt", "updatedAt") FROM stdin;
@@ -680,77 +678,77 @@ COPY public."Users" (id, email, "groupId", "industryId", "createdAt", "updatedAt
 
 
 --
--- Name: Admins_id_seq; Type: SEQUENCE SET; Schema: public; Owner: wylkhmgvtlywtp
+-- Name: Admins_id_seq; Type: SEQUENCE SET; Schema: public; Owner: kaeglmkspezpcf
 --
 
 SELECT pg_catalog.setval('public."Admins_id_seq"', 8, true);
 
 
 --
--- Name: Categories_id_seq; Type: SEQUENCE SET; Schema: public; Owner: wylkhmgvtlywtp
+-- Name: Categories_id_seq; Type: SEQUENCE SET; Schema: public; Owner: kaeglmkspezpcf
 --
 
 SELECT pg_catalog.setval('public."Categories_id_seq"', 1, false);
 
 
 --
--- Name: Category_results_id_seq; Type: SEQUENCE SET; Schema: public; Owner: wylkhmgvtlywtp
+-- Name: Category_results_id_seq; Type: SEQUENCE SET; Schema: public; Owner: kaeglmkspezpcf
 --
 
 SELECT pg_catalog.setval('public."Category_results_id_seq"', 1, false);
 
 
 --
--- Name: Industries_id_seq; Type: SEQUENCE SET; Schema: public; Owner: wylkhmgvtlywtp
+-- Name: Industries_id_seq; Type: SEQUENCE SET; Schema: public; Owner: kaeglmkspezpcf
 --
 
 SELECT pg_catalog.setval('public."Industries_id_seq"', 1, false);
 
 
 --
--- Name: Question_answers_id_seq; Type: SEQUENCE SET; Schema: public; Owner: wylkhmgvtlywtp
+-- Name: Question_answers_id_seq; Type: SEQUENCE SET; Schema: public; Owner: kaeglmkspezpcf
 --
 
 SELECT pg_catalog.setval('public."Question_answers_id_seq"', 1, false);
 
 
 --
--- Name: Questions_id_seq; Type: SEQUENCE SET; Schema: public; Owner: wylkhmgvtlywtp
+-- Name: Questions_id_seq; Type: SEQUENCE SET; Schema: public; Owner: kaeglmkspezpcf
 --
 
 SELECT pg_catalog.setval('public."Questions_id_seq"', 8, true);
 
 
 --
--- Name: Survey_results_id_seq; Type: SEQUENCE SET; Schema: public; Owner: wylkhmgvtlywtp
+-- Name: Survey_results_id_seq; Type: SEQUENCE SET; Schema: public; Owner: kaeglmkspezpcf
 --
 
 SELECT pg_catalog.setval('public."Survey_results_id_seq"', 1, false);
 
 
 --
--- Name: Surveys_id_seq; Type: SEQUENCE SET; Schema: public; Owner: wylkhmgvtlywtp
+-- Name: Surveys_id_seq; Type: SEQUENCE SET; Schema: public; Owner: kaeglmkspezpcf
 --
 
 SELECT pg_catalog.setval('public."Surveys_id_seq"', 1, false);
 
 
 --
--- Name: User_answers_id_seq; Type: SEQUENCE SET; Schema: public; Owner: wylkhmgvtlywtp
+-- Name: User_answers_id_seq; Type: SEQUENCE SET; Schema: public; Owner: kaeglmkspezpcf
 --
 
 SELECT pg_catalog.setval('public."User_answers_id_seq"', 1, false);
 
 
 --
--- Name: Users_id_seq; Type: SEQUENCE SET; Schema: public; Owner: wylkhmgvtlywtp
+-- Name: Users_id_seq; Type: SEQUENCE SET; Schema: public; Owner: kaeglmkspezpcf
 --
 
 SELECT pg_catalog.setval('public."Users_id_seq"', 1, false);
 
 
 --
--- Name: Admins Admins_pkey; Type: CONSTRAINT; Schema: public; Owner: wylkhmgvtlywtp
+-- Name: Admins Admins_pkey; Type: CONSTRAINT; Schema: public; Owner: kaeglmkspezpcf
 --
 
 ALTER TABLE ONLY public."Admins"
@@ -758,7 +756,7 @@ ALTER TABLE ONLY public."Admins"
 
 
 --
--- Name: Categories Categories_pkey; Type: CONSTRAINT; Schema: public; Owner: wylkhmgvtlywtp
+-- Name: Categories Categories_pkey; Type: CONSTRAINT; Schema: public; Owner: kaeglmkspezpcf
 --
 
 ALTER TABLE ONLY public."Categories"
@@ -766,7 +764,7 @@ ALTER TABLE ONLY public."Categories"
 
 
 --
--- Name: Category_results Category_results_pkey; Type: CONSTRAINT; Schema: public; Owner: wylkhmgvtlywtp
+-- Name: Category_results Category_results_pkey; Type: CONSTRAINT; Schema: public; Owner: kaeglmkspezpcf
 --
 
 ALTER TABLE ONLY public."Category_results"
@@ -774,7 +772,7 @@ ALTER TABLE ONLY public."Category_results"
 
 
 --
--- Name: Industries Industries_pkey; Type: CONSTRAINT; Schema: public; Owner: wylkhmgvtlywtp
+-- Name: Industries Industries_pkey; Type: CONSTRAINT; Schema: public; Owner: kaeglmkspezpcf
 --
 
 ALTER TABLE ONLY public."Industries"
@@ -782,7 +780,7 @@ ALTER TABLE ONLY public."Industries"
 
 
 --
--- Name: Organizations Organizations_pkey; Type: CONSTRAINT; Schema: public; Owner: wylkhmgvtlywtp
+-- Name: Organizations Organizations_pkey; Type: CONSTRAINT; Schema: public; Owner: kaeglmkspezpcf
 --
 
 ALTER TABLE ONLY public."Organizations"
@@ -790,7 +788,7 @@ ALTER TABLE ONLY public."Organizations"
 
 
 --
--- Name: Question_answers Question_answers_pkey; Type: CONSTRAINT; Schema: public; Owner: wylkhmgvtlywtp
+-- Name: Question_answers Question_answers_pkey; Type: CONSTRAINT; Schema: public; Owner: kaeglmkspezpcf
 --
 
 ALTER TABLE ONLY public."Question_answers"
@@ -798,7 +796,7 @@ ALTER TABLE ONLY public."Question_answers"
 
 
 --
--- Name: Questions Questions_pkey; Type: CONSTRAINT; Schema: public; Owner: wylkhmgvtlywtp
+-- Name: Questions Questions_pkey; Type: CONSTRAINT; Schema: public; Owner: kaeglmkspezpcf
 --
 
 ALTER TABLE ONLY public."Questions"
@@ -806,7 +804,7 @@ ALTER TABLE ONLY public."Questions"
 
 
 --
--- Name: Survey_results Survey_results_pkey; Type: CONSTRAINT; Schema: public; Owner: wylkhmgvtlywtp
+-- Name: Survey_results Survey_results_pkey; Type: CONSTRAINT; Schema: public; Owner: kaeglmkspezpcf
 --
 
 ALTER TABLE ONLY public."Survey_results"
@@ -814,7 +812,7 @@ ALTER TABLE ONLY public."Survey_results"
 
 
 --
--- Name: Survey_user_groups Survey_user_groups_pkey; Type: CONSTRAINT; Schema: public; Owner: wylkhmgvtlywtp
+-- Name: Survey_user_groups Survey_user_groups_pkey; Type: CONSTRAINT; Schema: public; Owner: kaeglmkspezpcf
 --
 
 ALTER TABLE ONLY public."Survey_user_groups"
@@ -822,7 +820,7 @@ ALTER TABLE ONLY public."Survey_user_groups"
 
 
 --
--- Name: Surveys Surveys_pkey; Type: CONSTRAINT; Schema: public; Owner: wylkhmgvtlywtp
+-- Name: Surveys Surveys_pkey; Type: CONSTRAINT; Schema: public; Owner: kaeglmkspezpcf
 --
 
 ALTER TABLE ONLY public."Surveys"
@@ -830,7 +828,7 @@ ALTER TABLE ONLY public."Surveys"
 
 
 --
--- Name: User_answers User_answers_pkey; Type: CONSTRAINT; Schema: public; Owner: wylkhmgvtlywtp
+-- Name: User_answers User_answers_pkey; Type: CONSTRAINT; Schema: public; Owner: kaeglmkspezpcf
 --
 
 ALTER TABLE ONLY public."User_answers"
@@ -838,7 +836,7 @@ ALTER TABLE ONLY public."User_answers"
 
 
 --
--- Name: Users Users_pkey; Type: CONSTRAINT; Schema: public; Owner: wylkhmgvtlywtp
+-- Name: Users Users_pkey; Type: CONSTRAINT; Schema: public; Owner: kaeglmkspezpcf
 --
 
 ALTER TABLE ONLY public."Users"
@@ -846,7 +844,7 @@ ALTER TABLE ONLY public."Users"
 
 
 --
--- Name: Category_results Category_results_categoryId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: wylkhmgvtlywtp
+-- Name: Category_results Category_results_categoryId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: kaeglmkspezpcf
 --
 
 ALTER TABLE ONLY public."Category_results"
@@ -854,7 +852,7 @@ ALTER TABLE ONLY public."Category_results"
 
 
 --
--- Name: Question_answers Question_answers_questionId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: wylkhmgvtlywtp
+-- Name: Question_answers Question_answers_questionId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: kaeglmkspezpcf
 --
 
 ALTER TABLE ONLY public."Question_answers"
@@ -862,7 +860,7 @@ ALTER TABLE ONLY public."Question_answers"
 
 
 --
--- Name: Questions Questions_surveyId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: wylkhmgvtlywtp
+-- Name: Questions Questions_surveyId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: kaeglmkspezpcf
 --
 
 ALTER TABLE ONLY public."Questions"
@@ -870,7 +868,7 @@ ALTER TABLE ONLY public."Questions"
 
 
 --
--- Name: Survey_results Survey_results_surveyId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: wylkhmgvtlywtp
+-- Name: Survey_results Survey_results_surveyId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: kaeglmkspezpcf
 --
 
 ALTER TABLE ONLY public."Survey_results"
@@ -878,7 +876,7 @@ ALTER TABLE ONLY public."Survey_results"
 
 
 --
--- Name: Survey_user_groups Survey_user_groups_organizationId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: wylkhmgvtlywtp
+-- Name: Survey_user_groups Survey_user_groups_organizationId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: kaeglmkspezpcf
 --
 
 ALTER TABLE ONLY public."Survey_user_groups"
@@ -886,7 +884,7 @@ ALTER TABLE ONLY public."Survey_user_groups"
 
 
 --
--- Name: Survey_user_groups Survey_user_groups_surveyId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: wylkhmgvtlywtp
+-- Name: Survey_user_groups Survey_user_groups_surveyId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: kaeglmkspezpcf
 --
 
 ALTER TABLE ONLY public."Survey_user_groups"
@@ -894,7 +892,7 @@ ALTER TABLE ONLY public."Survey_user_groups"
 
 
 --
--- Name: User_answers User_answers_QuestionAnswerId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: wylkhmgvtlywtp
+-- Name: User_answers User_answers_QuestionAnswerId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: kaeglmkspezpcf
 --
 
 ALTER TABLE ONLY public."User_answers"
@@ -902,7 +900,7 @@ ALTER TABLE ONLY public."User_answers"
 
 
 --
--- Name: User_answers User_answers_questionAnswerId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: wylkhmgvtlywtp
+-- Name: User_answers User_answers_questionAnswerId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: kaeglmkspezpcf
 --
 
 ALTER TABLE ONLY public."User_answers"
@@ -910,7 +908,7 @@ ALTER TABLE ONLY public."User_answers"
 
 
 --
--- Name: User_answers User_answers_userId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: wylkhmgvtlywtp
+-- Name: User_answers User_answers_userId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: kaeglmkspezpcf
 --
 
 ALTER TABLE ONLY public."User_answers"
@@ -918,7 +916,7 @@ ALTER TABLE ONLY public."User_answers"
 
 
 --
--- Name: Users Users_groupId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: wylkhmgvtlywtp
+-- Name: Users Users_groupId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: kaeglmkspezpcf
 --
 
 ALTER TABLE ONLY public."Users"
@@ -926,7 +924,7 @@ ALTER TABLE ONLY public."Users"
 
 
 --
--- Name: Users Users_industryId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: wylkhmgvtlywtp
+-- Name: Users Users_industryId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: kaeglmkspezpcf
 --
 
 ALTER TABLE ONLY public."Users"
@@ -937,16 +935,16 @@ ALTER TABLE ONLY public."Users"
 -- Name: SCHEMA heroku_ext; Type: ACL; Schema: -; Owner: u9osjafbq65ukv
 --
 
-GRANT USAGE ON SCHEMA heroku_ext TO wylkhmgvtlywtp;
+GRANT USAGE ON SCHEMA heroku_ext TO kaeglmkspezpcf;
 
 
 --
--- Name: SCHEMA public; Type: ACL; Schema: -; Owner: wylkhmgvtlywtp
+-- Name: SCHEMA public; Type: ACL; Schema: -; Owner: kaeglmkspezpcf
 --
 
 REVOKE ALL ON SCHEMA public FROM postgres;
 REVOKE ALL ON SCHEMA public FROM PUBLIC;
-GRANT ALL ON SCHEMA public TO wylkhmgvtlywtp;
+GRANT ALL ON SCHEMA public TO kaeglmkspezpcf;
 GRANT ALL ON SCHEMA public TO PUBLIC;
 
 
@@ -954,7 +952,7 @@ GRANT ALL ON SCHEMA public TO PUBLIC;
 -- Name: LANGUAGE plpgsql; Type: ACL; Schema: -; Owner: postgres
 --
 
-GRANT ALL ON LANGUAGE plpgsql TO wylkhmgvtlywtp;
+GRANT ALL ON LANGUAGE plpgsql TO kaeglmkspezpcf;
 
 
 --
