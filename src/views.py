@@ -191,5 +191,19 @@ def create_survey():
     title = request.form["title"]
     survey = request.form["survey"]
     survey_id = queries.create_survey(name,title,survey)
-    # TODO change redirect to the survey created once pages for surveys exist
-    return redirect("/")
+    route = "/surveys/" + str(survey_id)
+    return redirect(route)
+
+@app.route("/surveys/<survey_id>")
+def view_survey(survey_id):
+    """ Looks up survey information based
+    on the id with a db function and renders
+    a page with the info from the survey """
+    survey = queries.get_survey(survey_id)
+    if survey is False:
+        report = "There is no survey by that id"
+        return render_template("view_survey.html",no_survey=report,\
+            ENV=app.config["ENV"])
+    return render_template("view_survey.html",name=survey[1],\
+    created=survey[2],updated=survey[3],title=survey[4],\
+        text=survey[5],ENV=app.config["ENV"])

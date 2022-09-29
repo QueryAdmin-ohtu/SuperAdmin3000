@@ -23,7 +23,25 @@ Logged In User Can Create Questionnaires
     Go To Home Page
     Click Link  Create a new questionnaire
     Make A Survey
-    Title Should Be  Super Admin 3000
+    Page Should Contain  Testi
+    Page Should Contain  Toimiikohan
+    Page Should Contain  Surveyn tekeminen testauksessa
+
+Logged In User Cannot Create Questionnaires Without Name
+    Go To Home Page
+    Click Link  Create a new questionnaire
+    Make Survey Without Name
+    Alert Should Be Present  Must have a name
+
+Logged In User Cannot Create Questionnaires Without Title
+    Click Link  Create a new questionnaire
+    Make Survey Without Title
+    Alert Should Be Present  Must have a title
+
+Logged In User Cannot Create Questionnaires Without Text
+    Click Link  Create a new questionnaire
+    Make Survey Without Text
+    Alert Should Be Present  Must have a flavor text
 
 Logged Out User Cannot Access Questionnaires
     Logout
@@ -47,4 +65,19 @@ Make A Survey
     Set Survey Name  Testi
     Set Survey Title  Surveyn tekeminen testauksessa
     Set Survey Text  Toimiikohan
+    Create A Survey
+
+Make Survey Without Name
+    Set Survey Title  Surveyn tekeminen testauksessa
+    Set Survey Text  Toimiikohan
+    Create A Survey
+
+Make Survey Without Title
+    Set Survey Name  Testi
+    Set Survey Text  Toimiikohan
+    Create A Survey
+
+Make Survey Without Text
+    Set Survey Name  Testi
+    Set Survey Title  Surveyn tekeminen testauksessa
     Create A Survey

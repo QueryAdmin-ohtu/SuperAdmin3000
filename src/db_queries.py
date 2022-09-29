@@ -37,7 +37,7 @@ def create_survey(name, title, survey):
     INSERT INTO "Surveys"
     (name,"createdAt","updatedAt",title_text,survey_text)
     VALUES (:name, :createdAt, :updatedAt, :title_text, :survey_text)
-    RETURNING id"""
+    RETURNING id """
     values = {
         "name": name,
         "createdAt": created,
@@ -47,4 +47,13 @@ def create_survey(name, title, survey):
     }
     survey_id = db.session.execute(sql,values).fetchone()
     db.session.commit()
-    return survey_id
+    return survey_id[0]
+
+def get_survey(survey_id):
+    """ Looks up survey information with
+    id and returns it in a list"""
+    sql = """ SELECT * FROM "Surveys" WHERE id=:id """
+    survey = db.session.execute(sql,{"id":survey_id}).fetchone()
+    if not survey:
+        return False
+    return survey
