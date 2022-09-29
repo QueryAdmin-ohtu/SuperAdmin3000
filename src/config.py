@@ -35,8 +35,7 @@ class LocalConfig(Config):
 
 class TestConfig(Config):
     """Test environment config vars"""
-    # TODO: Config for Heroku test environment
-    pass
+    GOOGLE_URI = getenv("TEST_GOOGLE_URI")
 
 def load_config(mode=getenv("ENVIRONMENT")):
     """Load configuration to app"""
