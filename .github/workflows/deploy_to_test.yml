@@ -1,0 +1,73 @@
+# For more information see: https://help.github.com/actions/language-and-framework-guides/using-python-with-github-actions
+
+name: Deploy_to_test
+
+on:
+  push:
+    branches: 
+      - dev_*
+    paths-ignore:
+      - 'docs/**'
+      - 'Documentation/**'
+      - 'README.md'
+
+permissions:
+  contents: read
+
+jobs:
+  build_and_unit_test:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Set up Python 3.8
+      uses: actions/setup-python@v3
+      with:
+        python-version: "3.8"   
+    - name: Install Poetry
+      uses: snok/install-poetry@v1
+    - name: Install Dependencies using Poetry
+      run: |
+          poetry install
+    - name: Run style checks # To-do: Add a minimum threshold
+      run: |
+          poetry run invoke lint
+    - name: Run unit tests
+      run: |
+          poetry run invoke tests
+  deploy_to_heroku_test:
+    needs: [build_and_unit_test]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: akhileshns/heroku-deploy@v3.12.12
+        with:
+          heroku_api_key: ${{secrets.TEST_HEROKU_API_KEY}}
+          heroku_app_name: "test-superadmin3000"
+          heroku_email: ${{secrets.TEST_HEROKU_EMAIL}}
+          usedocker: true
+  e2e_tests_on_heroku_test_environment:
+    needs: [deploy_to_heroku_test]
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Set up Python 3.8
+      uses: actions/setup-python@v3
+      with:
+        python-version: "3.8"  
+    - name: Install libraries
+      run: |
+          pip install robotframework
+          pip install --upgrade robotframework-seleniumlibrary
+          pip install invoke
+    - name: Setup chromedriver
+      uses: nanasess/setup-chromedriver@master
+    - run: |
+          export DISPLAY=:99
+          chromedriver --url-base=/wd/hub &
+          sudo Xvfb -ac :99 -screen 0 1280x1024x24 > /dev/null 2>&1 &
+    - name: Initialize test database
+      run: |
+          invoke init-db ${{secrets.TEST_DB_URI}}
+    - name: Run e2e tests
+      run: |
+          robot -v URL:https://test-superadmin3000.herokuapp.com/ src/tests/robot_tests/

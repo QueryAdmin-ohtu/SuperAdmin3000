@@ -19,7 +19,7 @@ permissions:
 
 jobs:
   build:
-
+    if: github.head_ref == dev_* # VARMISTA TOIMIIKO. VAATIIKO LAINAUSMERKIT?
     runs-on: ubuntu-latest
 
     steps:
