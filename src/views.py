@@ -38,6 +38,11 @@ def send_message():
 
     return redirect("/testdb")
 
+@app.route("/testdb/get_surveys")
+def get_all_surveys():
+    result = db.session.execute("SELECT id, name, title_text FROM \"Surveys\"")
+    surveys = result.fetchall()
+    return render_template("surveys.html", surveys = surveys, ENV=ENV)
 
 @app.route("/testdb")
 def testdb():
