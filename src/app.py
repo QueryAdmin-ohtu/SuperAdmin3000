@@ -1,9 +1,11 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
-from config import PORT
+from config import PORT, load_config
 
+"""Create Flask app"""
 app = Flask(__name__)
-app.config.from_object("config.DevConfig")
+config = load_config()
+app.config.from_object(config)
 
 db = SQLAlchemy(app)
 
