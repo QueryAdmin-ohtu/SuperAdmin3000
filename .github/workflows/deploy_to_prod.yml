@@ -13,16 +13,28 @@ permissions:
   contents: read
 
 jobs:
-  build:
-    uses: ./.github/workflows/test_build.yml
-  heroku:
-    needs: [build]
+  build_and_deploy:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: akhileshns/heroku-deploy@v3.12.12
-        with:
-          heroku_api_key: ${{secrets.HEROKU_API_KEY}}
-          heroku_app_name: "superadmin3000"
-          heroku_email: ${{secrets.HEROKU_EMAIL}}
-          usedocker: true
+    - uses: actions/checkout@v3
+    - name: Set up Python 3.8
+      uses: actions/setup-python@v3
+      with:
+        python-version: "3.8"   
+    - name: Install Poetry
+      uses: snok/install-poetry@v1
+    - name: Install Dependencies using Poetry
+      run: |
+          poetry install
+  # deploy_to_heroku_test:
+  #   needs: [build]
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v2
+    - name: deploy
+      uses: akhileshns/heroku-deploy@v3.12.12 # This is the action
+      with:
+        heroku_api_key: ${{secrets.HEROKU_API_KEY}}
+        heroku_app_name: "superadmin3000"
+        heroku_email: ${{secrets.HEROKU_EMAIL}}
+        usedocker: true
