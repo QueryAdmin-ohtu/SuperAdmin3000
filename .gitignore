@@ -146,3 +146,6 @@ report.html
 selenium-screenshot-*.png
 
 .DS_Store
+
+# DIA
+*.autosave
