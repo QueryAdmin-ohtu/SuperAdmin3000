@@ -45,7 +45,7 @@ def send_message():
 def get_all_surveys():
     result = db.session.execute("SELECT id, name, title_text FROM \"Surveys\"")
     surveys = result.fetchall()
-    return render_template("surveys.html", surveys = surveys, ENV=ENV)
+    return render_template("surveys.html", surveys = surveys, ENV=app.config["ENV"])
 
 @app.route("/testdb")
 def testdb():
@@ -181,3 +181,4 @@ def ping():
     """ Test function for general testing
     """
     return "pong"
+    
