@@ -1,6 +1,7 @@
 *** Settings ***
 Resource  resource.robot
 Resource  login_resource.robot
+Resource  creating_survey.robot
 Suite Setup  Open And Configure Browser
 Suite Teardown  Close Browser
 Test Setup  Go To Home Page
@@ -21,7 +22,8 @@ Logged In User Can Edit Questionnaires
 Logged In User Can Create Questionnaires
     Go To Home Page
     Click Link  Create a new questionnaire
-    Page Should Contain  Here you can eventually create new questionnaires
+    Make A Survey
+    Title Should Be  Super Admin 3000
 
 Logged Out User Cannot Access Questionnaires
     Logout
@@ -40,3 +42,9 @@ Login With Correct Credentials
     Set Username  rudolf
     Set Password  secret
     Submit Credentials
+
+Make A Survey
+    Set Survey Name  Testi
+    Set Survey Title  Surveyn tekeminen testauksessa
+    Set Survey Text  Toimiikohan
+    Create A Survey

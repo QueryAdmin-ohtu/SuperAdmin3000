@@ -181,4 +181,15 @@ def ping():
     """ Test function for general testing
     """
     return "pong"
-    
+
+@app.route("/create_survey", methods=["POST"])
+def create_survey():
+    """ Takes arguments from new.html
+    and calls a db function using them
+    which creates a survey into Surveys """
+    name = request.form["name"]
+    title = request.form["title"]
+    survey = request.form["survey"]
+    survey_id = queries.create_survey(name,title,survey)
+    # TODO change redirect to the survey created once pages for surveys exist
+    return redirect("/")
