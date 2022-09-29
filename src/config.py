@@ -35,8 +35,7 @@ class LocalConfig(Config):
 
 class TestConfig(Config):
     """Test environment config vars"""
-    # TODO: Config for Heroku test environment
-    pass
+    GOOGLE_URI = getenv("TEST_GOOGLE_URI")
 
 def load_config(mode=getenv("ENVIRONMENT")):
     """Load configuration to app"""
@@ -45,7 +44,8 @@ def load_config(mode=getenv("ENVIRONMENT")):
             return LocalConfig
         if mode == "prod":
             return ProdConfig
-        # TODO: config for heroku test environment
+        if mode == "test":
+            return TestConfig
         return None
     except ImportError:
         # TODO: default to production?

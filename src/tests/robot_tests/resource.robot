@@ -1,14 +1,14 @@
 *** Settings ***
 Library  SeleniumLibrary
 
+
 *** Variables ***
-${SERVER}  localhost:5000
 ${BROWSER}  headlesschrome
 ${DELAY}  0 seconds
-${HOME URL}  http://${SERVER}
-${BACKDOOR URL}  http://${SERVER}/backdoor
-${EDIT URL}  http://${SERVER}/edit
-${NEW URL}  http://${SERVER}/new
+${URL}  http://localhost:5000
+${BACKDOOR URL}  ${URL}/backdoor
+${EDIT URL}  ${URL}/edit
+${NEW URL}  ${URL}/new
 
 
 *** Keywords ***
@@ -18,7 +18,7 @@ Open And Configure Browser
     Set Selenium Speed  ${DELAY}
 
 Go To Home Page
-    Go To  ${HOME URL}
+    Go To  ${URL}
 
 Go To Backdoor Login Page
     Go To  ${BACKDOOR URL}
