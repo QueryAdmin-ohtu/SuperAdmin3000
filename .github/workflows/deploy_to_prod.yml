@@ -26,13 +26,8 @@ jobs:
     - name: Install Dependencies using Poetry
       run: |
           poetry install
-  # deploy_to_heroku_test:
-  #   needs: [build]
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - uses: actions/checkout@v2
     - name: deploy
-      uses: akhileshns/heroku-deploy@v3.12.12 # This is the action
+      uses: akhileshns/heroku-deploy@v3.12.12
       with:
         heroku_api_key: ${{secrets.HEROKU_API_KEY}}
         heroku_app_name: "superadmin3000"
