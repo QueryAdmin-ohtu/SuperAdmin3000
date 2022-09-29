@@ -26,12 +26,15 @@ class Config:
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
 class ProdConfig(Config):
+    """Production config vars"""
     GOOGLE_URI = getenv("PROD_GOOGLE_URI")
 
 class LocalConfig(Config):
+    """Development config vars"""
     GOOGLE_URI = getenv("LOCAL_GOOGLE_URI")
 
 class TestConfig(Config):
+    """Test environment config vars"""
     # TODO: Config for Heroku test environment
     pass
 
@@ -40,11 +43,10 @@ def load_config(mode=getenv("ENVIRONMENT")):
     try:
         if mode == "local":
             return LocalConfig
-        elif mode == "prod":
+        if mode == "prod":
             return ProdConfig
-        else:
-            # TODO: config for heroku test environment
-            pass
+        # TODO: config for heroku test environment
+        return None
     except ImportError:
         # TODO: default to production?
-        pass
+        return None

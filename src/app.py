@@ -4,12 +4,12 @@ from config import PORT, load_config
 
 """Create Flask app"""
 app = Flask(__name__)
-config = load_config()
-app.config.from_object(config)
+configs = load_config()
+app.config.from_object(configs)
 
 db = SQLAlchemy(app)
 
-from views import *
+from views import * # pylint: disable=unused-wildcard-import, wrong-import-position, wildcard-import
 
 if __name__ == "__main__":
     app.run(debug=False, host="0.0.0.0", port=PORT)
