@@ -74,11 +74,10 @@ elif ENV == 'prod':
 else:
     print("ENV:", ENV)  # Should this throw an error?
 
-# TODO: Create a proper storage for the authorized users
-# pylint: disable-next=line-too-long
+# # TODO: Create a proper storage for the authorized users
+# # pylint: disable-next=line-too-long
 authorized_google_accounts = ["antti.vainikka36@gmail.com", "jatufin@gmail.com", "me@juan.fi",
-# pylint: disable-next=line-too-long
-                              "niemi.leo@gmail.com", "oskar.sjolund93@gmail.com", "rami.piik@gmail.com", "siljaorvokki@gmail.com"]
+"niemi.leo@gmail.com", "oskar.sjolund93@gmail.com", "rami.piik@gmail.com", "siljaorvokki@gmail.com"]
 
 
 @app.route("/", methods=["GET"])
@@ -256,15 +255,11 @@ def _backdoor_validate_and_login(username, password):
     session["username"] = username
     return True
 
-# TODO: Remove if not needed
-
-
 @app.route("/ping")
 def ping():
     """ Test function for general testing
     """
     return "pong"
-
 
 if __name__ == "__main__":
     app.run(debug=False, host="0.0.0.0", port=PORT)
