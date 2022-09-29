@@ -44,7 +44,8 @@ def load_config(mode=getenv("ENVIRONMENT")):
             return LocalConfig
         if mode == "prod":
             return ProdConfig
-        # TODO: config for heroku test environment
+        if mode == "test":
+            return TestConfig
         return None
     except ImportError:
         # TODO: default to production?
