@@ -14,7 +14,16 @@
 - The backend uses SQLAlchemy toolkit to communicate with the database
 
 ## Frontend
-- Simple HTML/CSS pages are displayed
+
+- Simple HTML/CSS pages are displayed.
+
+### TailwindCSS
+This project uses TailwindCSS. To create a CSS file with the needed TailwindCSS utility classes install the [standalone TailwindCLI](https://tailwindcss.com/blog/standalone-cli). After insatllation run from the root of the project:
+```
+tailwindcss -c src/static/tailwind.config.js -i src/static/src/style.css -o src/static/css/main.css --watch
+```
+Tailwind now watches the HTML template files and creates a new css file when it is needed.
+
 
 ## Packaging
 - The software is deployed as a Docker image
