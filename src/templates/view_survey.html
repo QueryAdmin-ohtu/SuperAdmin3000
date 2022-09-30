@@ -8,4 +8,13 @@ Created at<br>
 {{ created }}<br>
 Updated at<br>
 {{ updated }}
+<h2>Questions</h2>
+{% if questions|length > 0 %}
+{% for question in questions %}
+<p>{{ question.text }}</p>
+<hr>
+{% endfor %}
+{% else %}
+<p>Survey has no questions 🥺</p>
+{% endif %}
 {% endblock %}

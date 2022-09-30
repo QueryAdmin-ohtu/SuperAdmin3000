@@ -57,3 +57,19 @@ def get_survey(survey_id):
     if not survey:
         return False
     return survey
+
+
+def get_questions_of_questionnaire(questionnaire_id):
+    """ Fetches questions of a given questionnaire
+    Args:
+      questionnaire_id: Id of the questionnaire
+
+    Returns:
+      An array containing each question object
+    """
+    sql = "SELECT * FROM \"Questions\" WHERE \"Questions\".\"surveyId\"=:questionnaire_id"
+    result = db.session.execute(sql, {"questionnaire_id": questionnaire_id})
+
+    questions = result.fetchall()
+
+    return questions

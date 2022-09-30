@@ -28,3 +28,7 @@ Go To Edit Questionnaires Page
 
 Go To Create New Questionnaire Page
     Go To  ${NEW URL}
+
+Go To Survey
+    [Arguments]  ${survey_id}
+    Go To  ${URL}/surveys/${survey_id}
