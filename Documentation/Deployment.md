@@ -44,13 +44,32 @@ pip list --format freeze > requirements.txt
 
 ## Docker
 The preliminary docker image can be built with
-````
+```
 $ (sudo) docker build . -t superadmin3000
-````
+```
 
 To run the container locally:
-````
+```
  $ (sudo) docker run -p 3000:5000 superadmin
 
-````
+```
 When the container is succesfully running the application can be accessed at [http://localhost:3000](http://localhost:3000)
+
+## Database rebuild
+
+PostgreSQL database server should be up and running. It can be started with command:
+```
+start-pg.sh
+```
+
+The database tables can be initialized with the following command in Poetry environment:
+```
+invoke init_db localdb
+```
+
+If the database copy `schema.sql` should be created with `pg_dump` command, selectors `--inserts` and `--no-owner` should be set:
+
+
+```
+pg_dump --inserts --no-owner postgresql://username:password@server:5432/database
+```
