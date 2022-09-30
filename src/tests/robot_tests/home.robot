@@ -44,6 +44,20 @@ Logged In User Cannot Create Questionnaires Without Text
     Make Survey Without Text
     Alert Should Be Present  Must have a flavor text
 
+A new survey does not contain questions
+    Click Link  Create a new questionnaire
+    Make A Survey
+    Page Should Contain  Survey has no questions
+
+Questions of survey are displayed on survey Page
+    Go To Survey  1
+    Page Should Contain  Question 1
+    Page Should Contain  Question 2
+    Page Should Contain  Question 3
+    Page Should Contain  Question 4
+    Page Should Contain  Question 5
+    Page Should Contain  Question 6
+
 Logged Out User Cannot Access Questionnaires
     Logout
     Page Should Not Contain  You are logged in as
