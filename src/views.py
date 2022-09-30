@@ -181,4 +181,29 @@ def ping():
     """ Test function for general testing
     """
     return "pong"
-    
+
+@app.route("/create_survey", methods=["POST"])
+def create_survey():
+    """ Takes arguments from new.html
+    and calls a db function using them
+    which creates a survey into Surveys """
+    name = request.form["name"]
+    title = request.form["title"]
+    survey = request.form["survey"]
+    survey_id = queries.create_survey(name,title,survey)
+    route = "/surveys/" + str(survey_id)
+    return redirect(route)
+
+@app.route("/surveys/<survey_id>")
+def view_survey(survey_id):
+    """ Looks up survey information based
+    on the id with a db function and renders
+    a page with the info from the survey """
+    survey = queries.get_survey(survey_id)
+    if survey is False:
+        report = "There is no survey by that id"
+        return render_template("view_survey.html",no_survey=report,\
+            ENV=app.config["ENV"])
+    return render_template("view_survey.html",name=survey[1],\
+    created=survey[2],updated=survey[3],title=survey[4],\
+        text=survey[5],ENV=app.config["ENV"])
