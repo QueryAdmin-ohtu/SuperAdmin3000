@@ -4,12 +4,8 @@ from google.auth.transport import requests
 from app import app, db
 import helper
 import db_queries as queries
-<<<<<<< HEAD
-# from config import ENV, CLIENT_ID
-=======
-import sys
->>>>>>> 358f4cd (Work on fetching questions)
 
+# from config import ENV, CLIENT_ID
 # if ENV == 'local':
 #     print("ENV: local")
 #     GOOGLE_URI = "http://localhost:5000/google_login"
@@ -208,12 +204,7 @@ def view_survey(survey_id):
         report = "There is no survey by that id"
         return render_template("view_survey.html",no_survey=report,\
             ENV=app.config["ENV"])
+    survey_questions = queries.get_questions_of_questionnaire(survey_id)
     return render_template("view_survey.html",name=survey[1],\
     created=survey[2],updated=survey[3],title=survey[4],\
-        text=survey[5],ENV=app.config["ENV"])
-
-@app.route("/questions")
-def questions():
-    questions = queries.get_questions_of_questionnaire(5)
-    print(questions, file=sys.stderr)
-    return redirect("/")
+        text=survey[5], questions=survey_questions, ENV=app.config["ENV"])
