@@ -20,6 +20,7 @@ Logged In User Can Edit Questionnaires
     Page Should Contain  Here you can eventually edit or delete existing questionnaires
 
 Logged In User Can Create Questionnaires
+    Make Two Surveys
     Go To Home Page
     Click Link  Create a new questionnaire
     Make A Survey
@@ -60,6 +61,20 @@ Login With Correct Credentials
     Set Username  rudolf
     Set Password  secret
     Submit Credentials
+
+Make Two Surveys
+    Go To Home Page
+    Click Link  Create a new questionnaire
+    Set Survey Name  Making two surveys
+    Set Survey Title  Which fail
+    Set Survey Text  To make the third one work
+    Create A Survey
+    Go To Home Page
+    Click Link  Create a new questionnaire
+    Set Survey Name  Making two surveys
+    Set Survey Title  Which fail
+    Set Survey Text  To make the third one work
+    Create A Survey
 
 Make A Survey
     Set Survey Name  Testi
