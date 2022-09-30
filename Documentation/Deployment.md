@@ -24,15 +24,33 @@ pip list --format freeze > requirements.txt
 ## Continuous Integration
 
 - Github Actions has been used for CI/CP pipeline
+- Github builds a Docker image
+- The docker image is pushed to Heroku
+- There are two Heroku environments: One for testing and one for product deployment
 - The process goes ass follows:
 
 1. A developer runs all tests locally
-1. The developer pushes pull request to Github
+1. The developer pushes pull request to Github. The branch name starts with "dev_"
 1. Github runs style and quality checks (Lint)
 1. Github runs unit tests
-1. Github runs end-to-end-tests
-1. Github build Docker image
-1. Pull request is accepted and merged
-1. Github pushes the docker image to the server (Heroku)
+1. Github builds Docker image
+1. Githup deploys the image to Heroku
+1. Heroku runs E2E tests (Robot framework)
+1. Heroku return test results to Github
+1. Pull request is accepted and merged manually to the main branch
+1. Github builds the docker image in main branch
+1. Githup deploys the image to Heroku
 
-As from the above can be seen, the Docker image is deployed to the server only after a main branch push/merge. Only tests are run for pull requests.
+
+## Docker
+The preliminary docker image can be built with
+````
+$ (sudo) docker build . -t superadmin3000
+````
+
+To run the container locally:
+````
+ $ (sudo) docker run -p 3000:5000 superadmin
+
+````
+When the container is succesfully running the application can be accessed at [http://localhost:3000](http://localhost:3000)
