@@ -38,7 +38,7 @@ def send_message():
     """
     if not helper.valid_token(request.form):
         abort(403)
-        
+
     question = request.form["content"]
 
     # pylint: disable-next=line-too-long
@@ -48,12 +48,16 @@ def send_message():
 
     return redirect("/testdb")
 
+
 @app.route("/testdb/get_surveys")
 def get_all_surveys():
+    """ List all surveys in the database
+    """
     result = db.session.execute("SELECT id, name, title_text FROM \"Surveys\"")
     surveys = result.fetchall()
-    
-    return render_template("surveys.html", surveys = surveys, ENV=app.config["ENV"])
+
+    return render_template("surveys.html", surveys=surveys, ENV=app.config["ENV"])
+
 
 @app.route("/testdb")
 def testdb():
@@ -61,7 +65,7 @@ def testdb():
     """
     result = db.session.execute("SELECT text FROM \"Questions\"")
     questions = result.fetchall()
-    
+
     return render_template("testdb.html", count=len(questions), questions=questions, ENV=app.config["ENV"])
 
 
@@ -83,7 +87,7 @@ def google_login():
     """ Login with a Google account.
     """
     print("Google login...", flush=True)
-    
+
     try:
         csrf_token_cookie = request.cookies.get('g_csrf_token')
         if not csrf_token_cookie:
@@ -100,7 +104,8 @@ def google_login():
         if not token:
             abort(400, 'No token found.')
 
-        idinfo = id_token.verify_oauth2_token(token, requests.Request(), app.config["CLIENT_ID"], clock_skew_in_seconds=10)
+        idinfo = id_token.verify_oauth2_token(
+            token, requests.Request(), app.config["CLIENT_ID"], clock_skew_in_seconds=10)
         email = idinfo['email']
 
         email_verified = idinfo['email_verified']
@@ -128,9 +133,9 @@ def logout():
     """
     if not helper.valid_token(request.form):
         abort(403)
-        
+
     helper.clear_session()
-    
+
     return redirect("/")
 
 
@@ -160,7 +165,7 @@ def test_page():
     """
     if not helper.logged_in():
         abort(401)
-        
+
     return render_template("test.html", ENV=app.config["ENV"])
 
 
@@ -213,23 +218,25 @@ def ping():
     """
     return "pong"
 
+
 @app.route("/create_survey", methods=["POST"])
 def create_survey():
     """ Takes arguments from new.html
     and calls a db function using them
     which creates a survey into Surveys
     """
-    
+
     if not helper.valid_token(request.form):
         abort(403)
 
     name = request.form["name"]
     title = request.form["title"]
     survey = request.form["survey"]
-    survey_id = queries.create_survey(name,title,survey)
+    survey_id = queries.create_survey(name, title, survey)
     route = "/surveys/" + str(survey_id)
-    
+
     return redirect(route)
+
 
 @app.route("/surveys/<survey_id>")
 def view_survey(survey_id):
@@ -242,11 +249,11 @@ def view_survey(survey_id):
     if survey is False:
         report = "There is no survey by that id"
 
-        return render_template("view_survey.html",no_survey=report,\
-            ENV=app.config["ENV"])
+        return render_template("view_survey.html", no_survey=report,
+                               ENV=app.config["ENV"])
 
     survey_questions = queries.get_questions_of_questionnaire(survey_id)
 
-    return render_template("view_survey.html",name=survey[1],\
-    created=survey[2],updated=survey[3],title=survey[4],\
-        text=survey[5], questions=survey_questions, ENV=app.config["ENV"])
+    return render_template("view_survey.html", name=survey[1],
+                           created=survey[2], updated=survey[3], title=survey[4],
+                           text=survey[5], questions=survey_questions, ENV=app.config["ENV"])

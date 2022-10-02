@@ -1,6 +1,7 @@
-from flask import session
 from secrets import token_hex
-from app import db
+
+from flask import session
+
 
 def backdoor_validate_and_login(username, password):
     """ Check if the given username password pair is correct
@@ -18,6 +19,8 @@ def backdoor_validate_and_login(username, password):
 
 
 def update_session(email, first_name, csrf_token_cookie):
+    """ Update Flask session variables
+    """
     session["email"] = email
     session["username"] = first_name
     session["csrf_token"] = csrf_token_cookie
@@ -54,5 +57,5 @@ def valid_token(form, tokenname="csrf_token"):
 
     if tokenname not in form:
         return False
-    
+
     return form[tokenname] == session[tokenname]
