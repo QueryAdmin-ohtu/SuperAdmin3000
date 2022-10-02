@@ -1,9 +1,13 @@
 from flask import render_template, redirect, request, abort
+
 from google.oauth2 import id_token
 from google.auth.transport import requests
+
 from app import app, db
+
 import helper
 import db_queries as queries
+
 
 # from config import ENV, CLIENT_ID
 # if ENV == 'local':
@@ -32,6 +36,9 @@ def new_message():
 def send_message():
     """ Add a question to the database
     """
+    if not helper.valid_token(request.form):
+        abort(403)
+        
     question = request.form["content"]
 
     # pylint: disable-next=line-too-long
@@ -45,6 +52,7 @@ def send_message():
 def get_all_surveys():
     result = db.session.execute("SELECT id, name, title_text FROM \"Surveys\"")
     surveys = result.fetchall()
+    
     return render_template("surveys.html", surveys = surveys, ENV=app.config["ENV"])
 
 @app.route("/testdb")
@@ -53,6 +61,7 @@ def testdb():
     """
     result = db.session.execute("SELECT text FROM \"Questions\"")
     questions = result.fetchall()
+    
     return render_template("testdb.html", count=len(questions), questions=questions, ENV=app.config["ENV"])
 
 
@@ -65,6 +74,7 @@ def index():
     """
     if helper.logged_in():
         return render_template("index.html", ENV=app.config["ENV"])
+
     return render_template("google_login.html", URI=app.config["GOOGLE_URI"], ENV=app.config["ENV"])
 
 
@@ -72,31 +82,42 @@ def index():
 def google_login():
     """ Login with a Google account.
     """
+    print("Google login...", flush=True)
+    
     try:
         csrf_token_cookie = request.cookies.get('g_csrf_token')
         if not csrf_token_cookie:
             abort(400, 'No CSRF token in Cookie.')
+
         csrf_token_body = request.form['g_csrf_token']
         if not csrf_token_body:
             abort(400, 'No CSRF token in post body.')
+
         if csrf_token_cookie != csrf_token_body:
             abort(400, 'Failed to verify double submit cookie.')
+
         token = request.form["credential"]
         if not token:
             abort(400, 'No token found.')
-        idinfo = id_token.verify_oauth2_token(
-            token, requests.Request(), app.config["CLIENT_ID"], clock_skew_in_seconds=10)
+
+        idinfo = id_token.verify_oauth2_token(token, requests.Request(), app.config["CLIENT_ID"], clock_skew_in_seconds=10)
         email = idinfo['email']
+
         email_verified = idinfo['email_verified']
         if not email_verified:
             abort(400, 'Email not verified by Google.')
+
         first_name = idinfo['given_name']
+
         if queries.google_login_authorize(email):
             helper.update_session(email, first_name, csrf_token_cookie)
+            print("Google login OK", flush=True)
             return redirect("/")
+
     except ValueError:
         # Invalid token
         pass
+
     return "You are not authorized to use the service. Please contact your administrator."
 
 
@@ -105,7 +126,11 @@ def logout():
     """ Logout the user by removing all properties from the session
     and returning to the front page
     """
+    if not helper.valid_token(request.form):
+        abort(403)
+        
     helper.clear_session()
+    
     return redirect("/")
 
 
@@ -135,6 +160,7 @@ def test_page():
     """
     if not helper.logged_in():
         abort(401)
+        
     return render_template("test.html", ENV=app.config["ENV"])
 
 
@@ -167,6 +193,11 @@ def backdoor_form():
 @app.route("/backdoor", methods=["POST"])
 def backdoor_login():
     """ Receive and process the backdoor login
+
+    Session token is not validated in this POST handler,
+    because there should be no no active session yet.
+
+    THIS BACKDOOR WILL BE REMOVED FROM THE PRODUCTION CODE
     """
     if app.config["ENV"] not in ["prod"]:
         username = request.form["username"]
@@ -186,12 +217,18 @@ def ping():
 def create_survey():
     """ Takes arguments from new.html
     and calls a db function using them
-    which creates a survey into Surveys """
+    which creates a survey into Surveys
+    """
+    
+    if not helper.valid_token(request.form):
+        abort(403)
+
     name = request.form["name"]
     title = request.form["title"]
     survey = request.form["survey"]
     survey_id = queries.create_survey(name,title,survey)
     route = "/surveys/" + str(survey_id)
+    
     return redirect(route)
 
 @app.route("/surveys/<survey_id>")
@@ -199,12 +236,17 @@ def view_survey(survey_id):
     """ Looks up survey information based
     on the id with a db function and renders
     a page with the info from the survey """
+
     survey = queries.get_survey(survey_id)
+
     if survey is False:
         report = "There is no survey by that id"
+
         return render_template("view_survey.html",no_survey=report,\
             ENV=app.config["ENV"])
+
     survey_questions = queries.get_questions_of_questionnaire(survey_id)
+
     return render_template("view_survey.html",name=survey[1],\
     created=survey[2],updated=survey[3],title=survey[4],\
         text=survey[5], questions=survey_questions, ENV=app.config["ENV"])

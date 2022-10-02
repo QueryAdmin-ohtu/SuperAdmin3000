@@ -4,6 +4,7 @@
     <container class="flex flex-col gap-4">
         <h3>Create a new survey</h3>
         <p>Name of survey</p>
+        <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
         <input type="text" name="name" oninvalid="alert('Must have a name');" required>
         <p>Title text</p>
         <input type="text" name="title" oninvalid="alert('Must have a title');" required>

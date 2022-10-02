@@ -2,7 +2,6 @@ from flask import session
 from secrets import token_hex
 from app import db
 
-
 def backdoor_validate_and_login(username, password):
     """ Check if the given username password pair is correct
     If username and password match, a new session will be created
@@ -46,10 +45,14 @@ def logged_in():
     return "username" in session
 
 
-def valid_token(form):
+def valid_token(form, tokenname="csrf_token"):
     """ Check if the token send with the form matches with the current
     session.
     """
     if not logged_in():
         return False
-    return form["csrf_token"] == session["csrf_token"]
+
+    if tokenname not in form:
+        return False
+    
+    return form[tokenname] == session[tokenname]
