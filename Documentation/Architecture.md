@@ -58,4 +58,15 @@ ENVIRONMENT="local"
 
 Google Client ID for Google Single Sign On. The value of the variable is provided by Google.
 
+The variable is in the form:
 
+```
+GOOGLE_CLIENT_ID="1234567XXXXXXXXXXXapps.googleusercontent.com"
+```
+
+### `LOCAL_GOOGLE_URI`
+
+The address of the Google login  POST reuqest destination, when running system in the local environment.
+```
+LOCAL_GOOGLE_URI="http://localhost:5000/google_login"
+```
