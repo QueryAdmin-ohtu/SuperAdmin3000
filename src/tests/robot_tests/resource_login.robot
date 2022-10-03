@@ -12,3 +12,8 @@ Submit Credentials
 
 Logout
     Click Button  Logout
+
+Login With Correct Credentials
+    Set Username  rudolf
+    Set Password  secret
+    Submit Credentials
