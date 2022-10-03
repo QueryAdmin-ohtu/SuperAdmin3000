@@ -14,10 +14,6 @@ User Logged In With Correct Credentials
     Login With Correct Credentials
     Page Should Contain  Hello rudolf!
 
-Logged In User Can Edit Questionnaires
-    Click Link  Edit an existing survey
-    Page Should Contain  Here you can eventually edit or delete existing questionnaires
-
 Logged In User Can See Surveys On Home Page
     Go To Home Page
     Page Should Contain  List of surveys
@@ -33,10 +29,3 @@ Logged Out User Should Be On Login Page
     Go To Home Page
     Page Should Contain  Please login with your Google account:
 
-Logged Out User Cannot Edit Questionnaires
-    Go To Edit Questionnaires Page
-    Page Should Contain  Please login 
-
-Logged Out User Cannot Create Questionnaires
-    Go To Create New Questionnaire Page
-    Page Should Contain  Please login
