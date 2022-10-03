@@ -9,8 +9,6 @@ ${URL}  http://localhost:5000
 ${BACKDOOR URL}  ${URL}/backdoor
 ${EDIT URL}  ${URL}/edit
 ${NEW URL}  ${URL}/new
-${LIST URL}  ${URL}/surveys
-
 
 *** Keywords ***
 Open And Configure Browser
