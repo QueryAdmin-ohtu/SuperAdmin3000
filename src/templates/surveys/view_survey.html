@@ -1,15 +1,18 @@
 {% extends "layout.html" %}
 {% block content %}
-{{ no_survey }}
-{{ name }}<br>
-{{ title }}<br>
-{{ text }}<br>
-Created at<br>
-{{ created }}<br>
-Updated at<br>
-{{ updated }}
+
+{% if survey %}
+<h2>Survey: {{ survey[1] }} ID: {{ survey[0] }}</h2>
+
+<ul>
+  <li>Created: {{ survey[2] }}</li>
+  <li>Updated: {{ survey[3] }}</li>
+  <li>Title: {{ survey[4] }}</li>
+  <li>Text: {{ survey[5] }}</li>  
+</ul>
+
 <h2>Questions</h2>
-{% if questions|length > 0 %}
+{% if survey.questions %}
 {% for question in questions %}
 <p>{{ question.text }}</p>
 <hr>
@@ -17,4 +20,9 @@ Updated at<br>
 {% else %}
 <p>Survey has no questions 🥺</p>
 {% endif %}
+
+{% else %}
+There is no survey with ID: {{ survey_id }}
+{% endif %}
+
 {% endblock %}

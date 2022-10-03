@@ -16,14 +16,16 @@ def new():
     return render_template("surveys/new.html", ENV=app.config["ENV"])
 
 
-@surveys.route("/edit")
-def edit():
+@surveys.route("/surveys/edit/<survey_id>")
+def edit(survey_id):
     """Renders the edit survey page
     """
     if not helper.logged_in():
         return redirect("/")
 
-    return render_template("surveys/edit.html", ENV=app.config["ENV"])
+    survey = queries.get_survey(survey_id)
+    
+    return render_template("surveys/edit.html", survey=survey, survey_id=survey_id)
 
 @surveys.route("/create_survey", methods=["POST"])
 def create_survey():
@@ -54,14 +56,5 @@ def view_survey(survey_id):
         return redirect("/")
 
     survey = queries.get_survey(survey_id)
-    if survey is False:
-        report = "There is no survey by that id"
 
-        return render_template("surveys/view_survey.html", no_survey=report,
-                               ENV=app.config["ENV"])
-
-    survey_questions = queries.get_questions_of_questionnaire(survey_id)
-
-    return render_template("surveys/view_survey.html",name=survey[1],\
-        created=survey[2],updated=survey[3],title=survey[4],\
-        text=survey[5], questions=survey_questions, ENV=app.config["ENV"])
+    return render_template("surveys/view_survey.html", survey=survey, survey_id=survey_id)
