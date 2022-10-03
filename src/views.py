@@ -74,13 +74,19 @@ def testdb():
 def index():
     """ Main page
 
-    If there's active session, index.html will be rendered,
-    otherwise the login page will be displayed.
+    If there's active session, main page with existing surveys
+    will be rendered, otherwise the login page will be displayed.
     """
-    if helper.logged_in():
-        return render_template("index.html", ENV=app.config["ENV"])
+    if not helper.logged_in():
+        return render_template("google_login.html", URI=app.config["GOOGLE_URI"], ENV=app.config["ENV"])
 
-    return render_template("google_login.html", URI=app.config["GOOGLE_URI"], ENV=app.config["ENV"])
+    surveys = queries.get_all_surveys()
+    if surveys is False:
+        report = "There are no surveys"
+        return render_template("index.html", no_surveys=report,\
+            ENV=app.config["ENV"])
+    return render_template("index.html", surveys=surveys, ENV=app.config["ENV"])
+
 
 
 @app.route("/google_login", methods=["POST"])
@@ -244,8 +250,10 @@ def view_survey(survey_id):
     on the id with a db function and renders
     a page with the info from the survey """
 
-    survey = queries.get_survey(survey_id)
+    if not helper.logged_in():
+        return redirect("/")
 
+    survey = queries.get_survey(survey_id)
     if survey is False:
         report = "There is no survey by that id"
 
@@ -256,16 +264,3 @@ def view_survey(survey_id):
     return render_template("view_survey.html",name=survey[1],\
     created=survey[2],updated=survey[3],title=survey[4],\
         text=survey[5], questions=survey_questions, ENV=app.config["ENV"])
-
-@app.route("/surveys")
-def view_all_surveys():
-    """ Finds and lists all of the surveys 
-    in the database """
-    if not helper.logged_in():
-        return redirect("/")
-    surveys = queries.get_all_surveys()
-    if surveys is False:
-        report = "There are no surveys"
-        return render_template("all_surveys.html", no_surveys=report,\
-            ENV=app.config["ENV"])
-    return render_template("all_surveys.html", surveys=surveys, ENV=app.config["ENV"])
