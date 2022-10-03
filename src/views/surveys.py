@@ -6,6 +6,7 @@ import db_queries as queries
 
 surveys = Blueprint("surveys", __name__)
 
+
 @surveys.route("/new")
 def new():
     """Renders the new survey page
@@ -24,8 +25,9 @@ def surveys_edit(survey_id):
         return redirect("/")
 
     survey = queries.get_survey(survey_id)
-    
+
     return render_template("surveys/edit.html", survey=survey, survey_id=survey_id)
+
 
 @surveys.route("/surveys/update", methods=["POST"])
 def surveys_update():
@@ -46,7 +48,8 @@ def surveys_update():
     route = f"/surveys/{survey_id}"
 
     return redirect(route)
-    
+
+
 @surveys.route("/create_survey", methods=["POST"])
 def create_survey():
     """ Takes arguments from new.html
@@ -89,7 +92,7 @@ def surveys_statistics(survey_id):
         return redirect("/")
 
     survey = queries.get_survey(survey_id)
-    
+
     #  TODO: get statistics
     statistics = "JUGE STATS HERE!"
 
