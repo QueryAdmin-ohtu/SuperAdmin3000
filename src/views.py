@@ -91,7 +91,7 @@ def google_login():
         if not email_verified:
             abort(400, 'Email not verified by Google.')
         first_name = idinfo['given_name']
-        if queries.google_login_authorize(email):
+        if queries.authorized_google_login(email):
             helper.update_session(email, first_name, csrf_token_cookie)
             return redirect("/")
     except ValueError:
