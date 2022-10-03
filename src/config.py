@@ -16,6 +16,7 @@ except FileNotFoundError:
 
 PORT = environ.get("PORT", 5000)
 
+
 class Config:
     """Set base Flask config variables"""
     SECRET_KEY = getenv("SECRET_KEY")
@@ -25,17 +26,21 @@ class Config:
     SQLALCHEMY_DATABASE_URI = getenv("DATABASE_URI")
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
+
 class ProdConfig(Config):
     """Production config vars"""
     GOOGLE_URI = getenv("PROD_GOOGLE_URI")
+
 
 class LocalConfig(Config):
     """Development config vars"""
     GOOGLE_URI = getenv("LOCAL_GOOGLE_URI")
 
+
 class TestConfig(Config):
     """Test environment config vars"""
     GOOGLE_URI = getenv("TEST_GOOGLE_URI")
+
 
 def load_config(mode=getenv("ENVIRONMENT")):
     """Load configuration to app"""

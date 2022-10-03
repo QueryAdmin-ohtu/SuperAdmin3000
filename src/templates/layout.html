@@ -23,7 +23,8 @@
                     class=" text-sky-600 hover:text-sky-700 hover:underline font-medium rounded-lg text-sm">Edit
                     existing questionnaire</a>
                 <form action="/logout" method="POST" class="m-1">
-                    <button type="submit"
+                  <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">                    
+                  <button type="submit"
                         class=" text-sky-600 hover:text-sky-700 hover:underline focus:ring-4 font-medium rounded-lg text-sm">Logout</button>
                 </form>
     
