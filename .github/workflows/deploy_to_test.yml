@@ -28,7 +28,7 @@ jobs:
     - name: Install Dependencies using Poetry
       run: |
           poetry install
-    - name: Run style checks # To-do: Add a minimum threshold
+    - name: Run style checks
       run: |
           poetry run invoke lint
     - name: Run unit tests
