@@ -12,7 +12,8 @@ Home Page Should Be Open
 User Logged In With Correct Credentials
     Go To Backdoor Login Page
     Login With Correct Credentials
-    Page Should Contain  Hello rudolf!
+    Page Should Contain  Logged in
+    Page Should Contain  rudolf
 
 Logged In User Can See Surveys On Home Page
     Go To Home Page

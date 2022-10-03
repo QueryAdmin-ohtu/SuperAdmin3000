@@ -79,8 +79,9 @@ def view_survey(survey_id):
         return redirect("/")
 
     survey = queries.get_survey(survey_id)
-
-    return render_template("surveys/view_survey.html", survey=survey, survey_id=survey_id)
+    questions = queries.get_questions_of_questionnaire(survey_id)
+    
+    return render_template("surveys/view_survey.html", survey=survey, questions=questions, survey_id=survey_id)
 
 
 @surveys.route("/surveys/statistics/<survey_id>")
