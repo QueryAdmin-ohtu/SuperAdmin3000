@@ -4,12 +4,16 @@
 {% if survey %}
 <h2>Survey: {{ survey[1] }} ID: {{ survey[0] }}</h2>
 
+<div>
 <ul>
   <li>Created: {{ survey[2] }}</li>
   <li>Updated: {{ survey[3] }}</li>
   <li>Title: {{ survey[4] }}</li>
   <li>Text: {{ survey[5] }}</li>  
 </ul>
+<a href="/surveys/edit/{{ survey[0] }}"><b>EDIT</b></a><br>
+<a href="/surveys/statistics/{{ survey[0] }}"><b>Statistics</b></a><br>
+<div>
 
 <h2>Questions</h2>
 {% if survey.questions %}

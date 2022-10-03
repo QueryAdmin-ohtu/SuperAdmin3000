@@ -1,7 +1,19 @@
 {% extends "layout.html" %}
 {% block content %}
 <container class="flex flex-col gap-4">
-    <h3>Edit questionnaires</h3>
-    <p>Here you can eventually edit or delete existing questionnaires</p>
+  <h3>Edit survey</h3>
+
+  {% if survey %}
+  <form action="/surveys/update" method="POST">
+    <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}"><br>
+    <input name="survey_id" type="text" class="border" readonly="readonly" value="{{ survey[0] }}"><br>
+    <input name="name" type="text" class="border" value="{{ survey[1] }}"><br>
+    <input name="title" type="text" class="border" value="{{ survey[4] }}"><br>
+    <input name="text" type="text" class="border" value="{{ survey[5] }}"><br>
+    <button type="submit"><b>SAVE</b></button><br>
+  </form>
+  {% else %}
+  There is no survey with ID: {{ survey_id }}
+  {% endif %}
 </container>
 {% endblock %}
