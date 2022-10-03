@@ -47,6 +47,7 @@ def get_all_surveys():
     surveys = result.fetchall()
     return render_template("surveys.html", surveys = surveys, ENV=app.config["ENV"])
 
+
 @app.route("/testdb")
 def testdb():
     """ Open the test database
@@ -208,3 +209,16 @@ def view_survey(survey_id):
     return render_template("view_survey.html",name=survey[1],\
     created=survey[2],updated=survey[3],title=survey[4],\
         text=survey[5], questions=survey_questions, ENV=app.config["ENV"])
+
+@app.route("/surveys")
+def view_all_surveys():
+    """ Finds and lists all of the surveys 
+    in the database """
+    if not helper.logged_in():
+        return redirect("/")
+    surveys = queries.get_all_surveys()
+    if surveys is False:
+        report = "There are no surveys"
+        return render_template("all_surveys.html", no_surveys=report,\
+            ENV=app.config["ENV"])
+    return render_template("all_surveys.html", surveys=surveys, ENV=app.config["ENV"])

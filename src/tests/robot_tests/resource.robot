@@ -9,6 +9,7 @@ ${URL}  http://localhost:5000
 ${BACKDOOR URL}  ${URL}/backdoor
 ${EDIT URL}  ${URL}/edit
 ${NEW URL}  ${URL}/new
+${LIST URL}  ${URL}/surveys
 
 
 *** Keywords ***
@@ -32,3 +33,6 @@ Go To Create New Questionnaire Page
 Go To Survey
     [Arguments]  ${survey_id}
     Go To  ${URL}/surveys/${survey_id}
+
+Go To List All Surveys Page
+    Go To  ${LIST URL}

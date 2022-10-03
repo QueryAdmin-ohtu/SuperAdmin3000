@@ -16,13 +16,13 @@ User Logged In With Correct Credentials
     Page Should Contain  Hello rudolf!
 
 Logged In User Can Edit Questionnaires
-    Click Link  Edit existing questionnaire
+    Click Link  Edit an existing survey
     Page Should Contain  Here you can eventually edit or delete existing questionnaires
 
 Logged In User Can Create Questionnaires
     Make Two Surveys
     Go To Home Page
-    Click Link  Create a new questionnaire
+    Click Link  Create a new survey
     Make A Survey
     Page Should Contain  Testi
     Page Should Contain  Toimiikohan
@@ -30,22 +30,22 @@ Logged In User Can Create Questionnaires
 
 Logged In User Cannot Create Questionnaires Without Name
     Go To Home Page
-    Click Link  Create a new questionnaire
+    Click Link  Create a new survey
     Make Survey Without Name
     Alert Should Be Present  Must have a name
 
 Logged In User Cannot Create Questionnaires Without Title
-    Click Link  Create a new questionnaire
+    Click Link  Create a new survey
     Make Survey Without Title
     Alert Should Be Present  Must have a title
 
 Logged In User Cannot Create Questionnaires Without Text
-    Click Link  Create a new questionnaire
+    Click Link  Create a new survey
     Make Survey Without Text
     Alert Should Be Present  Must have a flavor text
 
 A new survey does not contain questions
-    Click Link  Create a new questionnaire
+    Click Link  Create a new survey
     Make A Survey
     Page Should Contain  Survey has no questions
 
@@ -68,7 +68,7 @@ Logged Out User Cannot Edit Questionnaires
 
 Logged Out User Cannot Create Questionnaires
     Go To Create New Questionnaire Page
-    Page Should Contain  Please login 
+    Page Should Contain  Please login
 
 *** Keywords ***
 Login With Correct Credentials
@@ -78,13 +78,13 @@ Login With Correct Credentials
 
 Make Two Surveys
     Go To Home Page
-    Click Link  Create a new questionnaire
+    Click Link  Create a new survey
     Set Survey Name  Making two surveys
     Set Survey Title  Which fail
     Set Survey Text  To make the third one work
     Create A Survey
     Go To Home Page
-    Click Link  Create a new questionnaire
+    Click Link  Create a new survey
     Set Survey Name  Making two surveys
     Set Survey Title  Which fail
     Set Survey Text  To make the third one work

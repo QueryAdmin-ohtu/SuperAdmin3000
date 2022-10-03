@@ -1,0 +1,20 @@
+{% extends "layout.html" %}
+{% block content %}
+<h3>List of surveys</h3>
+<br>
+{{ no_surveys }}
+{% for survey in surveys %}
+<div>
+<ul>
+<li><span>Title: {{survey[1]}}</span></li>
+<br>
+<li><span>Questions: {{survey[2]}}</span></li>
+<br>
+<li><span>Submissions: {{survey[3]}}</span></li>
+<br><br>
+</ul>
+</div>
+{% endfor %}
+<br>
+
+{% endblock %}
