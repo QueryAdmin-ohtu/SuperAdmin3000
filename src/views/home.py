@@ -11,15 +11,19 @@ home = Blueprint("home", __name__)
 
 @home.route("/", methods=["GET"])
 def index():
-    """ Main page
-
-    If there's active session, index.html will be rendered,
-    otherwise the login page will be displayed.
+    """Main page
+    If there's an active session, main page with existing surveys
+    will be rendered, otherwise the login page will be displayed.
     """
-    if helper.logged_in():
-        return render_template("index.html", ENV=app.config["ENV"])
+    if not helper.logged_in():
+        return render_template("google_login.html", URI=app.config["GOOGLE_URI"], ENV=app.config["ENV"])
 
-    return render_template("google_login.html", URI=app.config["GOOGLE_URI"], ENV=app.config["ENV"])
+    surveys = queries.get_all_surveys()
+    if surveys is False:
+        report = "There are no surveys"
+        return render_template("index.html", no_surveys=report,\
+            ENV=app.config["ENV"])
+    return render_template("index.html", surveys=surveys, ENV=app.config["ENV"])
 
 @home.route("/google_login", methods=["POST"])
 def google_login():

@@ -1,78 +1,79 @@
-from flask import render_template, redirect, request, abort
+# from flask import render_template, redirect, request, abort
 
-from google.oauth2 import id_token
-from google.auth.transport import requests
+# from app import app, db
+# import helper
 
-from app import app, db
+# from google.oauth2 import id_token
+# from google.auth.transport import requests
 
-import helper
-import db_queries as queries
-
-
-print("ENV:", app.config["ENV"])
+# import helper
+# import db_queries as queries
 
 
-@app.route("/testdb/new")
-def new_message():
-    """  Create new message to test database
-    """
-    return render_template("testdb_new.html", ENV=app.config["ENV"])
+# print("ENV:", app.config["ENV"])
 
 
-@app.route("/testdb/add_question", methods=["POST"])
-def send_message():
-    """ Add a question to the database
-    """
-    if not helper.valid_token(request.form):
-        abort(403)
-
-    question = request.form["content"]
-
-    # pylint: disable-next=line-too-long
-    sql = "INSERT INTO \"Questions\" (\"text\", \"surveyId\", \"createdAt\", \"updatedAt\") VALUES (:question, '1', (select CURRENT_TIMESTAMP), (select CURRENT_TIMESTAMP))"
-    db.session.execute(sql, {"question": question})
-    db.session.commit()
-
-    return redirect("/testdb")
+# @app.route("/testdb/new")
+# def new_message():
+#     """  Create new message to test database
+#     """
+#     return render_template("testdb_new.html", ENV=app.config["ENV"])
 
 
-@app.route("/testdb/get_surveys")
-def get_all_surveys():
-    """ List all surveys in the database
-    """
-    result = db.session.execute("SELECT id, name, title_text FROM \"Surveys\"")
-    surveys = result.fetchall()
+# @app.route("/testdb/add_question", methods=["POST"])
+# def send_message():
+#     """ Add a question to the database
+#     """
+#     if not helper.valid_token(request.form):
+#         abort(403)
 
-    return render_template("surveys.html", surveys=surveys, ENV=app.config["ENV"])
+#     question = request.form["content"]
+
+#     # pylint: disable-next=line-too-long
+#     sql = "INSERT INTO \"Questions\" (\"text\", \"surveyId\", \"createdAt\", \"updatedAt\") VALUES (:question, '1', (select CURRENT_TIMESTAMP), (select CURRENT_TIMESTAMP))"
+#     db.session.execute(sql, {"question": question})
+#     db.session.commit()
+
+#     return redirect("/testdb")
+
+
+# @app.route("/testdb/get_surveys")
+# def get_all_surveys():
+#     """ List all surveys in the database
+#     """
+#     result = db.session.execute("SELECT id, name, title_text FROM \"Surveys\"")
+#     surveys = result.fetchall()
+
+#     return render_template("surveys.html", surveys=surveys, ENV=app.config["ENV"])
 
 
 
-@app.route("/testdb")
-def testdb():
-    """ Open the test database
-    """
-    result = db.session.execute("SELECT text FROM \"Questions\"")
-    questions = result.fetchall()
+# @app.route("/testdb")
+# def testdb():
+#     """ Open the test database
+#     """
+#     result = db.session.execute("SELECT text FROM \"Questions\"")
+#     questions = result.fetchall()
 
-    return render_template("testdb.html", count=len(questions), questions=questions, ENV=app.config["ENV"])
+#     return render_template("testdb.html", count=len(questions), questions=questions, ENV=app.config["ENV"])
 
 
 # @app.route("/", methods=["GET"])
 # def index():
 #     """ Main page
 
-    # If there's active session, main page with existing surveys
-    # will be rendered, otherwise the login page will be displayed.
-    # """
-    # if not helper.logged_in():
-    #     return render_template("google_login.html", URI=app.config["GOOGLE_URI"], ENV=app.config["ENV"])
+#     If there's active session, main page with existing surveys
+#     will be rendered, otherwise the login page will be displayed.
+#     """
+#     if not helper.logged_in():
+#         return render_template("google_login.html", URI=app.config["GOOGLE_URI"], ENV=app.config["ENV"])
 
-    # surveys = queries.get_all_surveys()
-    # if surveys is False:
-    #     report = "There are no surveys"
-    #     return render_template("index.html", no_surveys=report,\
-    #         ENV=app.config["ENV"])
-    # return render_template("index.html", surveys=surveys, ENV=app.config["ENV"])
+#     surveys = queries.get_all_surveys()
+#     if surveys is False:
+#         report = "There are no surveys"
+#         return render_template("index.html", no_surveys=report,\
+#             ENV=app.config["ENV"])
+#     return render_template("index.html", surveys=surveys, ENV=app.config["ENV"])
 
 
 
@@ -152,29 +153,29 @@ def testdb():
 #     return render_template("edit.html", ENV=app.config["ENV"])
 
 
-@app.route("/test")
-def test_page():
-    """ The test page should only be shown if the user has logged in
-    """
-    if not helper.logged_in():
-        abort(401)
+# @app.route("/test")
+# def test_page():
+#     """ The test page should only be shown if the user has logged in
+#     """
+#     if not helper.logged_in():
+#         abort(401)
 
-    return render_template("test.html", ENV=app.config["ENV"])
+#     return render_template("test.html", ENV=app.config["ENV"])
 
 
-@app.route("/testform", methods=["POST"])
-def test_form():
-    """ All forms should include the hidden csrf_token field, so the
-    session can be validated
-    """
+# @app.route("/testform", methods=["POST"])
+# def test_form():
+#     """ All forms should include the hidden csrf_token field, so the
+#     session can be validated
+#     """
 
-    if not helper.logged_in():
-        abort(401)
+#     if not helper.logged_in():
+#         abort(401)
 
-    if not helper.valid_token(request.form):
-        abort(403)
+#     if not helper.valid_token(request.form):
+#         abort(403)
 
-    return render_template("testdata.html", testdata=request.form["testdata"], ENV=app.config["ENV"])
+#     return render_template("testdata.html", testdata=request.form["testdata"], ENV=app.config["ENV"])
 
 
 # @app.route("/backdoor", methods=["GET"])
@@ -237,17 +238,17 @@ def test_form():
 #     on the id with a db function and renders
 #     a page with the info from the survey """
 
-    # if not helper.logged_in():
-    #     return redirect("/")
+#     if not helper.logged_in():
+#         return redirect("/")
 
-    # survey = queries.get_survey(survey_id)
-    # if survey is False:
-    #     report = "There is no survey by that id"
+#     survey = queries.get_survey(survey_id)
+#     if survey is False:
+#         report = "There is no survey by that id"
 
 #         return render_template("view_survey.html", no_survey=report,
 #                                ENV=app.config["ENV"])
 
-    # survey_questions = queries.get_questions_of_questionnaire(survey_id)
-    # return render_template("view_survey.html",name=survey[1],\
-    # created=survey[2],updated=survey[3],title=survey[4],\
-    #     text=survey[5], questions=survey_questions, ENV=app.config["ENV"])
+#     survey_questions = queries.get_questions_of_questionnaire(survey_id)
+#     return render_template("view_survey.html",name=survey[1],\
+#     created=survey[2],updated=survey[3],title=survey[4],\
+#         text=survey[5], questions=survey_questions, ENV=app.config["ENV"])

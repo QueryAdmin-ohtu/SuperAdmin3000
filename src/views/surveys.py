@@ -50,8 +50,10 @@ def view_survey(survey_id):
     on the id with a db function and renders
     a page with the info from the survey """
 
-    survey = queries.get_survey(survey_id)
+    if not helper.logged_in():
+        return redirect("/")
 
+    survey = queries.get_survey(survey_id)
     if survey is False:
         report = "There is no survey by that id"
 
@@ -60,6 +62,7 @@ def view_survey(survey_id):
 
     survey_questions = queries.get_questions_of_questionnaire(survey_id)
 
-    return render_template("view_survey.html", name=survey[1],
-                           created=survey[2], updated=survey[3], title=survey[4],
-                           text=survey[5], questions=survey_questions, ENV=app.config["ENV"])
+    return render_template("view_survey.html",name=survey[1],\
+        created=survey[2],updated=survey[3],title=survey[4],\
+        text=survey[5], questions=survey_questions, ENV=app.config["ENV"])
+        
