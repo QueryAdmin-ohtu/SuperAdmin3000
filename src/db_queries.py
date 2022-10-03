@@ -1,12 +1,6 @@
 from datetime import datetime
 from app import db
 
-# TODO: Create a proper storage for the authorized users
-# pylint: disable-next=line-too-long
-authorized_google_accounts = ["antti.vainikka36@gmail.com", "jatufin@gmail.com", "me@juan.fi",
-                              # pylint: disable-next=line-too-long
-                              "niemi.leo@gmail.com", "oskar.sjolund93@gmail.com", "rami.piik@gmail.com", "siljaorvokki@gmail.com"]
-
 
 def authorized_google_login(email):
     """ Checks whether a Google account is authorized to access the app.
@@ -21,13 +15,6 @@ def authorized_google_login(email):
 
     return False
 
-
-def google_login_authorize(email):
-    """ Checks whether a Google account is authorized to access the app.
-    """
-    if email in authorized_google_accounts:
-        return True
-    return False
 
 def create_survey(name, title, survey):
     """ Inserts a survey to table Surveys based
@@ -45,15 +32,16 @@ def create_survey(name, title, survey):
         "title_text": title,
         "survey_text": survey
     }
-    survey_id = db.session.execute(sql,values).fetchone()
+    survey_id = db.session.execute(sql, values).fetchone()
     db.session.commit()
     return survey_id[0]
+
 
 def get_survey(survey_id):
     """ Looks up survey information with
     id and returns it in a list"""
     sql = """ SELECT * FROM "Surveys" WHERE id=:id """
-    survey = db.session.execute(sql,{"id":survey_id}).fetchone()
+    survey = db.session.execute(sql, {"id": survey_id}).fetchone()
     if not survey:
         return False
     return survey
