@@ -33,6 +33,3 @@ Go To Create New Questionnaire Page
 Go To Survey
     [Arguments]  ${survey_id}
     Go To  ${URL}/surveys/${survey_id}
-
-Go To List All Surveys Page
-    Go To  ${LIST URL}
