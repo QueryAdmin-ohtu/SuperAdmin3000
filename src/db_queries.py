@@ -1,5 +1,4 @@
 from datetime import datetime
-from app import db
 
 
 def authorized_google_login(email):
