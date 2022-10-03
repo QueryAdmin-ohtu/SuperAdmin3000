@@ -16,15 +16,22 @@
                 <p class="text-slate-400 font-mono"><i><small>Environment: {{ENV}}</small></i></p>
             </header>
             <nav class="flex flex-row gap-4 items-center justify-end">
-                <a href="/new"
-                    class=" text-sky-600 hover:text-sky-700 hover:underline font-medium rounded-lg text-sm">Create
-                    a new questionnaire</a>
-                <a href="/edit"
-                    class=" text-sky-600 hover:text-sky-700 hover:underline font-medium rounded-lg text-sm">Edit
-                    existing questionnaire</a>
+                <a href="/surveys"
+                class=" text-sky-600 hover:text-sky-700 hover:underline font-medium rounded-lg text-sm">Surveys</a>
+                <a href="/new_survey"
+                class=" text-sky-600 hover:text-sky-700 hover:underline font-medium rounded-lg text-sm">New survey</a>
+                <a href="/edit_survey"
+                class=" text-sky-600 hover:text-sky-700 hover:underline font-medium rounded-lg text-sm">Edit survey</a>
+                <a href="/questions"
+                class=" text-sky-600 hover:text-sky-700 hover:underline font-medium rounded-lg text-sm">Questions</a>
+                <a href="/new_question"
+                class=" text-sky-600 hover:text-sky-700 hover:underline font-medium rounded-lg text-sm">New question</a>
+                <a href="/edit_question"
+                class=" text-sky-600 hover:text-sky-700 hover:underline font-medium rounded-lg text-sm">Edit question</a>
                 <form action="/logout" method="POST" class="m-1">
-                    <button type="submit"
-                        class=" text-sky-600 hover:text-sky-700 hover:underline focus:ring-4 font-medium rounded-lg text-sm">Logout</button>
+                <button type="submit"
+                    class=" text-sky-600 hover:text-sky-700 hover:underline focus:ring-4 font-medium rounded-lg text-sm">Logout</button>
+                <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
                 </form>
     
             </nav>

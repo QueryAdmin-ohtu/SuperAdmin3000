@@ -1,12 +1,10 @@
 {% extends "layout.html" %}
 {% block content %}
-Kysymysten määrä: {{ count }}
+Nr. of questions: {{ count }}
 <br><br>
 <hr>
 {% for question in questions %}
 {{ question[0]}}
 <hr>
 {% endfor %}
-<br>
-<a href="/testdb/new">Lisää kysymys</a>
 {% endblock %}

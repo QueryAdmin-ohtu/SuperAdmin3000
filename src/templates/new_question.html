@@ -1,0 +1,30 @@
+{% extends "layout.html" %}
+{% block content %}
+<form action="/add_question" method="POST">
+  <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">  
+    Question: <br>
+    <textarea name="text" rows="3" cols="40" style="border:solid 1px black"></textarea>
+    <br><br>
+    <h3>Select a survey for the question</h3>
+    <i><small>(this should probably be indicated by the URL when we get there)</small></i><br>
+    <br>
+    <select name="surveyId" id="surveyId">
+        {% for survey in surveys %}
+        <option value="{{survey[0]}}">{{survey[0]}}: {{survey[1]}}</option>
+        {% endfor %}
+    </select><br>
+    <br>
+    <h3>Insert category weights for the question</h3>
+    <div>
+        {% for category in categories %}
+        {{category[1]}}. Weight: <textarea name="cat{{category[0]}}" rows="1" cols="2" style="border:solid 1px black"></textarea>
+        <hr>
+        {% endfor %}
+    </div>
+    <br><br>
+    <input type="submit" value="Submit">
+</form>
+
+
+
+{% endblock %}

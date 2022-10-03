@@ -1,105 +1,138 @@
 from flask import render_template, redirect, request, abort
+
 from google.oauth2 import id_token
 from google.auth.transport import requests
+
 from app import app, db
+
 import helper
 import db_queries as queries
 import json 
 
 
-# from config import ENV, CLIENT_ID
-# if ENV == 'local':
-#     print("ENV: local")
-#     GOOGLE_URI = "http://localhost:5000/google_login"
-# elif ENV == 'test':
-#     print("ENV: test")
-#     GOOGLE_URI = "TO BE DEFINED"
-# elif ENV == 'prod':
-#     print("ENV: prod")
-#     GOOGLE_URI = "https://superadmin3000.herokuapp.com/google_login"
-# else:
-#     print("ENV:", ENV)  # Should this throw an error?
-
 print("ENV:", app.config["ENV"])
 
 
-@app.route("/testdb/new")
-def test_new_question_page():
-    """  Retuns a page for creating a new question to test the database connection
+@app.route("/new_question", methods=["GET"])
+def new_question():
+    """  Retuns a page for creating a new question.
     """
     surveys = queries.get_all_surveys()
-    print(surveys)
-    return render_template("testdb_new.html", ENV=app.config["ENV"], surveys=surveys)
+    categories=queries.get_all_categories()
+    return render_template("new_question.html", ENV=app.config["ENV"], surveys=surveys, categories=categories)
 
 
-# @app.route("/testdb/add_question", methods=["POST"])
-# def test_create_new_question():
-#     """ Add a question to the database
-#     """
-#     question = request.form["content"]
-
-#     # pylint: disable-next=line-too-long
-#     sql = "INSERT INTO \"Questions\" (\"text\", \"surveyId\", \"createdAt\", \"updatedAt\") VALUES (:question, '1', (select CURRENT_TIMESTAMP), (select CURRENT_TIMESTAMP))"
-#     db.session.execute(sql, {"question": question})
-#     db.session.commit()
-
-# return redirect("/testdb")
-
-@app.route("/testdb/get_surveys")
-def get_all_surveys():
-    surveys=queries.get_all_surveys()
-    return render_template("surveys.html", surveys = surveys, ENV=app.config["ENV"])
-
-@app.route("/testdb")
-def testdb():
-    """ Open the test database
+@app.route("/add_question", methods=["POST"])
+def add_question():
+    """ Adds a new question to the database
     """
-    result = db.session.execute("SELECT text FROM \"Questions\"")
-    questions = result.fetchall()
-    return render_template("testdb.html", count=len(questions), questions=questions, ENV=app.config["ENV"])
+    text = request.form["text"]
+    surveyId = request.form["surveyId"]
+
+    # Constructs a list of category dictionaries.
+    # TO DO: Move to services.py
+    # TO DO: Add frontend validation of the user inputs
+    category_list=[]
+    categories=queries.get_all_categories()
+    for category in categories:
+        dict={}
+        dict["category"]=category[1]
+        weight=request.form["cat"+str(category[0])]
+        try:
+            if not weight: #no input means zero weight
+                weight=0
+            weight=str(weight).replace(",", ".")
+            dict["multiplier"]=float(weight)
+        except:
+            return ("Invalid weights")
+        category_list.append(dict)
+
+
+    category_weights = json.dumps(category_list)
+    survey_id = queries.create_question(text,surveyId, category_weights)
+
+    return redirect("/questions")
 
 
 @app.route("/", methods=["GET"])
 def index():
     """ Main page
 
-    If there's active session, index.html will be rendered,
-    otherwise the login page will be displayed.
+    If there's active session, main page with existing surveys
+    will be rendered, otherwise the login page will be displayed.
     """
-    if helper.logged_in():
-        return render_template("index.html", ENV=app.config["ENV"])
-    return render_template("google_login.html", URI=app.config["GOOGLE_URI"], ENV=app.config["ENV"])
+    if not helper.logged_in():
+        return render_template("google_login.html", URI=app.config["GOOGLE_URI"], ENV=app.config["ENV"])
+
+    surveys = queries.get_all_surveys()
+    if surveys is False:
+        report = "There are no surveys"
+        return render_template("index.html", no_surveys=report,\
+            ENV=app.config["ENV"])
+    return render_template("index.html", surveys=surveys, ENV=app.config["ENV"])
+
+
+@app.route("/surveys")
+def get_all_surveys():
+    """ List all surveys in the database
+    """
+    result = db.session.execute("SELECT id, name, title_text FROM \"Surveys\"")
+    surveys = result.fetchall()
+
+    return render_template("surveys.html", surveys=surveys, ENV=app.config["ENV"])
+
+
+@app.route("/questions")
+def get_all_questions():
+    """ List all the questions in the database
+    """
+    #TO DO: Move the query to db_queries
+    result = db.session.execute("SELECT text FROM \"Questions\"")
+    questions = result.fetchall()
+
+    return render_template("questions.html", count=len(questions), questions=questions, ENV=app.config["ENV"])
 
 
 @app.route("/google_login", methods=["POST"])
 def google_login():
     """ Login with a Google account.
     """
+    print("Google login...", flush=True)
+
     try:
         csrf_token_cookie = request.cookies.get('g_csrf_token')
         if not csrf_token_cookie:
             abort(400, 'No CSRF token in Cookie.')
+
         csrf_token_body = request.form['g_csrf_token']
         if not csrf_token_body:
             abort(400, 'No CSRF token in post body.')
+
         if csrf_token_cookie != csrf_token_body:
             abort(400, 'Failed to verify double submit cookie.')
+
         token = request.form["credential"]
         if not token:
             abort(400, 'No token found.')
+
         idinfo = id_token.verify_oauth2_token(
             token, requests.Request(), app.config["CLIENT_ID"], clock_skew_in_seconds=10)
         email = idinfo['email']
+
         email_verified = idinfo['email_verified']
         if not email_verified:
             abort(400, 'Email not verified by Google.')
+
         first_name = idinfo['given_name']
         if queries.authorized_google_login(email):
             helper.update_session(email, first_name, csrf_token_cookie)
+            print("Google login OK", flush=True)
             return redirect("/")
+
     except ValueError:
         # Invalid token
         pass
+
     return "You are not authorized to use the service. Please contact your administrator."
 
 
@@ -108,29 +141,42 @@ def logout():
     """ Logout the user by removing all properties from the session
     and returning to the front page
     """
+    if not helper.valid_token(request.form):
+        abort(403)
+
     helper.clear_session()
+
     return redirect("/")
 
 
-@app.route("/new")
-def new():
+@app.route("/new_survey")
+def new_survey():
     """Renders the new questionnaire page
     """
     if not helper.logged_in():
         return redirect("/")
 
-    return render_template("new.html", ENV=app.config["ENV"])
+    return render_template("new_survey.html", ENV=app.config["ENV"])
 
 
-@app.route("/edit")
-def edit():
+@app.route("/edit_survey")
+def edit_survey():
     """Renders the edit questionnaire page
     """
     if not helper.logged_in():
         return redirect("/")
 
-    return render_template("edit.html", ENV=app.config["ENV"])
+    return render_template("edit_survey.html", ENV=app.config["ENV"])
 
+
+@app.route("/edit_question")
+def edit_question():
+    """Renders the page for editing questions
+    """
+    if not helper.logged_in():
+        return redirect("/")
+
+    return render_template("edit_question.html", ENV=app.config["ENV"])
 
 @app.route("/test")
 def test_page():
@@ -138,6 +184,7 @@ def test_page():
     """
     if not helper.logged_in():
         abort(401)
+
     return render_template("test.html", ENV=app.config["ENV"])
 
 
@@ -170,6 +217,11 @@ def backdoor_form():
 @app.route("/backdoor", methods=["POST"])
 def backdoor_login():
     """ Receive and process the backdoor login
+
+    Session token is not validated in this POST handler,
+    because there should be no no active session yet.
+
+    THIS BACKDOOR WILL BE REMOVED FROM THE PRODUCTION CODE
     """
     if app.config["ENV"] not in ["prod"]:
         username = request.form["username"]
@@ -185,49 +237,43 @@ def ping():
     """
     return "pong"
 
+
 @app.route("/create_survey", methods=["POST"])
 def create_survey():
     """ Takes arguments from new.html
     and calls a db function using them
-    which creates a survey into Surveys """
+    which creates a survey into Surveys
+    """
+
+    if not helper.valid_token(request.form):
+        abort(403)
+
     name = request.form["name"]
     title = request.form["title"]
     survey = request.form["survey"]
-    survey_id = queries.create_survey(name,title,survey)
+    survey_id = queries.create_survey(name, title, survey)
     route = "/surveys/" + str(survey_id)
+
     return redirect(route)
+
 
 @app.route("/surveys/<survey_id>")
 def view_survey(survey_id):
     """ Looks up survey information based
     on the id with a db function and renders
     a page with the info from the survey """
+
+    if not helper.logged_in():
+        return redirect("/")
+
     survey = queries.get_survey(survey_id)
     if survey is False:
         report = "There is no survey by that id"
-        return render_template("view_survey.html",no_survey=report,\
-            ENV=app.config["ENV"])
+
+        return render_template("view_survey.html", no_survey=report,
+                               ENV=app.config["ENV"])
+
     survey_questions = queries.get_questions_of_questionnaire(survey_id)
     return render_template("view_survey.html",name=survey[1],\
     created=survey[2],updated=survey[3],title=survey[4],\
         text=survey[5], questions=survey_questions, ENV=app.config["ENV"])
-
-
-@app.route("/testdb/add_question", methods=["POST"])
-def add_question():
-    """ Adds a new question to the database
-    """
-    text = request.form["text"]
-    surveyId = request.form["surveyId"]
-
-    #TO DO: TÄHÄN PITÄISI TULLA PAINOT JSON-MUOTOISENA
-    # category_weights=request.form["category_weights"] 
-    
-    #Temporary workaround
-    categories_as_dict=[{"category": "Category 1", "multiplier": 1}, {"category": "Category 2", "multiplier": 1}, {"category": "Category 3", "multiplier": 0}, {"category": "Category 4", "multiplier": 0}, {"category": "Category 5", "multiplier": 0}]
-    json_object = json.dumps(categories_as_dict)
-    category_weights=json_object
-
-    survey_id = queries.create_question(text,surveyId, category_weights)
-
-    return redirect("/testdb")
