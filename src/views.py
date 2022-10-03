@@ -46,6 +46,7 @@ def get_all_surveys():
     return render_template("surveys.html", surveys=surveys, ENV=app.config["ENV"])
 
 
+
 @app.route("/testdb")
 def testdb():
     """ Open the test database
@@ -60,13 +61,19 @@ def testdb():
 # def index():
 #     """ Main page
 
-#     If there's active session, index.html will be rendered,
-#     otherwise the login page will be displayed.
-#     """
-#     if helper.logged_in():
-#         return render_template("index.html", ENV=app.config["ENV"])
+    # If there's active session, main page with existing surveys
+    # will be rendered, otherwise the login page will be displayed.
+    # """
+    # if not helper.logged_in():
+    #     return render_template("google_login.html", URI=app.config["GOOGLE_URI"], ENV=app.config["ENV"])
 
-#     return render_template("google_login.html", URI=app.config["GOOGLE_URI"], ENV=app.config["ENV"])
+    # surveys = queries.get_all_surveys()
+    # if surveys is False:
+    #     report = "There are no surveys"
+    #     return render_template("index.html", no_surveys=report,\
+    #         ENV=app.config["ENV"])
+    # return render_template("index.html", surveys=surveys, ENV=app.config["ENV"])
+
 
 
 # @app.route("/google_login", methods=["POST"])
@@ -230,16 +237,17 @@ def test_form():
 #     on the id with a db function and renders
 #     a page with the info from the survey """
 
-#     survey = queries.get_survey(survey_id)
+    # if not helper.logged_in():
+    #     return redirect("/")
 
-#     if survey is False:
-#         report = "There is no survey by that id"
+    # survey = queries.get_survey(survey_id)
+    # if survey is False:
+    #     report = "There is no survey by that id"
 
 #         return render_template("view_survey.html", no_survey=report,
 #                                ENV=app.config["ENV"])
 
-#     survey_questions = queries.get_questions_of_questionnaire(survey_id)
-
-#     return render_template("view_survey.html", name=survey[1],
-#                            created=survey[2], updated=survey[3], title=survey[4],
-#                            text=survey[5], questions=survey_questions, ENV=app.config["ENV"])
+    # survey_questions = queries.get_questions_of_questionnaire(survey_id)
+    # return render_template("view_survey.html",name=survey[1],\
+    # created=survey[2],updated=survey[3],title=survey[4],\
+    #     text=survey[5], questions=survey_questions, ENV=app.config["ENV"])

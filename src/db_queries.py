@@ -45,6 +45,32 @@ def get_survey(survey_id):
         return False
     return survey
 
+def get_all_surveys():
+    """ Fetches all surveys, counts the questions
+    for each survey and the amount of submissions
+    related to the survey returning a list
+
+    Returns: Array containing the survey id, title,
+    question count and submission count """
+    sql = """
+    SELECT 
+        s.id, 
+        s.title_text,
+        COUNT(DISTINCT q.id) AS questions,
+        COUNT(DISTINCT r.id) AS submissions
+    FROM "Surveys" AS s
+    LEFT JOIN "Survey_results" AS r
+        ON s.id = r."surveyId"
+    LEFT JOIN "Questions" AS q
+        ON s.id = q."surveyId"
+    GROUP BY s.id
+    """
+    surveys = db.session.execute(sql).fetchall()
+
+    if not surveys:
+        return False
+    return surveys
+
 
 def get_questions_of_questionnaire(questionnaire_id):
     """ Fetches questions of a given questionnaire
