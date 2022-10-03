@@ -36,6 +36,26 @@ def create_survey(name, title, survey):
     db.session.commit()
     return survey_id[0]
 
+def create_question(text, surveyId, category_weights):
+    """ Inserts a new question to table Questions based
+    on given parameters and returns the id """
+    created = datetime.now()
+    sql = """
+    INSERT INTO "Questions"
+    ("text", "surveyId", "category_weights", "createdAt","updatedAt")
+    VALUES (:text, :surveyId, :category_weights, :createdAt, :updatedAt)
+    RETURNING id """
+    values = {
+        "text": text,
+        "surveyId": surveyId,
+        "category_weights": category_weights,
+        "createdAt": created,
+        "updatedAt": created
+    }
+    survey_id = db.session.execute(sql,values).fetchone()
+    db.session.commit()
+    return survey_id[0]
+
 def get_survey(survey_id):
     """ Looks up survey information with
     id and returns it in a list"""
@@ -60,3 +80,16 @@ def get_questions_of_questionnaire(questionnaire_id):
     questions = result.fetchall()
 
     return questions
+
+def get_all_surveys():
+    """ Fetches all surveys from the database
+
+    Returns:
+      An array containing survey id's, names and titles
+    """
+    sql = """ SELECT id, name, title_text FROM "Surveys" """
+    result = db.session.execute(sql)
+
+    surveys = result.fetchall()
+
+    return surveys

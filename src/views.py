@@ -4,6 +4,8 @@ from google.auth.transport import requests
 from app import app, db
 import helper
 import db_queries as queries
+import json 
+
 
 # from config import ENV, CLIENT_ID
 # if ENV == 'local':
@@ -22,29 +24,30 @@ print("ENV:", app.config["ENV"])
 
 
 @app.route("/testdb/new")
-def new_message():
-    """  Create new message to test database
+def test_new_question_page():
+    """  Retuns a page for creating a new question to test the database connection
     """
-    return render_template("testdb_new.html", ENV=app.config["ENV"])
+    surveys = queries.get_all_surveys()
+    print(surveys)
+    return render_template("testdb_new.html", ENV=app.config["ENV"], surveys=surveys)
 
 
-@app.route("/testdb/add_question", methods=["POST"])
-def send_message():
-    """ Add a question to the database
-    """
-    question = request.form["content"]
+# @app.route("/testdb/add_question", methods=["POST"])
+# def test_create_new_question():
+#     """ Add a question to the database
+#     """
+#     question = request.form["content"]
 
-    # pylint: disable-next=line-too-long
-    sql = "INSERT INTO \"Questions\" (\"text\", \"surveyId\", \"createdAt\", \"updatedAt\") VALUES (:question, '1', (select CURRENT_TIMESTAMP), (select CURRENT_TIMESTAMP))"
-    db.session.execute(sql, {"question": question})
-    db.session.commit()
+#     # pylint: disable-next=line-too-long
+#     sql = "INSERT INTO \"Questions\" (\"text\", \"surveyId\", \"createdAt\", \"updatedAt\") VALUES (:question, '1', (select CURRENT_TIMESTAMP), (select CURRENT_TIMESTAMP))"
+#     db.session.execute(sql, {"question": question})
+#     db.session.commit()
 
-    return redirect("/testdb")
+# return redirect("/testdb")
 
 @app.route("/testdb/get_surveys")
 def get_all_surveys():
-    result = db.session.execute("SELECT id, name, title_text FROM \"Surveys\"")
-    surveys = result.fetchall()
+    surveys=queries.get_all_surveys()
     return render_template("surveys.html", surveys = surveys, ENV=app.config["ENV"])
 
 @app.route("/testdb")
@@ -208,3 +211,23 @@ def view_survey(survey_id):
     return render_template("view_survey.html",name=survey[1],\
     created=survey[2],updated=survey[3],title=survey[4],\
         text=survey[5], questions=survey_questions, ENV=app.config["ENV"])
+
+
+@app.route("/testdb/add_question", methods=["POST"])
+def add_question():
+    """ Adds a new question to the database
+    """
+    text = request.form["text"]
+    surveyId = request.form["surveyId"]
+
+    #TO DO: TÄHÄN PITÄISI TULLA PAINOT JSON-MUOTOISENA
+    # category_weights=request.form["category_weights"] 
+    
+    #Temporary workaround
+    categories_as_dict=[{"category": "Category 1", "multiplier": 1}, {"category": "Category 2", "multiplier": 1}, {"category": "Category 3", "multiplier": 0}, {"category": "Category 4", "multiplier": 0}, {"category": "Category 5", "multiplier": 0}]
+    json_object = json.dumps(categories_as_dict)
+    category_weights=json_object
+
+    survey_id = queries.create_question(text,surveyId, category_weights)
+
+    return redirect("/testdb")
