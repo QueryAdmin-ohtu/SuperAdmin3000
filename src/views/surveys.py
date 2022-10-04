@@ -79,7 +79,7 @@ def view_survey(survey_id):
         return redirect("/")
 
     survey = queries.get_survey(survey_id)
-    questions = queries.get_questions_of_questionnaire(survey_id)
+    questions = queries.get_questions_of_survey(survey_id)
     
     return render_template("surveys/view_survey.html", survey=survey, questions=questions, survey_id=survey_id)
 

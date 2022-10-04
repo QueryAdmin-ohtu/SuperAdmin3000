@@ -74,7 +74,7 @@ def get_all_surveys():
     return surveys
 
 
-def get_questions_of_questionnaire(questionnaire_id):
+def get_questions_of_survey(questionnaire_id):
     """ Fetches questions of a given questionnaire
     Args:
       questionnaire_id: Id of the questionnaire
@@ -88,3 +88,4 @@ def get_questions_of_questionnaire(questionnaire_id):
     questions = result.fetchall()
 
     return questions
+
