@@ -1,5 +1,6 @@
 from datetime import datetime
 import re
+from repositories.survey_repository import SurveyRepository
 
 class UserInputError(Exception):
     pass
@@ -61,15 +62,25 @@ class SurveyService:
 
         return self.survey_repository.get_survey(survey_id)
 
+    def get_all_surveys(self):
+        """ Fetches all surveys, counts the questions
+        for each survey and the amount of submissions
+        related to the survey returning a list
+
+        Returns: Array containing the survey id, title,
+        question count and submission count """
+
+        return self.survey_repository.get_all_surveys()
+
     def get_questions_of_survey(self, survey_id: str):
-        """ Fetches questions of a given questionnaire
+        """ Fetches questions of a given survey
         Args:
-          questionnaire_id: Id of the questionnaire
+          survey_id: Id of the survey
 
         Returns:
           An array containing each question object
         """
-        return self.survey_repository.get_questions_of_questionnaire(survey_id)
+        return self.survey_repository.get_questions_of_survey(survey_id)
 
     def _validate_survey_details(self, name: str, title: str, description: str):
         """ Checks given survey details
@@ -103,3 +114,5 @@ class SurveyService:
             return True
 
         raise UserInputError("Given email address is flawed")
+
+survey_service = SurveyService(SurveyRepository())

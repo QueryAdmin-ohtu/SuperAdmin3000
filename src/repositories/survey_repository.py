@@ -1,10 +1,11 @@
+from db import db
 
 class SurveyRepository:
     """
     A class for interacting with the survey database
     """
 
-    def __init__(self, db_connection):
+    def __init__(self, db_connection = db):
         self.db_connection = db_connection
 
     def authorized_google_login(self, email):
@@ -47,17 +48,43 @@ class SurveyRepository:
         if not survey:
             return False
         return survey
-        
-    def get_questions_of_questionnaire(self, questionnaire_id):
-        """ Fetches questions of a given questionnaire
+
+    def get_all_surveys(self):
+        """ Fetches all surveys, counts the questions
+        for each survey and the amount of submissions
+        related to the survey returning a list
+
+        Returns: Array containing the survey id, title,
+        question count and submission count """
+        sql = """
+        SELECT 
+            s.id, 
+            s.title_text,
+            COUNT(DISTINCT q.id) AS questions,
+            COUNT(DISTINCT r.id) AS submissions
+        FROM "Surveys" AS s
+        LEFT JOIN "Survey_results" AS r
+            ON s.id = r."surveyId"
+        LEFT JOIN "Questions" AS q
+            ON s.id = q."surveyId"
+        GROUP BY s.id
+        """
+        surveys = self.db_connection.session.execute(sql).fetchall()
+
+        if not surveys:
+            return False
+        return surveys
+
+    def get_questions_of_survey(self, survey_id):
+        """ Fetches questions of a given survey
         Args:
-          questionnaire_id: Id of the questionnaire
+          survey_id: Id of the survey
 
         Returns:
           An array containing each question object
         """
-        sql = "SELECT * FROM \"Questions\" WHERE \"Questions\".\"surveyId\"=:questionnaire_id"
-        result = self.db_connection.session.execute(sql, {"questionnaire_id": questionnaire_id})
+        sql = "SELECT * FROM \"Questions\" WHERE \"Questions\".\"surveyId\"=:survey_id"
+        result = self.db_connection.session.execute(sql, {"survey_id": survey_id})
 
         questions = result.fetchall()
 

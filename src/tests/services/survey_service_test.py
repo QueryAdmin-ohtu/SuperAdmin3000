@@ -66,7 +66,7 @@ class TestSurveyService(unittest.TestCase):
     def test_get_questions_of_survey_calls_repo_correctyl(self):
         questions_to_return= ["question1", "question2"]
         survey_id = 1
-        self.repo_mock.get_questions_of_questionnaire.return_value = questions_to_return
+        self.repo_mock.get_questions_of_survey.return_value = questions_to_return
         check = self.survey_service.get_questions_of_survey(survey_id)
         self.assertEqual(questions_to_return, check)
-        self.repo_mock.get_questions_of_questionnaire.assert_called_with(survey_id)
+        self.repo_mock.get_questions_of_survey.assert_called_with(survey_id)

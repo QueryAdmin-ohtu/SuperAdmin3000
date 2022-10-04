@@ -1,0 +1,25 @@
+{% extends "layout.html" %}
+{% block content %}
+
+{% if survey %}
+<h1>Statistics</h1>
+<h2>Survey: {{ survey[1] }} ID: {{ survey[0] }}</h2>
+
+<div>
+<ul>
+  <li>Created: {{ survey[2] }}</li>
+  <li>Updated: {{ survey[3] }}</li>
+  <li>Title: {{ survey[4] }}</li>
+  <li>Text: {{ survey[5] }}</li>
+</ul>
+</div>
+<div>
+
+  {{ statistics }}
+</div>
+
+{% else %}
+There is no survey with ID: {{ survey_id }}
+{% endif %}
+
+{% endblock %}
