@@ -1,9 +1,8 @@
 import unittest
 from unittest.mock import Mock
-
-from services.survey_service import SurveyService
-
 from datetime import datetime
+from freezegun import freeze_time
+from services.survey_service import SurveyService
 
 class TestSurveyService(unittest.TestCase):
     def setUp(self):
@@ -22,7 +21,8 @@ class TestSurveyService(unittest.TestCase):
         check = self.survey_service.check_if_authorized_google_login(email_address)
         self.assertFalse(check)
         assert not self.repo_mock.authorized_google_login.called
-        
+
+    @freeze_time('2013-04-09')
     def test_create_survey_works_with_proper_arguments(self):
         self.repo_mock.create_survey.return_value = 1
         name = "Marsupial Survey"
@@ -30,4 +30,4 @@ class TestSurveyService(unittest.TestCase):
         description = "Come and find out what marsupial represents you best"
         check = self.survey_service.create_survey(name, title, description)
         self.assertEqual(check, 1)
-        self.repo_mock.create_survey.assert_called_with(name, title, description, datetime.now)
+        self.repo_mock.create_survey.assert_called_with(name, title, description, datetime(2013, 4, 9))
