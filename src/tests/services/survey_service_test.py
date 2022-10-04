@@ -56,12 +56,19 @@ class TestSurveyService(unittest.TestCase):
             self.survey_service.create_survey(name, title, description)
 
     def test_get_survey_calls_repo_correctly(self):
-        survey_to_return = { "name": "survey_name" , "title": "survey_title", "description": "survey_description"}
+        survey_to_return = { "name": "survey_name" , "title": "survey_title", "description": "survey_description" }
         survey_id = 1
         self.repo_mock.get_survey.return_value = survey_to_return
         check = self.survey_service.get_survey(survey_id)
         self.assertEqual(check, survey_to_return)
         self.repo_mock.get_survey.assert_called_with(survey_id)
+
+    def test_get_all_surveys_calls_repo_correctly(self):
+        surveys_to_return = [{"name": "survey_name" , "title": "survey_title", "description": "survey_description", "questions": 12, "submissions": 2}]
+        self.repo_mock.get_all_surveys.return_value = surveys_to_return
+        check = self.survey_service.get_all_surveys()
+        self.assertEqual(surveys_to_return, check)
+        self.repo_mock.get_all_surveys.assert_called_once()
 
     def test_get_questions_of_survey_calls_repo_correctyl(self):
         questions_to_return= ["question1", "question2"]
