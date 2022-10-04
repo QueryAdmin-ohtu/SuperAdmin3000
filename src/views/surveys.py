@@ -2,7 +2,7 @@ from flask import render_template, redirect, request, abort, Blueprint
 from flask import current_app as app
 
 import helper
-import db_queries as queries
+from services.survey_service import survey_service
 
 surveys = Blueprint("surveys", __name__)
 
@@ -24,7 +24,7 @@ def surveys_edit(survey_id):
     if not helper.logged_in():
         return redirect("/")
 
-    survey = queries.get_survey(survey_id)
+    survey = survey_service.get_survey(survey_id)
 
     return render_template("surveys/edit.html", survey=survey, survey_id=survey_id)
 
@@ -43,7 +43,7 @@ def surveys_update():
     survey = request.form["text"]
 
     # TODO: Implement the SQL query for updating a survey
-    #  result = queries.update_survey(survey_id, name, title, text)
+    #  result = survey_service.update_survey(survey_id, name, title, text)
 
     route = f"/surveys/{survey_id}"
 
@@ -63,7 +63,7 @@ def create_survey():
     name = request.form["name"]
     title = request.form["title"]
     survey = request.form["survey"]
-    survey_id = queries.create_survey(name, title, survey)
+    survey_id = survey_service.create_survey(name, title, survey)
     route = f"/surveys/{survey_id}"
 
     return redirect(route)
@@ -78,8 +78,8 @@ def view_survey(survey_id):
     if not helper.logged_in():
         return redirect("/")
 
-    survey = queries.get_survey(survey_id)
-    questions = queries.get_questions_of_survey(survey_id)
+    survey = survey_service.get_survey(survey_id)
+    questions = survey_service.get_questions_of_survey(survey_id)
     
     return render_template("surveys/view_survey.html", survey=survey, questions=questions, survey_id=survey_id)
 
@@ -92,7 +92,7 @@ def surveys_statistics(survey_id):
     if not helper.logged_in():
         return redirect("/")
 
-    survey = queries.get_survey(survey_id)
+    survey = survey_service.get_survey(survey_id)
 
     #  TODO: get statistics
     statistics = "JUGE STATS HERE!"

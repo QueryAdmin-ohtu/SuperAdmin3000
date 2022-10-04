@@ -5,7 +5,7 @@ from google.oauth2 import id_token
 from google.auth.transport import requests
 
 import helper
-import db_queries as queries
+from services.survey_service import survey_service
 
 home = Blueprint("home", __name__)
 
@@ -19,7 +19,7 @@ def index():
     if not helper.logged_in():
         return render_template("home/google_login.html", URI=app.config["GOOGLE_URI"], ENV=app.config["ENV"])
 
-    surveys = queries.get_all_surveys()
+    surveys = survey_service.get_all_surveys()
     if surveys is False:
         report = "There are no surveys"
         return render_template("index.html", no_surveys=report,
@@ -58,7 +58,7 @@ def google_login():
             abort(400, 'Email not verified by Google.')
 
         first_name = idinfo['given_name']
-        if queries.authorized_google_login(email):
+        if survey_service.check_if_authorized_google_login(email):
             helper.update_session(email, first_name, csrf_token_cookie)
             print("Google login OK", flush=True)
             return redirect("/")
