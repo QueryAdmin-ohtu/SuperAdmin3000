@@ -1,4 +1,5 @@
 from datetime import datetime
+import re
 
 class UserInputError(Exception):
     pass
@@ -22,7 +23,11 @@ class SurveyService:
         Returns:
             Boolean value
         """
-        return self.survey_repository.authorized_google_login(email)
+        try:
+            if self._validate_email_address(email):
+                return self.survey_repository.authorized_google_login(email)
+        except UserInputError:
+            return False
 
     def create_survey(self, name: str, title: str, description: str):
         """
@@ -72,7 +77,7 @@ class SurveyService:
             True if inputs are ok
 
         Raises:
-            UserInputError: If seurveys is missing required details
+            UserInputError: If survey is missing required details
 
         """
         if len(name) < 1 or len(title) < 1 or len(description) < 1:
@@ -82,3 +87,19 @@ class SurveyService:
             raise UserInputError("Survey input is too long")
 
         return True
+
+    def _validate_email_address(self, email_address: str):
+        """ Check if given email address
+        Returns:
+            True if inputs are ok
+
+        Raises:
+            UserInputError: If email address if flawed
+        """
+
+        regex = re.compile(r'([A-Za-z0-9]+[.-_])*[A-Za-z0-9]+@[A-Za-z0-9-]+(\.[A-Z|a-z]{2,})+')
+
+        if re.fullmatch(regex, email_address):
+            return True
+
+        raise UserInputError("Given email address is flawed")
