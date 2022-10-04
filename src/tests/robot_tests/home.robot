@@ -12,11 +12,8 @@ Home Page Should Be Open
 User Logged In With Correct Credentials
     Go To Backdoor Login Page
     Login With Correct Credentials
-    Page Should Contain  Hello rudolf!
-
-Logged In User Can Edit Questionnaires
-    Click Link  Edit an existing survey
-    Page Should Contain  Here you can eventually edit or delete existing questionnaires
+    Page Should Contain  Logged in
+    Page Should Contain  rudolf
 
 Logged In User Can See Surveys On Home Page
     Go To Home Page
@@ -33,10 +30,3 @@ Logged Out User Should Be On Login Page
     Go To Home Page
     Page Should Contain  Please login with your Google account:
 
-Logged Out User Cannot Edit Questionnaires
-    Go To Edit Questionnaires Page
-    Page Should Contain  Please login 
-
-Logged Out User Cannot Create Questionnaires
-    Go To Create New Questionnaire Page
-    Page Should Contain  Please login

@@ -1,4 +1,4 @@
-from app import ping
+from views.home import ping
 
 
 def test_ping(app):

@@ -28,12 +28,12 @@
                 class=" text-sky-600 hover:text-sky-700 hover:underline font-medium rounded-lg text-sm">New question</a>
                 <a href="/edit_question"
                 class=" text-sky-600 hover:text-sky-700 hover:underline font-medium rounded-lg text-sm">Edit question</a>
+                Logged in as <b>{{ session.username }}</b>
                 <form action="/logout" method="POST" class="m-1">
                 <button type="submit"
                     class=" text-sky-600 hover:text-sky-700 hover:underline focus:ring-4 font-medium rounded-lg text-sm">Logout</button>
                 <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
                 </form>
-    
             </nav>
         </div>
     </div>

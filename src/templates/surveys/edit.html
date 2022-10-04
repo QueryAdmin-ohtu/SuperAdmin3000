@@ -1,0 +1,19 @@
+{% extends "layout.html" %}
+{% block content %}
+<container class="flex flex-col gap-4">
+  <h3>Edit survey</h3>
+
+  {% if survey %}
+  <form action="/surveys/update" method="POST">
+    <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}"><br>
+    <input name="survey_id" type="text" class="border" readonly="readonly" value="{{ survey[0] }}"><br>
+    <input name="name" type="text" class="border" value="{{ survey[1] }}"><br>
+    <input name="title" type="text" class="border" value="{{ survey[4] }}"><br>
+    <input name="text" type="text" class="border" value="{{ survey[5] }}"><br>
+    <button type="submit"><button class="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">SAVE</button></button><br>
+  </form>
+  {% else %}
+  There is no survey with ID: {{ survey_id }}
+  {% endif %}
+</container>
+{% endblock %}

@@ -8,7 +8,7 @@ Test Setup  Go To Home Page
 
 *** Test Cases ***
 
-Logged In User Can Create Questionnaires
+Logged In User Can Create Surveys
     Go To Backdoor Login Page
     Login With Correct Credentials
     Make Two Surveys
@@ -19,17 +19,17 @@ Logged In User Can Create Questionnaires
     Page Should Contain  Toimiikohan
     Page Should Contain  Surveyn tekeminen testauksessa
 
-Logged In User Cannot Create Questionnaires Without Name
+Logged In User Cannot Create Surveys Without Name
     Click Link  Create a new survey
     Make Survey Without Name
     Alert Should Be Present  Must have a name
 
-Logged In User Cannot Create Questionnaires Without Title
+Logged In User Cannot Create Surveys Without Title
     Click Link  Create a new survey
     Make Survey Without Title
     Alert Should Be Present  Must have a title
 
-Logged In User Cannot Create Questionnaires Without Text
+Logged In User Cannot Create Surveys Without Text
     Click Link  Create a new survey
     Make Survey Without Text
     Alert Should Be Present  Must have a flavor text
