@@ -40,6 +40,27 @@ class SurveyRepository:
         self.db_connection.session.commit()
         return survey_id[0]
 
+
+    def create_question(text, surveyId, category_weights):
+        """ Inserts a new question to table Questions based
+        on given parameters and returns the id """
+        created = datetime.now()
+        sql = """
+        INSERT INTO "Questions"
+        ("text", "surveyId", "category_weights", "createdAt","updatedAt")
+        VALUES (:text, :surveyId, :category_weights, :createdAt, :updatedAt)
+        RETURNING id """
+        values = {
+            "text": text,
+            "surveyId": surveyId,
+            "category_weights": category_weights,
+            "createdAt": created,
+            "updatedAt": created
+        }
+        survey_id = db.session.execute(sql,values).fetchone()
+        db.session.commit()
+        return survey_id[0]
+
     def get_survey(self, survey_id):
         """ Looks up survey information with
         id and returns it in a list"""
@@ -89,3 +110,16 @@ class SurveyRepository:
         questions = result.fetchall()
 
         return questions
+    
+    def get_all_categories():
+        """ Fetches all categories from the database
+
+        Returns:
+        An array containing survey id's, names and titles
+        """
+        sql = """ SELECT id, name, description, content_links FROM "Categories" """
+        result = db.session.execute(sql)
+
+        categories = result.fetchall()
+
+        return categories

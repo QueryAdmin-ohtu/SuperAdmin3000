@@ -7,7 +7,7 @@ from services.survey_service import survey_service
 surveys = Blueprint("surveys", __name__)
 
 
-@surveys.route("/new")
+@surveys.route("/new_survey")
 def new():
     """Renders the new survey page
     """
