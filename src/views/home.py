@@ -9,6 +9,7 @@ import db_queries as queries
 
 home = Blueprint("home", __name__)
 
+
 @home.route("/", methods=["GET"])
 def index():
     """Main page
@@ -21,9 +22,10 @@ def index():
     surveys = queries.get_all_surveys()
     if surveys is False:
         report = "There are no surveys"
-        return render_template("index.html", no_surveys=report,\
-            ENV=app.config["ENV"])
+        return render_template("index.html", no_surveys=report,
+                               ENV=app.config["ENV"])
     return render_template("home/index.html", surveys=surveys, ENV=app.config["ENV"])
+
 
 @home.route("/google_login", methods=["POST"])
 def google_login():
@@ -80,6 +82,7 @@ def logout():
 
     return redirect("/")
 
+
 @home.route("/backdoor", methods=["GET"])
 def backdoor_form():
     """ Form for logging in without Google
@@ -106,6 +109,7 @@ def backdoor_login():
         if not helper.backdoor_validate_and_login(username, password):
             return abort(401)
     return redirect("/")
+
 
 @home.route("/ping")
 def ping():

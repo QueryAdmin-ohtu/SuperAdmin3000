@@ -5,6 +5,7 @@ from views.home import home
 from views.surveys import surveys
 from db import db
 
+
 def create_app():
     """Application factory to create Flask app"""
     app = Flask(__name__)
