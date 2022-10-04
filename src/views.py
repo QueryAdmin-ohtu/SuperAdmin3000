@@ -1,13 +1,10 @@
 from flask import render_template, redirect, request, abort
-
 from google.oauth2 import id_token
 from google.auth.transport import requests
 
-from app import app, db
+from app import app, survey_service
 
 import helper
-import db_queries as queries
-
 
 # from config import ENV, CLIENT_ID
 # if ENV == 'local':
@@ -23,51 +20,6 @@ import db_queries as queries
 #     print("ENV:", ENV)  # Should this throw an error?
 
 print("ENV:", app.config["ENV"])
-
-
-@app.route("/testdb/new")
-def new_message():
-    """  Create new message to test database
-    """
-    return render_template("testdb_new.html", ENV=app.config["ENV"])
-
-
-@app.route("/testdb/add_question", methods=["POST"])
-def send_message():
-    """ Add a question to the database
-    """
-    if not helper.valid_token(request.form):
-        abort(403)
-
-    question = request.form["content"]
-
-    # pylint: disable-next=line-too-long
-    sql = "INSERT INTO \"Questions\" (\"text\", \"surveyId\", \"createdAt\", \"updatedAt\") VALUES (:question, '1', (select CURRENT_TIMESTAMP), (select CURRENT_TIMESTAMP))"
-    db.session.execute(sql, {"question": question})
-    db.session.commit()
-
-    return redirect("/testdb")
-
-
-@app.route("/testdb/get_surveys")
-def get_all_surveys():
-    """ List all surveys in the database
-    """
-    result = db.session.execute("SELECT id, name, title_text FROM \"Surveys\"")
-    surveys = result.fetchall()
-
-    return render_template("surveys.html", surveys=surveys, ENV=app.config["ENV"])
-
-
-@app.route("/testdb")
-def testdb():
-    """ Open the test database
-    """
-    result = db.session.execute("SELECT text FROM \"Questions\"")
-    questions = result.fetchall()
-
-    return render_template("testdb.html", count=len(questions), questions=questions, ENV=app.config["ENV"])
-
 
 @app.route("/", methods=["GET"])
 def index():
@@ -113,7 +65,7 @@ def google_login():
             abort(400, 'Email not verified by Google.')
 
         first_name = idinfo['given_name']
-        if queries.authorized_google_login(email):
+        if survey_service.authorized_google_login(email):
             helper.update_session(email, first_name, csrf_token_cookie)
             print("Google login OK", flush=True)
             return redirect("/")
@@ -231,7 +183,7 @@ def create_survey():
     name = request.form["name"]
     title = request.form["title"]
     survey = request.form["survey"]
-    survey_id = queries.create_survey(name, title, survey)
+    survey_id = survey_service.create_survey(name, title, survey)
     route = "/surveys/" + str(survey_id)
 
     return redirect(route)
@@ -243,7 +195,7 @@ def view_survey(survey_id):
     on the id with a db function and renders
     a page with the info from the survey """
 
-    survey = queries.get_survey(survey_id)
+    survey = survey_service.get_survey(survey_id)
 
     if survey is False:
         report = "There is no survey by that id"
@@ -251,7 +203,7 @@ def view_survey(survey_id):
         return render_template("view_survey.html", no_survey=report,
                                ENV=app.config["ENV"])
 
-    survey_questions = queries.get_questions_of_questionnaire(survey_id)
+    survey_questions = survey_service.get_questions_of_survey(survey_id)
 
     return render_template("view_survey.html", name=survey[1],
                            created=survey[2], updated=survey[3], title=survey[4],
