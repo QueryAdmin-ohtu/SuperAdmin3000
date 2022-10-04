@@ -2,7 +2,7 @@ import unittest
 from unittest.mock import Mock
 from datetime import datetime
 from freezegun import freeze_time
-from services.survey_service import SurveyService
+from services.survey_service import SurveyService, UserInputError
 
 class TestSurveyService(unittest.TestCase):
     def setUp(self):
@@ -22,7 +22,9 @@ class TestSurveyService(unittest.TestCase):
         self.assertFalse(check)
         assert not self.repo_mock.authorized_google_login.called
 
-    @freeze_time('2013-04-09')
+    # SurveyService assigns the current time to each survey. @freeze_time allows us to set the current
+    # datetime.now() time for tests
+    @freeze_time('2013-04-09') 
     def test_create_survey_works_with_proper_arguments(self):
         self.repo_mock.create_survey.return_value = 1
         name = "Marsupial Survey"
@@ -31,3 +33,40 @@ class TestSurveyService(unittest.TestCase):
         check = self.survey_service.create_survey(name, title, description)
         self.assertEqual(check, 1)
         self.repo_mock.create_survey.assert_called_with(name, title, description, datetime(2013, 4, 9))
+
+    def test_create_survey_with_no_name_does_not_work(self):
+        name = ""
+        title = "What marsupial woudl I be?"
+        description = "Come and find out what marsupial represents you best"
+        with self.assertRaises(UserInputError):
+            self.survey_service.create_survey(name, title, description)
+
+    def test_create_survey_with_no_title_does_not_work(self):
+        name = "Marsupial Survey"
+        title = ""
+        description = "Come and find out what marsupial represents you best"
+        with self.assertRaises(UserInputError):
+            self.survey_service.create_survey(name, title, description)
+
+    def test_create_survey_with_no_description_does_not_work(self):
+        name = "Marsupial Survey"
+        title = "What marsupial woudl I be?"
+        description = ""
+        with self.assertRaises(UserInputError):
+            self.survey_service.create_survey(name, title, description)
+
+    def test_get_survey_calls_repo_correctly(self):
+        survey_to_return = { "name": "survey_name" , "title": "survey_title", "description": "survey_description"}
+        survey_id = 1
+        self.repo_mock.get_survey.return_value = survey_to_return
+        check = self.survey_service.get_survey(survey_id)
+        self.assertEqual(check, survey_to_return)
+        self.repo_mock.get_survey.assert_called_with(survey_id)
+
+    def test_get_questions_of_survey_calls_repo_correctyl(self):
+        questions_to_return= ["question1", "question2"]
+        survey_id = 1
+        self.repo_mock.get_questions_of_questionnaire.return_value = questions_to_return
+        check = self.survey_service.get_questions_of_survey(survey_id)
+        self.assertEqual(questions_to_return, check)
+        self.repo_mock.get_questions_of_questionnaire.assert_called_with(survey_id)
