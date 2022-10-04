@@ -22,10 +22,10 @@ Go To Home Page
 Go To Backdoor Login Page
     Go To  ${BACKDOOR URL}
 
-Go To Edit Questionnaires Page
+Go To Edit Surveys Page
     Go To  ${EDIT URL}
 
-Go To Create New Questionnaire Page
+Go To Create New Survey Page
     Go To  ${NEW URL}
 
 Go To Survey

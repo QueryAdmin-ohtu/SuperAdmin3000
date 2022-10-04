@@ -74,17 +74,18 @@ def get_all_surveys():
     return surveys
 
 
-def get_questions_of_questionnaire(questionnaire_id):
-    """ Fetches questions of a given questionnaire
+def get_questions_of_survey(survey_id):
+    """ Fetches questions of a given survey
     Args:
-      questionnaire_id: Id of the questionnaire
+      survey_id: Id of the survey
 
     Returns:
       An array containing each question object
     """
-    sql = "SELECT * FROM \"Questions\" WHERE \"Questions\".\"surveyId\"=:questionnaire_id"
-    result = db.session.execute(sql, {"questionnaire_id": questionnaire_id})
+    sql = "SELECT * FROM \"Questions\" WHERE \"Questions\".\"surveyId\"=:survey_id"
+    result = db.session.execute(sql, {"survey_id": survey_id})
 
     questions = result.fetchall()
 
     return questions
+

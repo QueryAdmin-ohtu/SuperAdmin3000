@@ -246,7 +246,7 @@
 #         return render_template("view_survey.html", no_survey=report,
 #                                ENV=app.config["ENV"])
 
-#     survey_questions = queries.get_questions_of_questionnaire(survey_id)
+#     survey_questions = queries.get_questions_of_survey(survey_id)
 #     return render_template("view_survey.html",name=survey[1],\
 #     created=survey[2],updated=survey[3],title=survey[4],\
 #         text=survey[5], questions=survey_questions, ENV=app.config["ENV"])
