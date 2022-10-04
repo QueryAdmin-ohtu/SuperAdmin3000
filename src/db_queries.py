@@ -89,3 +89,18 @@ def get_questions_of_survey(survey_id):
 
     return questions
 
+def delete_question_from_survey(survey_id, question_id):
+    """ Deletes a question in a given survey
+    Args:
+      survey_id: Id of the survey
+      question_id: Id of the question
+
+    Returns:
+      The deleted question
+    """
+    sql = "DELETE FROM \"Questions\" WHERE \"Questions\".\"surveyId\"=:survey_id AND \"id\"=:question_id"
+    result = db.session.execute(sql, {"survey_id":survey_id, "question_id":question_id})
+    db.session.commit()
+    return result
+
+
