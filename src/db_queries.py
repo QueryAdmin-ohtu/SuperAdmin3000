@@ -46,6 +46,7 @@ def get_survey(survey_id):
         return False
     return survey
 
+
 def get_all_surveys():
     """ Fetches all surveys, counts the questions
     for each survey and the amount of submissions

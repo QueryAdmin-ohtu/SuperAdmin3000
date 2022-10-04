@@ -1,15 +1,22 @@
 {% extends "layout.html" %}
 {% block content %}
-{{ no_survey }}
-{{ name }}<br>
-{{ title }}<br>
-{{ text }}<br>
-Created at<br>
-{{ created }}<br>
-Updated at<br>
-{{ updated }}
+
+{% if survey %}
+<h2>Survey: {{ survey[1] }} ID: {{ survey[0] }}</h2>
+
+<div>
+<ul>
+  <li>Created: {{ survey[2] }}</li>
+  <li>Updated: {{ survey[3] }}</li>
+  <li>Title: {{ survey[4] }}</li>
+  <li>Text: {{ survey[5] }}</li>  
+</ul>
+<a href="/surveys/edit/{{ survey[0] }}"><button class="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">EDIT</button></a><br>
+<a href="/surveys/statistics/{{ survey[0] }}"><button class="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Statistics</button></a><br>
+<div>
+
 <h2>Questions</h2>
-{% if questions|length > 0 %}
+{% if questions %}
 {% for question in questions %}
 <p>{{ question.text }}</p>
 <hr>
@@ -17,4 +24,9 @@ Updated at<br>
 {% else %}
 <p>Survey has no questions 🥺</p>
 {% endif %}
+
+{% else %}
+There is no survey with ID: {{ survey_id }}
+{% endif %}
+
 {% endblock %}

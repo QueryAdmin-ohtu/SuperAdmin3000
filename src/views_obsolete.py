@@ -47,7 +47,6 @@
 #     return render_template("surveys.html", surveys=surveys, ENV=app.config["ENV"])
 
 
-
 # @app.route("/testdb")
 # def testdb():
 #     """ Open the test database
@@ -74,7 +73,6 @@
 #         return render_template("index.html", no_surveys=report,\
 #             ENV=app.config["ENV"])
 #     return render_template("index.html", surveys=surveys, ENV=app.config["ENV"])
-
 
 
 # @app.route("/google_login", methods=["POST"])

@@ -6,6 +6,7 @@ import db_queries as queries
 
 surveys = Blueprint("surveys", __name__)
 
+
 @surveys.route("/new")
 def new():
     """Renders the new survey page
@@ -16,14 +17,38 @@ def new():
     return render_template("surveys/new.html", ENV=app.config["ENV"])
 
 
-@surveys.route("/edit")
-def edit():
+@surveys.route("/surveys/edit/<survey_id>")
+def surveys_edit(survey_id):
     """Renders the edit survey page
     """
     if not helper.logged_in():
         return redirect("/")
 
-    return render_template("surveys/edit.html", ENV=app.config["ENV"])
+    survey = queries.get_survey(survey_id)
+
+    return render_template("surveys/edit.html", survey=survey, survey_id=survey_id)
+
+
+@surveys.route("/surveys/update", methods=["POST"])
+def surveys_update():
+    """ Form handler for updating an existing survey info
+    """
+
+    if not helper.valid_token(request.form):
+        abort(403)
+
+    survey_id = request.form["survey_id"]
+    name = request.form["name"]
+    title = request.form["title"]
+    survey = request.form["text"]
+
+    # TODO: Implement the SQL query for updating a survey
+    #  result = queries.update_survey(survey_id, name, title, text)
+
+    route = f"/surveys/{survey_id}"
+
+    return redirect(route)
+
 
 @surveys.route("/create_survey", methods=["POST"])
 def create_survey():
@@ -39,7 +64,7 @@ def create_survey():
     title = request.form["title"]
     survey = request.form["survey"]
     survey_id = queries.create_survey(name, title, survey)
-    route = "/surveys/" + str(survey_id)
+    route = f"/surveys/{survey_id}"
 
     return redirect(route)
 
@@ -54,14 +79,22 @@ def view_survey(survey_id):
         return redirect("/")
 
     survey = queries.get_survey(survey_id)
-    if survey is False:
-        report = "There is no survey by that id"
+    questions = queries.get_questions_of_questionnaire(survey_id)
+    
+    return render_template("surveys/view_survey.html", survey=survey, questions=questions, survey_id=survey_id)
 
-        return render_template("surveys/view_survey.html", no_survey=report,
-                               ENV=app.config["ENV"])
 
-    survey_questions = queries.get_questions_of_questionnaire(survey_id)
+@surveys.route("/surveys/statistics/<survey_id>")
+def surveys_statistics(survey_id):
+    """ Open up statistics for the given survey
+    """
 
-    return render_template("surveys/view_survey.html",name=survey[1],\
-        created=survey[2],updated=survey[3],title=survey[4],\
-        text=survey[5], questions=survey_questions, ENV=app.config["ENV"])
+    if not helper.logged_in():
+        return redirect("/")
+
+    survey = queries.get_survey(survey_id)
+
+    #  TODO: get statistics
+    statistics = "JUGE STATS HERE!"
+
+    return render_template("surveys/statistics.html", survey=survey, statistics=statistics, survey_id=survey_id)

@@ -1,23 +1,20 @@
 {% extends "layout.html" %}
 {% block content %}
 <container class="flex flex-col gap-4">
-    <h3>Hello {{ session.username }}! 👋</h3>
-    <p>Welcome to the Super Admin 3000 experience.</p>
-    <p>Test content: +++ </p>
-    <h3>List of surveys</h3>
-    <br>
-    {{ no_surveys }}
-    {% for survey in surveys %}
-    <div>
+  <h3>List of surveys</h3>
+  <br>
+  {{ no_surveys }}
+  {% for survey in surveys %}
+  <div>
     <ul>
-    <li><span>Title: {{survey[1]}}</span></li>
-    <br>
-    <li><span>Questions: {{survey[2]}}</span></li>
-    <br>
-    <li><span>Submissions: {{survey[3]}}</span></li>
-    <br><br>
+      <li>Survey ID: {{survey[0]}}
+      <li><span>Title: {{survey[1]}}</span></li>
+      <li><span>Questions: {{survey[2]}}</span></li>
+      <li><span>Submissions: {{survey[3]}}</span></li>
+      <li><a href="/surveys/{{survey[0]}}"><button class="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">OPEN</button></a></li>
     </ul>
-    </div>
-{% endfor %}
+  </div>
+  <hr>
+  {% endfor %}
 </container>
 {% endblock %}
