@@ -10,7 +10,6 @@ ${BACKDOOR URL}  ${URL}/backdoor
 ${EDIT URL}  ${URL}/edit
 ${NEW URL}  ${URL}/new
 
-
 *** Keywords ***
 Open And Configure Browser
     Open Browser  browser=${BROWSER}
@@ -28,3 +27,7 @@ Go To Edit Questionnaires Page
 
 Go To Create New Questionnaire Page
     Go To  ${NEW URL}
+
+Go To Survey
+    [Arguments]  ${survey_id}
+    Go To  ${URL}/surveys/${survey_id}

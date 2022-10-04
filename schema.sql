@@ -3,7 +3,7 @@
 --
 
 -- Dumped from database version 14.5 (Ubuntu 14.5-1.pgdg20.04+1)
--- Dumped by pg_dump version 14.5 (Ubuntu 14.5-0ubuntu0.22.04.1)
+-- Dumped by pg_dump version 14.5
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -17,20 +17,18 @@ SET client_min_messages = warning;
 SET row_security = off;
 
 --
--- Name: heroku_ext; Type: SCHEMA; Schema: -; Owner: u9osjafbq65ukv
+-- Name: heroku_ext; Type: SCHEMA; Schema: -; Owner: -
 --
 
 CREATE SCHEMA heroku_ext;
 
-
-ALTER SCHEMA heroku_ext OWNER TO u9osjafbq65ukv;
 
 SET default_tablespace = '';
 
 SET default_table_access_method = heap;
 
 --
--- Name: Admins; Type: TABLE; Schema: public; Owner: kaeglmkspezpcf
+-- Name: Admins; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE public."Admins" (
@@ -39,10 +37,8 @@ CREATE TABLE public."Admins" (
 );
 
 
-ALTER TABLE public."Admins" OWNER TO kaeglmkspezpcf;
-
 --
--- Name: Admins_id_seq; Type: SEQUENCE; Schema: public; Owner: kaeglmkspezpcf
+-- Name: Admins_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
 CREATE SEQUENCE public."Admins_id_seq"
@@ -54,17 +50,15 @@ CREATE SEQUENCE public."Admins_id_seq"
     CACHE 1;
 
 
-ALTER TABLE public."Admins_id_seq" OWNER TO kaeglmkspezpcf;
-
 --
--- Name: Admins_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: kaeglmkspezpcf
+-- Name: Admins_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
 ALTER SEQUENCE public."Admins_id_seq" OWNED BY public."Admins".id;
 
 
 --
--- Name: Categories; Type: TABLE; Schema: public; Owner: kaeglmkspezpcf
+-- Name: Categories; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE public."Categories" (
@@ -77,10 +71,8 @@ CREATE TABLE public."Categories" (
 );
 
 
-ALTER TABLE public."Categories" OWNER TO kaeglmkspezpcf;
-
 --
--- Name: Categories_id_seq; Type: SEQUENCE; Schema: public; Owner: kaeglmkspezpcf
+-- Name: Categories_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
 CREATE SEQUENCE public."Categories_id_seq"
@@ -92,17 +84,15 @@ CREATE SEQUENCE public."Categories_id_seq"
     CACHE 1;
 
 
-ALTER TABLE public."Categories_id_seq" OWNER TO kaeglmkspezpcf;
-
 --
--- Name: Categories_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: kaeglmkspezpcf
+-- Name: Categories_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
 ALTER SEQUENCE public."Categories_id_seq" OWNED BY public."Categories".id;
 
 
 --
--- Name: Category_results; Type: TABLE; Schema: public; Owner: kaeglmkspezpcf
+-- Name: Category_results; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE public."Category_results" (
@@ -115,10 +105,8 @@ CREATE TABLE public."Category_results" (
 );
 
 
-ALTER TABLE public."Category_results" OWNER TO kaeglmkspezpcf;
-
 --
--- Name: Category_results_id_seq; Type: SEQUENCE; Schema: public; Owner: kaeglmkspezpcf
+-- Name: Category_results_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
 CREATE SEQUENCE public."Category_results_id_seq"
@@ -130,17 +118,15 @@ CREATE SEQUENCE public."Category_results_id_seq"
     CACHE 1;
 
 
-ALTER TABLE public."Category_results_id_seq" OWNER TO kaeglmkspezpcf;
-
 --
--- Name: Category_results_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: kaeglmkspezpcf
+-- Name: Category_results_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
 ALTER SEQUENCE public."Category_results_id_seq" OWNED BY public."Category_results".id;
 
 
 --
--- Name: Industries; Type: TABLE; Schema: public; Owner: kaeglmkspezpcf
+-- Name: Industries; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE public."Industries" (
@@ -151,10 +137,8 @@ CREATE TABLE public."Industries" (
 );
 
 
-ALTER TABLE public."Industries" OWNER TO kaeglmkspezpcf;
-
 --
--- Name: Industries_id_seq; Type: SEQUENCE; Schema: public; Owner: kaeglmkspezpcf
+-- Name: Industries_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
 CREATE SEQUENCE public."Industries_id_seq"
@@ -166,17 +150,15 @@ CREATE SEQUENCE public."Industries_id_seq"
     CACHE 1;
 
 
-ALTER TABLE public."Industries_id_seq" OWNER TO kaeglmkspezpcf;
-
 --
--- Name: Industries_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: kaeglmkspezpcf
+-- Name: Industries_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
 ALTER SEQUENCE public."Industries_id_seq" OWNED BY public."Industries".id;
 
 
 --
--- Name: Organizations; Type: TABLE; Schema: public; Owner: kaeglmkspezpcf
+-- Name: Organizations; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE public."Organizations" (
@@ -187,10 +169,8 @@ CREATE TABLE public."Organizations" (
 );
 
 
-ALTER TABLE public."Organizations" OWNER TO kaeglmkspezpcf;
-
 --
--- Name: Question_answers; Type: TABLE; Schema: public; Owner: kaeglmkspezpcf
+-- Name: Question_answers; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE public."Question_answers" (
@@ -203,10 +183,8 @@ CREATE TABLE public."Question_answers" (
 );
 
 
-ALTER TABLE public."Question_answers" OWNER TO kaeglmkspezpcf;
-
 --
--- Name: Question_answers_id_seq; Type: SEQUENCE; Schema: public; Owner: kaeglmkspezpcf
+-- Name: Question_answers_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
 CREATE SEQUENCE public."Question_answers_id_seq"
@@ -218,17 +196,15 @@ CREATE SEQUENCE public."Question_answers_id_seq"
     CACHE 1;
 
 
-ALTER TABLE public."Question_answers_id_seq" OWNER TO kaeglmkspezpcf;
-
 --
--- Name: Question_answers_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: kaeglmkspezpcf
+-- Name: Question_answers_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
 ALTER SEQUENCE public."Question_answers_id_seq" OWNED BY public."Question_answers".id;
 
 
 --
--- Name: Questions; Type: TABLE; Schema: public; Owner: kaeglmkspezpcf
+-- Name: Questions; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE public."Questions" (
@@ -241,10 +217,8 @@ CREATE TABLE public."Questions" (
 );
 
 
-ALTER TABLE public."Questions" OWNER TO kaeglmkspezpcf;
-
 --
--- Name: Questions_id_seq; Type: SEQUENCE; Schema: public; Owner: kaeglmkspezpcf
+-- Name: Questions_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
 CREATE SEQUENCE public."Questions_id_seq"
@@ -256,17 +230,15 @@ CREATE SEQUENCE public."Questions_id_seq"
     CACHE 1;
 
 
-ALTER TABLE public."Questions_id_seq" OWNER TO kaeglmkspezpcf;
-
 --
--- Name: Questions_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: kaeglmkspezpcf
+-- Name: Questions_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
 ALTER SEQUENCE public."Questions_id_seq" OWNED BY public."Questions".id;
 
 
 --
--- Name: Survey_results; Type: TABLE; Schema: public; Owner: kaeglmkspezpcf
+-- Name: Survey_results; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE public."Survey_results" (
@@ -279,10 +251,8 @@ CREATE TABLE public."Survey_results" (
 );
 
 
-ALTER TABLE public."Survey_results" OWNER TO kaeglmkspezpcf;
-
 --
--- Name: Survey_results_id_seq; Type: SEQUENCE; Schema: public; Owner: kaeglmkspezpcf
+-- Name: Survey_results_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
 CREATE SEQUENCE public."Survey_results_id_seq"
@@ -294,17 +264,15 @@ CREATE SEQUENCE public."Survey_results_id_seq"
     CACHE 1;
 
 
-ALTER TABLE public."Survey_results_id_seq" OWNER TO kaeglmkspezpcf;
-
 --
--- Name: Survey_results_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: kaeglmkspezpcf
+-- Name: Survey_results_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
 ALTER SEQUENCE public."Survey_results_id_seq" OWNED BY public."Survey_results".id;
 
 
 --
--- Name: Survey_user_groups; Type: TABLE; Schema: public; Owner: kaeglmkspezpcf
+-- Name: Survey_user_groups; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE public."Survey_user_groups" (
@@ -317,10 +285,8 @@ CREATE TABLE public."Survey_user_groups" (
 );
 
 
-ALTER TABLE public."Survey_user_groups" OWNER TO kaeglmkspezpcf;
-
 --
--- Name: Surveys; Type: TABLE; Schema: public; Owner: kaeglmkspezpcf
+-- Name: Surveys; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE public."Surveys" (
@@ -333,10 +299,8 @@ CREATE TABLE public."Surveys" (
 );
 
 
-ALTER TABLE public."Surveys" OWNER TO kaeglmkspezpcf;
-
 --
--- Name: Surveys_id_seq; Type: SEQUENCE; Schema: public; Owner: kaeglmkspezpcf
+-- Name: Surveys_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
 CREATE SEQUENCE public."Surveys_id_seq"
@@ -348,17 +312,15 @@ CREATE SEQUENCE public."Surveys_id_seq"
     CACHE 1;
 
 
-ALTER TABLE public."Surveys_id_seq" OWNER TO kaeglmkspezpcf;
-
 --
--- Name: Surveys_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: kaeglmkspezpcf
+-- Name: Surveys_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
 ALTER SEQUENCE public."Surveys_id_seq" OWNED BY public."Surveys".id;
 
 
 --
--- Name: User_answers; Type: TABLE; Schema: public; Owner: kaeglmkspezpcf
+-- Name: User_answers; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE public."User_answers" (
@@ -371,10 +333,8 @@ CREATE TABLE public."User_answers" (
 );
 
 
-ALTER TABLE public."User_answers" OWNER TO kaeglmkspezpcf;
-
 --
--- Name: User_answers_id_seq; Type: SEQUENCE; Schema: public; Owner: kaeglmkspezpcf
+-- Name: User_answers_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
 CREATE SEQUENCE public."User_answers_id_seq"
@@ -386,17 +346,15 @@ CREATE SEQUENCE public."User_answers_id_seq"
     CACHE 1;
 
 
-ALTER TABLE public."User_answers_id_seq" OWNER TO kaeglmkspezpcf;
-
 --
--- Name: User_answers_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: kaeglmkspezpcf
+-- Name: User_answers_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
 ALTER SEQUENCE public."User_answers_id_seq" OWNED BY public."User_answers".id;
 
 
 --
--- Name: Users; Type: TABLE; Schema: public; Owner: kaeglmkspezpcf
+-- Name: Users; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE public."Users" (
@@ -409,10 +367,8 @@ CREATE TABLE public."Users" (
 );
 
 
-ALTER TABLE public."Users" OWNER TO kaeglmkspezpcf;
-
 --
--- Name: Users_id_seq; Type: SEQUENCE; Schema: public; Owner: kaeglmkspezpcf
+-- Name: Users_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
 CREATE SEQUENCE public."Users_id_seq"
@@ -424,331 +380,309 @@ CREATE SEQUENCE public."Users_id_seq"
     CACHE 1;
 
 
-ALTER TABLE public."Users_id_seq" OWNER TO kaeglmkspezpcf;
-
 --
--- Name: Users_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: kaeglmkspezpcf
+-- Name: Users_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
 ALTER SEQUENCE public."Users_id_seq" OWNED BY public."Users".id;
 
 
 --
--- Name: Admins id; Type: DEFAULT; Schema: public; Owner: kaeglmkspezpcf
+-- Name: Admins id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public."Admins" ALTER COLUMN id SET DEFAULT nextval('public."Admins_id_seq"'::regclass);
 
 
 --
--- Name: Categories id; Type: DEFAULT; Schema: public; Owner: kaeglmkspezpcf
+-- Name: Categories id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public."Categories" ALTER COLUMN id SET DEFAULT nextval('public."Categories_id_seq"'::regclass);
 
 
 --
--- Name: Category_results id; Type: DEFAULT; Schema: public; Owner: kaeglmkspezpcf
+-- Name: Category_results id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public."Category_results" ALTER COLUMN id SET DEFAULT nextval('public."Category_results_id_seq"'::regclass);
 
 
 --
--- Name: Industries id; Type: DEFAULT; Schema: public; Owner: kaeglmkspezpcf
+-- Name: Industries id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public."Industries" ALTER COLUMN id SET DEFAULT nextval('public."Industries_id_seq"'::regclass);
 
 
 --
--- Name: Question_answers id; Type: DEFAULT; Schema: public; Owner: kaeglmkspezpcf
+-- Name: Question_answers id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public."Question_answers" ALTER COLUMN id SET DEFAULT nextval('public."Question_answers_id_seq"'::regclass);
 
 
 --
--- Name: Questions id; Type: DEFAULT; Schema: public; Owner: kaeglmkspezpcf
+-- Name: Questions id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public."Questions" ALTER COLUMN id SET DEFAULT nextval('public."Questions_id_seq"'::regclass);
 
 
 --
--- Name: Survey_results id; Type: DEFAULT; Schema: public; Owner: kaeglmkspezpcf
+-- Name: Survey_results id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public."Survey_results" ALTER COLUMN id SET DEFAULT nextval('public."Survey_results_id_seq"'::regclass);
 
 
 --
--- Name: Surveys id; Type: DEFAULT; Schema: public; Owner: kaeglmkspezpcf
+-- Name: Surveys id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public."Surveys" ALTER COLUMN id SET DEFAULT nextval('public."Surveys_id_seq"'::regclass);
 
 
 --
--- Name: User_answers id; Type: DEFAULT; Schema: public; Owner: kaeglmkspezpcf
+-- Name: User_answers id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public."User_answers" ALTER COLUMN id SET DEFAULT nextval('public."User_answers_id_seq"'::regclass);
 
 
 --
--- Name: Users id; Type: DEFAULT; Schema: public; Owner: kaeglmkspezpcf
+-- Name: Users id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public."Users" ALTER COLUMN id SET DEFAULT nextval('public."Users_id_seq"'::regclass);
 
 
 --
--- Data for Name: Admins; Type: TABLE DATA; Schema: public; Owner: kaeglmkspezpcf
+-- Data for Name: Admins; Type: TABLE DATA; Schema: public; Owner: -
 --
 
-COPY public."Admins" (id, email) FROM stdin;
-1	rami.piik@gmail.com
-2	antti.vainikka36@gmail.com
-3	jatufin@gmail.com
-4	me@juan.fi
-5	niemi.leo@gmail.com
-6	oskar.sjolund93@gmail.com
-7	siljaorvokki@gmail.com
-\.
+INSERT INTO public."Admins" VALUES (2, 'rami.piik@gmail.com');
+INSERT INTO public."Admins" VALUES (3, 'antti.vainikka36@gmail.com');
+INSERT INTO public."Admins" VALUES (4, 'jatufin@gmail.com');
+INSERT INTO public."Admins" VALUES (5, 'me@juan.fi');
+INSERT INTO public."Admins" VALUES (6, 'niemi.leo@gmail.com');
+INSERT INTO public."Admins" VALUES (7, 'oskar.sjolund93@gmail.com');
+INSERT INTO public."Admins" VALUES (8, 'siljaorvokki@gmail.com');
 
 
 --
--- Data for Name: Categories; Type: TABLE DATA; Schema: public; Owner: kaeglmkspezpcf
+-- Data for Name: Categories; Type: TABLE DATA; Schema: public; Owner: -
 --
 
-COPY public."Categories" (id, name, description, content_links, "createdAt", "updatedAt") FROM stdin;
-1	Category 1	Static descriptive text about the category 1.	[{"url":"https://www.eficode.com/cases/hansen","type":"Case Study"},{"url":"https://www.eficode.com/cases/basware","type":"Case Study"}]	2022-09-26 14:03:28.613+00	2022-09-26 14:03:28.613+00
-2	Category 2	Static descriptive text about the category 2.	[{"url":"https://www.eficode.com/cases/hansen","type":"Case Study"},{"url":"https://www.eficode.com/cases/basware","type":"Case Study"}]	2022-09-26 14:03:28.613+00	2022-09-26 14:03:28.613+00
-3	Category 3	Static descriptive text about the category 3.	[{"url":"https://www.eficode.com/cases/hansen","type":"Case Study"},{"url":"https://www.eficode.com/cases/basware","type":"Case Study"}]	2022-09-26 14:03:28.613+00	2022-09-26 14:03:28.613+00
-4	Category 4	Static descriptive text about the category 4.	[{"url":"https://www.eficode.com/cases/hansen","type":"Case Study"},{"url":"https://www.eficode.com/cases/basware","type":"Case Study"}]	2022-09-26 14:03:28.613+00	2022-09-26 14:03:28.613+00
-5	Category 5	Static descriptive text about the category 5.	[{"url":"https://www.eficode.com/cases/hansen","type":"Case Study"},{"url":"https://www.eficode.com/cases/basware","type":"Case Study"}]	2022-09-26 14:03:28.613+00	2022-09-26 14:03:28.613+00
-\.
+INSERT INTO public."Categories" VALUES (1, 'Category 1', 'Static descriptive text about the category 1.', '[{"url":"https://www.eficode.com/cases/hansen","type":"Case Study"},{"url":"https://www.eficode.com/cases/basware","type":"Case Study"}]', '2022-09-26 14:03:28.613+00', '2022-09-26 14:03:28.613+00');
+INSERT INTO public."Categories" VALUES (2, 'Category 2', 'Static descriptive text about the category 2.', '[{"url":"https://www.eficode.com/cases/hansen","type":"Case Study"},{"url":"https://www.eficode.com/cases/basware","type":"Case Study"}]', '2022-09-26 14:03:28.613+00', '2022-09-26 14:03:28.613+00');
+INSERT INTO public."Categories" VALUES (3, 'Category 3', 'Static descriptive text about the category 3.', '[{"url":"https://www.eficode.com/cases/hansen","type":"Case Study"},{"url":"https://www.eficode.com/cases/basware","type":"Case Study"}]', '2022-09-26 14:03:28.613+00', '2022-09-26 14:03:28.613+00');
+INSERT INTO public."Categories" VALUES (4, 'Category 4', 'Static descriptive text about the category 4.', '[{"url":"https://www.eficode.com/cases/hansen","type":"Case Study"},{"url":"https://www.eficode.com/cases/basware","type":"Case Study"}]', '2022-09-26 14:03:28.613+00', '2022-09-26 14:03:28.613+00');
+INSERT INTO public."Categories" VALUES (5, 'Category 5', 'Static descriptive text about the category 5.', '[{"url":"https://www.eficode.com/cases/hansen","type":"Case Study"},{"url":"https://www.eficode.com/cases/basware","type":"Case Study"}]', '2022-09-26 14:03:28.613+00', '2022-09-26 14:03:28.613+00');
 
 
 --
--- Data for Name: Category_results; Type: TABLE DATA; Schema: public; Owner: kaeglmkspezpcf
+-- Data for Name: Category_results; Type: TABLE DATA; Schema: public; Owner: -
 --
 
-COPY public."Category_results" (id, "categoryId", text, cutoff_from_maxpoints, "createdAt", "updatedAt") FROM stdin;
-1	1	Dynamically fetched feedback text for category score.	0.4	2022-09-26 14:17:29.755+00	2022-09-26 14:17:29.755+00
-2	1	Dynamically fetched feedback text for category score.	0.8	2022-09-26 14:17:29.755+00	2022-09-26 14:17:29.755+00
-3	1	Dynamically fetched feedback text for category score.	1	2022-09-26 14:17:29.755+00	2022-09-26 14:17:29.755+00
-4	2	Dynamically fetched feedback text for category score.	0.4	2022-09-26 14:17:29.755+00	2022-09-26 14:17:29.755+00
-5	2	Dynamically fetched feedback text for category score.	0.8	2022-09-26 14:17:29.755+00	2022-09-26 14:17:29.755+00
-6	2	Dynamically fetched feedback text for category score.	1	2022-09-26 14:17:29.755+00	2022-09-26 14:17:29.755+00
-7	3	Dynamically fetched feedback text for category score.	0.4	2022-09-26 14:17:29.755+00	2022-09-26 14:17:29.755+00
-8	3	Dynamically fetched feedback text for category score.	0.8	2022-09-26 14:17:29.755+00	2022-09-26 14:17:29.755+00
-9	3	Dynamically fetched feedback text for category score.	1	2022-09-26 14:17:29.755+00	2022-09-26 14:17:29.755+00
-10	4	Dynamically fetched feedback text for category score.	0.4	2022-09-26 14:17:29.755+00	2022-09-26 14:17:29.755+00
-11	4	Dynamically fetched feedback text for category score.	0.8	2022-09-26 14:17:29.755+00	2022-09-26 14:17:29.755+00
-12	4	Dynamically fetched feedback text for category score.	1	2022-09-26 14:17:29.755+00	2022-09-26 14:17:29.755+00
-13	5	Dynamically fetched feedback text for category score.	0.4	2022-09-26 14:17:29.755+00	2022-09-26 14:17:29.755+00
-14	5	Dynamically fetched feedback text for category score.	0.8	2022-09-26 14:17:29.755+00	2022-09-26 14:17:29.755+00
-15	5	Dynamically fetched feedback text for category score.	1	2022-09-26 14:17:29.755+00	2022-09-26 14:17:29.755+00
-\.
+INSERT INTO public."Category_results" VALUES (11, 4, 'Dynamically fetched feedback text for category score.', 0.8, '2022-09-26 14:17:29.755+00', '2022-09-26 14:17:29.755+00');
+INSERT INTO public."Category_results" VALUES (12, 4, 'Dynamically fetched feedback text for category score.', 1, '2022-09-26 14:17:29.755+00', '2022-09-26 14:17:29.755+00');
+INSERT INTO public."Category_results" VALUES (13, 5, 'Dynamically fetched feedback text for category score.', 0.4, '2022-09-26 14:17:29.755+00', '2022-09-26 14:17:29.755+00');
+INSERT INTO public."Category_results" VALUES (14, 5, 'Dynamically fetched feedback text for category score.', 0.8, '2022-09-26 14:17:29.755+00', '2022-09-26 14:17:29.755+00');
+INSERT INTO public."Category_results" VALUES (15, 5, 'Dynamically fetched feedback text for category score.', 1, '2022-09-26 14:17:29.755+00', '2022-09-26 14:17:29.755+00');
+INSERT INTO public."Category_results" VALUES (1, 1, 'Dynamically fetched feedback text for category score.', 0.4, '2022-09-26 14:17:29.755+00', '2022-09-26 14:17:29.755+00');
+INSERT INTO public."Category_results" VALUES (2, 1, 'Dynamically fetched feedback text for category score.', 0.8, '2022-09-26 14:17:29.755+00', '2022-09-26 14:17:29.755+00');
+INSERT INTO public."Category_results" VALUES (3, 1, 'Dynamically fetched feedback text for category score.', 1, '2022-09-26 14:17:29.755+00', '2022-09-26 14:17:29.755+00');
+INSERT INTO public."Category_results" VALUES (4, 2, 'Dynamically fetched feedback text for category score.', 0.4, '2022-09-26 14:17:29.755+00', '2022-09-26 14:17:29.755+00');
+INSERT INTO public."Category_results" VALUES (5, 2, 'Dynamically fetched feedback text for category score.', 0.8, '2022-09-26 14:17:29.755+00', '2022-09-26 14:17:29.755+00');
+INSERT INTO public."Category_results" VALUES (6, 2, 'Dynamically fetched feedback text for category score.', 1, '2022-09-26 14:17:29.755+00', '2022-09-26 14:17:29.755+00');
+INSERT INTO public."Category_results" VALUES (7, 3, 'Dynamically fetched feedback text for category score.', 0.4, '2022-09-26 14:17:29.755+00', '2022-09-26 14:17:29.755+00');
+INSERT INTO public."Category_results" VALUES (8, 3, 'Dynamically fetched feedback text for category score.', 0.8, '2022-09-26 14:17:29.755+00', '2022-09-26 14:17:29.755+00');
+INSERT INTO public."Category_results" VALUES (9, 3, 'Dynamically fetched feedback text for category score.', 1, '2022-09-26 14:17:29.755+00', '2022-09-26 14:17:29.755+00');
+INSERT INTO public."Category_results" VALUES (10, 4, 'Dynamically fetched feedback text for category score.', 0.4, '2022-09-26 14:17:29.755+00', '2022-09-26 14:17:29.755+00');
 
 
 --
--- Data for Name: Industries; Type: TABLE DATA; Schema: public; Owner: kaeglmkspezpcf
+-- Data for Name: Industries; Type: TABLE DATA; Schema: public; Owner: -
 --
 
-COPY public."Industries" (id, name, "createdAt", "updatedAt") FROM stdin;
-1	IT/Software development	2022-09-26 14:03:28.604+00	2022-09-26 14:03:28.604+00
-2	Financial services	2022-09-26 14:03:28.604+00	2022-09-26 14:03:28.604+00
-3	Telecommunications	2022-09-26 14:03:28.604+00	2022-09-26 14:03:28.604+00
-4	Insurance	2022-09-26 14:03:28.604+00	2022-09-26 14:03:28.604+00
-5	Automotive	2022-09-26 14:03:28.604+00	2022-09-26 14:03:28.604+00
-6	Business services	2022-09-26 14:03:28.604+00	2022-09-26 14:03:28.604+00
-7	Manufacturing	2022-09-26 14:03:28.604+00	2022-09-26 14:03:28.604+00
-8	Retail	2022-09-26 14:03:28.604+00	2022-09-26 14:03:28.604+00
-9	Oil & energy	2022-09-26 14:03:28.604+00	2022-09-26 14:03:28.604+00
-10	Logistics & supply chain	2022-09-26 14:03:28.604+00	2022-09-26 14:03:28.604+00
-\.
+INSERT INTO public."Industries" VALUES (1, 'IT/Software development', '2022-09-26 14:03:28.604+00', '2022-09-26 14:03:28.604+00');
+INSERT INTO public."Industries" VALUES (2, 'Financial services', '2022-09-26 14:03:28.604+00', '2022-09-26 14:03:28.604+00');
+INSERT INTO public."Industries" VALUES (3, 'Telecommunications', '2022-09-26 14:03:28.604+00', '2022-09-26 14:03:28.604+00');
+INSERT INTO public."Industries" VALUES (4, 'Insurance', '2022-09-26 14:03:28.604+00', '2022-09-26 14:03:28.604+00');
+INSERT INTO public."Industries" VALUES (5, 'Automotive', '2022-09-26 14:03:28.604+00', '2022-09-26 14:03:28.604+00');
+INSERT INTO public."Industries" VALUES (6, 'Business services', '2022-09-26 14:03:28.604+00', '2022-09-26 14:03:28.604+00');
+INSERT INTO public."Industries" VALUES (7, 'Manufacturing', '2022-09-26 14:03:28.604+00', '2022-09-26 14:03:28.604+00');
+INSERT INTO public."Industries" VALUES (8, 'Retail', '2022-09-26 14:03:28.604+00', '2022-09-26 14:03:28.604+00');
+INSERT INTO public."Industries" VALUES (9, 'Oil & energy', '2022-09-26 14:03:28.604+00', '2022-09-26 14:03:28.604+00');
+INSERT INTO public."Industries" VALUES (10, 'Logistics & supply chain', '2022-09-26 14:03:28.604+00', '2022-09-26 14:03:28.604+00');
 
 
 --
--- Data for Name: Organizations; Type: TABLE DATA; Schema: public; Owner: kaeglmkspezpcf
+-- Data for Name: Organizations; Type: TABLE DATA; Schema: public; Owner: -
 --
 
-COPY public."Organizations" (id, name, "createdAt", "updatedAt") FROM stdin;
-\.
 
 
 --
--- Data for Name: Question_answers; Type: TABLE DATA; Schema: public; Owner: kaeglmkspezpcf
+-- Data for Name: Question_answers; Type: TABLE DATA; Schema: public; Owner: -
 --
 
-COPY public."Question_answers" (id, text, points, "questionId", "createdAt", "updatedAt") FROM stdin;
-1	Strongly Disagree	0	1	2022-09-26 14:17:29.764+00	2022-09-26 14:17:29.764+00
-2	Disagree	1	1	2022-09-26 14:17:29.764+00	2022-09-26 14:17:29.764+00
-3	Do not disagree or agree	2	1	2022-09-26 14:17:29.764+00	2022-09-26 14:17:29.764+00
-4	Agree	3	1	2022-09-26 14:17:29.764+00	2022-09-26 14:17:29.764+00
-5	Strongly Agree	4	1	2022-09-26 14:17:29.764+00	2022-09-26 14:17:29.764+00
-6	Strongly Disagree	0	2	2022-09-26 14:17:29.764+00	2022-09-26 14:17:29.764+00
-7	Disagree	1	2	2022-09-26 14:17:29.764+00	2022-09-26 14:17:29.764+00
-8	Do not disagree or agree	2	2	2022-09-26 14:17:29.764+00	2022-09-26 14:17:29.764+00
-9	Agree	3	2	2022-09-26 14:17:29.764+00	2022-09-26 14:17:29.764+00
-10	Strongly Agree	4	2	2022-09-26 14:17:29.764+00	2022-09-26 14:17:29.764+00
-11	Strongly Disagree	0	3	2022-09-26 14:17:29.764+00	2022-09-26 14:17:29.764+00
-12	Disagree	1	3	2022-09-26 14:17:29.764+00	2022-09-26 14:17:29.764+00
-13	Do not disagree or agree	2	3	2022-09-26 14:17:29.764+00	2022-09-26 14:17:29.764+00
-14	Agree	3	3	2022-09-26 14:17:29.764+00	2022-09-26 14:17:29.764+00
-15	Strongly Agree	4	3	2022-09-26 14:17:29.764+00	2022-09-26 14:17:29.764+00
-16	Strongly Disagree	0	4	2022-09-26 14:17:29.764+00	2022-09-26 14:17:29.764+00
-17	Disagree	1	4	2022-09-26 14:17:29.764+00	2022-09-26 14:17:29.764+00
-18	Do not disagree or agree	2	4	2022-09-26 14:17:29.764+00	2022-09-26 14:17:29.764+00
-19	Agree	3	4	2022-09-26 14:17:29.764+00	2022-09-26 14:17:29.764+00
-20	Strongly Agree	4	4	2022-09-26 14:17:29.764+00	2022-09-26 14:17:29.764+00
-21	Strongly Disagree	0	5	2022-09-26 14:17:29.764+00	2022-09-26 14:17:29.764+00
-22	Disagree	1	5	2022-09-26 14:17:29.764+00	2022-09-26 14:17:29.764+00
-23	Do not disagree or agree	2	5	2022-09-26 14:17:29.764+00	2022-09-26 14:17:29.764+00
-24	Agree	3	5	2022-09-26 14:17:29.764+00	2022-09-26 14:17:29.764+00
-25	Strongly Agree	4	5	2022-09-26 14:17:29.764+00	2022-09-26 14:17:29.764+00
-26	Strongly Disagree	0	6	2022-09-26 14:17:29.764+00	2022-09-26 14:17:29.764+00
-27	Disagree	1	6	2022-09-26 14:17:29.764+00	2022-09-26 14:17:29.764+00
-28	Do not disagree or agree	2	6	2022-09-26 14:17:29.764+00	2022-09-26 14:17:29.764+00
-29	Agree	3	6	2022-09-26 14:17:29.764+00	2022-09-26 14:17:29.764+00
-30	Strongly Agree	4	6	2022-09-26 14:17:29.764+00	2022-09-26 14:17:29.764+00
-\.
+INSERT INTO public."Question_answers" VALUES (1, 'Strongly Disagree', 0, 1, '2022-09-26 14:17:29.764+00', '2022-09-26 14:17:29.764+00');
+INSERT INTO public."Question_answers" VALUES (2, 'Disagree', 1, 1, '2022-09-26 14:17:29.764+00', '2022-09-26 14:17:29.764+00');
+INSERT INTO public."Question_answers" VALUES (3, 'Do not disagree or agree', 2, 1, '2022-09-26 14:17:29.764+00', '2022-09-26 14:17:29.764+00');
+INSERT INTO public."Question_answers" VALUES (4, 'Agree', 3, 1, '2022-09-26 14:17:29.764+00', '2022-09-26 14:17:29.764+00');
+INSERT INTO public."Question_answers" VALUES (5, 'Strongly Agree', 4, 1, '2022-09-26 14:17:29.764+00', '2022-09-26 14:17:29.764+00');
+INSERT INTO public."Question_answers" VALUES (6, 'Strongly Disagree', 0, 2, '2022-09-26 14:17:29.764+00', '2022-09-26 14:17:29.764+00');
+INSERT INTO public."Question_answers" VALUES (7, 'Disagree', 1, 2, '2022-09-26 14:17:29.764+00', '2022-09-26 14:17:29.764+00');
+INSERT INTO public."Question_answers" VALUES (8, 'Do not disagree or agree', 2, 2, '2022-09-26 14:17:29.764+00', '2022-09-26 14:17:29.764+00');
+INSERT INTO public."Question_answers" VALUES (9, 'Agree', 3, 2, '2022-09-26 14:17:29.764+00', '2022-09-26 14:17:29.764+00');
+INSERT INTO public."Question_answers" VALUES (10, 'Strongly Agree', 4, 2, '2022-09-26 14:17:29.764+00', '2022-09-26 14:17:29.764+00');
+INSERT INTO public."Question_answers" VALUES (11, 'Strongly Disagree', 0, 3, '2022-09-26 14:17:29.764+00', '2022-09-26 14:17:29.764+00');
+INSERT INTO public."Question_answers" VALUES (12, 'Disagree', 1, 3, '2022-09-26 14:17:29.764+00', '2022-09-26 14:17:29.764+00');
+INSERT INTO public."Question_answers" VALUES (13, 'Do not disagree or agree', 2, 3, '2022-09-26 14:17:29.764+00', '2022-09-26 14:17:29.764+00');
+INSERT INTO public."Question_answers" VALUES (14, 'Agree', 3, 3, '2022-09-26 14:17:29.764+00', '2022-09-26 14:17:29.764+00');
+INSERT INTO public."Question_answers" VALUES (15, 'Strongly Agree', 4, 3, '2022-09-26 14:17:29.764+00', '2022-09-26 14:17:29.764+00');
+INSERT INTO public."Question_answers" VALUES (16, 'Strongly Disagree', 0, 4, '2022-09-26 14:17:29.764+00', '2022-09-26 14:17:29.764+00');
+INSERT INTO public."Question_answers" VALUES (17, 'Disagree', 1, 4, '2022-09-26 14:17:29.764+00', '2022-09-26 14:17:29.764+00');
+INSERT INTO public."Question_answers" VALUES (18, 'Do not disagree or agree', 2, 4, '2022-09-26 14:17:29.764+00', '2022-09-26 14:17:29.764+00');
+INSERT INTO public."Question_answers" VALUES (19, 'Agree', 3, 4, '2022-09-26 14:17:29.764+00', '2022-09-26 14:17:29.764+00');
+INSERT INTO public."Question_answers" VALUES (20, 'Strongly Agree', 4, 4, '2022-09-26 14:17:29.764+00', '2022-09-26 14:17:29.764+00');
+INSERT INTO public."Question_answers" VALUES (21, 'Strongly Disagree', 0, 5, '2022-09-26 14:17:29.764+00', '2022-09-26 14:17:29.764+00');
+INSERT INTO public."Question_answers" VALUES (22, 'Disagree', 1, 5, '2022-09-26 14:17:29.764+00', '2022-09-26 14:17:29.764+00');
+INSERT INTO public."Question_answers" VALUES (23, 'Do not disagree or agree', 2, 5, '2022-09-26 14:17:29.764+00', '2022-09-26 14:17:29.764+00');
+INSERT INTO public."Question_answers" VALUES (24, 'Agree', 3, 5, '2022-09-26 14:17:29.764+00', '2022-09-26 14:17:29.764+00');
+INSERT INTO public."Question_answers" VALUES (25, 'Strongly Agree', 4, 5, '2022-09-26 14:17:29.764+00', '2022-09-26 14:17:29.764+00');
+INSERT INTO public."Question_answers" VALUES (26, 'Strongly Disagree', 0, 6, '2022-09-26 14:17:29.764+00', '2022-09-26 14:17:29.764+00');
+INSERT INTO public."Question_answers" VALUES (27, 'Disagree', 1, 6, '2022-09-26 14:17:29.764+00', '2022-09-26 14:17:29.764+00');
+INSERT INTO public."Question_answers" VALUES (28, 'Do not disagree or agree', 2, 6, '2022-09-26 14:17:29.764+00', '2022-09-26 14:17:29.764+00');
+INSERT INTO public."Question_answers" VALUES (29, 'Agree', 3, 6, '2022-09-26 14:17:29.764+00', '2022-09-26 14:17:29.764+00');
+INSERT INTO public."Question_answers" VALUES (30, 'Strongly Agree', 4, 6, '2022-09-26 14:17:29.764+00', '2022-09-26 14:17:29.764+00');
 
 
 --
--- Data for Name: Questions; Type: TABLE DATA; Schema: public; Owner: kaeglmkspezpcf
+-- Data for Name: Questions; Type: TABLE DATA; Schema: public; Owner: -
 --
 
-COPY public."Questions" (id, text, "surveyId", category_weights, "createdAt", "updatedAt") FROM stdin;
-1	Question 1	1	[{"category": "Category 1", "multiplier": 1}, {"category": "Category 2", "multiplier": 1}, {"category": "Category 3", "multiplier": 0}, {"category": "Category 4", "multiplier": 0}, {"category": "Category 5", "multiplier": 0}]	2022-09-26 14:17:29.76+00	2022-09-26 14:17:29.76+00
-2	Question 2	1	[{"category": "Category 1", "multiplier": 0}, {"category": "Category 2", "multiplier": 1}, {"category": "Category 3", "multiplier": 1}, {"category": "Category 4", "multiplier": 0}, {"category": "Category 5", "multiplier": 0}]	2022-09-22 21:03:09.628167+00	2022-09-22 21:03:09.628167+00
-3	Question 3	1	[{"category": "Category 1", "multiplier": 0}, {"category": "Category 2", "multiplier": 0}, {"category": "Category 3", "multiplier": 1}, {"category": "Category 4", "multiplier": 1}, {"category": "Category 5", "multiplier": 0}]	2022-09-22 21:03:22.124125+00	2022-09-22 21:03:22.124125+00
-4	Question 4	1	[{"category": "Category 1", "multiplier": 0}, {"category": "Category 2", "multiplier": 0}, {"category": "Category 3", "multiplier": 0}, {"category": "Category 4", "multiplier": 1}, {"category": "Category 5", "multiplier": 1}]	2022-09-22 21:31:09.984421+00	2022-09-22 21:31:09.984421+00
-5	Question 5	1	[{"category": "Category 1", "multiplier": 1}, {"category": "Category 2", "multiplier": 0}, {"category": "Category 3", "multiplier": 0}, {"category": "Category 4", "multiplier": 0}, {"category": "Category 5", "multiplier": 1}]	2022-09-26 14:17:29.76+00	2022-09-26 14:17:29.76+00
-6	Question 6	1	[{"category": "Category 1", "multiplier": 1}, {"category": "Category 2", "multiplier": 1}, {"category": "Category 3", "multiplier": 1}, {"category": "Category 4", "multiplier": 1}, {"category": "Category 5", "multiplier": 1}]	2022-09-26 14:17:29.76+00	2022-09-26 14:17:29.76+00
-\.
-
-
---
--- Data for Name: Survey_results; Type: TABLE DATA; Schema: public; Owner: kaeglmkspezpcf
---
-
-COPY public."Survey_results" (id, "surveyId", text, cutoff_from_maxpoints, "createdAt", "updatedAt") FROM stdin;
-1	1	Dynamically fetched result text 1	0.5	2022-09-26 14:03:28.609+00	2022-09-26 14:03:28.609+00
-2	1	Dynamically fetched result text 2	1	2022-09-26 14:03:28.609+00	2022-09-26 14:03:28.609+00
-3	1	Dynamically fetched result text 3	0.7	2022-09-26 14:03:28.609+00	2022-09-26 14:03:28.609+00
-\.
+INSERT INTO public."Questions" VALUES (1, 'Question 1', 1, '[{"category": "Category 1", "multiplier": 1}, {"category": "Category 2", "multiplier": 1}, {"category": "Category 3", "multiplier": 0}, {"category": "Category 4", "multiplier": 0}, {"category": "Category 5", "multiplier": 0}]', '2022-09-26 14:17:29.76+00', '2022-09-26 14:17:29.76+00');
+INSERT INTO public."Questions" VALUES (2, 'Question 2', 1, '[{"category": "Category 1", "multiplier": 0}, {"category": "Category 2", "multiplier": 1}, {"category": "Category 3", "multiplier": 1}, {"category": "Category 4", "multiplier": 0}, {"category": "Category 5", "multiplier": 0}]', '2022-09-22 21:03:09.628167+00', '2022-09-22 21:03:09.628167+00');
+INSERT INTO public."Questions" VALUES (7, 'Question7', 1, NULL, '2022-09-26 19:16:45.279882+00', '2022-09-26 19:16:45.279882+00');
+INSERT INTO public."Questions" VALUES (8, 'Question 8', 1, NULL, '2022-09-26 19:33:13.8708+00', '2022-09-26 19:33:13.8708+00');
+INSERT INTO public."Questions" VALUES (9, 'Which one is best: 1) Game of Thrones, 2) Breaking Bad, or 3) Narcos? ', 1, NULL, '2022-09-29 21:34:03.33838+00', '2022-09-29 21:34:03.33838+00');
+INSERT INTO public."Questions" VALUES (3, 'Question 3', 1, '[{"category": "Category 1", "multiplier": 0}, {"category": "Category 2", "multiplier": 0}, {"category": "Category 3", "multiplier": 1}, {"category": "Category 4", "multiplier": 1}, {"category": "Category 5", "multiplier": 0}]', '2022-09-22 21:03:22.124125+00', '2022-09-22 21:03:22.124125+00');
+INSERT INTO public."Questions" VALUES (4, 'Question 4', 1, '[{"category": "Category 1", "multiplier": 0}, {"category": "Category 2", "multiplier": 0}, {"category": "Category 3", "multiplier": 0}, {"category": "Category 4", "multiplier": 1}, {"category": "Category 5", "multiplier": 1}]', '2022-09-22 21:31:09.984421+00', '2022-09-22 21:31:09.984421+00');
+INSERT INTO public."Questions" VALUES (5, 'Question 5', 1, '[{"category": "Category 1", "multiplier": 1}, {"category": "Category 2", "multiplier": 0}, {"category": "Category 3", "multiplier": 0}, {"category": "Category 4", "multiplier": 0}, {"category": "Category 5", "multiplier": 1}]', '2022-09-26 14:17:29.76+00', '2022-09-26 14:17:29.76+00');
+INSERT INTO public."Questions" VALUES (6, 'Question 6', 1, '[{"category": "Category 1", "multiplier": 1}, {"category": "Category 2", "multiplier": 1}, {"category": "Category 3", "multiplier": 1}, {"category": "Category 4", "multiplier": 1}, {"category": "Category 5", "multiplier": 1}]', '2022-09-26 14:17:29.76+00', '2022-09-26 14:17:29.76+00');
 
 
 --
--- Data for Name: Survey_user_groups; Type: TABLE DATA; Schema: public; Owner: kaeglmkspezpcf
+-- Data for Name: Survey_results; Type: TABLE DATA; Schema: public; Owner: -
 --
 
-COPY public."Survey_user_groups" (id, group_name, "surveyId", "organizationId", "createdAt", "updatedAt") FROM stdin;
-\.
-
-
---
--- Data for Name: Surveys; Type: TABLE DATA; Schema: public; Owner: kaeglmkspezpcf
---
-
-COPY public."Surveys" (id, name, "createdAt", "updatedAt", title_text, survey_text) FROM stdin;
-1	Survey 1	2022-09-20 12:28:09.613+00	2022-09-20 12:28:09.613+00	This will be survey title text	This will be survey flavor text
-2	Survey 2	2022-09-20 12:36:57.525+00	2022-09-20 12:36:57.525+00	This will be survey title text	This will be survey flavor text
-\.
+INSERT INTO public."Survey_results" VALUES (1, 1, 'Dynamically fetched result text 1', 0.5, '2022-09-26 14:03:28.609+00', '2022-09-26 14:03:28.609+00');
+INSERT INTO public."Survey_results" VALUES (2, 1, 'Dynamically fetched result text 2', 1, '2022-09-26 14:03:28.609+00', '2022-09-26 14:03:28.609+00');
+INSERT INTO public."Survey_results" VALUES (3, 1, 'Dynamically fetched result text 3', 0.7, '2022-09-26 14:03:28.609+00', '2022-09-26 14:03:28.609+00');
 
 
 --
--- Data for Name: User_answers; Type: TABLE DATA; Schema: public; Owner: kaeglmkspezpcf
+-- Data for Name: Survey_user_groups; Type: TABLE DATA; Schema: public; Owner: -
 --
 
-COPY public."User_answers" (id, "userId", "questionAnswerId", "createdAt", "updatedAt", "QuestionAnswerId") FROM stdin;
-\.
 
 
 --
--- Data for Name: Users; Type: TABLE DATA; Schema: public; Owner: kaeglmkspezpcf
+-- Data for Name: Surveys; Type: TABLE DATA; Schema: public; Owner: -
 --
 
-COPY public."Users" (id, email, "groupId", "industryId", "createdAt", "updatedAt") FROM stdin;
-\.
+INSERT INTO public."Surveys" VALUES (1, 'Survey 1', '2022-09-20 12:28:09.613+00', '2022-09-20 12:28:09.613+00', 'This will be survey title text', 'This will be survey flavor text');
+INSERT INTO public."Surveys" VALUES (2, 'Survey 2', '2022-09-20 12:36:57.525+00', '2022-09-20 12:36:57.525+00', 'This will be survey title text', 'This will be survey flavor text');
+INSERT INTO public."Surveys" VALUES (3, 'Paras ohjelmointikieli', '2022-09-30 06:55:00.222057+00', '2022-09-30 06:55:00.222057+00', 'Mikä on paras ohjelmointikieli?', 'Onko se python? Vaiko Java?');
 
 
 --
--- Name: Admins_id_seq; Type: SEQUENCE SET; Schema: public; Owner: kaeglmkspezpcf
+-- Data for Name: User_answers; Type: TABLE DATA; Schema: public; Owner: -
+--
+
+
+
+--
+-- Data for Name: Users; Type: TABLE DATA; Schema: public; Owner: -
+--
+
+
+
+--
+-- Name: Admins_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
 SELECT pg_catalog.setval('public."Admins_id_seq"', 8, true);
 
 
 --
--- Name: Categories_id_seq; Type: SEQUENCE SET; Schema: public; Owner: kaeglmkspezpcf
+-- Name: Categories_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
 SELECT pg_catalog.setval('public."Categories_id_seq"', 1, false);
 
 
 --
--- Name: Category_results_id_seq; Type: SEQUENCE SET; Schema: public; Owner: kaeglmkspezpcf
+-- Name: Category_results_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
 SELECT pg_catalog.setval('public."Category_results_id_seq"', 1, false);
 
 
 --
--- Name: Industries_id_seq; Type: SEQUENCE SET; Schema: public; Owner: kaeglmkspezpcf
+-- Name: Industries_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
 SELECT pg_catalog.setval('public."Industries_id_seq"', 1, false);
 
 
 --
--- Name: Question_answers_id_seq; Type: SEQUENCE SET; Schema: public; Owner: kaeglmkspezpcf
+-- Name: Question_answers_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
 SELECT pg_catalog.setval('public."Question_answers_id_seq"', 1, false);
 
 
 --
--- Name: Questions_id_seq; Type: SEQUENCE SET; Schema: public; Owner: kaeglmkspezpcf
+-- Name: Questions_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('public."Questions_id_seq"', 8, true);
+SELECT pg_catalog.setval('public."Questions_id_seq"', 9, true);
 
 
 --
--- Name: Survey_results_id_seq; Type: SEQUENCE SET; Schema: public; Owner: kaeglmkspezpcf
+-- Name: Survey_results_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
 SELECT pg_catalog.setval('public."Survey_results_id_seq"', 1, false);
 
 
 --
--- Name: Surveys_id_seq; Type: SEQUENCE SET; Schema: public; Owner: kaeglmkspezpcf
+-- Name: Surveys_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('public."Surveys_id_seq"', 1, false);
+SELECT pg_catalog.setval('public."Surveys_id_seq"', 3, true);
 
 
 --
--- Name: User_answers_id_seq; Type: SEQUENCE SET; Schema: public; Owner: kaeglmkspezpcf
+-- Name: User_answers_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
 SELECT pg_catalog.setval('public."User_answers_id_seq"', 1, false);
 
 
 --
--- Name: Users_id_seq; Type: SEQUENCE SET; Schema: public; Owner: kaeglmkspezpcf
+-- Name: Users_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
 SELECT pg_catalog.setval('public."Users_id_seq"', 1, false);
 
 
 --
--- Name: Admins Admins_pkey; Type: CONSTRAINT; Schema: public; Owner: kaeglmkspezpcf
+-- Name: Admins Admins_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public."Admins"
@@ -756,7 +690,7 @@ ALTER TABLE ONLY public."Admins"
 
 
 --
--- Name: Categories Categories_pkey; Type: CONSTRAINT; Schema: public; Owner: kaeglmkspezpcf
+-- Name: Categories Categories_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public."Categories"
@@ -764,7 +698,7 @@ ALTER TABLE ONLY public."Categories"
 
 
 --
--- Name: Category_results Category_results_pkey; Type: CONSTRAINT; Schema: public; Owner: kaeglmkspezpcf
+-- Name: Category_results Category_results_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public."Category_results"
@@ -772,7 +706,7 @@ ALTER TABLE ONLY public."Category_results"
 
 
 --
--- Name: Industries Industries_pkey; Type: CONSTRAINT; Schema: public; Owner: kaeglmkspezpcf
+-- Name: Industries Industries_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public."Industries"
@@ -780,7 +714,7 @@ ALTER TABLE ONLY public."Industries"
 
 
 --
--- Name: Organizations Organizations_pkey; Type: CONSTRAINT; Schema: public; Owner: kaeglmkspezpcf
+-- Name: Organizations Organizations_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public."Organizations"
@@ -788,7 +722,7 @@ ALTER TABLE ONLY public."Organizations"
 
 
 --
--- Name: Question_answers Question_answers_pkey; Type: CONSTRAINT; Schema: public; Owner: kaeglmkspezpcf
+-- Name: Question_answers Question_answers_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public."Question_answers"
@@ -796,7 +730,7 @@ ALTER TABLE ONLY public."Question_answers"
 
 
 --
--- Name: Questions Questions_pkey; Type: CONSTRAINT; Schema: public; Owner: kaeglmkspezpcf
+-- Name: Questions Questions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public."Questions"
@@ -804,7 +738,7 @@ ALTER TABLE ONLY public."Questions"
 
 
 --
--- Name: Survey_results Survey_results_pkey; Type: CONSTRAINT; Schema: public; Owner: kaeglmkspezpcf
+-- Name: Survey_results Survey_results_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public."Survey_results"
@@ -812,7 +746,7 @@ ALTER TABLE ONLY public."Survey_results"
 
 
 --
--- Name: Survey_user_groups Survey_user_groups_pkey; Type: CONSTRAINT; Schema: public; Owner: kaeglmkspezpcf
+-- Name: Survey_user_groups Survey_user_groups_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public."Survey_user_groups"
@@ -820,7 +754,7 @@ ALTER TABLE ONLY public."Survey_user_groups"
 
 
 --
--- Name: Surveys Surveys_pkey; Type: CONSTRAINT; Schema: public; Owner: kaeglmkspezpcf
+-- Name: Surveys Surveys_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public."Surveys"
@@ -828,7 +762,7 @@ ALTER TABLE ONLY public."Surveys"
 
 
 --
--- Name: User_answers User_answers_pkey; Type: CONSTRAINT; Schema: public; Owner: kaeglmkspezpcf
+-- Name: User_answers User_answers_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public."User_answers"
@@ -836,7 +770,7 @@ ALTER TABLE ONLY public."User_answers"
 
 
 --
--- Name: Users Users_pkey; Type: CONSTRAINT; Schema: public; Owner: kaeglmkspezpcf
+-- Name: Users Users_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public."Users"
@@ -844,7 +778,7 @@ ALTER TABLE ONLY public."Users"
 
 
 --
--- Name: Category_results Category_results_categoryId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: kaeglmkspezpcf
+-- Name: Category_results Category_results_categoryId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public."Category_results"
@@ -852,7 +786,7 @@ ALTER TABLE ONLY public."Category_results"
 
 
 --
--- Name: Question_answers Question_answers_questionId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: kaeglmkspezpcf
+-- Name: Question_answers Question_answers_questionId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public."Question_answers"
@@ -860,7 +794,7 @@ ALTER TABLE ONLY public."Question_answers"
 
 
 --
--- Name: Questions Questions_surveyId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: kaeglmkspezpcf
+-- Name: Questions Questions_surveyId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public."Questions"
@@ -868,7 +802,7 @@ ALTER TABLE ONLY public."Questions"
 
 
 --
--- Name: Survey_results Survey_results_surveyId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: kaeglmkspezpcf
+-- Name: Survey_results Survey_results_surveyId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public."Survey_results"
@@ -876,7 +810,7 @@ ALTER TABLE ONLY public."Survey_results"
 
 
 --
--- Name: Survey_user_groups Survey_user_groups_organizationId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: kaeglmkspezpcf
+-- Name: Survey_user_groups Survey_user_groups_organizationId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public."Survey_user_groups"
@@ -884,7 +818,7 @@ ALTER TABLE ONLY public."Survey_user_groups"
 
 
 --
--- Name: Survey_user_groups Survey_user_groups_surveyId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: kaeglmkspezpcf
+-- Name: Survey_user_groups Survey_user_groups_surveyId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public."Survey_user_groups"
@@ -892,7 +826,7 @@ ALTER TABLE ONLY public."Survey_user_groups"
 
 
 --
--- Name: User_answers User_answers_QuestionAnswerId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: kaeglmkspezpcf
+-- Name: User_answers User_answers_QuestionAnswerId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public."User_answers"
@@ -900,7 +834,7 @@ ALTER TABLE ONLY public."User_answers"
 
 
 --
--- Name: User_answers User_answers_questionAnswerId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: kaeglmkspezpcf
+-- Name: User_answers User_answers_questionAnswerId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public."User_answers"
@@ -908,7 +842,7 @@ ALTER TABLE ONLY public."User_answers"
 
 
 --
--- Name: User_answers User_answers_userId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: kaeglmkspezpcf
+-- Name: User_answers User_answers_userId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public."User_answers"
@@ -916,7 +850,7 @@ ALTER TABLE ONLY public."User_answers"
 
 
 --
--- Name: Users Users_groupId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: kaeglmkspezpcf
+-- Name: Users Users_groupId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public."Users"
@@ -924,7 +858,7 @@ ALTER TABLE ONLY public."Users"
 
 
 --
--- Name: Users Users_industryId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: kaeglmkspezpcf
+-- Name: Users Users_industryId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public."Users"
@@ -932,27 +866,27 @@ ALTER TABLE ONLY public."Users"
 
 
 --
--- Name: SCHEMA heroku_ext; Type: ACL; Schema: -; Owner: u9osjafbq65ukv
+-- Name: SCHEMA heroku_ext; Type: ACL; Schema: -; Owner: -
 --
 
-GRANT USAGE ON SCHEMA heroku_ext TO kaeglmkspezpcf;
+GRANT USAGE ON SCHEMA heroku_ext TO wylkhmgvtlywtp;
 
 
 --
--- Name: SCHEMA public; Type: ACL; Schema: -; Owner: kaeglmkspezpcf
+-- Name: SCHEMA public; Type: ACL; Schema: -; Owner: -
 --
 
 REVOKE ALL ON SCHEMA public FROM postgres;
 REVOKE ALL ON SCHEMA public FROM PUBLIC;
-GRANT ALL ON SCHEMA public TO kaeglmkspezpcf;
+GRANT ALL ON SCHEMA public TO wylkhmgvtlywtp;
 GRANT ALL ON SCHEMA public TO PUBLIC;
 
 
 --
--- Name: LANGUAGE plpgsql; Type: ACL; Schema: -; Owner: postgres
+-- Name: LANGUAGE plpgsql; Type: ACL; Schema: -; Owner: -
 --
 
-GRANT ALL ON LANGUAGE plpgsql TO kaeglmkspezpcf;
+GRANT ALL ON LANGUAGE plpgsql TO wylkhmgvtlywtp;
 
 
 --

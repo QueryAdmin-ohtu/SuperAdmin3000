@@ -14,7 +14,16 @@
 - The backend uses SQLAlchemy toolkit to communicate with the database
 
 ## Frontend
-- Simple HTML/CSS pages are displayed
+
+- Simple HTML/CSS pages are displayed.
+
+### TailwindCSS
+This project uses TailwindCSS. To create a CSS file with the needed TailwindCSS utility classes install the [standalone TailwindCLI](https://tailwindcss.com/blog/standalone-cli). After insatllation run from the root of the project:
+```
+tailwindcss -c src/static/tailwind.config.js -i src/static/src/style.css -o src/static/css/main.css --watch
+```
+Tailwind now watches the HTML template files and creates a new css file when it is needed.
+
 
 ## Packaging
 - The software is deployed as a Docker image
@@ -49,4 +58,15 @@ ENVIRONMENT="local"
 
 Google Client ID for Google Single Sign On. The value of the variable is provided by Google.
 
+The variable is in the form:
 
+```
+GOOGLE_CLIENT_ID="1234567XXXXXXXXXXXapps.googleusercontent.com"
+```
+
+### `LOCAL_GOOGLE_URI`
+
+The address of the Google login  POST reuqest destination, when running system in the local environment.
+```
+LOCAL_GOOGLE_URI="http://localhost:5000/google_login"
+```

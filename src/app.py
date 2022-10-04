@@ -1,15 +1,24 @@
 from flask import Flask
-from flask_sqlalchemy import SQLAlchemy
 from config import PORT, load_config
 
-"""Create Flask app"""
-app = Flask(__name__)
-configs = load_config()
-app.config.from_object(configs)
+from views.home import home
+from views.surveys import surveys
+from db import db
 
-db = SQLAlchemy(app)
+def create_app():
+    """Application factory to create Flask app"""
+    app = Flask(__name__)
+    configs = load_config()
+    app.config.from_object(configs)
 
-from views import * # pylint: disable=unused-wildcard-import, wrong-import-position, wildcard-import
+    app.register_blueprint(home)
+    app.register_blueprint(surveys)
+
+    db.init_app(app)
+
+    return app
+
 
 if __name__ == "__main__":
+    app = create_app()
     app.run(debug=False, host="0.0.0.0", port=PORT)

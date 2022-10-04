@@ -7,7 +7,7 @@ def start(ctx):
 
 @task
 def lint(ctx):
-    ctx.run("pylint src")
+    ctx.run("pylint --fail-under=9 src")
 
 @task
 def tests(ctx):

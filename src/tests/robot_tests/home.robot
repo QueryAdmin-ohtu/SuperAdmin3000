@@ -1,7 +1,6 @@
 *** Settings ***
 Resource  resource.robot
-Resource  login_resource.robot
-Resource  creating_survey.robot
+Resource  resource_login.robot
 Suite Setup  Open And Configure Browser
 Suite Teardown  Close Browser
 Test Setup  Go To Home Page
@@ -16,37 +15,23 @@ User Logged In With Correct Credentials
     Page Should Contain  Hello rudolf!
 
 Logged In User Can Edit Questionnaires
-    Click Link  Edit existing questionnaire
+    Click Link  Edit an existing survey
     Page Should Contain  Here you can eventually edit or delete existing questionnaires
 
-Logged In User Can Create Questionnaires
-    Make Two Surveys
+Logged In User Can See Surveys On Home Page
     Go To Home Page
-    Click Link  Create a new questionnaire
-    Make A Survey
-    Page Should Contain  Testi
-    Page Should Contain  Toimiikohan
-    Page Should Contain  Surveyn tekeminen testauksessa
+    Page Should Contain  List of surveys
+    Page Should Contain  Title: This will be survey title text
+    Page Should Contain  Questions: 9
+    Page Should Contain  Submissions: 3
+    Page Should Contain  Questions: 0
+    Page Should Contain  Submissions: 0
+    Page Should Contain  Title: Mikä on paras ohjelmointikieli?
 
-Logged In User Cannot Create Questionnaires Without Name
-    Go To Home Page
-    Click Link  Create a new questionnaire
-    Make Survey Without Name
-    Alert Should Be Present  Must have a name
-
-Logged In User Cannot Create Questionnaires Without Title
-    Click Link  Create a new questionnaire
-    Make Survey Without Title
-    Alert Should Be Present  Must have a title
-
-Logged In User Cannot Create Questionnaires Without Text
-    Click Link  Create a new questionnaire
-    Make Survey Without Text
-    Alert Should Be Present  Must have a flavor text
-
-Logged Out User Cannot Access Questionnaires
+Logged Out User Should Be On Login Page
     Logout
-    Page Should Not Contain  You are logged in as
+    Go To Home Page
+    Page Should Contain  Please login with your Google account:
 
 Logged Out User Cannot Edit Questionnaires
     Go To Edit Questionnaires Page
@@ -54,45 +39,4 @@ Logged Out User Cannot Edit Questionnaires
 
 Logged Out User Cannot Create Questionnaires
     Go To Create New Questionnaire Page
-    Page Should Contain  Please login 
-
-*** Keywords ***
-Login With Correct Credentials
-    Set Username  rudolf
-    Set Password  secret
-    Submit Credentials
-
-Make Two Surveys
-    Go To Home Page
-    Click Link  Create a new questionnaire
-    Set Survey Name  Making two surveys
-    Set Survey Title  Which fail
-    Set Survey Text  To make the third one work
-    Create A Survey
-    Go To Home Page
-    Click Link  Create a new questionnaire
-    Set Survey Name  Making two surveys
-    Set Survey Title  Which fail
-    Set Survey Text  To make the third one work
-    Create A Survey
-
-Make A Survey
-    Set Survey Name  Testi
-    Set Survey Title  Surveyn tekeminen testauksessa
-    Set Survey Text  Toimiikohan
-    Create A Survey
-
-Make Survey Without Name
-    Set Survey Title  Surveyn tekeminen testauksessa
-    Set Survey Text  Toimiikohan
-    Create A Survey
-
-Make Survey Without Title
-    Set Survey Name  Testi
-    Set Survey Text  Toimiikohan
-    Create A Survey
-
-Make Survey Without Text
-    Set Survey Name  Testi
-    Set Survey Title  Surveyn tekeminen testauksessa
-    Create A Survey
+    Page Should Contain  Please login

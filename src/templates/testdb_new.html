@@ -1,6 +1,7 @@
 {% extends "layout.html" %}
 {% block content %}
 <form action="/testdb/add_question" method="POST">
+  <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">  
     Kysymys: <br>
     <textarea name="content" rows="3" cols="40" style="border:solid 1px black"></textarea>
     <br>
