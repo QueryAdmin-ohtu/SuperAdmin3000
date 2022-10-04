@@ -98,3 +98,65 @@ def surveys_statistics(survey_id):
     statistics = "JUGE STATS HERE!"
 
     return render_template("surveys/statistics.html", survey=survey, statistics=statistics, survey_id=survey_id)
+
+
+@surveys.route("/questions")
+def get_all_questions():
+    """ List all the questions in the database
+    """
+    #TO DO: Move the query to db_queries
+    # result = db.session.execute("SELECT text FROM \"Questions\"")
+    questions = survey_service.get_all_questions()
+
+    return render_template("questions.html", count=len(questions), questions=questions, ENV=app.config["ENV"])
+
+
+@surveys.route("/add_question", methods=["POST"])
+def add_question():
+    """ Adds a new question to the database
+    """
+    text = request.form["text"]
+    surveyId = request.form["surveyId"]
+
+    # Constructs a list of category dictionaries.
+    # TO DO: Move to services.py
+    # TO DO: Add frontend validation of the user inputs
+    category_list=[]
+    categories=survey_service.get_all_categories()
+    for category in categories:
+        dict={}
+        dict["category"]=category[1]
+        weight=request.form["cat"+str(category[0])]
+        try:
+            if not weight: #no input means zero weight
+                weight=0
+            weight=str(weight).replace(",", ".")
+            dict["multiplier"]=float(weight)
+        except:
+            return ("Invalid weights")
+        category_list.append(dict)
+
+
+    category_weights = json.dumps(category_list)
+    survey_id = survey_service.create_question(text,surveyId, category_weights)
+
+    return redirect("/questions")
+
+
+@surveys.route("/new_question", methods=["GET"])
+def new_question():
+    """  Retuns a page for creating a new question.
+    """
+    surveys = survey_service.get_all_surveys()
+    categories=survey_service.get_all_categories()
+    return render_template("new_question.html", ENV=app.config["ENV"], surveys=surveys, categories=categories)
+
+
+@surveys.route("/edit_question")
+def edit_question():
+    """Renders the page for editing questions
+    """
+    if not helper.logged_in():
+        return redirect("/")
+
+    return render_template("edit_question.html", ENV=app.config["ENV"])

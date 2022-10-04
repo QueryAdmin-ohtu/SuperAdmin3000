@@ -115,4 +115,11 @@ class SurveyService:
 
         raise UserInputError("Given email address is flawed")
 
+    def get_all_questions(self):
+        return self.survey_repository.get_all_questions()
+
+
+    def get_all_categories(self):
+        return self.survey_repository.get_all_categories()
+
 survey_service = SurveyService(SurveyRepository())

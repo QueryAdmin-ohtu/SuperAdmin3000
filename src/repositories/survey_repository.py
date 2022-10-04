@@ -111,15 +111,30 @@ class SurveyRepository:
 
         return questions
     
-    def get_all_categories():
+    def get_all_categories(self):
         """ Fetches all categories from the database
 
         Returns:
         An array containing survey id's, names and titles
         """
         sql = """ SELECT id, name, description, content_links FROM "Categories" """
-        result = db.session.execute(sql)
+        result = self.db_connection.session.execute(sql)
 
         categories = result.fetchall()
 
         return categories
+
+
+
+    def get_all_questions(self):
+        """ Fetches texts of all questions from the database
+
+        Returns:
+        An array containing question texts
+        """
+        sql = """ SELECT text FROM "Questions" """
+        result = self.db_connection.session.execute(sql)
+
+        questions = result.fetchall()
+
+        return questions
