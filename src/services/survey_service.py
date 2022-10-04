@@ -2,6 +2,7 @@ from datetime import datetime
 import re
 from repositories.survey_repository import SurveyRepository
 
+
 class UserInputError(Exception):
     pass
 
@@ -93,7 +94,7 @@ class SurveyService:
         """
         if len(name) < 1 or len(title) < 1 or len(description) < 1:
             raise UserInputError("Missing required information of survey")
-            
+
         if len(name) > 1000 or len(title) > 1000 or len(description) > 1000:
             raise UserInputError("Survey input is too long")
 
@@ -108,7 +109,8 @@ class SurveyService:
             UserInputError: If email address if flawed
         """
 
-        regex = re.compile(r'([A-Za-z0-9]+[.-_])*[A-Za-z0-9]+@[A-Za-z0-9-]+(\.[A-Z|a-z]{2,})+')
+        regex = re.compile(
+            r'([A-Za-z0-9]+[.-_])*[A-Za-z0-9]+@[A-Za-z0-9-]+(\.[A-Z|a-z]{2,})+')
 
         if re.fullmatch(regex, email_address):
             return True
@@ -118,8 +120,11 @@ class SurveyService:
     def get_all_questions(self):
         return self.survey_repository.get_all_questions()
 
-
     def get_all_categories(self):
         return self.survey_repository.get_all_categories()
+
+    def create_question(self, text, surveyId, category_weights):
+        return self.survey_repository.create_question(text, surveyId, category_weights, datetime.now())
+
 
 survey_service = SurveyService(SurveyRepository())

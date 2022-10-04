@@ -1,11 +1,12 @@
 from db import db
 
+
 class SurveyRepository:
     """
     A class for interacting with the survey database
     """
 
-    def __init__(self, db_connection = db):
+    def __init__(self, db_connection=db):
         self.db_connection = db_connection
 
     def authorized_google_login(self, email):
@@ -40,11 +41,9 @@ class SurveyRepository:
         self.db_connection.session.commit()
         return survey_id[0]
 
-
-    def create_question(text, surveyId, category_weights):
+    def create_question(self, text, surveyId, category_weights, created):
         """ Inserts a new question to table Questions based
         on given parameters and returns the id """
-        created = datetime.now()
         sql = """
         INSERT INTO "Questions"
         ("text", "surveyId", "category_weights", "createdAt","updatedAt")
@@ -57,7 +56,7 @@ class SurveyRepository:
             "createdAt": created,
             "updatedAt": created
         }
-        survey_id = db.session.execute(sql,values).fetchone()
+        survey_id = db.session.execute(sql, values).fetchone()
         db.session.commit()
         return survey_id[0]
 
@@ -65,7 +64,8 @@ class SurveyRepository:
         """ Looks up survey information with
         id and returns it in a list"""
         sql = """ SELECT * FROM "Surveys" WHERE id=:id """
-        survey = self.db_connection.session.execute(sql, {"id": survey_id}).fetchone()
+        survey = self.db_connection.session.execute(
+            sql, {"id": survey_id}).fetchone()
         if not survey:
             return False
         return survey
@@ -105,12 +105,13 @@ class SurveyRepository:
           An array containing each question object
         """
         sql = "SELECT * FROM \"Questions\" WHERE \"Questions\".\"surveyId\"=:survey_id"
-        result = self.db_connection.session.execute(sql, {"survey_id": survey_id})
+        result = self.db_connection.session.execute(
+            sql, {"survey_id": survey_id})
 
         questions = result.fetchall()
 
         return questions
-    
+
     def get_all_categories(self):
         """ Fetches all categories from the database
 
@@ -123,8 +124,6 @@ class SurveyRepository:
         categories = result.fetchall()
 
         return categories
-
-
 
     def get_all_questions(self):
         """ Fetches texts of all questions from the database

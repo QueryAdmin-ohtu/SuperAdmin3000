@@ -7,7 +7,7 @@ from app import app, db
 
 import helper
 import db_queries as queries
-import json 
+import json
 
 
 print("ENV:", app.config["ENV"])
@@ -18,7 +18,7 @@ def new_question():
     """  Retuns a page for creating a new question.
     """
     surveys = queries.get_all_surveys()
-    categories=queries.get_all_categories()
+    categories = queries.get_all_categories()
     return render_template("new_question.html", ENV=app.config["ENV"], surveys=surveys, categories=categories)
 
 
@@ -32,24 +32,23 @@ def add_question():
     # Constructs a list of category dictionaries.
     # TO DO: Move to services.py
     # TO DO: Add frontend validation of the user inputs
-    category_list=[]
-    categories=queries.get_all_categories()
+    category_list = []
+    categories = queries.get_all_categories()
     for category in categories:
-        dict={}
-        dict["category"]=category[1]
-        weight=request.form["cat"+str(category[0])]
+        dict = {}
+        dict["category"] = category[1]
+        weight = request.form["cat"+str(category[0])]
         try:
-            if not weight: #no input means zero weight
-                weight=0
-            weight=str(weight).replace(",", ".")
-            dict["multiplier"]=float(weight)
+            if not weight:  # no input means zero weight
+                weight = 0
+            weight = str(weight).replace(",", ".")
+            dict["multiplier"] = float(weight)
         except:
             return ("Invalid weights")
         category_list.append(dict)
 
-
     category_weights = json.dumps(category_list)
-    survey_id = queries.create_question(text,surveyId, category_weights)
+    survey_id = queries.create_question(text, surveyId, category_weights)
 
     return redirect("/questions")
 
@@ -67,8 +66,8 @@ def index():
     surveys = queries.get_all_surveys()
     if surveys is False:
         report = "There are no surveys"
-        return render_template("index.html", no_surveys=report,\
-            ENV=app.config["ENV"])
+        return render_template("index.html", no_surveys=report,
+                               ENV=app.config["ENV"])
     return render_template("index.html", surveys=surveys, ENV=app.config["ENV"])
 
 
@@ -86,7 +85,7 @@ def get_all_surveys():
 def get_all_questions():
     """ List all the questions in the database
     """
-    #TO DO: Move the query to db_queries
+    # TO DO: Move the query to db_queries
     result = db.session.execute("SELECT text FROM \"Questions\"")
     questions = result.fetchall()
 
@@ -177,6 +176,7 @@ def edit_question():
         return redirect("/")
 
     return render_template("edit_question.html", ENV=app.config["ENV"])
+
 
 @app.route("/test")
 def test_page():
@@ -274,6 +274,6 @@ def view_survey(survey_id):
                                ENV=app.config["ENV"])
 
     survey_questions = queries.get_questions_of_questionnaire(survey_id)
-    return render_template("view_survey.html",name=survey[1],\
-    created=survey[2],updated=survey[3],title=survey[4],\
-        text=survey[5], questions=survey_questions, ENV=app.config["ENV"])
+    return render_template("view_survey.html", name=survey[1],
+                           created=survey[2], updated=survey[3], title=survey[4],
+                           text=survey[5], questions=survey_questions, ENV=app.config["ENV"])

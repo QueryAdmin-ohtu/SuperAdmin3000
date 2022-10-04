@@ -3,6 +3,7 @@ from flask import current_app as app
 
 import helper
 from services.survey_service import survey_service
+import json
 
 surveys = Blueprint("surveys", __name__)
 
@@ -14,7 +15,7 @@ def new():
     if not helper.logged_in():
         return redirect("/")
 
-    return render_template("surveys/new.html", ENV=app.config["ENV"])
+    return render_template("surveys/new_survey.html", ENV=app.config["ENV"])
 
 
 @surveys.route("/surveys/edit/<survey_id>")
@@ -26,7 +27,7 @@ def surveys_edit(survey_id):
 
     survey = survey_service.get_survey(survey_id)
 
-    return render_template("surveys/edit.html", survey=survey, survey_id=survey_id)
+    return render_template("surveys/edit_survey.html", survey=survey, survey_id=survey_id)
 
 
 @surveys.route("/surveys/update", methods=["POST"])
@@ -80,7 +81,7 @@ def view_survey(survey_id):
 
     survey = survey_service.get_survey(survey_id)
     questions = survey_service.get_questions_of_survey(survey_id)
-    
+
     return render_template("surveys/view_survey.html", survey=survey, questions=questions, survey_id=survey_id)
 
 
@@ -104,11 +105,11 @@ def surveys_statistics(survey_id):
 def get_all_questions():
     """ List all the questions in the database
     """
-    #TO DO: Move the query to db_queries
+    # TO DO: Move the query to db_queries
     # result = db.session.execute("SELECT text FROM \"Questions\"")
     questions = survey_service.get_all_questions()
 
-    return render_template("questions.html", count=len(questions), questions=questions, ENV=app.config["ENV"])
+    return render_template("questions/questions.html", count=len(questions), questions=questions, ENV=app.config["ENV"])
 
 
 @surveys.route("/add_question", methods=["POST"])
@@ -116,40 +117,39 @@ def add_question():
     """ Adds a new question to the database
     """
     text = request.form["text"]
-    surveyId = request.form["surveyId"]
+    survey_id = request.form["survey_id"]
 
     # Constructs a list of category dictionaries.
-    # TO DO: Move to services.py
     # TO DO: Add frontend validation of the user inputs
-    category_list=[]
-    categories=survey_service.get_all_categories()
+    category_list = []
+    categories = survey_service.get_all_categories()
     for category in categories:
-        dict={}
-        dict["category"]=category[1]
-        weight=request.form["cat"+str(category[0])]
+        dict = {}
+        dict["category"] = category[1]
+        weight = request.form["cat"+str(category[0])]
         try:
-            if not weight: #no input means zero weight
-                weight=0
-            weight=str(weight).replace(",", ".")
-            dict["multiplier"]=float(weight)
+            if not weight:  # no input means zero weight
+                weight = 0
+            weight = str(weight).replace(",", ".")
+            dict["multiplier"] = float(weight)
         except:
             return ("Invalid weights")
         category_list.append(dict)
 
-
     category_weights = json.dumps(category_list)
-    survey_id = survey_service.create_question(text,surveyId, category_weights)
+    survey_service.create_question(text, survey_id, category_weights)
 
-    return redirect("/questions")
+    return redirect(f"/surveys/{survey_id}")
 
 
-@surveys.route("/new_question", methods=["GET"])
-def new_question():
+@surveys.route("/<survey_id>/new_question", methods=["GET"])
+def new_question(survey_id):
     """  Retuns a page for creating a new question.
     """
     surveys = survey_service.get_all_surveys()
-    categories=survey_service.get_all_categories()
-    return render_template("new_question.html", ENV=app.config["ENV"], surveys=surveys, categories=categories)
+    categories = survey_service.get_all_categories()
+    survey = survey_service.get_survey(survey_id)
+    return render_template("questions/new_question.html", ENV=app.config["ENV"], surveys=surveys, categories=categories, survey=survey)
 
 
 @surveys.route("/edit_question")
@@ -159,4 +159,4 @@ def edit_question():
     if not helper.logged_in():
         return redirect("/")
 
-    return render_template("edit_question.html", ENV=app.config["ENV"])
+    return render_template("questions/edit_question.html", ENV=app.config["ENV"])
