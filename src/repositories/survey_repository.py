@@ -41,17 +41,17 @@ class SurveyRepository:
         self.db_connection.session.commit()
         return survey_id[0]
 
-    def create_question(self, text, surveyId, category_weights, created):
+    def create_question(self, text, survey_id, category_weights, created):
         """ Inserts a new question to table Questions based
         on given parameters and returns the id """
         sql = """
         INSERT INTO "Questions"
         ("text", "surveyId", "category_weights", "createdAt","updatedAt")
-        VALUES (:text, :surveyId, :category_weights, :createdAt, :updatedAt)
+        VALUES (:text, :survey_id, :category_weights, :createdAt, :updatedAt)
         RETURNING id """
         values = {
             "text": text,
-            "surveyId": surveyId,
+            "survey_id": survey_id,
             "category_weights": category_weights,
             "createdAt": created,
             "updatedAt": created

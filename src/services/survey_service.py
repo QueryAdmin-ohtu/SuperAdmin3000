@@ -28,6 +28,7 @@ class SurveyService:
         try:
             if self._validate_email_address(email):
                 return self.survey_repository.authorized_google_login(email)
+            return False
         except UserInputError:
             return False
 
@@ -123,8 +124,8 @@ class SurveyService:
     def get_all_categories(self):
         return self.survey_repository.get_all_categories()
 
-    def create_question(self, text, surveyId, category_weights):
-        return self.survey_repository.create_question(text, surveyId, category_weights, datetime.now())
+    def create_question(self, text, survey_id, category_weights):
+        return self.survey_repository.create_question(text, survey_id, category_weights, datetime.now())
 
 
 survey_service = SurveyService(SurveyRepository())

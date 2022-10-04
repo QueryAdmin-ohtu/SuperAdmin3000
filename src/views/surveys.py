@@ -1,9 +1,9 @@
+import json
 from flask import render_template, redirect, request, abort, Blueprint
 from flask import current_app as app
-
 import helper
 from services.survey_service import survey_service
-import json
+
 
 surveys = Blueprint("surveys", __name__)
 
@@ -124,17 +124,17 @@ def add_question():
     category_list = []
     categories = survey_service.get_all_categories()
     for category in categories:
-        dict = {}
-        dict["category"] = category[1]
+        category_dict = {}
+        category_dict["category"] = category[1]
         weight = request.form["cat"+str(category[0])]
         try:
             if not weight:  # no input means zero weight
                 weight = 0
             weight = str(weight).replace(",", ".")
-            dict["multiplier"] = float(weight)
-        except:
-            return ("Invalid weights")
-        category_list.append(dict)
+            category_dict["multiplier"] = float(weight)
+        except ValueError:
+            return "Invalid weights"
+        category_list.append(category_dict)
 
     category_weights = json.dumps(category_list)
     survey_service.create_question(text, survey_id, category_weights)
@@ -146,10 +146,11 @@ def add_question():
 def new_question(survey_id):
     """  Retuns a page for creating a new question.
     """
-    surveys = survey_service.get_all_surveys()
-    categories = survey_service.get_all_categories()
+    stored_surveys = survey_service.get_all_surveys()
+    stored_categories = survey_service.get_all_categories()
     survey = survey_service.get_survey(survey_id)
-    return render_template("questions/new_question.html", ENV=app.config["ENV"], surveys=surveys, categories=categories, survey=survey)
+    # pylint: disable-next=line-too-long
+    return render_template("questions/new_question.html", ENV=app.config["ENV"], surveys=stored_surveys, categories=stored_categories, survey=survey)
 
 
 @surveys.route("/edit_question")
