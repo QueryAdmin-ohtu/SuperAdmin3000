@@ -17,7 +17,7 @@ class TestSurveyService(unittest.TestCase):
         self.repo_mock.authorized_google_login.assert_called_with(email_address)
 
     def test_authorized_google_login_called_with_fake_email(self):
-        email_address = "jorma@uotinencom"
+        email_address = "jorma@uotinennet"
         check = self.survey_service.check_if_authorized_google_login(email_address)
         self.assertFalse(check)
         assert not self.repo_mock.authorized_google_login.called
