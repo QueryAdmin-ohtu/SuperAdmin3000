@@ -1,4 +1,3 @@
-import json
 from flask import render_template, redirect, request, abort, Blueprint
 from flask import current_app as app
 import helper
@@ -101,50 +100,29 @@ def surveys_statistics(survey_id):
     return render_template("surveys/statistics.html", survey=survey, statistics=statistics, survey_id=survey_id)
 
 
-@surveys.route("/questions")
-def get_all_questions():
-    """ List all the questions in the database
-    """
-    # TO DO: Move the query to db_queries
-    # result = db.session.execute("SELECT text FROM \"Questions\"")
-    questions = survey_service.get_all_questions()
-
-    return render_template("questions/questions.html", count=len(questions), questions=questions, ENV=app.config["ENV"])
-
-
 @surveys.route("/add_question", methods=["POST"])
 def add_question():
     """ Adds a new question to the database
     """
+
+    if not helper.valid_token(request.form):
+        abort(400, 'Invalid CSRF token.')
+
+    categories = survey_service.get_all_categories()
+    try: 
+        category_weights = helper.category_weights_as_json(
+            categories, request.form)
+    except ValueError:
+        return "Invalid weights"    
     text = request.form["text"]
     survey_id = request.form["survey_id"]
-
-    # Constructs a list of category dictionaries.
-    # TO DO: Add frontend validation of the user inputs
-    category_list = []
-    categories = survey_service.get_all_categories()
-    for category in categories:
-        category_dict = {}
-        category_dict["category"] = category[1]
-        weight = request.form["cat"+str(category[0])]
-        try:
-            if not weight:  # no input means zero weight
-                weight = 0
-            weight = str(weight).replace(",", ".")
-            category_dict["multiplier"] = float(weight)
-        except ValueError:
-            return "Invalid weights"
-        category_list.append(category_dict)
-
-    category_weights = json.dumps(category_list)
     survey_service.create_question(text, survey_id, category_weights)
-
     return redirect(f"/surveys/{survey_id}")
 
 
 @surveys.route("/<survey_id>/new_question", methods=["GET"])
 def new_question(survey_id):
-    """  Retuns a page for creating a new question.
+    """  Retuns the page for creating a new question.
     """
     stored_surveys = survey_service.get_all_surveys()
     stored_categories = survey_service.get_all_categories()
@@ -155,7 +133,7 @@ def new_question(survey_id):
 
 @surveys.route("/edit_question")
 def edit_question():
-    """Renders the page for editing questions
+    """Renders the page for editing a question
     """
     if not helper.logged_in():
         return redirect("/")

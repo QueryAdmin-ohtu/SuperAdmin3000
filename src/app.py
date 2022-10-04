@@ -9,7 +9,7 @@ from db import db
 
 def create_app():
     """Application factory to create Flask app"""
-    app = Flask(__name__) # pylint: disable=redefined-outer-name
+    app = Flask(__name__)  # pylint: disable=redefined-outer-name
     configs = load_config()
     app.config.from_object(configs)
 

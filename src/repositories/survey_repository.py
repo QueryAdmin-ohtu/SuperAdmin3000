@@ -43,7 +43,10 @@ class SurveyRepository:
 
     def create_question(self, text, survey_id, category_weights, created):
         """ Inserts a new question to table Questions based
-        on given parameters and returns the id """
+        on given parameters.
+
+        Returns:
+            Id of the new question. """
         sql = """
         INSERT INTO "Questions"
         ("text", "surveyId", "category_weights", "createdAt","updatedAt")
@@ -113,10 +116,10 @@ class SurveyRepository:
         return questions
 
     def get_all_categories(self):
-        """ Fetches all categories from the database
+        """ Fetches all categories from the database.
 
         Returns:
-        An array containing survey id's, names and titles
+        An array containing id, name, description, content_links of each category.
         """
         sql = """ SELECT id, name, description, content_links FROM "Categories" """
         result = self.db_connection.session.execute(sql)
@@ -124,16 +127,3 @@ class SurveyRepository:
         categories = result.fetchall()
 
         return categories
-
-    def get_all_questions(self):
-        """ Fetches texts of all questions from the database
-
-        Returns:
-        An array containing question texts
-        """
-        sql = """ SELECT text FROM "Questions" """
-        result = self.db_connection.session.execute(sql)
-
-        questions = result.fetchall()
-
-        return questions

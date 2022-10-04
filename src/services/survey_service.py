@@ -118,13 +118,28 @@ class SurveyService:
 
         raise UserInputError("Given email address is flawed")
 
-    def get_all_questions(self):
-        return self.survey_repository.get_all_questions()
-
     def get_all_categories(self):
+        """ Fetches all categories
+        Args:
+          None
+
+        Returns:
+            Array containing id, name, description and content_links of each category """
+
         return self.survey_repository.get_all_categories()
 
-    def create_question(self, text, survey_id, category_weights):
+    def create_question(self, text: str, survey_id: int, category_weights: str):
+        """
+        Creates a new questions with given information. 
+
+        Args:
+            text: Content of the question
+            survey_id: Id of the survey that the question is related to
+            category_weights: json-formatted string containing the category weights of the question
+
+        Returns:
+            If succeeds: The DB id of the created question
+        """
         return self.survey_repository.create_question(text, survey_id, category_weights, datetime.now())
 
 
