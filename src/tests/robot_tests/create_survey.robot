@@ -47,3 +47,8 @@ Questions Of Survey Are Displayed On Survey Page
     Page Should Contain  Question 4
     Page Should Contain  Question 5
     Page Should Contain  Question 6
+
+Logged Out User Cannot Create Surveys
+    Logout
+    Go To Create New Survey Page
+    Page Should Contain  Please login
