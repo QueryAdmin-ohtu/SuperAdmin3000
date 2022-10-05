@@ -49,6 +49,24 @@ class SurveyRepository:
 
         return survey_id[0]
 
+    def delete_survey(self, survey_id):
+        """ Deletes a survey from Surveys after deleting all
+        questions, results and groups which relate to it.
+        After deletion, checks if survey has been deleted
+        and returns the result """
+        sql = """ DELETE FROM "Questions" WHERE "surveyId"=:id """
+        db.session.execute(sql, {"id": survey_id})
+        sql = """ DELETE FROM "Survey_results" WHERE "surveyId"=:id """
+        db.session.execute(sql, {"id": survey_id})
+        sql = """ DELETE FROM "Survey_user_groups" WHERE "surveyId"=:id """
+        db.session.execute(sql, {"id": survey_id})
+        sql = """ DELETE FROM "Surveys" WHERE "id"=:id """
+        db.session.execute(sql, {"id": survey_id})
+        db.session.commit()
+        if self.get_survey(survey_id) is False:
+            return True
+        return False
+
     def get_survey(self, survey_id):
         """ Looks up survey information with
         id and returns it in a list"""

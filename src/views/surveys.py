@@ -68,6 +68,20 @@ def create_survey():
 
     return redirect(route)
 
+@surveys.route("/delete_survey", methods=["POST"])
+def delete_survey():
+    """ Takes survey id from new.html and calls
+    a db function to delete the survey using the id
+    and redirects to homepage if deletion succeeded,
+    otherwise redirects back to the survey """
+
+    if not helper.valid_token(request.form):
+        abort(403)
+
+    survey_id = request.form["id"]
+    if survey_service.delete_survey(survey_id):
+        return redirect("/")
+    return redirect(f"/surveys/{survey_id}")
 
 @surveys.route("/surveys/<survey_id>")
 def view_survey(survey_id):
