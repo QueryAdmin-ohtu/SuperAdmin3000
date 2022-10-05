@@ -8,6 +8,7 @@ on:
       - dev_*
     paths-ignore:
       - 'Documentation/**'
+      - '.github/**'
       - 'README.md'
 
 permissions:
