@@ -93,7 +93,7 @@ class SurveyService:
         """
         if len(name) < 1 or len(title) < 1 or len(description) < 1:
             raise UserInputError("Missing required information of survey")
-            
+
         if len(name) > 1000 or len(title) > 1000 or len(description) > 1000:
             raise UserInputError("Survey input is too long")
 
