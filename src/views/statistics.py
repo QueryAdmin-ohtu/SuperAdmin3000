@@ -6,4 +6,3 @@ stats = Blueprint("stats", __name__)
 def statistics():
     """Placeholder for route to stats page"""
     pass
-
