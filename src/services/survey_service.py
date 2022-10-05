@@ -2,6 +2,7 @@ from datetime import datetime
 import re
 from repositories.survey_repository import SurveyRepository
 
+
 class UserInputError(Exception):
     pass
 
@@ -119,11 +120,13 @@ class SurveyService:
             UserInputError: If email address if flawed
         """
 
-        regex = re.compile(r'([A-Za-z0-9]+[.-_])*[A-Za-z0-9]+@[A-Za-z0-9-]+(\.[A-Z|a-z]{2,})+')
+        regex = re.compile(
+            r'([A-Za-z0-9]+[.-_])*[A-Za-z0-9]+@[A-Za-z0-9-]+(\.[A-Z|a-z]{2,})+')
 
         if re.fullmatch(regex, email_address):
             return True
 
         raise UserInputError("Given email address is flawed")
+
 
 survey_service = SurveyService(SurveyRepository())

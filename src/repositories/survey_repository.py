@@ -2,12 +2,13 @@ from sqlalchemy import exc
 
 from db import db
 
+
 class SurveyRepository:
     """
     A class for interacting with the survey database
     """
 
-    def __init__(self, db_connection = db):
+    def __init__(self, db_connection=db):
         self.db_connection = db_connection
 
     def authorized_google_login(self, email):
@@ -40,7 +41,8 @@ class SurveyRepository:
         }
 
         try:
-            survey_id = self.db_connection.session.execute(sql, values).fetchone()
+            survey_id = self.db_connection.session.execute(
+                sql, values).fetchone()
             self.db_connection.session.commit()
         except exc.SQLAlchemyError:
             return None
@@ -51,7 +53,8 @@ class SurveyRepository:
         """ Looks up survey information with
         id and returns it in a list"""
         sql = """ SELECT * FROM "Surveys" WHERE id=:id """
-        survey = self.db_connection.session.execute(sql, {"id": survey_id}).fetchone()
+        survey = self.db_connection.session.execute(
+            sql, {"id": survey_id}).fetchone()
         if not survey:
             return False
         return survey
@@ -91,15 +94,16 @@ class SurveyRepository:
           An array containing each question object
         """
         sql = "SELECT * FROM \"Questions\" WHERE \"Questions\".\"surveyId\"=:survey_id"
-        result = self.db_connection.session.execute(sql, {"survey_id": survey_id})
+        result = self.db_connection.session.execute(
+            sql, {"survey_id": survey_id})
 
         questions = result.fetchall()
 
-        return questions    
+        return questions
 
     def delete_question_from_survey(self, question_id):
         """ Deletes a question in a given survey
-        
+
         Args:
             question_id: Id of the question
 
@@ -108,9 +112,9 @@ class SurveyRepository:
             If not found: False
         """
         sql = "DELETE FROM \"Questions\" WHERE \"id\"=:question_id"
-        result = self.db_connection.session.execute(sql, {"question_id":question_id})
+        result = self.db_connection.session.execute(
+            sql, {"question_id": question_id})
         db.session.commit()
         if not result:
             return False
         return True
-

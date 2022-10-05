@@ -99,12 +99,13 @@ def surveys_statistics(survey_id):
 
     return render_template("surveys/statistics.html", survey=survey, statistics=statistics, survey_id=survey_id)
 
+
 @surveys.route("/surveys/delete/<survey_id>/<question_id>")
 def delete_question(question_id, survey_id):
     """Call database query for removal of a single question
     """
     if not helper.logged_in():
         return redirect("/")
-    
+
     survey_service.delete_question_from_survey(question_id)
     return redirect("/surveys/" + survey_id)
