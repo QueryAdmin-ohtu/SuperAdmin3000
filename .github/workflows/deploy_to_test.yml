@@ -14,7 +14,7 @@ permissions:
   contents: read
 
 jobs:
-  build_and_run_style_checks:
+  build_and_unit_test:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
@@ -30,7 +30,15 @@ jobs:
     - name: Run style checks
       run: |
           poetry run invoke lint
-      
+    - name: Run unit tests
+      run: |
+          invoke tests
+    - name: Coverage report
+      run: |
+          poetry run coverage run --branch -m pytest
+          poetry run coverage xml
+    - name: Coverage report to Codecov
+      uses: codecov/codecov-action@v2      
   deploy_to_heroku_test:
     needs: [build_and_unit_test]
     runs-on: ubuntu-latest
@@ -56,19 +64,6 @@ jobs:
           pip install robotframework
           pip install --upgrade robotframework-seleniumlibrary
           pip install invoke
-    - name: Initialize test database
-      run: |
-          invoke init-db ${{secrets.TEST_DB_URI}}          
-    - name: Run unit tests
-      run: |
-          invoke tests
-# TODO: Coverage report on Heroku
-#    - name: Coverage report
-#      run: |
-#          poetry run coverage run --branch -m pytest
-#          poetry run coverage xml
-#    - name: Coverage report to Codecov
-#      uses: codecov/codecov-action@v2
     - name: Setup chromedriver
       uses: nanasess/setup-chromedriver@master
     - run: |
