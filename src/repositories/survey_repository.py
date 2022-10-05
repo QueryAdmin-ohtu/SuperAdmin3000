@@ -1,3 +1,5 @@
+from sqlalchemy import exc
+
 from db import db
 
 class SurveyRepository:
@@ -36,8 +38,13 @@ class SurveyRepository:
             "title_text": title,
             "survey_text": survey
         }
-        survey_id = self.db_connection.session.execute(sql, values).fetchone()
-        self.db_connection.session.commit()
+
+        try:
+            survey_id = self.db_connection.session.execute(sql, values).fetchone()
+            self.db_connection.session.commit()
+        except exc.SQLAlchemyError:
+            return None
+
         return survey_id[0]
 
     def get_survey(self, survey_id):
@@ -57,8 +64,8 @@ class SurveyRepository:
         Returns: Array containing the survey id, title,
         question count and submission count """
         sql = """
-        SELECT 
-            s.id, 
+        SELECT
+            s.id,
             s.title_text,
             COUNT(DISTINCT q.id) AS questions,
             COUNT(DISTINCT r.id) AS submissions
