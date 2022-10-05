@@ -32,7 +32,7 @@ jobs:
           poetry run invoke lint
     - name: Run unit tests
       run: |
-          invoke tests
+          poetry run invoke tests
     - name: Coverage report
       run: |
           poetry run coverage run --branch -m pytest
