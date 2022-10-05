@@ -153,9 +153,9 @@ class SurveyService:
 
         return self.survey_repository.get_all_categories()
 
-    def create_question(self, text: str, survey_id: int, category_weights: str):
+    def create_question(self, text: str, survey_id: int, category_weights: str, time: datetime):
         """
-        Creates a new questions with given information. 
+        Creates a new questions with given information.
 
         Args:
             text: Content of the question
@@ -165,7 +165,7 @@ class SurveyService:
         Returns:
             If succeeds: The DB id of the created question
         """
-        return self.survey_repository.create_question(text, survey_id, category_weights, datetime.now())
+        return self.survey_repository.create_question(text, survey_id, category_weights, time)
 
 
 survey_service = SurveyService(SurveyRepository())

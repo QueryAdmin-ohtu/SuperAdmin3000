@@ -2,39 +2,36 @@
 {% block content %}
 
 {% if survey %}
-<h2>Survey: {{ survey[1] }} ID: {{ survey[0] }}</h2>
+  <h2>Survey: {{ survey[1] }} ID: {{ survey[0] }}</h2>
 
-<div>
-<ul>
-  <li>Created: {{ survey[2] }}</li>
-  <li>Updated: {{ survey[3] }}</li>
-  <li>Title: {{ survey[4] }}</li>
-  <li>Text: {{ survey[5] }}</li>  
-</ul>
-<a href="/surveys/edit/{{ survey[0] }}"><button class="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">EDIT</button></a><br>
-<a href="/surveys/statistics/{{ survey[0] }}"><button class="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Statistics</button></a><br>
-<div>
-<h2>Questions</h2>
-<a href="/{{ survey[0] }}/new_question"><button class="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Add question</button></a><br>
-{% if questions %}
-{% for question in questions %}
-<p>{{ question.text }}</p>
-    <h2>Questions</h2>
+  <div>
+  <ul>
+    <li>Created: {{ survey[2] }}</li>
+    <li>Updated: {{ survey[3] }}</li>
+    <li>Title: {{ survey[4] }}</li>
+    <li>Text: {{ survey[5] }}</li>  
+  </ul>
+  <a href="/surveys/edit/{{ survey[0] }}"><button class="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">EDIT</button></a><br><br>
+  <a href="/surveys/statistics/{{ survey[0] }}"><button class="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Statistics</button></a><br><br>
+  <a href="/{{ survey[0] }}/new_question"><button class="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Add question</button></a><br><br>
+  <br>
+  <h2>Questions</h2>
+  <br>
     {% if questions %}
-    {% for question in questions %}                                    
-<p>{{ question.text }}<a href="/surveys/delete/{{survey[0]}}/{{question[0]}}"><button class="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">DELETE {{question[0]}}</button></a></p>
-<hr>
-{% endfor %}
+      {% for question in questions %}                                    
+        <p>{{ question.text }}<a href="/surveys/delete/{{survey[0]}}/{{question[0]}}"><button class="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">DELETE {{question[0]}}</button></a></p>
+        <hr>
+      {% endfor %}
+    {% else %}
+      <p>Survey has no questions 🥺</p>
+    {% endif %}
+  <form action="/delete_survey" method="POST">
+    <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
+    <input type="hidden" name="id" value="{{ survey[0] }}">
+    <button name="delete" value="delete" onclick="return confirm('Are you sure you want to delete this survey?')">Delete Survey</button>
+  </form>
 {% else %}
-<p>Survey has no questions 🥺</p>
-{% endif %}
-<form action="/delete_survey" method="POST">
-  <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
-  <input type="hidden" name="id" value="{{ survey[0] }}">
-  <button name="delete" value="delete" onclick="return confirm('Are you sure you want to delete this survey?')">Delete Survey</button>
-</form>
-{% else %}
-There is no survey with ID: {{ survey_id }}
+  There is no survey with ID: {{ survey_id }}
 {% endif %}
 
 {% endblock %}

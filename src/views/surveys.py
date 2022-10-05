@@ -1,7 +1,9 @@
+from datetime import datetime
 from flask import render_template, redirect, request, abort, Blueprint
 from flask import current_app as app
 import helper
 from services.survey_service import survey_service
+
 
 
 surveys = Blueprint("surveys", __name__)
@@ -68,6 +70,7 @@ def create_survey():
 
     return redirect(route)
 
+
 @surveys.route("/delete_survey", methods=["POST"])
 def delete_survey():
     """ Takes survey id from new.html and calls
@@ -82,6 +85,7 @@ def delete_survey():
     if survey_service.delete_survey(survey_id):
         return redirect("/")
     return redirect(f"/surveys/{survey_id}")
+
 
 @surveys.route("/surveys/<survey_id>")
 def view_survey(survey_id):
@@ -123,14 +127,15 @@ def add_question():
         abort(400, 'Invalid CSRF token.')
 
     categories = survey_service.get_all_categories()
-    try: 
+    try:
         category_weights = helper.category_weights_as_json(
             categories, request.form)
     except ValueError:
-        return "Invalid weights"    
+        return "Invalid weights"
     text = request.form["text"]
     survey_id = request.form["survey_id"]
-    survey_service.create_question(text, survey_id, category_weights)
+    time = datetime.now()
+    survey_service.create_question(text, survey_id, category_weights, time)
     return redirect(f"/surveys/{survey_id}")
 
 

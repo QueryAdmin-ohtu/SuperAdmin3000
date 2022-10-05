@@ -8,7 +8,7 @@ ${DELAY}  0 seconds
 ${URL}  http://localhost:5000
 ${BACKDOOR URL}  ${URL}/backdoor
 ${EDIT URL}  ${URL}/edit
-${NEW URL}  ${URL}/new
+${NEW URL}  ${URL}/new_survey
 
 *** Keywords ***
 Open And Configure Browser

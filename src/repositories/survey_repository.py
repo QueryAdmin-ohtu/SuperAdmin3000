@@ -41,7 +41,6 @@ class SurveyRepository:
         self.db_connection.session.commit()
         return survey_id[0]
 
-<<<<<<< HEAD
     def create_question(self, text, survey_id, category_weights, created):
         """ Inserts a new question to table Questions based
         on given parameters.
@@ -63,7 +62,7 @@ class SurveyRepository:
         survey_id = db.session.execute(sql, values).fetchone()
         db.session.commit()
         return survey_id[0]
-=======
+
     def delete_survey(self, survey_id):
         """ Deletes a survey from Surveys after deleting all
         questions, results and groups which relate to it.
@@ -81,7 +80,6 @@ class SurveyRepository:
         if self.get_survey(survey_id) is False:
             return True
         return False
->>>>>>> main
 
     def get_survey(self, survey_id):
         """ Looks up survey information with
@@ -147,6 +145,7 @@ class SurveyRepository:
         categories = result.fetchall()
 
         return categories
+
     def delete_question_from_survey(self, question_id):
         """ Deletes a question in a given survey
 
@@ -158,7 +157,8 @@ class SurveyRepository:
             If not found: False
         """
         sql = "DELETE FROM \"Questions\" WHERE \"id\"=:question_id"
-        result = self.db_connection.session.execute(sql, {"question_id":question_id})
+        result = self.db_connection.session.execute(
+            sql, {"question_id": question_id})
         db.session.commit()
         if not result:
             return False

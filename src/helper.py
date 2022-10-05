@@ -79,8 +79,8 @@ def category_weights_as_json(categories: list, form: dict):
                 weight = 0
             weight = str(weight).replace(",", ".")
             category_dict["multiplier"] = float(weight)
-        except ValueError:
-            raise ValueError
+        except ValueError as exc:
+            raise ValueError from exc
         category_list.append(category_dict)
 
     return json.dumps(category_list)
