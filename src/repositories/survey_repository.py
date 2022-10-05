@@ -88,7 +88,7 @@ class SurveyRepository:
 
         questions = result.fetchall()
 
-        return questions
+        return questions    
 
     def delete_question_from_survey(self, question_id):
         """ Deletes a question in a given survey
