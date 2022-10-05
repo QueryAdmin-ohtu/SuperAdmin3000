@@ -88,4 +88,22 @@ class SurveyRepository:
 
         questions = result.fetchall()
 
-        return questions
+        return questions    
+
+    def delete_question_from_survey(self, question_id):
+        """ Deletes a question in a given survey
+        
+        Args:
+            question_id: Id of the question
+
+        Returns:
+            If succeeds: True
+            If not found: False
+        """
+        sql = "DELETE FROM \"Questions\" WHERE \"id\"=:question_id"
+        result = self.db_connection.session.execute(sql, {"question_id":question_id})
+        db.session.commit()
+        if not result:
+            return False
+        return True
+

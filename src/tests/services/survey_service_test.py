@@ -70,7 +70,7 @@ class TestSurveyService(unittest.TestCase):
         self.assertEqual(surveys_to_return, check)
         self.repo_mock.get_all_surveys.assert_called_once()
 
-    def test_get_questions_of_survey_calls_repo_correctyl(self):
+    def test_get_questions_of_survey_calls_repo_correctly(self):
         questions_to_return= ["question1", "question2"]
         survey_id = 1
         self.repo_mock.get_questions_of_survey.return_value = questions_to_return
