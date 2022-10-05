@@ -14,20 +14,6 @@ Set Survey Text
 Create A Survey
     Click Button  Create Survey
 
-Make Two Surveys
-    Go To Home Page
-    Click Link  Create a new survey
-    Set Survey Name  Making two surveys
-    Set Survey Title  Which fail
-    Set Survey Text  To make the third one work
-    Create A Survey
-    Go To Home Page
-    Click Link  Create a new survey
-    Set Survey Name  Making two surveys
-    Set Survey Title  Which fail
-    Set Survey Text  To make the third one work
-    Create A Survey
-
 Make A Survey
     Set Survey Name  Testi
     Set Survey Title  Surveyn tekeminen testauksessa

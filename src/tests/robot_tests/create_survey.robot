@@ -11,7 +11,6 @@ Test Setup  Go To Home Page
 Logged In User Can Create Surveys
     Go To Backdoor Login Page
     Login With Correct Credentials
-    Make Two Surveys
     Go To Home Page
     Click Link  Create a new survey
     Make A Survey
@@ -51,4 +50,10 @@ Questions Of Survey Are Displayed On Survey Page
 Logged Out User Cannot Create Surveys
     Logout
     Go To Create New Survey Page
+    Page Should Contain  Please login
+
+Logged Out User Cannot See Surveys
+    Go To Survey  1
+    Page Should Contain  Please login
+    Go To Home Page
     Page Should Contain  Please login
