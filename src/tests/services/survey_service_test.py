@@ -84,3 +84,22 @@ class TestSurveyService(unittest.TestCase):
         check = self.survey_service.get_questions_of_survey(survey_id)
         self.assertEqual(questions_to_return, check)
         self.repo_mock.get_questions_of_survey.assert_called_with(survey_id)
+
+    def test_get_all_categories_calls_repo_correctly(self):
+        categories_to_return = ["id", "name", "description", "content_links"]
+        self.repo_mock.get_all_categories.return_value = categories_to_return
+        check = self.survey_service.get_all_categories()
+        self.assertEqual(categories_to_return, check)
+        self.repo_mock.get_all_categories.assert_called_once()
+
+    def test_create_question_calls_repo_correctly(self):
+        self.repo_mock.create_question.return_value = 1
+        text = "text"
+        survey_id = 1
+        category_weights = []
+        time = datetime(2022, 10, 6)
+        check = self.survey_service.create_question(
+            text, survey_id, category_weights, time)
+        self.assertEqual(check, 1)
+        self.repo_mock.create_question.assert_called_with(
+            text, survey_id, category_weights, time)

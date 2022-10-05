@@ -12,29 +12,29 @@ Logged In User Can Create Surveys
     Go To Backdoor Login Page
     Login With Correct Credentials
     Go To Home Page
-    Click Link  Create a new survey
+    Click Link  New survey
     Make A Survey
     Page Should Contain  Testi
     Page Should Contain  Toimiikohan
     Page Should Contain  Surveyn tekeminen testauksessa
 
 Logged In User Cannot Create Surveys Without Name
-    Click Link  Create a new survey
+    Click Link  New survey
     Make Survey Without Name
     Alert Should Be Present  Must have a name
 
 Logged In User Cannot Create Surveys Without Title
-    Click Link  Create a new survey
+    Click Link  New survey
     Make Survey Without Title
     Alert Should Be Present  Must have a title
 
 Logged In User Cannot Create Surveys Without Text
-    Click Link  Create a new survey
+    Click Link  New survey
     Make Survey Without Text
     Alert Should Be Present  Must have a flavor text
 
 A New Survey Does Not Contain Questions
-    Click Link  Create a new survey
+    Click Link  New survey
     Make A Survey
     Page Should Contain  Survey has no questions
 

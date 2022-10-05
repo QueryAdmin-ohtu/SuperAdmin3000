@@ -1,5 +1,5 @@
+import json
 from secrets import token_hex
-
 from flask import session
 
 
@@ -59,3 +59,28 @@ def valid_token(form, tokenname="csrf_token"):
         return False
 
     return form[tokenname] == session[tokenname]
+
+
+def category_weights_as_json(categories: list, form: dict):
+    """ Constructs category weights as json based on user input
+    Args:
+        categories: List of categories. Items on the list are lists containing category id and category name
+        form: Dictionary containing the desired category weights
+
+    Returns:
+        Category list as serialized json """
+    category_list = []
+    for category in categories:
+        category_dict = {}
+        category_dict["category"] = category[1]
+        weight = form["cat"+str(category[0])]
+        try:
+            if not weight:  # no input means zero weight
+                weight = 0
+            weight = str(weight).replace(",", ".")
+            category_dict["multiplier"] = float(weight)
+        except ValueError as exc:
+            raise ValueError from exc
+        category_list.append(category_dict)
+
+    return json.dumps(category_list)

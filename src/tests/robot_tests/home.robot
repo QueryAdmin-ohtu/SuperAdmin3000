@@ -19,7 +19,7 @@ Logged In User Can See Surveys On Home Page
     Go To Home Page
     Page Should Contain  List of surveys
     Page Should Contain  Title: This will be survey title text
-    Page Should Contain  Questions: 9
+    Page Should Contain  Questions: 11
     Page Should Contain  Submissions: 3
     Page Should Contain  Questions: 0
     Page Should Contain  Submissions: 0
