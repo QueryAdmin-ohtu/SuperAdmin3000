@@ -68,6 +68,20 @@ def create_survey():
 
     return redirect(route)
 
+@surveys.route("/delete_survey", methods=["POST"])
+def delete_survey():
+    """ Takes survey id from new.html and calls
+    a db function to delete the survey using the id
+    and redirects to homepage if deletion succeeded,
+    otherwise redirects back to the survey """
+
+    if not helper.valid_token(request.form):
+        abort(403)
+
+    survey_id = request.form["id"]
+    if survey_service.delete_survey(survey_id):
+        return redirect("/")
+    return redirect(f"/surveys/{survey_id}")
 
 @surveys.route("/surveys/<survey_id>")
 def view_survey(survey_id):
@@ -131,11 +145,12 @@ def new_question(survey_id):
     return render_template("questions/new_question.html", ENV=app.config["ENV"], surveys=stored_surveys, categories=stored_categories, survey=survey)
 
 
-@surveys.route("/edit_question")
-def edit_question():
-    """Renders the page for editing a question
+@surveys.route("/surveys/delete/<survey_id>/<question_id>")
+def delete_question(question_id, survey_id):
+    """Call database query for removal of a single question
     """
     if not helper.logged_in():
         return redirect("/")
 
-    return render_template("questions/edit_question.html", ENV=app.config["ENV"])
+    survey_service.delete_question_from_survey(question_id)
+    return redirect("/surveys/" + survey_id)

@@ -41,6 +41,7 @@ class SurveyRepository:
         self.db_connection.session.commit()
         return survey_id[0]
 
+<<<<<<< HEAD
     def create_question(self, text, survey_id, category_weights, created):
         """ Inserts a new question to table Questions based
         on given parameters.
@@ -62,6 +63,25 @@ class SurveyRepository:
         survey_id = db.session.execute(sql, values).fetchone()
         db.session.commit()
         return survey_id[0]
+=======
+    def delete_survey(self, survey_id):
+        """ Deletes a survey from Surveys after deleting all
+        questions, results and groups which relate to it.
+        After deletion, checks if survey has been deleted
+        and returns the result """
+        sql = """ DELETE FROM "Questions" WHERE "surveyId"=:id """
+        db.session.execute(sql, {"id": survey_id})
+        sql = """ DELETE FROM "Survey_results" WHERE "surveyId"=:id """
+        db.session.execute(sql, {"id": survey_id})
+        sql = """ DELETE FROM "Survey_user_groups" WHERE "surveyId"=:id """
+        db.session.execute(sql, {"id": survey_id})
+        sql = """ DELETE FROM "Surveys" WHERE "id"=:id """
+        db.session.execute(sql, {"id": survey_id})
+        db.session.commit()
+        if self.get_survey(survey_id) is False:
+            return True
+        return False
+>>>>>>> main
 
     def get_survey(self, survey_id):
         """ Looks up survey information with
@@ -127,3 +147,19 @@ class SurveyRepository:
         categories = result.fetchall()
 
         return categories
+    def delete_question_from_survey(self, question_id):
+        """ Deletes a question in a given survey
+
+        Args:
+            question_id: Id of the question
+
+        Returns:
+            If succeeds: True
+            If not found: False
+        """
+        sql = "DELETE FROM \"Questions\" WHERE \"id\"=:question_id"
+        result = self.db_connection.session.execute(sql, {"question_id":question_id})
+        db.session.commit()
+        if not result:
+            return False
+        return True

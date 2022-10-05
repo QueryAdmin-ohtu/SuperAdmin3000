@@ -31,3 +31,7 @@ Go To Create New Survey Page
 Go To Survey
     [Arguments]  ${survey_id}
     Go To  ${URL}/surveys/${survey_id}
+
+Delete Question
+    [Arguments]  ${survey_id}  ${question_id}
+    Go To  ${URL}/delete/${survey_id}/${question_id}
