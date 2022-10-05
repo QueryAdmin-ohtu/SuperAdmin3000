@@ -15,10 +15,10 @@
 <a href="/surveys/statistics/{{ survey[0] }}"><button class="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Statistics</button></a><br>
 <div>
 
-<h2>Questions</h2>
-{% if questions %}
-{% for question in questions %}
-<p>{{ question.text }}</p>
+    <h2>Questions</h2>
+    {% if questions %}
+    {% for question in questions %}                                    
+<p>{{ question.text }}<a href="/surveys/delete/{{survey[0]}}/{{question[0]}}"><button class="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">DELETE {{question[0]}}</button></a></p>
 <hr>
 {% endfor %}
 {% else %}

@@ -62,6 +62,17 @@ class SurveyService:
 
         return self.survey_repository.get_survey(survey_id)
 
+    def delete_question_from_survey(self, question_id: str):
+        """ Removes a question from a survey.
+        Args:
+            question_id: Db id of question
+        Returns:
+            If succeeds: True
+            Not found: False
+        """
+
+        return self.survey_repository.delete_question_from_survey(question_id)
+
     def get_all_surveys(self):
         """ Fetches all surveys, counts the questions
         for each survey and the amount of submissions
