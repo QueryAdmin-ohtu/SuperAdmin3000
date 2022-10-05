@@ -2,6 +2,7 @@ from datetime import datetime
 import re
 from repositories.survey_repository import SurveyRepository
 
+
 class UserInputError(Exception):
     pass
 
@@ -27,6 +28,7 @@ class SurveyService:
         try:
             if self._validate_email_address(email):
                 return self.survey_repository.authorized_google_login(email)
+            return False
         except UserInputError:
             return False
 
@@ -133,11 +135,37 @@ class SurveyService:
             UserInputError: If email address if flawed
         """
 
-        regex = re.compile(r'([A-Za-z0-9]+[.-_])*[A-Za-z0-9]+@[A-Za-z0-9-]+(\.[A-Z|a-z]{2,})+')
+        regex = re.compile(
+            r'([A-Za-z0-9]+[.-_])*[A-Za-z0-9]+@[A-Za-z0-9-]+(\.[A-Z|a-z]{2,})+')
 
         if re.fullmatch(regex, email_address):
             return True
 
         raise UserInputError("Given email address is flawed")
+
+    def get_all_categories(self):
+        """ Fetches all categories
+        Args:
+          None
+
+        Returns:
+            Array containing id, name, description and content_links of each category """
+
+        return self.survey_repository.get_all_categories()
+
+    def create_question(self, text: str, survey_id: int, category_weights: str, time: datetime):
+        """
+        Creates a new questions with given information.
+
+        Args:
+            text: Content of the question
+            survey_id: Id of the survey that the question is related to
+            category_weights: json-formatted string containing the category weights of the question
+
+        Returns:
+            If succeeds: The DB id of the created question
+        """
+        return self.survey_repository.create_question(text, survey_id, category_weights, time)
+
 
 survey_service = SurveyService(SurveyRepository())

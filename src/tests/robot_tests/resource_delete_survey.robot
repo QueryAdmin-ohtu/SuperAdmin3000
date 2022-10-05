@@ -20,7 +20,7 @@ Delete The Survey
 
 Make A Survey To Delete
     Go To Home Page
-    Click Link  Create a new survey
+    Click Link  New survey
     Set Survey Name  Must Not Contain
     Set Survey Title  Poistuisikohan
     Set Survey Text  On Home Page
