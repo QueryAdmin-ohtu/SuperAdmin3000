@@ -9,7 +9,7 @@ from db import db
 
 def create_app():
     """Application factory to create Flask app"""
-    app = Flask(__name__)
+    app = Flask(__name__)  # pylint: disable=redefined-outer-name
     configs = load_config()
     app.config.from_object(configs)
 
@@ -24,4 +24,4 @@ def create_app():
 
 if __name__ == "__main__":
     app = create_app()
-    app.run(debug=False, host="0.0.0.0", port=PORT)
+    app.run(debug=True, host="0.0.0.0", port=PORT)

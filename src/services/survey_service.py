@@ -2,6 +2,7 @@ from datetime import datetime
 import re
 from repositories.survey_repository import SurveyRepository
 
+
 class UserInputError(Exception):
     pass
 
@@ -27,6 +28,7 @@ class SurveyService:
         try:
             if self._validate_email_address(email):
                 return self.survey_repository.authorized_google_login(email)
+            return False
         except UserInputError:
             return False
 
@@ -62,6 +64,31 @@ class SurveyService:
 
         return self.survey_repository.get_survey(survey_id)
 
+    def delete_survey(self, survey_id: str):
+        """
+        Deletes survey from the repository
+
+        Args:
+            survey_id: Db id of survey
+
+        Returns:
+            If succeeds: True
+            If not: False
+        """
+
+        return self.survey_repository.delete_survey(survey_id)
+
+    def delete_question_from_survey(self, question_id: str):
+        """ Removes a question from a survey.
+        Args:
+            question_id: Db id of question
+        Returns:
+            If succeeds: True
+            Not found: False
+        """
+
+        return self.survey_repository.delete_question_from_survey(question_id)
+
     def get_all_surveys(self):
         """ Fetches all surveys, counts the questions
         for each survey and the amount of submissions
@@ -93,7 +120,7 @@ class SurveyService:
         """
         if len(name) < 1 or len(title) < 1 or len(description) < 1:
             raise UserInputError("Missing required information of survey")
-            
+
         if len(name) > 1000 or len(title) > 1000 or len(description) > 1000:
             raise UserInputError("Survey input is too long")
 
@@ -108,11 +135,37 @@ class SurveyService:
             UserInputError: If email address if flawed
         """
 
-        regex = re.compile(r'([A-Za-z0-9]+[.-_])*[A-Za-z0-9]+@[A-Za-z0-9-]+(\.[A-Z|a-z]{2,})+')
+        regex = re.compile(
+            r'([A-Za-z0-9]+[.-_])*[A-Za-z0-9]+@[A-Za-z0-9-]+(\.[A-Z|a-z]{2,})+')
 
         if re.fullmatch(regex, email_address):
             return True
 
         raise UserInputError("Given email address is flawed")
+
+    def get_all_categories(self):
+        """ Fetches all categories
+        Args:
+          None
+
+        Returns:
+            Array containing id, name, description and content_links of each category """
+
+        return self.survey_repository.get_all_categories()
+
+    def create_question(self, text: str, survey_id: int, category_weights: str, time: datetime):
+        """
+        Creates a new questions with given information.
+
+        Args:
+            text: Content of the question
+            survey_id: Id of the survey that the question is related to
+            category_weights: json-formatted string containing the category weights of the question
+
+        Returns:
+            If succeeds: The DB id of the created question
+        """
+        return self.survey_repository.create_question(text, survey_id, category_weights, time)
+
 
 survey_service = SurveyService(SurveyRepository())

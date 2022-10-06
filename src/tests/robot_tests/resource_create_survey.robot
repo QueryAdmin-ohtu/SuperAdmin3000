@@ -16,13 +16,13 @@ Create A Survey
 
 Make Two Surveys
     Go To Home Page
-    Click Link  Create a new survey
+    Click Link  New survey
     Set Survey Name  Making two surveys
     Set Survey Title  Which fail
     Set Survey Text  To make the third one work
     Create A Survey
     Go To Home Page
-    Click Link  Create a new survey
+    Click Link  New survey
     Set Survey Name  Making two surveys
     Set Survey Title  Which fail
     Set Survey Text  To make the third one work

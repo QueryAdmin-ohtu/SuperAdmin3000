@@ -8,7 +8,7 @@ ${DELAY}  0 seconds
 ${URL}  http://localhost:5000
 ${BACKDOOR URL}  ${URL}/backdoor
 ${EDIT URL}  ${URL}/edit
-${NEW URL}  ${URL}/new
+${NEW URL}  ${URL}/new_survey
 
 *** Keywords ***
 Open And Configure Browser
@@ -31,3 +31,7 @@ Go To Create New Survey Page
 Go To Survey
     [Arguments]  ${survey_id}
     Go To  ${URL}/surveys/${survey_id}
+
+Delete Question
+    [Arguments]  ${survey_id}  ${question_id}
+    Go To  ${URL}/delete/${survey_id}/${question_id}

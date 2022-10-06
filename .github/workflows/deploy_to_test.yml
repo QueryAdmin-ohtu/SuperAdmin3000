@@ -7,7 +7,6 @@ on:
     branches: 
       - dev_*
     paths-ignore:
-      - 'docs/**'
       - 'Documentation/**'
       - 'README.md'
 
@@ -34,6 +33,13 @@ jobs:
     - name: Run unit tests
       run: |
           poetry run invoke tests
+    - name: Coverage report
+      run: |
+          poetry run coverage run --branch -m pytest
+          poetry run coverage xml
+    - name: Coverage report to Codecov
+      uses: codecov/codecov-action@v2
+      
   deploy_to_heroku_test:
     needs: [build_and_unit_test]
     runs-on: ubuntu-latest
