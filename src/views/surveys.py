@@ -134,28 +134,51 @@ def add_question():
         return "Invalid weights"
     text = request.form["text"]
     survey_id = request.form["survey_id"]
+    question_id = request.form["question_id"]
     time = datetime.now()
-    survey_service.create_question(text, survey_id, category_weights, time)
+    if request.form["edit"]:
+        survey_service.update_question(question_id, text, category_weights, time)
+    else:
+        survey_service.create_question(text, survey_id, category_weights, time)
     return redirect(f"/surveys/{survey_id}")
 
 
 @surveys.route("/<survey_id>/new_question", methods=["GET"])
 def new_question(survey_id):
-    """  Retuns the page for creating a new question.
+    """  Returns the page for creating a new question.
     """
-    stored_surveys = survey_service.get_all_surveys()
     stored_categories = survey_service.get_all_categories()
-    survey = survey_service.get_survey(survey_id)
-    # pylint: disable-next=line-too-long
-    return render_template("questions/new_question.html", ENV=app.config["ENV"], surveys=stored_surveys, categories=stored_categories, survey=survey)
+    weights = {}
+    return render_template("questions/new_question.html", 
+    ENV=app.config["ENV"], categories=stored_categories,
+    survey_id=survey_id, weights=weights)
 
 
 @surveys.route("/surveys/delete/<survey_id>/<question_id>")
 def delete_question(question_id, survey_id):
-    """Call database query for removal of a single question
+    """ Call database query for removal of a single question
     """
     if not helper.logged_in():
         return redirect("/")
 
     survey_service.delete_question_from_survey(question_id)
     return redirect("/surveys/" + survey_id)
+
+
+@surveys.route("/questions/<question_id>")
+def edit_question(question_id):
+    """ Returns the page for creating a new question
+    where the inputs are filled with the information
+    from the question to be edited """
+    question = survey_service.get_question(question_id)
+    if len(question) < 4:
+        return redirect("/")
+    text = question[0]
+    survey_id = question[1]
+    created = question[2]
+    weights = helper.json_into_dictionary(question[3])
+    stored_categories = survey_service.get_all_categories()
+    return render_template("questions/new_question.html",
+    ENV=app.config["ENV"],text = text, survey_id = survey_id,
+    weights = weights, categories = stored_categories,
+    created = created, edit = True, question_id = question_id)

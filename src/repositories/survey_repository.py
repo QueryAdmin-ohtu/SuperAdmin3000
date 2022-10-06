@@ -63,6 +63,37 @@ class SurveyRepository:
         db.session.commit()
         return survey_id[0]
 
+    def update_question(self, question_id, text, category_weights, updated):
+        """ Updates a question from the table Questions
+        based on given parameters. If text nor category
+        weights have been changed, nothing will happen
+        and False will be returned. Otherwise, changes
+        will take place and True is returned """
+        original = self.get_question(question_id)
+        sql = """ UPDATE "Questions" SET "updatedAt"=:updated
+        WHERE id=:question_id """
+        sql2 = False
+        sql3 = False
+
+        if text != original[0]:
+            sql2 = """ UPDATE "Questions" SET text=:text
+            WHERE id=:question_id """
+            self.db_connection.session.execute(
+            sql2, {"text": text, "question_id": question_id})
+
+        if category_weights != original[3]:
+            sql3 = """ UPDATE "Questions" SET category_weights=:category_weights
+            WHERE id=:question_id """
+            self.db_connection.session.execute(
+            sql3, {"category_weights": category_weights, "question_id": question_id})
+
+        if sql2 or sql3:
+            self.db_connection.session.execute(
+            sql, {"updated": updated, "question_id": question_id})
+            self.db_connection.session.commit()
+
+        return sql2 or sql3
+
     def delete_survey(self, survey_id):
         """ Deletes a survey from Surveys after deleting all
         questions, results and groups which relate to it.
@@ -163,3 +194,12 @@ class SurveyRepository:
         if not result:
             return False
         return True
+
+    def get_question(self, question_id):
+        """ Gets the text, survey id, category weights,
+        and creation time of a question """
+        sql = """ SELECT text, "surveyId", "createdAt", category_weights
+        FROM "Questions" WHERE id=:question_id """
+        question = self.db_connection.session.execute(
+            sql, {"question_id": question_id}).fetchone()
+        return question

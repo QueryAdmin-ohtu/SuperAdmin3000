@@ -84,3 +84,12 @@ def category_weights_as_json(categories: list, form: dict):
         category_list.append(category_dict)
 
     return json.dumps(category_list)
+
+def json_into_dictionary(json_file):
+    """ Takes category weights and makes them into
+    a dictionary where the keys are the category
+    names and the values are the multipliers """
+    categories = {}
+    for category in json_file:
+        categories[category["category"]] = category["multiplier"]
+    return categories
