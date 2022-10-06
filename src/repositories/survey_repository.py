@@ -89,3 +89,23 @@ class SurveyRepository:
         questions = result.fetchall()
 
         return questions
+
+    def survey_exists(self, survey_name):
+        """Checks if a survey with identical name already exists
+
+        Args:
+            survey_name: Name of the new survey
+
+        Returns:
+            True if matching name found, False if not
+        """
+        sql = "SELECT name FROM 'Surveys' WHERE 'Surveys'.name=:survey_name"
+        result = self.db_connection.session.execute(sql, {"survey_name": survey_name})
+
+        survey_found = result.fetchone()
+
+        if survey_found:
+            return True
+        return False
+
+
