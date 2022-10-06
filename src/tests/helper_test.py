@@ -7,7 +7,8 @@ import helper
 @pytest.fixture()
 def app():
     app = create_app()
-
+    app.secret_key = "testkey"
+    
     yield app
 
 
