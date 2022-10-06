@@ -14,6 +14,18 @@ def tests(ctx):
     ctx.run("pytest")
 
 @task
+def coverage(ctx):
+    ctx.run("coverage run --branch -m pytest")
+
+@task
+def coveragehtml(ctx):
+    ctx.run("coverage html")
+
+@task
+def coveragexml(ctx):
+    ctx.run("coverage xml")
+    
+@task
 def e2etests(ctx):
     ctx.run("robot src/tests/robot_tests/")
 
