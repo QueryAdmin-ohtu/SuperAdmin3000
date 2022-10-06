@@ -15,7 +15,7 @@ Create A Survey
     Click Button  Create Survey
 
 Delete The Survey
-    Click Button  Delete Survey
+    Click Button  DELETE SURVEY
     Handle Alert  Accept
 
 Make A Survey To Delete
