@@ -3,4 +3,5 @@ source = src
 omit = src/tests/**,
     src/config.py,
     src/views/**,
-    src/app.py
+    src/app.py,
+    src/repositories/**

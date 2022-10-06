@@ -5,7 +5,6 @@ import helper
 from services.survey_service import survey_service
 
 
-
 surveys = Blueprint("surveys", __name__)
 
 
