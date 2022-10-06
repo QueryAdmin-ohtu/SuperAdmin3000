@@ -29,10 +29,9 @@ def update_session(email, first_name, csrf_token_cookie):
 def clear_session():
     """ Logout the user and clear session properties
     """
-    _remove_from_session("email")    
+    _remove_from_session("email")
     _remove_from_session("username")
     _remove_from_session("csrf_token")
-
 
 
 def _remove_from_session(property_key):
