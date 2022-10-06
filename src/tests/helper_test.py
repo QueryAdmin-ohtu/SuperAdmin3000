@@ -70,3 +70,12 @@ def test_logged_in_when_not_logged_in(app):
         response = helper.logged_in()
         
         assert not response
+
+def test_category_weights_as_json_returns_json():
+    categories = [ [1, "Category 1"], [2, "Category 2" ] ]
+    form = { "cat1": 10, "cat2": 20 }
+
+    correct_json = '[{"category": "Category 1", "multiplier": 10.0}, {"category": "Category 2", "multiplier": 20.0}]'
+    result = helper.category_weights_as_json(categories, form)
+
+    assert result == correct_json
