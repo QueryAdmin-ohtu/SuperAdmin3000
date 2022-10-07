@@ -36,7 +36,6 @@ jobs:
       run: poetry run invoke tests
       env:
         DATABASE_URI: ${{ secrets.DATABASE_URI }}
-        SQLALCHEMY_DATABASE_URI: ${{ secrets.DATABASE_URI }}
     - name: Coverage report
       run: |
           poetry run coverage run --branch -m pytest

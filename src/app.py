@@ -12,6 +12,8 @@ def create_app():
     app = Flask(__name__)  # pylint: disable=redefined-outer-name
     configs = load_config()
     app.config.from_object(configs)
+    app.config['SQLALCHEMY_DATABASE_URI'] = configs.SQLALCHEMY_DATABASE_URI
+    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
     app.register_blueprint(home)
     app.register_blueprint(surveys)

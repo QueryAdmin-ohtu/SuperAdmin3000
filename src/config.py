@@ -16,8 +16,6 @@ except FileNotFoundError:
 
 PORT = environ.get("PORT", 5000)
 
-SQLALCHEMY_DATABASE_URI = getenv("DATABASE_URI")
-
 class Config:
     """Set base Flask config variables"""
     SECRET_KEY = getenv("SECRET_KEY")
