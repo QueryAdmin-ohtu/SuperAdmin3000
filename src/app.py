@@ -1,6 +1,6 @@
 from flask import Flask
 from config import PORT, load_config
-
+from os import path, getenv, environ
 from views.home import home
 from views.surveys import surveys
 from views.statistics import stats
@@ -12,7 +12,7 @@ def create_app():
     app = Flask(__name__)  # pylint: disable=redefined-outer-name
     configs = load_config()
     app.config.from_object(configs)
-    app.config['SQLALCHEMY_DATABASE_URI'] = configs.SQLALCHEMY_DATABASE_URI
+    app.config['SQLALCHEMY_DATABASE_URI'] = getenv("DATABASE_URI")
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
     app.register_blueprint(home)
