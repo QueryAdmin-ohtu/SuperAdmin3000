@@ -103,3 +103,37 @@ class TestSurveyService(unittest.TestCase):
         self.assertEqual(check, 1)
         self.repo_mock.create_question.assert_called_with(
             text, survey_id, category_weights, time)
+    
+    def test_edit_survey_with_no_name_does_not_work(self):
+        name = ""
+        title = "What marsupial woudl I be?"
+        description = "Come and find out what marsupial represents you best"
+        with self.assertRaises(UserInputError):
+            self.survey_service.edit_survey(1, name, title, description)
+    
+    def test_edit_survey_works_with_proper_arguments(self):
+        self.repo_mock.edit_survey.return_value = 1
+        id = "1"
+        name = "Marsupial Survey"
+        title = "What marsupial woudl I be?"
+        description = "Come and find out what marsupial represents you best"
+        check = self.survey_service.edit_survey(id, name, title, description)
+        self.assertEqual(check, 1)
+        self.repo_mock.edit_survey.assert_called_with(
+            id, name, title, description)
+    
+    def test_edit_survey_with_no_title_does_not_work(self):
+        id = "1"
+        name = "Marsupial Survey"
+        title = ""
+        description = "Come and find out what marsupial represents you best"
+        with self.assertRaises(UserInputError):
+            self.survey_service.edit_survey(id, name, title, description)
+
+    def test_edit_survey_with_no_description_does_not_work(self):
+        id = "1"
+        name = "Marsupial Survey"
+        title = "What marsupial woudl I be?"
+        description = ""
+        with self.assertRaises(UserInputError):
+            self.survey_service.edit_survey(id, name, title, description)
