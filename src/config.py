@@ -16,7 +16,6 @@ except FileNotFoundError:
 
 PORT = environ.get("PORT", 5000)
 
-
 class Config:
     """Set base Flask config variables"""
     SECRET_KEY = getenv("SECRET_KEY")
