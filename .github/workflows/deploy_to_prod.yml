@@ -33,6 +33,9 @@ jobs:
       run: |
           poetry run coverage run --branch -m pytest
           poetry run coverage xml
+      env:
+        DATABASE_URI: ${{ secrets.DATABASE_URI }}
+        ENVIRONMENT: "test"  
     - name: Coverage report to Codecov
       uses: codecov/codecov-action@v2
     - name: deploy
