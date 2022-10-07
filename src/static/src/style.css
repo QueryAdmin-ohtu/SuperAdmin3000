@@ -22,7 +22,7 @@
     h3 {
         @apply text-lg;
         @apply font-sans;
-        @apply font-bold;
+        @apply font-medium;
     }
     p {
         @apply text-base;
