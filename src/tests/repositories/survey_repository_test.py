@@ -82,3 +82,24 @@ class TestSurveyRepository(unittest.TestCase):
             response = self.repo.get_questions_of_survey(1)
 
         self.assertGreater(len(response), 2)
+
+    def test_get_question_returns_question(self):
+        with self.app.app_context():
+            response = self.repo.get_questions_of_survey(1)
+
+        self.assertGreater(len(response), 2)
+
+
+    def test_update_question_returns_True(self):
+        question_id = 6
+        text = "muutettu"
+        category_weights = [{"category": "Category 1", "multiplier": 10.0}, {"category": "Category 2", "multiplier": 20.0}]
+
+        with self.app.app_context():
+            response = self.repo.update_question(
+                question_id,
+                text,
+                category_weights,
+                datetime.now())
+
+        self.assertEqual(response,True)

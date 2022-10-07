@@ -85,3 +85,9 @@ def test_category_weights_as_json_returns_json():
     result = helper.category_weights_as_json(categories, form)
 
     assert result == correct_json
+
+def test_json_as_dictionary():
+    json = [{"category": "Category 1", "multiplier": 10.0}, {"category": "Category 2", "multiplier": 20.0}]
+    result = helper.json_into_dictionary(json)
+    result = [result["Category 1"],result["Category 2"]]
+    assert result == [10.0,20.0]
