@@ -189,7 +189,7 @@ class SurveyRepository:
             title_text=:title,
             survey_text=:description
         WHERE id=:survey_id
-        RETURNING *
+        RETURNING id
         """
         values = {
             "survey_id":survey_id,
@@ -202,4 +202,5 @@ class SurveyRepository:
             self.db_connection.session.commit()
         except exc.SQLAlchemyError:
             return None
-        return updated[0]
+        if updated is not None:
+            return updated[0]
