@@ -34,6 +34,8 @@ jobs:
       run: |
           poetry run invoke init-db ${{secrets.DATABASE_URI}}
     - name: Run unit tests
+      env: 
+        DATABASE_URI: ${{secrets.DATABASE_URI}}
       run: |
           poetry run invoke tests
     - name: Coverage report
