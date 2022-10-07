@@ -82,3 +82,27 @@ class TestSurveyRepository(unittest.TestCase):
             response = self.repo.get_questions_of_survey(1)
 
         self.assertGreater(len(response), 2)
+    
+    def test_edit_survey_returns_false_with_invalid_arguments(self):
+
+        with self.app.app_context():
+            response = self.repo.edit_survey(
+                None,
+                "name_test",
+                "title_test",
+                "description_test"
+            )
+        
+        self.assertIsNone(response)
+    
+    def test_edit_survey_returns_true_with_valid_arguments(self):
+
+        with self.app.app_context():
+            response = self.repo.edit_survey(
+                1,
+                "name_test",
+                "title_test",
+                "description_test"
+            )
+        
+        self.assertIsNotNone(response)
