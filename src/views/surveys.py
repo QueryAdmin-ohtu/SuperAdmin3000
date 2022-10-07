@@ -175,7 +175,9 @@ def edit_question(question_id):
     text = question[0]
     survey_id = question[1]
     created = question[2]
-    weights = helper.json_into_dictionary(question[3])
+    weights = question[3]
+    if weights:
+        weights = helper.json_into_dictionary(question[3])
     stored_categories = survey_service.get_all_categories()
     return render_template("questions/new_question.html",
     ENV=app.config["ENV"],text = text, survey_id = survey_id,
