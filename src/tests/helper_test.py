@@ -76,7 +76,36 @@ def test_logged_in_when_not_logged_in(app):
 
         assert not response
 
+def test_valid_token_succeeds_if_username_and_token_are_present(app):
+    with app.test_request_context() as context:
+        form = {"csrf_token": "tokenX"}
+        
+        context.session["username"] = "user"
+        context.session["csrf_token"] = "tokenX"
+        
+        assert helper.valid_token(form)
 
+def test_valid_token_fails_if_username_and_token_are_not_present(app):
+    with app.test_request_context() as context:
+        form = {"csrf_token": "tokenX"}
+
+        if "username" in context.session:
+            del context.session["username"]
+            
+        context.session["csrf_token"] = "tokenX"
+
+        assert not helper.valid_token(form)
+
+        context.session["username"] = "user"
+        context.session["csrf_token"] = "tokenY"
+
+        assert not helper.valid_token(form)
+
+        context.session["username"] = None
+        context.session["csrf_token"] = None
+
+        assert not helper.valid_token(form)
+        
 def test_category_weights_as_json_returns_json():
     categories = [[1, "Category 1"], [2, "Category 2"]]
     form = {"cat1": 10, "cat2": 20}
