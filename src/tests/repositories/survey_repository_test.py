@@ -106,3 +106,15 @@ class TestSurveyRepository(unittest.TestCase):
             )
         
         self.assertEqual(response, 1)
+    
+    def test_edit_survey_returns_false_with_invalid_input(self):
+        
+        with self.app.app_context():
+            response = self.repo.edit_survey(
+                "one",
+                "mame_test",
+                "title_test",
+                "description_test"
+            )
+        
+        self.assertFalse(response)
