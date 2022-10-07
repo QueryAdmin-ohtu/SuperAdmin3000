@@ -164,7 +164,7 @@ class SurveyRepository:
         Returns:
           An array containing each question object
         """
-        sql = "SELECT * FROM \"Questions\" WHERE \"Questions\".\"surveyId\"=:survey_id"
+        sql = "SELECT * FROM \"Questions\" WHERE \"Questions\".\"surveyId\"=:survey_id ORDER BY id"
         result = self.db_connection.session.execute(
             sql, {"survey_id": survey_id})
 
