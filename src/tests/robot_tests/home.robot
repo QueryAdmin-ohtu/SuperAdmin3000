@@ -17,7 +17,7 @@ User Logged In With Correct Credentials
 
 Logged In User Can See Surveys On Home Page
     Go To Home Page
-    Page Should Contain  List of surveys
+    Page Should Contain  Here you can see the active surveys. Click on the survey to view additional information!
     Page Should Contain  Title: This will be survey title text
     Page Should Contain  Questions: 11
     Page Should Contain  Submissions: 3
