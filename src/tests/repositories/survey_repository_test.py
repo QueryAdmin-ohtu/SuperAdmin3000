@@ -82,3 +82,13 @@ class TestSurveyRepository(unittest.TestCase):
             response = self.repo.get_questions_of_survey(1)
 
         self.assertGreater(len(response), 2)
+
+    def test_delete_survey_deletes_existing_survey(self):
+
+        with self.app.app_context():
+            self.repo.delete_survey(2)
+            response = self.repo.get_survey(2)
+
+        self.assertFalse(response)
+
+    
