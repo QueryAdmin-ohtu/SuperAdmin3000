@@ -23,7 +23,7 @@ class Config:
     CLIENT_ID = getenv("GOOGLE_CLIENT_ID")
     ENV = getenv("ENVIRONMENT")
 
-    SQLALCHEMY_DATABASE_URI = environ.get("DATABASE_URI")
+    SQLALCHEMY_DATABASE_URI = getenv("DATABASE_URI")
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
 
