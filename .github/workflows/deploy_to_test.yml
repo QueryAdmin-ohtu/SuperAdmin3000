@@ -30,13 +30,15 @@ jobs:
     - name: Run style checks
       run: |
           poetry run invoke lint
-    - name: Run unit tests
-      run: |
-          poetry run invoke tests
-    - name: Coverage report
+    - name: Initialize test database
+      run: poetry run invoke init-db ${{secrets.DATABASE_URI}}
+    - name: Run tests and report coverage
       run: |
           poetry run coverage run --branch -m pytest
           poetry run coverage xml
+      env:
+        DATABASE_URI: ${{ secrets.DATABASE_URI }}
+        ENVIRONMENT: "test"
     - name: Coverage report to Codecov
       uses: codecov/codecov-action@v2
       

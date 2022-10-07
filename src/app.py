@@ -1,6 +1,5 @@
 from flask import Flask
 from config import PORT, load_config
-
 from views.home import home
 from views.surveys import surveys
 from views.statistics import stats
