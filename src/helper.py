@@ -86,6 +86,7 @@ def category_weights_as_json(categories: list, form: dict):
 
     return json.dumps(category_list)
 
+
 def json_into_dictionary(json_file):
     """ Takes category weights and makes them into
     a dictionary where the keys are the category

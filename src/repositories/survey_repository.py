@@ -87,17 +87,17 @@ class SurveyRepository:
             sql2 = """ UPDATE "Questions" SET text=:text
             WHERE id=:question_id """
             self.db_connection.session.execute(
-            sql2, {"text": text, "question_id": question_id})
+                sql2, {"text": text, "question_id": question_id})
 
         if category_weights != original[3]:
             sql3 = """ UPDATE "Questions" SET category_weights=:category_weights
             WHERE id=:question_id """
             self.db_connection.session.execute(
-            sql3, {"category_weights": category_weights, "question_id": question_id})
+                sql3, {"category_weights": category_weights, "question_id": question_id})
 
         if sql2 or sql3:
             self.db_connection.session.execute(
-            sql, {"updated": updated, "question_id": question_id})
+                sql, {"updated": updated, "question_id": question_id})
             self.db_connection.session.commit()
 
         return sql2 or sql3

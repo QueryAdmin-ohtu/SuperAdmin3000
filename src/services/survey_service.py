@@ -167,12 +167,12 @@ class SurveyService:
         """
         return self.survey_repository.create_question(text, survey_id, category_weights, time)
 
-    def update_question(self, question_id :int, text: str, category_weights :str, updated: datetime):
+    def update_question(self, question_id: int, text: str, category_weights: str, updated: datetime):
         """ Updates a question if changes have been made and returns true.
         If no changes have been made, nothing changes and false is returned """
-        return self.survey_repository.update_question(question_id,text,category_weights,updated)
+        return self.survey_repository.update_question(question_id, text, category_weights, updated)
 
-    def get_question(self,question_id):
+    def get_question(self, question_id):
         """Gets the text, survey id, category weights, and the
         time of creation of a question based on the questions id """
         return self.survey_repository.get_question(question_id)

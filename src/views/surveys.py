@@ -136,7 +136,8 @@ def add_question():
     question_id = request.form["question_id"]
     time = datetime.now()
     if request.form["edit"]:
-        survey_service.update_question(question_id, text, category_weights, time)
+        survey_service.update_question(
+            question_id, text, category_weights, time)
     else:
         survey_service.create_question(text, survey_id, category_weights, time)
     return redirect(f"/surveys/{survey_id}")
@@ -148,9 +149,9 @@ def new_question(survey_id):
     """
     stored_categories = survey_service.get_all_categories()
     weights = {}
-    return render_template("questions/new_question.html", 
-    ENV=app.config["ENV"], categories=stored_categories,
-    survey_id=survey_id, weights=weights)
+    return render_template("questions/new_question.html",
+                           ENV=app.config["ENV"], categories=stored_categories,
+                           survey_id=survey_id, weights=weights)
 
 
 @surveys.route("/surveys/delete/<survey_id>/<question_id>")
@@ -180,6 +181,6 @@ def edit_question(question_id):
         weights = helper.json_into_dictionary(question[3])
     stored_categories = survey_service.get_all_categories()
     return render_template("questions/new_question.html",
-    ENV=app.config["ENV"],text = text, survey_id = survey_id,
-    weights = weights, categories = stored_categories,
-    created = created, edit = True, question_id = question_id)
+                           ENV=app.config["ENV"], text=text, survey_id=survey_id,
+                           weights=weights, categories=stored_categories,
+                           created=created, edit=True, question_id=question_id)
