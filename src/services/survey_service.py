@@ -167,5 +167,22 @@ class SurveyService:
         """
         return self.survey_repository.create_question(text, survey_id, category_weights, time)
 
+    def edit_survey(self, survey_id: str, name: str, title: str, description: str):
+        """
+        Edits existing survey with the given information.
+
+        Args:
+            survey_id: Id of the survey to edit
+            name: Name for the survey
+            title: Title for the survey
+            description: Survey text
+
+        Returns:
+            If succeeds: The DB id of the updated survey
+        """
+        self._validate_survey_details(name, title, description)
+
+        return self.survey_repository.edit_survey(survey_id, name, title, description)
+
 
 survey_service = SurveyService(SurveyRepository())
