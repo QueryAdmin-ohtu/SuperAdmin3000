@@ -21,13 +21,13 @@ Logged In User Can Add a New Question
     Page Should Contain  kysymys1
 
 Category Weights Must Be Numbers
-    Click Link  OPEN
+    Click Element  id:survey-1
     Click Link  Add question
     Add New Question  kysymys2  abc
     Page Should Contain  Invalid weights
 
 Empty Category Weights Are Interpreted As Zeros
-    Click Link  OPEN
+    Click Element  id:survey-1
     Click Link  Add question
     Add Question With No Weights  kysymys3
     Page Should Contain  kysymys3
