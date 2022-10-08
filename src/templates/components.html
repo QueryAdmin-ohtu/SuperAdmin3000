@@ -1,9 +1,10 @@
 {% macro survey_card(survey) %}
-<div class="flex-col max-w-full shadow-lg bg-white p-12 gap-2">
-    <h3 class="text-gray-900 leading-tight">Survey ID: {{survey[0]}}</h3>
-    <p class="text-gray-700 text-base">Title: {{survey[1]}}</p>
-    <p class="text-gray-700 text-base">Questions: {{survey[2]}}</p>
-    <p class="text-gray-700 text-base">Submissions: {{survey[3]}}</p>
-    <p><a href="/surveys/{{survey[0]}}"><button class="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">OPEN</button></a></p>
+<div id="survey-{{survey[0]}}" style="cursor: pointer;" onclick="location.href='/surveys/{{survey[0]}}';"
+    class="flex-col max-w-full bg-white p-4 gap-2 rounded-lg border border-slate-300 hover:border-slate-400 hover:shadow-sm transition">
+    <h3 class="text-gray-900 leading-tight">{{survey[1]}}</h3>
+    <p class="text-slate-600 font-mono text-sm font-medium">id: {{survey[0]}}</p>
+    <div class="grow h-14"></div>
+    <p class="text-slate-600 font-mono text-sm font-medium">Questions: {{survey[2]}}</p>
+    <p class="text-slate-600 font-mono text-sm font-medium">Submissions: {{survey[3]}}</p>
 </div>
 {% endmacro %}

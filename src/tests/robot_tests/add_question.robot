@@ -13,7 +13,7 @@ Logged In User Can Add a New Question
     Go To Backdoor Login Page
     Login With Correct Credentials
     Go To Home Page
-    Click Link  OPEN
+    Click Element  id:survey-1
     Page Should Contain  Add question
     Click Link  Add question
     Page Should Contain  Insert category weights
