@@ -18,7 +18,7 @@ Delete An Existing Survey
 Logged In User Can Edit Survey
     Go To Survey  1
     ${updated}=  Get Text  updated
-    Click Button  EDIT SURVEY
+    Click Link  Edit survey
     Edit Survey With Valid Info
     Page Should Contain  test_name
     Page Should Contain  test_title
