@@ -83,6 +83,19 @@ class TestSurveyRepository(unittest.TestCase):
 
         self.assertGreater(len(response), 2)
 
+    def test_get_question_returns_question(self):
+        with self.app.app_context():
+            response = self.repo.get_questions_of_survey(1)
+
+        self.assertGreater(len(response), 2)
+
+    def test_get_question_with_invalid_id_returns_none(self):
+
+        with self.app.app_context():
+            response = self.repo.get_question(99999)
+
+        self.assertIsNone(response)
+
     def test_delete_survey_deletes_existing_survey(self):
 
         with self.app.app_context():
@@ -91,4 +104,57 @@ class TestSurveyRepository(unittest.TestCase):
 
         self.assertFalse(response)
 
-    
+    def test_create_question_creates_question(self):
+
+        with self.app.app_context():
+            text = "create question test"
+            survey_id = 1
+            category_weights = '[{"category": "Category 1", "multiplier": 10.0}, {"category": "Category 2", "multiplier": 20.0}]'
+            created = datetime.now()
+
+            question_id = self.repo.create_question(
+                text, survey_id, category_weights, created)
+
+            result = self.repo.get_question(question_id)
+
+        self.assertEqual(result.text, "create question test")
+
+    def test_delete_question_from_survey_deletes_question(self):
+
+        with self.app.app_context():
+            text = "create question test"
+            survey_id = 1
+            category_weights = '[{"category": "Category 1", "multiplier": 10.0}, {"category": "Category 2", "multiplier": 20.0}]'
+            created = datetime.now()
+
+            question_id = self.repo.create_question(
+                text, survey_id, category_weights, created)
+
+            response_delete = self.repo.delete_question_from_survey(
+                question_id)
+            response_get_deleted = self.repo.get_question(question_id)
+
+        self.assertTrue(response_delete)
+        self.assertIsNone(response_get_deleted)
+
+    def test_update_question_updates_question(self):
+
+        with self.app.app_context():
+            text = "create question test"
+            survey_id = 1
+            category_weights = '[{"category": "Category 1", "multiplier": 10.0}, {"category": "Category 2", "multiplier": 20.0}]'
+            created = datetime.now()
+
+            question_id = self.repo.create_question(
+                text, survey_id, category_weights, created)
+
+            new_text = "update question test"
+            updated = datetime.now()
+
+            result_update = self.repo.update_question(
+                question_id, new_text, category_weights, updated)
+
+            result_get_new = self.repo.get_question(question_id)
+
+        self.assertTrue(result_update)
+        self.assertEqual(result_get_new.text, "update question test")

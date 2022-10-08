@@ -8,7 +8,7 @@ import helper
 def app():
     app = create_app()
     app.secret_key = "testkey"
-    
+
     yield app
 
 
@@ -76,14 +76,16 @@ def test_logged_in_when_not_logged_in(app):
 
         assert not response
 
+
 def test_valid_token_succeeds_if_username_and_token_are_present(app):
     with app.test_request_context() as context:
         form = {"csrf_token": "tokenX"}
-        
+
         context.session["username"] = "user"
         context.session["csrf_token"] = "tokenX"
-        
+
         assert helper.valid_token(form)
+
 
 def test_valid_token_fails_if_username_and_token_are_not_present(app):
     with app.test_request_context() as context:
@@ -91,7 +93,7 @@ def test_valid_token_fails_if_username_and_token_are_not_present(app):
 
         if "username" in context.session:
             del context.session["username"]
-            
+
         context.session["csrf_token"] = "tokenX"
 
         assert not helper.valid_token(form)
@@ -105,7 +107,8 @@ def test_valid_token_fails_if_username_and_token_are_not_present(app):
         context.session["csrf_token"] = None
 
         assert not helper.valid_token(form)
-        
+
+
 def test_category_weights_as_json_returns_json():
     categories = [[1, "Category 1"], [2, "Category 2"]]
     form = {"cat1": 10, "cat2": 20}
@@ -114,3 +117,11 @@ def test_category_weights_as_json_returns_json():
     result = helper.category_weights_as_json(categories, form)
 
     assert result == correct_json
+
+
+def test_json_as_dictionary():
+    json = [{"category": "Category 1", "multiplier": 10.0},
+            {"category": "Category 2", "multiplier": 20.0}]
+    result = helper.json_into_dictionary(json)
+    result = [result["Category 1"], result["Category 2"]]
+    assert result == [10.0, 20.0]

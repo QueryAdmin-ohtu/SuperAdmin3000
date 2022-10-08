@@ -30,6 +30,11 @@ The `index.html`file can be found in the `htmlcov` subdirectory.
 invoke coveragexml
 ```
 
+The coverage report can be produced with one combined command:
+```
+invoke coverage && invoke coveragehtml
+```
+
 The XML file appears in the project root directory.
 
 
