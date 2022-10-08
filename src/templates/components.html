@@ -1,10 +1,63 @@
 {% macro survey_card(survey) %}
-<div id="survey-{{survey[0]}}" style="cursor: pointer;" onclick="location.href='/surveys/{{survey[0]}}';"
+{# Creates a clickable card containing info about the provied survey
+    Args:
+        survey: A survey object containing
+            0: Survey id
+            1: Survey title
+            2: Question count
+            3: Submissions count
+#}
+<div id="survey-{{ survey[0] }}" style="cursor: pointer;" onclick="location.href='/surveys/{{ survey[0] }}';"
     class="flex-col max-w-full bg-white p-4 gap-2 rounded-lg border border-slate-300 hover:border-slate-400 hover:shadow-sm transition">
     <h3 class="text-gray-900 leading-tight">{{survey[1]}}</h3>
-    <p class="text-slate-600 font-mono text-sm font-medium">id: {{survey[0]}}</p>
+    <p class="text-slate-600 font-mono text-sm font-medium">id: {{ survey[0] }}</p>
     <div class="grow h-14"></div>
-    <p class="text-slate-600 font-mono text-sm font-medium">Questions: {{survey[2]}}</p>
-    <p class="text-slate-600 font-mono text-sm font-medium">Submissions: {{survey[3]}}</p>
+    <p class="text-slate-600 font-mono text-sm font-medium">Questions: {{ survey[2] }}</p>
+    <p class="text-slate-600 font-mono text-sm font-medium">Submissions: {{ survey[3] }}</p>
 </div>
+{% endmacro %}
+
+{% macro link_button(text, href, type = "default") %}
+{# Creates a button shaped link
+    Args:
+        text: Text to display on button
+        href: Link destination
+        type: A string degining style of button, defaults to default.
+            default: Default styling
+            destructive: Red button
+#}
+{% set bg = "bg-blue-500" %}
+{% set bg_hover = "bg-blue-700" %}
+
+{% if type == "destructive" %}
+{% set bg = "bg-red-500" %}
+{% set bg_hover = "bg-red-700" %}
+{% endif %}
+
+<a href="{{ href }}"
+    class="p-2 block rounded w-fit h-fit {{ bg }} text-sm text-white font-medium leading-tight uppercase hover:{{ bg_hover }} focus:{{ bg_hover }} focus:outline-none focus:ring-0 transition duration-150 ease-in-out">
+    {{ text }}
+</a>
+{% endmacro %}
+
+{% macro form_button(text, name, value, type = "default") %}
+{# Creates a form button that submits
+    Args:
+        text: Text to display on button
+        type: A string degining style of button, defaults to default.
+            default: Default styling
+            destructive: Red button
+#}
+{% set bg = "bg-blue-500" %}
+{% set bg_hover = "bg-blue-700" %}
+
+{% if type == "destructive" %}
+{% set bg = "bg-red-500" %}
+{% set bg_hover = "bg-red-700" %}
+{% endif %}
+<button class="{{ bg }} hover:{{ bg_hover }} p-2 block rounded w-fit h-fit text-sm text-white font-medium leading-tight uppercase focus:{{ bg_hover }} focus:outline-none focus:ring-0 transition duration-150 ease-in-out"
+name="{{ name }}" value="{{ value }}"
+>
+    {{ text }}
+</button>
 {% endmacro %}
