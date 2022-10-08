@@ -41,13 +41,10 @@ def surveys_update():
     survey_id = request.form["survey_id"]
     name = request.form["name"]
     title = request.form["title"]
-    survey = request.form["text"]
-
-    # TODO: Implement the SQL query for updating a survey
-    #  result = survey_service.update_survey(survey_id, name, title, text)
-
+    description = request.form["description"]
+    
+    survey_service.edit_survey(survey_id, name, title, description)
     route = f"/surveys/{survey_id}"
-
     return redirect(route)
 
 
