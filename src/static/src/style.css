@@ -8,6 +8,9 @@
         @apply bg-gradient-to-t; 
         @apply from-white; 
         @apply to-slate-50;
+        @apply bg-no-repeat;
+        @apply bg-auto;
+        @apply min-h-screen;
     }
 
     h1 {
