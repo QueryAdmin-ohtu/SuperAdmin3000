@@ -20,3 +20,6 @@ Add Question With No Weights
     [Arguments]  ${text}
     Set Question Text  ${text}
     Submit Question
+
+Add Question Without Arguments
+    Submit Question

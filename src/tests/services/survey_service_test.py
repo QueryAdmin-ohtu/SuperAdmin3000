@@ -2,6 +2,7 @@ import unittest
 from unittest.mock import Mock
 from datetime import datetime
 from freezegun import freeze_time
+#from matplotlib import category
 from services.survey_service import SurveyService, UserInputError
 
 
@@ -137,3 +138,15 @@ class TestSurveyService(unittest.TestCase):
         description = ""
         with self.assertRaises(UserInputError):
             self.survey_service.edit_survey(id, name, title, description)
+
+    def test_update_question_calls_repo_correctly(self):
+        self.repo_mock.update_question.return_value = 1
+        text = "change"
+        question_id = 6
+        category_weights = []
+        time = datetime(2022, 10, 6)
+        check = self.survey_service.update_question(
+            question_id, text, category_weights, time)
+        self.assertEqual(check, 1)
+        self.repo_mock.update_question.assert_called_with(
+            question_id, text, category_weights, time)
