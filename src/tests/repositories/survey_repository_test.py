@@ -118,3 +118,11 @@ class TestSurveyRepository(unittest.TestCase):
             )
         
         self.assertFalse(response)
+
+    def test_delete_survey_deletes_existing_survey(self):
+
+        with self.app.app_context():
+            self.repo.delete_survey(2)
+            response = self.repo.get_survey(2)
+
+        self.assertFalse(response)
