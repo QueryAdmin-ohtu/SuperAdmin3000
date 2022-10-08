@@ -203,6 +203,40 @@ class SurveyRepository:
             return False
         return True
 
+    def edit_survey(self, survey_id, name, title, description):
+        """ Edits the given survey
+
+        Args:
+            survey_id: Id of the survey
+            name: Name of the survey
+            title: Title of the survey
+            description: Description of the survey
+        """
+        sql = """
+        UPDATE "Surveys"
+        SET 
+            name=:name,
+            "updatedAt"=NOW(),
+            title_text=:title,
+            survey_text=:description
+        WHERE id=:survey_id
+        RETURNING id
+        """
+        values = {
+            "survey_id":survey_id,
+            "name":name,
+            "title":title,
+            "description":description
+        }
+        try:
+            updated = self.db_connection.session.execute(sql, values).fetchone()
+            self.db_connection.session.commit()
+        except exc.SQLAlchemyError:
+            return False
+        if updated is not None:
+            return updated[0]
+        return None
+
     def get_question(self, question_id):
         """ Gets the text, survey id, category weights,
         and creation time of a question """

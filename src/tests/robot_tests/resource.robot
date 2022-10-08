@@ -7,7 +7,7 @@ ${BROWSER}  headlesschrome
 ${DELAY}  0 seconds
 ${URL}  http://localhost:5000
 ${BACKDOOR URL}  ${URL}/backdoor
-${EDIT URL}  ${URL}/edit
+${EDIT URL}  ${URL}/surveys/edit/1
 ${NEW URL}  ${URL}/new_survey
 
 *** Keywords ***
