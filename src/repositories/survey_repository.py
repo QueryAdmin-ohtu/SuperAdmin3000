@@ -223,13 +223,14 @@ class SurveyRepository:
         RETURNING id
         """
         values = {
-            "survey_id":survey_id,
-            "name":name,
-            "title":title,
-            "description":description
+            "survey_id": survey_id,
+            "name": name,
+            "title": title,
+            "description": description
         }
         try:
-            updated = self.db_connection.session.execute(sql, values).fetchone()
+            updated = self.db_connection.session.execute(
+                sql, values).fetchone()
             self.db_connection.session.commit()
         except exc.SQLAlchemyError:
             return False

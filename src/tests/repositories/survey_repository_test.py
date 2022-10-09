@@ -82,7 +82,7 @@ class TestSurveyRepository(unittest.TestCase):
             response = self.repo.get_questions_of_survey(1)
 
         self.assertGreater(len(response), 2)
-    
+
     def test_edit_survey_returns_none_with_invalid_arguments(self):
 
         with self.app.app_context():
@@ -92,9 +92,9 @@ class TestSurveyRepository(unittest.TestCase):
                 "title_test",
                 "description_test"
             )
-        
+
         self.assertIsNone(response)
-    
+
     def test_edit_survey_returns_id_with_valid_arguments(self):
 
         with self.app.app_context():
@@ -104,11 +104,11 @@ class TestSurveyRepository(unittest.TestCase):
                 "title_test",
                 "description_test"
             )
-        
+
         self.assertEqual(response, 1)
-    
+
     def test_edit_survey_returns_false_with_invalid_input(self):
-        
+
         with self.app.app_context():
             response = self.repo.edit_survey(
                 "one",
@@ -116,7 +116,7 @@ class TestSurveyRepository(unittest.TestCase):
                 "title_test",
                 "description_test"
             )
-        
+
         self.assertFalse(response)
 
     def test_get_question_returns_question(self):
