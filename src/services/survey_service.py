@@ -167,7 +167,6 @@ class SurveyService:
         """
         return self.survey_repository.create_question(text, survey_id, category_weights, time)
 
-
     def edit_survey(self, survey_id: str, name: str, title: str, description: str):
         """
         Edits existing survey with the given information.

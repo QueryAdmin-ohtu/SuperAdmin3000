@@ -42,7 +42,7 @@ def surveys_update():
     name = request.form["name"]
     title = request.form["title"]
     description = request.form["description"]
-    
+
     survey_service.edit_survey(survey_id, name, title, description)
     route = f"/surveys/{survey_id}"
     return redirect(route)
