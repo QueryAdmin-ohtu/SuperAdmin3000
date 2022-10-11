@@ -96,7 +96,8 @@ def view_survey(survey_id):
     survey = survey_service.get_survey(survey_id)
     questions = survey_service.get_questions_of_survey(survey_id)
 
-    return render_template("surveys/view_survey.html", survey=survey, questions=questions, survey_id=survey_id, ENV=app.config["ENV"])
+    return render_template("surveys/view_survey.html", survey=survey,
+    questions=questions, survey_id=survey_id, ENV=app.config["ENV"])
 
 
 @surveys.route("/surveys/statistics/<survey_id>")
@@ -112,7 +113,8 @@ def surveys_statistics(survey_id):
     #  TODO: get statistics
     statistics = "JUGE STATS HERE!"
 
-    return render_template("surveys/statistics.html", survey=survey, statistics=statistics, survey_id=survey_id, ENV=app.config["ENV"])
+    return render_template("surveys/statistics.html", survey=survey,
+    statistics=statistics, survey_id=survey_id, ENV=app.config["ENV"])
 
 
 @surveys.route("/add_question", methods=["POST"])
