@@ -53,3 +53,13 @@ def init_db(ctx, db):
     create_tables=' '.join([beginning2,db,end2])
     ctx.run(create_tables)
 
+    beginning3="psql"
+    end3="-Atq -f reset.sql -o temp"
+    update_sequences=' '.join([beginning3,db,end3])
+    ctx.run(update_sequences)
+
+    beginning4="psql"
+    end4="-f temp"
+    clean=' '.join([beginning4,db,end4])
+    ctx.run(clean)
+    ctx.run("rm temp")
