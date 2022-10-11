@@ -1,7 +1,6 @@
 *** Settings ***
 Resource  resource.robot
 Resource  resource_login.robot
-Resource  resource_create_survey.robot
 Resource  resource_add_question.robot
 Suite Setup  Open And Configure Browser
 Suite Teardown  Close Browser

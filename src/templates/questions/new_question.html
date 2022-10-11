@@ -17,6 +17,7 @@
         {% endfor %}
     </div>
     <br><br>
+    {% if edit %}
     <h3>Question answers</h3>
     <div>
       {% for answer in answers %}
@@ -27,12 +28,13 @@
       <hr>
       {% endfor %}
     </div>
+    {% endif %}
     <br>
     New answer: <br>
     <textarea name="answer_text" rows="2" cols="30" style="border:solid 1px black"></textarea><br>
     Points: <br>
     <textarea name="points" rows="1" cols="2" style="border:solid 1px black"></textarea><br>
-    <button type="submit" formaction="/add_answer"> Add new answer </button>
+    <button type="submit" name="submit_answer" formaction="/add_answer"> Add new answer </button>
     <br><br>
     <input type="submit" name="submit" value="Submit">
 </form>
