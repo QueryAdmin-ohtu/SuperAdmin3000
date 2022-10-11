@@ -186,7 +186,12 @@ class TestSurveyRepository(unittest.TestCase):
             points = 9001
             question_id = 9
             created = datetime.now()
-
+            for _ in range(1,30):
+                try:
+                    answer_id = self.repo.create_answer(
+                        text, points, question_id, created)
+                except:
+                    pass
             answer_id = self.repo.create_answer(
                 text, points, question_id, created)
 
