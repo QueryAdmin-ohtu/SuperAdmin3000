@@ -1,3 +1,5 @@
+from array import array
+from datetime import time
 from sqlalchemy import exc
 
 from db import db
@@ -246,3 +248,25 @@ class SurveyRepository:
         question = self.db_connection.session.execute(
             sql, {"question_id": question_id}).fetchone()
         return question
+
+    def create_category(self, name:str, description:str, content_links:list , created:time):
+        """ Inserts a new category to table Categories based
+        on given parameters.
+
+        Returns:
+            Id of the new category. """
+        sql = """
+        INSERT INTO "Categories"
+        ("name", "description", "content_links", "createdAt","updatedAt")
+        VALUES (:name, :description, :content_links, :createdAt, :updatedAt)
+        RETURNING id """
+        values = {
+            "name": name,
+            "description": description,
+            "content_links": content_links,
+            "createdAt": created,
+            "updatedAt": created
+        }
+        survey_id = db.session.execute(sql, values).fetchone()
+        db.session.commit()
+        return survey_id[0]
