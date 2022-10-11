@@ -83,6 +83,12 @@ class TestSurveyRepository(unittest.TestCase):
 
         self.assertGreater(len(response), 2)
 
+    def test_get_answers_of_question_returns_questions(self):
+
+        with self.app.app_context():
+            response = self.repo.get_question_answers(2)
+        self.assertGreater(len(response), 0)
+
     def test_edit_survey_returns_none_with_invalid_arguments(self):
 
         with self.app.app_context():
@@ -172,6 +178,18 @@ class TestSurveyRepository(unittest.TestCase):
 
         self.assertTrue(response_delete)
         self.assertIsNone(response_get_deleted)
+
+    def test_delete_answer_from_question_deletes_answer(self):
+
+        with self.app.app_context():
+            question_id = 2
+            answer_id = 10
+            response_delete = self.repo.delete_answer_from_question(
+                answer_id)
+            response_get_deleted = self.repo.get_question_answers(question_id)
+
+        self.assertTrue(response_delete)
+        self.assertEqual(len(response_get_deleted),4)
 
     def test_update_question_updates_question(self):
 

@@ -89,6 +89,17 @@ class SurveyService:
 
         return self.survey_repository.delete_question_from_survey(question_id)
 
+    def delete_answer_from_question(self, answer_id):
+        """ Removes an answer from a question.
+        Args:
+            answer_id: Db id of answer
+        Returns:
+            If succeeds: True
+            Not found: False
+        """
+
+        return self.survey_repository.delete_answer_from_question(answer_id)
+
     def get_all_surveys(self):
         """ Fetches all surveys, counts the questions
         for each survey and the amount of submissions
@@ -167,6 +178,20 @@ class SurveyService:
         """
         return self.survey_repository.create_question(text, survey_id, category_weights, time)
 
+    def create_answer(self, text: str, points: int, question_id: int, time: datetime):
+        """
+        Creates a new questions with given information.
+
+        Args:
+            text: Content of the answer
+            points: The numerical value which is multiplied by the category_weights of the question
+            question_id: Id of the question that the answer is related to
+
+        Returns:
+            If succeeds: The DB id of the created answer
+        """
+        return self.survey_repository.create_answer(text, points, question_id, time)
+
     def edit_survey(self, survey_id: str, name: str, title: str, description: str):
         """
         Edits existing survey with the given information.
@@ -193,6 +218,11 @@ class SurveyService:
         """Gets the text, survey id, category weights, and the
         time of creation of a question based on the questions id """
         return self.survey_repository.get_question(question_id)
+
+    def get_question_answers(self, question_id):
+        """Gets the id:s, texts and points of the answers
+        from the question specified by the id given """
+        return self.survey_repository.get_question_answers(question_id)
 
 
 survey_service = SurveyService(SurveyRepository())

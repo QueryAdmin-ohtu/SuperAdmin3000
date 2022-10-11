@@ -68,9 +68,31 @@ class SurveyRepository:
             "createdAt": created,
             "updatedAt": created
         }
-        survey_id = db.session.execute(sql, values).fetchone()
+        question_id = db.session.execute(sql, values).fetchone()
         db.session.commit()
-        return survey_id[0]
+        return question_id[0]
+
+    def create_answer(self, text, points, question_id, created):
+        """ Inserts a new answer to table Question_answers based
+        on given parameters.
+
+        Returns:
+            Id of the new answer """
+        sql = """
+        INSERT INTO "Question_answers"
+        ("text", "points", "questionId", "createdAt","updatedAt")
+        VALUES (:text, :points, :question_id, :createdAt, :updatedAt)
+        RETURNING id """
+        values = {
+            "text": text,
+            "points": points,
+            "question_id": question_id,
+            "createdAt": created,
+            "updatedAt": created
+        }
+        answer_id = db.session.execute(sql, values).fetchone()
+        db.session.commit()
+        return answer_id[0]
 
     def update_question(self, question_id, text, category_weights, updated):
         """ Updates a question from the table Questions
@@ -204,6 +226,24 @@ class SurveyRepository:
             return False
         return True
 
+    def delete_answer_from_question(self, answer_id):
+        """ Deletes a answer in a given question
+
+        Args:
+            answer_id: Id of the answer
+
+        Returns:
+            If succeeds: True
+            If not found: False
+        """
+        sql = "DELETE FROM \"Question_answers\" WHERE \"id\"=:answer_id"
+        result = self.db_connection.session.execute(
+            sql, {"answer_id": answer_id})
+        db.session.commit()
+        if not result:
+            return False
+        return True
+
     def edit_survey(self, survey_id, name, title, description):
         """ Edits the given survey
 
@@ -273,3 +313,12 @@ class SurveyRepository:
         except exc.SQLAlchemyError:
             return None
         return category_id[0]
+    
+    def get_question_answers(self,question_id):
+        """ Gets the id:s, texts and points from the answers of
+        the question determined by the question_id given """
+        sql = """ SELECT id, text, points FROM "Question_answers"
+        WHERE "questionId"=:question_id """
+        answers = self.db_connection.session.execute(
+            sql, {"question_id": question_id}).fetchall()
+        return answers
