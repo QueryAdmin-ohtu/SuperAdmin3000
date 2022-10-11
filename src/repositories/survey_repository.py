@@ -225,6 +225,24 @@ class SurveyRepository:
             return False
         return True
 
+    def delete_answer_from_question(self, answer_id):
+        """ Deletes a answer in a given question
+
+        Args:
+            answer_id: Id of the answer
+
+        Returns:
+            If succeeds: True
+            If not found: False
+        """
+        sql = "DELETE FROM \"Question_answers\" WHERE \"id\"=:answer_id"
+        result = self.db_connection.session.execute(
+            sql, {"answer_id": answer_id})
+        db.session.commit()
+        if not result:
+            return False
+        return True
+
     def edit_survey(self, survey_id, name, title, description):
         """ Edits the given survey
 
@@ -270,9 +288,9 @@ class SurveyRepository:
         return question
 
     def get_question_answers(self,question_id):
-        """ Gets the texts and points from the answers of the
-        question determined by the question_id given """
-        sql = """ SELECT text, points FROM "Question_answers"
+        """ Gets the id:s, texts and points from the answers of
+        the question determined by the question_id given """
+        sql = """ SELECT id, text, points FROM "Question_answers"
         WHERE "questionId"=:question_id """
         answers = self.db_connection.session.execute(
             sql, {"question_id": question_id}).fetchall()

@@ -1,4 +1,5 @@
 from datetime import datetime
+#from matplotlib import category
 from flask import render_template, redirect, request, abort, Blueprint
 from flask import current_app as app
 import helper
@@ -142,18 +143,48 @@ def add_question():
 
 @surveys.route("/add_answer", methods=["POST"])
 def add_answer():
-    """ Adds a new answer to a question to the database
+    """ Adds a new answer to a question to the database.
+    If the question doesn't exist, it is created first
     """
 
     if not helper.valid_token(request.form):
         abort(400, 'Invalid CSRF token.')
 
-    text = request.form["answer_text"]
-    points = request.form["points"]
     question_id = request.form["question_id"]
     time = datetime.now()
-    survey_service.create_answer(text, points, question_id, time)
+
+    if not question_id:
+        text = request.form["text"]
+        survey_id = request.form["survey_id"]
+        categories = survey_service.get_all_categories()
+        try:
+            category_weights = helper.category_weights_as_json(
+                categories, request.form)
+        except ValueError:
+            return "Invalid weights"
+        question_id = survey_service.create_question(text, survey_id, category_weights, time)
+
+    answer_text = request.form["answer_text"]
+    points = request.form["points"]
+    if not points:
+        points = 0
+    try:
+        points = float(points)
+    except ValueError:
+        return "Invalid points"
+    survey_service.create_answer(answer_text, points, question_id, time)
     return redirect(f"/questions/{question_id}")
+
+
+@surveys.route("/question/delete/<question_id>/<answer_id>", methods=["POST"])
+def delete_answer(question_id,answer_id):
+    """ Call database query for removal of a single answer
+    """
+    if not helper.logged_in():
+        return redirect("/")
+
+    survey_service.delete_answer_from_question(answer_id)
+    return redirect("/questions/" + question_id)
 
 
 @surveys.route("/<survey_id>/new_question", methods=["GET"])

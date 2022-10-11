@@ -20,15 +20,18 @@
     <h3>Question answers</h3>
     <div>
       {% for answer in answers %}
-      {{answer[0]}}. Points: <textarea name={{answer[0]}} rows="1" cols="2" style="border:solid 1px black">{{ answer[1] }}</textarea>
+      <br> Answer: <br>
+      <textarea name="name_{{answer[1]}}" rows="2" cols="30" style="border:solid 1px black">{{ answer[1] }}</textarea> <br>
+      Points:  <textarea name="points_{{answer[1]}}" rows="1" cols="2" style="border:solid 1px black">{{ answer[2] }}</textarea> <br>
+      <button type="submit" formaction="/question/delete/{{question_id}}/{{answer[0]}}" onclick="return confirm('Are you sure you want to delete this answer?')" > Delete answer </button>
       <hr>
       {% endfor %}
     </div>
     <br>
     New answer: <br>
-    <textarea name="answer_text" rows="2" cols="40" style="border:solid 1px black"></textarea><br>
+    <textarea name="answer_text" rows="2" cols="30" style="border:solid 1px black"></textarea><br>
     Points: <br>
-    <textarea name="points" rows="1" cols="40" style="border:solid 1px black"></textarea><br>
+    <textarea name="points" rows="1" cols="2" style="border:solid 1px black"></textarea><br>
     <button type="submit" formaction="/add_answer"> Add new answer </button>
     <br><br>
     <input type="submit" name="submit" value="Submit">

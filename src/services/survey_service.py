@@ -89,6 +89,17 @@ class SurveyService:
 
         return self.survey_repository.delete_question_from_survey(question_id)
 
+    def delete_answer_from_question(self, answer_id):
+        """ Removes an answer from a question.
+        Args:
+            answer_id: Db id of answer
+        Returns:
+            If succeeds: True
+            Not found: False
+        """
+
+        return self.survey_repository.delete_answer_from_question(answer_id)
+
     def get_all_surveys(self):
         """ Fetches all surveys, counts the questions
         for each survey and the amount of submissions
@@ -167,7 +178,7 @@ class SurveyService:
         """
         return self.survey_repository.create_question(text, survey_id, category_weights, time)
 
-    def create_answer(self, text: str, points :int, question_id: int, time: datetime):
+    def create_answer(self, text: str, points: int, question_id: int, time: datetime):
         """
         Creates a new questions with given information.
 
@@ -209,7 +220,7 @@ class SurveyService:
         return self.survey_repository.get_question(question_id)
 
     def get_question_answers(self, question_id):
-        """Gets the texts and points of the answers
+        """Gets the id:s, texts and points of the answers
         from the question specified by the id given """
         return self.survey_repository.get_question_answers(question_id)
 
