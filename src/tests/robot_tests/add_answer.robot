@@ -9,9 +9,25 @@ Test Setup  Go To Home Page
 
 *** Test Cases ***
 
-Logged In User Can Add Answer To New Question
+Delete Existing Answers To Free Up Ids
     Go To Backdoor Login Page
     Login With Correct Credentials
+    Go To Survey  1
+    Click Button  EDIT
+    Click Button  Delete answer
+    Handle Alert  Accept
+    Click Button  Delete answer
+    Handle Alert  Accept
+    Click Button  Delete answer
+    Handle Alert  Accept
+    Click Button  Delete answer
+    Handle Alert  Accept
+    Click Button  Delete answer
+    Handle Alert  Accept
+    Click Button  Delete answer
+    Handle Alert  Accept
+
+Logged In User Can Add Answer To New Question
     Go To Survey  1
     Click Link  Add question
     Page Should Not Contain  Question answers
