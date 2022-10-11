@@ -238,3 +238,10 @@ class TestSurveyRepository(unittest.TestCase):
                 datetime.now())
 
         self.assertIsNone(response)
+
+    def test_get_all_categories_returns_multiple_categories(self):
+
+        with self.app.app_context():
+            response = self.repo.get_all_categories()
+
+        self.assertGreater(len(response), 2)
