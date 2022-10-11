@@ -24,8 +24,6 @@ Delete Existing Answers To Free Up Ids
     Handle Alert  Accept
     Click Button  Delete answer
     Handle Alert  Accept
-    Click Button  Delete answer
-    Handle Alert  Accept
 
 Logged In User Can Add Answer To New Question
     Go To Survey  1
