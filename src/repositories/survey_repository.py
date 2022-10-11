@@ -1,3 +1,4 @@
+from datetime import time
 from sqlalchemy import exc
 
 from db import db
@@ -287,6 +288,32 @@ class SurveyRepository:
             sql, {"question_id": question_id}).fetchone()
         return question
 
+    def create_category(self, name: str, description: str, content_links: list, created: time):
+        """ Inserts a new category to table Categories based
+        and returns Id.
+
+        Returns:
+            Id of the new category. """
+        sql = """
+        INSERT INTO "Categories"
+        ("name", "description", "content_links", "createdAt","updatedAt")
+        VALUES (:name, :description, :content_links, :createdAt, :updatedAt)
+        RETURNING id """
+        values = {
+            "name": name,
+            "description": description,
+            "content_links": content_links,
+            "createdAt": created,
+            "updatedAt": created
+        }
+        try:
+            category_id = self.db_connection.session.execute(
+                sql, values).fetchone()
+            self.db_connection.session.commit()
+        except exc.SQLAlchemyError:
+            return None
+        return category_id[0]
+    
     def get_question_answers(self,question_id):
         """ Gets the id:s, texts and points from the answers of
         the question determined by the question_id given """
