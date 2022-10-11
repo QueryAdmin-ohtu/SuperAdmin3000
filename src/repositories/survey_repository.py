@@ -67,9 +67,31 @@ class SurveyRepository:
             "createdAt": created,
             "updatedAt": created
         }
-        survey_id = db.session.execute(sql, values).fetchone()
+        question_id = db.session.execute(sql, values).fetchone()
         db.session.commit()
-        return survey_id[0]
+        return question_id[0]
+
+    def create_answer(self, text, points, question_id, created):
+        """ Inserts a new answer to table Question_answers based
+        on given parameters.
+
+        Returns:
+            Id of the new answer """
+        sql = """
+        INSERT INTO "Question_answers"
+        ("text", "points", "questionId", "createdAt","updatedAt")
+        VALUES (:text, :points, :question_id, :createdAt, :updatedAt)
+        RETURNING id """
+        values = {
+            "text": text,
+            "points": points,
+            "question_id": question_id,
+            "createdAt": created,
+            "updatedAt": created
+        }
+        answer_id = db.session.execute(sql, values).fetchone()
+        db.session.commit()
+        return answer_id[0]
 
     def update_question(self, question_id, text, category_weights, updated):
         """ Updates a question from the table Questions
@@ -246,3 +268,12 @@ class SurveyRepository:
         question = self.db_connection.session.execute(
             sql, {"question_id": question_id}).fetchone()
         return question
+
+    def get_question_answers(self,question_id):
+        """ Gets the texts and points from the answers of the
+        question determined by the question_id given """
+        sql = """ SELECT text, points FROM "Question_answers"
+        WHERE "questionId"=:question_id """
+        answers = self.db_connection.session.execute(
+            sql, {"question_id": question_id}).fetchall()
+        return answers

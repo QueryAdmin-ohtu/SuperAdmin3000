@@ -140,6 +140,22 @@ def add_question():
     return redirect(f"/surveys/{survey_id}")
 
 
+@surveys.route("/add_answer", methods=["POST"])
+def add_answer():
+    """ Adds a new answer to a question to the database
+    """
+
+    if not helper.valid_token(request.form):
+        abort(400, 'Invalid CSRF token.')
+
+    text = request.form["answer_text"]
+    points = request.form["points"]
+    question_id = request.form["question_id"]
+    time = datetime.now()
+    survey_service.create_answer(text, points, question_id, time)
+    return redirect(f"/questions/{question_id}")
+
+
 @surveys.route("/<survey_id>/new_question", methods=["GET"])
 def new_question(survey_id):
     """  Returns the page for creating a new question.
@@ -174,10 +190,12 @@ def edit_question(question_id):
     survey_id = question[1]
     created = question[2]
     weights = question[3]
+    answers = survey_service.get_question_answers(question_id)
     if weights:
         weights = helper.json_into_dictionary(question[3])
     stored_categories = survey_service.get_all_categories()
     return render_template("questions/new_question.html",
                            ENV=app.config["ENV"], text=text, survey_id=survey_id,
                            weights=weights, categories=stored_categories,
-                           created=created, edit=True, question_id=question_id)
+                           created=created, edit=True, question_id=question_id,
+                           answers = answers)

@@ -1,7 +1,11 @@
 {% extends "layout.html" %}
 {% block content %}
 <form action="/add_question" method="POST">
-  <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">  
+  <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
+  <input type="hidden" name="survey_id" id="survey_id" value={{survey_id}}>
+  <input type="hidden" name="question_id" id="question_id" value={{question_id}}>
+  <input type="hidden" name="edit" id="edit" value="{{ edit }}">
+  <input type="hidden" name="created" id="created" value="{{ created }}">  
     Question: <br>
     <textarea name="text" rows="3" cols="40" style="border:solid 1px black">{{ text }}</textarea>
     <br><br>
@@ -12,10 +16,20 @@
         <hr>
         {% endfor %}
     </div>
-    <input type="hidden" name="survey_id" id="survey_id" value={{survey_id}}>
-    <input type="hidden" name="question_id" id="question_id" value={{question_id}}>
-    <input type="hidden" name="edit" id="edit" value="{{ edit }}">
-    <input type="hidden" name="created" id="created" value="{{ created }}">
+    <br><br>
+    <h3>Question answers</h3>
+    <div>
+      {% for answer in answers %}
+      {{answer[0]}}. Points: <textarea name={{answer[0]}} rows="1" cols="2" style="border:solid 1px black">{{ answer[1] }}</textarea>
+      <hr>
+      {% endfor %}
+    </div>
+    <br>
+    New answer: <br>
+    <textarea name="answer_text" rows="2" cols="40" style="border:solid 1px black"></textarea><br>
+    Points: <br>
+    <textarea name="points" rows="1" cols="40" style="border:solid 1px black"></textarea><br>
+    <button type="submit" formaction="/add_answer"> Add new answer </button>
     <br><br>
     <input type="submit" name="submit" value="Submit">
 </form>
