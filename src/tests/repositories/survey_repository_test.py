@@ -218,3 +218,36 @@ class TestSurveyRepository(unittest.TestCase):
 
         self.assertTrue(result_update)
         self.assertEqual(result_get_new.text, "update question test")
+
+    def test_create_category_with_valid_data_returns_id(self):
+        name = "name"
+        description = "description"
+        content_links = '[{"url":"https://www.eficode.com/cases/hansen","type":"Case Study"},{"url":"https://www.eficode.com/cases/basware","type":"Case Study"}]'
+        createdAt = datetime.now()
+
+        with self.app.app_context():
+            response = self.repo.create_category(
+                "name",
+                "description",
+                content_links,
+                createdAt)
+
+        self.assertGreater(response, 0)
+
+    def test_create_survey_with_invalid_data_returns_none(self):
+
+        with self.app.app_context():
+            response = self.repo.create_category(
+                None,
+                "description",
+                "content_links",
+                datetime.now())
+
+        self.assertIsNone(response)
+
+    def test_get_all_categories_returns_multiple_categories(self):
+
+        with self.app.app_context():
+            response = self.repo.get_all_categories()
+
+        self.assertGreater(len(response), 2)

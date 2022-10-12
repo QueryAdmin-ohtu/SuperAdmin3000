@@ -223,6 +223,22 @@ class SurveyService:
         """Gets the id:s, texts and points of the answers
         from the question specified by the id given """
         return self.survey_repository.get_question_answers(question_id)
+    
+    def create_category(self, name: str, description: str, content_links: list, created_at:datetime):
+        """
+        Creates a new category with given information.
+
+        Args:
+            name: Name of the category
+            description: Description of the category
+            content_links: Content links related to the category
+            created_at: Time of creating the question
+
+        Returns:
+            If succeeds: The DB id of the created category
+        """
+        return self.survey_repository.create_category(name, description, content_links, created_at)
+
 
 
 survey_service = SurveyService(SurveyRepository())
