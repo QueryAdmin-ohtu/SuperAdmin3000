@@ -194,10 +194,9 @@ class TestSurveyRepository(unittest.TestCase):
                 text, survey_id, category_weights)
 
             new_text = "update question test"
-            updated = datetime.now()
 
             result_update = self.repo.update_question(
-                question_id, new_text, category_weights, updated)
+                question_id, new_text, category_weights)
 
             result_get_new = self.repo.get_question(question_id)
 
@@ -206,14 +205,12 @@ class TestSurveyRepository(unittest.TestCase):
 
     def test_create_category_with_valid_data_returns_id(self):
         content_links = '[{"url":"https://www.eficode.com/cases/hansen","type":"Case Study"},{"url":"https://www.eficode.com/cases/basware","type":"Case Study"}]'
-        createdAt = datetime.now()
 
         with self.app.app_context():
             response = self.repo.create_category(
                 "name",
                 "description",
-                content_links,
-                createdAt)
+                content_links)
 
         self.assertGreater(response, 0)
 
@@ -223,8 +220,7 @@ class TestSurveyRepository(unittest.TestCase):
             response = self.repo.create_category(
                 None,
                 "description",
-                "content_links",
-                datetime.now())
+                "content_links")
 
         self.assertIsNone(response)
 

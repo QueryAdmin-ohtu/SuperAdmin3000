@@ -117,12 +117,11 @@ class TestSurveyService(unittest.TestCase):
         text = "Breaking Bad"
         question_id = 9
         points = 9001
-        time = datetime(2022, 10, 6)
         check = self.survey_service.create_answer(
-            text, points, question_id, time)
+            text, points, question_id)
         self.assertEqual(check, 9)
         self.repo_mock.create_answer.assert_called_with(
-            text, points, question_id, time)
+            text, points, question_id)
 
     def test_edit_survey_with_no_name_does_not_work(self):
         name = ""
@@ -163,9 +162,8 @@ class TestSurveyService(unittest.TestCase):
         text = "change"
         question_id = 6
         category_weights = []
-        time = datetime(2022, 10, 6)
         check = self.survey_service.update_question(
-            question_id, text, category_weights, time)
+            question_id, text, category_weights)
         self.assertEqual(check, 1)
         self.repo_mock.update_question.assert_called_with(
-            question_id, text, category_weights, time)
+            question_id, text, category_weights)
