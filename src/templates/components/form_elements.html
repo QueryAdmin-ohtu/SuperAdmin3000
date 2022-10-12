@@ -1,0 +1,45 @@
+{% macro text_input(name, label_text, placeholder, is_required) %}
+{# Text input field for a form
+    On invalid miten?
+#}
+{% if is_required %}
+{% set required_text = 'required' %}
+{% endif %}
+
+{% call field_wrapper_and_label(name, label_text) %}
+<input type="text" name="{{ name }}" placeholder="{{ placeholder }}"
+    class="bg-white border border-slate-300 text-gray-900 text-sm rounded-lg focus:ring-sky-500 focus:border-sky-500 block w-full p-2.5"
+    {{ required_text }}>
+{% endcall %}
+
+{% endmacro %}
+
+{% macro text_area(name, label_text, placeholder, is_required) %}
+{# Text area for form
+    On invalid miten?
+#}
+
+{% if is_required %}
+{% set required_text = 'required' %}
+{% endif %}
+
+{% call field_wrapper_and_label(name, label_text) %}
+<textarea type="text" name="{{ name }}" placeholder="{{ placeholder }}"
+    class="bg-white border border-slate-300 text-gray-900 text-sm rounded-lg focus:ring-sky-500 focus:border-sky-500 block w-full p-2.5"
+    {{ required_text }}></textarea>
+{% endcall %}
+
+{% endmacro %}
+
+{% macro submit_button(button_text) %}
+<button class="bg-sky-500 p-4 rounded w-full h-fit text-base text-white leading-tight focus:bg-sky-500 focus:ring-sky-500 focus:border-sky-500  transition duration-150 ease-in-out" type="submit" value="{{ button_text }}">
+    {{ button_text }}
+</button>
+{% endmacro %}
+
+{% macro field_wrapper_and_label(name, label_text) %}
+<div class="flex flex-col gap-2 w-full">
+    <label for="{{ name }}" class="text-gray-700 text-sm font-bold">{{ label_text }}</label>
+    {{ caller() }}
+</div>
+{% endmacro %}

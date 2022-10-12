@@ -16,10 +16,6 @@
                 <p class="text-slate-400 font-mono"><i><small>Environment: {{ENV}}</small></i></p>
             </header>
             <nav class="flex flex-row gap-4 items-center justify-end">
-                <a href="/"
-                class=" text-sky-600 hover:text-sky-700 hover:underline font-medium rounded-lg text-sm">Surveys</a>
-                <a href="/new_survey"
-                class=" text-sky-600 hover:text-sky-700 hover:underline font-medium rounded-lg text-sm">New survey</a>
                 Logged in as <b>{{ session.username }}</b>
                 <form action="/logout" method="POST" class="m-1">
                 <button type="submit"
@@ -29,7 +25,7 @@
             </nav>
         </div>
     </div>
-    <div class="w-full flex flex-col">
+    <div class="px-4 w-full flex flex-col">
         <div class="container mx-auto py-8">
             {% block content %}{% endblock %}
         </div>
