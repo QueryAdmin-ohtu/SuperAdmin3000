@@ -46,7 +46,7 @@ Empty Points Are Interpreted As Zeros
 Logged In User Can Delete Answer
     Go To Survey  1
     Click Button  EDIT
-    Page Should Contain  Hammer
+    Page Should Contain  Strongly Disagree
     Click Button  Delete answer
     Handle Alert  Accept
-    Page Should Not Contain  Hammer
+    Page Should Not Contain  Strongly Disagree
