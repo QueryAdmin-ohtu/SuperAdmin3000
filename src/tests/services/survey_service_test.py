@@ -170,3 +170,15 @@ class TestSurveyService(unittest.TestCase):
         self.assertEqual(check, 1)
         self.repo_mock.update_question.assert_called_with(
             question_id, text, category_weights, time)
+
+    def test_create_category_calls_repo_correctly(self):
+        self.repo_mock.create_category.return_value = 1
+        name = "name"
+        description = "description"
+        content_links = [{"url":"https://www.eficode.com/cases/hansen","type":"Case Study"},{"url":"https://www.eficode.com/cases/basware","type":"Case Study"}]
+        created_at = datetime(2022, 10, 6)
+        check = self.survey_service.create_category(
+            name, description, content_links, created_at)
+        self.assertEqual(check, 1)
+        self.repo_mock.create_category.assert_called_with(
+            name, description, content_links, created_at)
