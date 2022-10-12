@@ -231,3 +231,20 @@ def edit_question(question_id):
                            weights=weights, categories=stored_categories,
                            created=created, edit=True, question_id=question_id,
                            answers = answers)
+
+
+@surveys.route("/add_category", methods=["POST"])
+def add_category():
+    """ Adds a new category to the database
+    """
+
+    if not helper.valid_token(request.form):
+        abort(400, 'Invalid CSRF token.')
+
+    name = request.form["name"]
+    description = request.form["description"]
+    content_links = request.form["content_links"]
+    #TO DO: CONVERT CONTENT_LINKS TO JSON WHEN REAL DATA FROM FRONTEND
+    created_at = datetime.now()
+    survey_service.create_category(name, description, content_links, created_at)
+    return redirect(request.url)
