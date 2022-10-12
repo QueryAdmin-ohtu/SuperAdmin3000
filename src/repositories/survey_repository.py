@@ -25,18 +25,16 @@ class SurveyRepository:
 
         return False
 
-    def create_survey(self, name, title, survey, created):
+    def create_survey(self, name, title, survey):
         """ Inserts a survey to table Surveys based
         on given parameters and returns the id """
         sql = """
         INSERT INTO "Surveys"
         (name,"createdAt","updatedAt",title_text,survey_text)
-        VALUES (:name, :createdAt, :updatedAt, :title_text, :survey_text)
+        VALUES (:name, NOW(), NOW(), :title_text, :survey_text)
         RETURNING id """
         values = {
             "name": name,
-            "createdAt": created,
-            "updatedAt": created,
             "title_text": title,
             "survey_text": survey
         }
@@ -50,7 +48,7 @@ class SurveyRepository:
 
         return survey_id[0]
 
-    def create_question(self, text, survey_id, category_weights, created):
+    def create_question(self, text, survey_id, category_weights):
         """ Inserts a new question to table Questions based
         on given parameters.
 
@@ -59,14 +57,12 @@ class SurveyRepository:
         sql = """
         INSERT INTO "Questions"
         ("text", "surveyId", "category_weights", "createdAt","updatedAt")
-        VALUES (:text, :survey_id, :category_weights, :createdAt, :updatedAt)
+        VALUES (:text, :survey_id, :category_weights, NOW(), NOW())
         RETURNING id """
         values = {
             "text": text,
             "survey_id": survey_id,
-            "category_weights": category_weights,
-            "createdAt": created,
-            "updatedAt": created
+            "category_weights": category_weights
         }
         question_id = db.session.execute(sql, values).fetchone()
         db.session.commit()

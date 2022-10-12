@@ -134,12 +134,12 @@ def add_question():
     text = request.form["text"]
     survey_id = request.form["survey_id"]
     question_id = request.form["question_id"]
-    time = datetime.now()
+
     if request.form["edit"]:
         survey_service.update_question(
-            question_id, text, category_weights, time)
+            question_id, text, category_weights)
     else:
-        survey_service.create_question(text, survey_id, category_weights, time)
+        survey_service.create_question(text, survey_id, category_weights)
     return redirect(f"/surveys/{survey_id}")
 
 

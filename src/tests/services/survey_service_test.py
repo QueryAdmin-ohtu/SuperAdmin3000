@@ -38,7 +38,7 @@ class TestSurveyService(unittest.TestCase):
         check = self.survey_service.create_survey(name, title, description)
         self.assertEqual(check, 1)
         self.repo_mock.create_survey.assert_called_with(
-            name, title, description, datetime(2013, 4, 9))
+            name, title, description)
 
     def test_create_survey_with_no_name_does_not_work(self):
         name = ""
@@ -106,12 +106,11 @@ class TestSurveyService(unittest.TestCase):
         text = "text"
         survey_id = 1
         category_weights = []
-        time = datetime(2022, 10, 6)
         check = self.survey_service.create_question(
-            text, survey_id, category_weights, time)
+            text, survey_id, category_weights)
         self.assertEqual(check, 1)
         self.repo_mock.create_question.assert_called_with(
-            text, survey_id, category_weights, time)
+            text, survey_id, category_weights)
 
     def test_create_answer_calls_repo_correctly(self):
         self.repo_mock.create_answer.return_value = 9

@@ -47,8 +47,7 @@ class SurveyService:
 
         self._validate_survey_details(name, title, description)
 
-        created = datetime.now()
-        return self.survey_repository.create_survey(name, title, description, created)
+        return self.survey_repository.create_survey(name, title, description)
 
     def get_survey(self, survey_id: str):
         """
@@ -164,7 +163,7 @@ class SurveyService:
 
         return self.survey_repository.get_all_categories()
 
-    def create_question(self, text: str, survey_id: int, category_weights: str, time: datetime):
+    def create_question(self, text: str, survey_id: int, category_weights: str):
         """
         Creates a new questions with given information.
 
@@ -176,7 +175,7 @@ class SurveyService:
         Returns:
             If succeeds: The DB id of the created question
         """
-        return self.survey_repository.create_question(text, survey_id, category_weights, time)
+        return self.survey_repository.create_question(text, survey_id, category_weights)
 
     def create_answer(self, text: str, points: int, question_id: int, time: datetime):
         """
