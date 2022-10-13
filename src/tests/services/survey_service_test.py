@@ -2,6 +2,7 @@ import unittest
 from unittest.mock import Mock
 from datetime import datetime
 from freezegun import freeze_time
+#from matplotlib import category
 from services.survey_service import SurveyService, UserInputError
 
 
@@ -85,6 +86,14 @@ class TestSurveyService(unittest.TestCase):
         self.assertEqual(questions_to_return, check)
         self.repo_mock.get_questions_of_survey.assert_called_with(survey_id)
 
+    def test_get_question_answers_calls_repo_correctly(self):
+        answers_to_return = ["because", 44]
+        question_id = 10
+        self.repo_mock.get_question_answers.return_value = answers_to_return
+        check = self.survey_service.get_question_answers(question_id)
+        self.assertEqual(answers_to_return, check)
+        self.repo_mock.get_question_answers.assert_called_with(question_id)
+
     def test_get_all_categories_calls_repo_correctly(self):
         categories_to_return = ["id", "name", "description", "content_links"]
         self.repo_mock.get_all_categories.return_value = categories_to_return
@@ -103,3 +112,73 @@ class TestSurveyService(unittest.TestCase):
         self.assertEqual(check, 1)
         self.repo_mock.create_question.assert_called_with(
             text, survey_id, category_weights, time)
+
+    def test_create_answer_calls_repo_correctly(self):
+        self.repo_mock.create_answer.return_value = 9
+        text = "Breaking Bad"
+        question_id = 9
+        points = 9001
+        time = datetime(2022, 10, 6)
+        check = self.survey_service.create_answer(
+            text, points, question_id, time)
+        self.assertEqual(check, 9)
+        self.repo_mock.create_answer.assert_called_with(
+            text, points, question_id, time)
+
+    def test_edit_survey_with_no_name_does_not_work(self):
+        name = ""
+        title = "What marsupial woudl I be?"
+        description = "Come and find out what marsupial represents you best"
+        with self.assertRaises(UserInputError):
+            self.survey_service.edit_survey(1, name, title, description)
+
+    def test_edit_survey_works_with_proper_arguments(self):
+        self.repo_mock.edit_survey.return_value = 1
+        id = "1"
+        name = "Marsupial Survey"
+        title = "What marsupial woudl I be?"
+        description = "Come and find out what marsupial represents you best"
+        check = self.survey_service.edit_survey(id, name, title, description)
+        self.assertEqual(check, 1)
+        self.repo_mock.edit_survey.assert_called_with(
+            id, name, title, description)
+
+    def test_edit_survey_with_no_title_does_not_work(self):
+        id = "1"
+        name = "Marsupial Survey"
+        title = ""
+        description = "Come and find out what marsupial represents you best"
+        with self.assertRaises(UserInputError):
+            self.survey_service.edit_survey(id, name, title, description)
+
+    def test_edit_survey_with_no_description_does_not_work(self):
+        id = "1"
+        name = "Marsupial Survey"
+        title = "What marsupial woudl I be?"
+        description = ""
+        with self.assertRaises(UserInputError):
+            self.survey_service.edit_survey(id, name, title, description)
+
+    def test_update_question_calls_repo_correctly(self):
+        self.repo_mock.update_question.return_value = 1
+        text = "change"
+        question_id = 6
+        category_weights = []
+        time = datetime(2022, 10, 6)
+        check = self.survey_service.update_question(
+            question_id, text, category_weights, time)
+        self.assertEqual(check, 1)
+        self.repo_mock.update_question.assert_called_with(
+            question_id, text, category_weights, time)
+
+    def test_create_category_calls_repo_correctly(self):
+        self.repo_mock.create_category.return_value = 1
+        name = "name"
+        description = "description"
+        content_links = [{"url":"https://www.eficode.com/cases/hansen","type":"Case Study"},{"url":"https://www.eficode.com/cases/basware","type":"Case Study"}]
+        created_at = datetime(2022, 10, 6)
+        check = self.survey_service.create_category(
+            name, description, content_links, created_at)
+        self.assertEqual(check, 1)
+        self.repo_mock.create_category.assert_called_with(
+            name, description, content_links, created_at)

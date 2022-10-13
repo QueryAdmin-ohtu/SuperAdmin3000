@@ -1,3 +1,6 @@
+from datetime import time
+from sqlalchemy import exc
+
 from db import db
 
 
@@ -37,8 +40,14 @@ class SurveyRepository:
             "title_text": title,
             "survey_text": survey
         }
-        survey_id = self.db_connection.session.execute(sql, values).fetchone()
-        self.db_connection.session.commit()
+
+        try:
+            survey_id = self.db_connection.session.execute(
+                sql, values).fetchone()
+            self.db_connection.session.commit()
+        except exc.SQLAlchemyError:
+            return None
+
         return survey_id[0]
 
     def create_question(self, text, survey_id, category_weights, created):
@@ -59,9 +68,62 @@ class SurveyRepository:
             "createdAt": created,
             "updatedAt": created
         }
-        survey_id = db.session.execute(sql, values).fetchone()
+        question_id = db.session.execute(sql, values).fetchone()
         db.session.commit()
-        return survey_id[0]
+        return question_id[0]
+
+    def create_answer(self, text, points, question_id, created):
+        """ Inserts a new answer to table Question_answers based
+        on given parameters.
+
+        Returns:
+            Id of the new answer """
+        sql = """
+        INSERT INTO "Question_answers"
+        ("text", "points", "questionId", "createdAt","updatedAt")
+        VALUES (:text, :points, :question_id, :createdAt, :updatedAt)
+        RETURNING id """
+        values = {
+            "text": text,
+            "points": points,
+            "question_id": question_id,
+            "createdAt": created,
+            "updatedAt": created
+        }
+        answer_id = db.session.execute(sql, values).fetchone()
+        db.session.commit()
+        return answer_id[0]
+
+    def update_question(self, question_id, text, category_weights, updated):
+        """ Updates a question from the table Questions
+        based on given parameters. If text nor category
+        weights have been changed, nothing will happen
+        and False will be returned. Otherwise, changes
+        will take place and True is returned """
+        original = self.get_question(question_id)
+        sql = """ UPDATE "Questions" SET "updatedAt"=:updated
+        WHERE id=:question_id """
+        sql2 = False
+        sql3 = False
+
+        if text != original[0]:
+            sql2 = """ UPDATE "Questions" SET text=:text
+            WHERE id=:question_id """
+            self.db_connection.session.execute(
+                sql2, {"text": text, "question_id": question_id})
+
+        if category_weights != original[3]:
+            sql3 = """ UPDATE "Questions" SET category_weights=:category_weights
+            WHERE id=:question_id """
+            self.db_connection.session.execute(
+                sql3, {"category_weights": category_weights, "question_id": question_id})
+
+        if sql2 or sql3:
+            self.db_connection.session.execute(
+                sql, {"updated": updated, "question_id": question_id})
+            self.db_connection.session.commit()
+
+        return sql2 or sql3
 
     def delete_survey(self, survey_id):
         """ Deletes a survey from Surveys after deleting all
@@ -99,8 +161,8 @@ class SurveyRepository:
         Returns: Array containing the survey id, title,
         question count and submission count """
         sql = """
-        SELECT 
-            s.id, 
+        SELECT
+            s.id,
             s.title_text,
             COUNT(DISTINCT q.id) AS questions,
             COUNT(DISTINCT r.id) AS submissions
@@ -125,7 +187,7 @@ class SurveyRepository:
         Returns:
           An array containing each question object
         """
-        sql = "SELECT * FROM \"Questions\" WHERE \"Questions\".\"surveyId\"=:survey_id"
+        sql = "SELECT * FROM \"Questions\" WHERE \"Questions\".\"surveyId\"=:survey_id ORDER BY id"
         result = self.db_connection.session.execute(
             sql, {"survey_id": survey_id})
 
@@ -183,3 +245,100 @@ class SurveyRepository:
         if not result:
             return False
         return True
+
+    def delete_answer_from_question(self, answer_id):
+        """ Deletes a answer in a given question
+
+        Args:
+            answer_id: Id of the answer
+
+        Returns:
+            If succeeds: True
+            If not found: False
+        """
+        sql = "DELETE FROM \"Question_answers\" WHERE \"id\"=:answer_id"
+        result = self.db_connection.session.execute(
+            sql, {"answer_id": answer_id})
+        db.session.commit()
+        if not result:
+            return False
+        return True
+
+    def edit_survey(self, survey_id, name, title, description):
+        """ Edits the given survey
+
+        Args:
+            survey_id: Id of the survey
+            name: Name of the survey
+            title: Title of the survey
+            description: Description of the survey
+        """
+        sql = """
+        UPDATE "Surveys"
+        SET 
+            name=:name,
+            "updatedAt"=NOW(),
+            title_text=:title,
+            survey_text=:description
+        WHERE id=:survey_id
+        RETURNING id
+        """
+        values = {
+            "survey_id": survey_id,
+            "name": name,
+            "title": title,
+            "description": description
+        }
+        try:
+            updated = self.db_connection.session.execute(
+                sql, values).fetchone()
+            self.db_connection.session.commit()
+        except exc.SQLAlchemyError:
+            return False
+        if updated is not None:
+            return updated[0]
+        return None
+
+    def get_question(self, question_id):
+        """ Gets the text, survey id, category weights,
+        and creation time of a question """
+        sql = """ SELECT text, "surveyId", "createdAt", category_weights
+        FROM "Questions" WHERE id=:question_id """
+        question = self.db_connection.session.execute(
+            sql, {"question_id": question_id}).fetchone()
+        return question
+
+    def create_category(self, name: str, description: str, content_links: list, created: time):
+        """ Inserts a new category to table Categories based
+        and returns Id.
+
+        Returns:
+            Id of the new category. """
+        sql = """
+        INSERT INTO "Categories"
+        ("name", "description", "content_links", "createdAt","updatedAt")
+        VALUES (:name, :description, :content_links, :createdAt, :updatedAt)
+        RETURNING id """
+        values = {
+            "name": name,
+            "description": description,
+            "content_links": content_links,
+            "createdAt": created,
+            "updatedAt": created
+        }
+        try:
+            category_id = self.db_connection.session.execute(
+                sql, values).fetchone()
+            self.db_connection.session.commit()
+        except exc.SQLAlchemyError:
+            return None
+        return category_id[0]
+    
+    def get_question_answers(self,question_id):
+        """ Gets the id:s, texts and points from the answers of
+        the question determined by the question_id given """
+        sql = """ SELECT id, text, points FROM "Question_answers"
+        WHERE "questionId"=:question_id """
+        answers = self.db_connection.session.execute(
+            sql, {"question_id": question_id}).fetchall()
+        return answers

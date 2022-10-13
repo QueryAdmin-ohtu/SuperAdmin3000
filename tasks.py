@@ -14,6 +14,18 @@ def tests(ctx):
     ctx.run("pytest")
 
 @task
+def coverage(ctx):
+    ctx.run("coverage run --branch -m pytest")
+
+@task
+def coveragehtml(ctx):
+    ctx.run("coverage html")
+
+@task
+def coveragexml(ctx):
+    ctx.run("coverage xml")
+    
+@task
 def e2etests(ctx):
     ctx.run("robot src/tests/robot_tests/")
 
@@ -41,3 +53,13 @@ def init_db(ctx, db):
     create_tables=' '.join([beginning2,db,end2])
     ctx.run(create_tables)
 
+    beginning3="psql"
+    end3="-Atq -f reset.sql -o temp"
+    update_sequences=' '.join([beginning3,db,end3])
+    ctx.run(update_sequences)
+
+    beginning4="psql"
+    end4="-f temp"
+    clean=' '.join([beginning4,db,end4])
+    ctx.run(clean)
+    ctx.run("rm temp")

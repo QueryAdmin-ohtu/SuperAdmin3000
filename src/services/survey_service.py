@@ -89,6 +89,17 @@ class SurveyService:
 
         return self.survey_repository.delete_question_from_survey(question_id)
 
+    def delete_answer_from_question(self, answer_id):
+        """ Removes an answer from a question.
+        Args:
+            answer_id: Db id of answer
+        Returns:
+            If succeeds: True
+            Not found: False
+        """
+
+        return self.survey_repository.delete_answer_from_question(answer_id)
+
     def get_all_surveys(self):
         """ Fetches all surveys, counts the questions
         for each survey and the amount of submissions
@@ -166,6 +177,68 @@ class SurveyService:
             If succeeds: The DB id of the created question
         """
         return self.survey_repository.create_question(text, survey_id, category_weights, time)
+
+    def create_answer(self, text: str, points: int, question_id: int, time: datetime):
+        """
+        Creates a new questions with given information.
+
+        Args:
+            text: Content of the answer
+            points: The numerical value which is multiplied by the category_weights of the question
+            question_id: Id of the question that the answer is related to
+
+        Returns:
+            If succeeds: The DB id of the created answer
+        """
+        return self.survey_repository.create_answer(text, points, question_id, time)
+
+    def edit_survey(self, survey_id: str, name: str, title: str, description: str):
+        """
+        Edits existing survey with the given information.
+
+        Args:
+            survey_id: Id of the survey to edit
+            name: Name for the survey
+            title: Title for the survey
+            description: Survey text
+
+        Returns:
+            If succeeds: The DB id of the updated survey
+        """
+        self._validate_survey_details(name, title, description)
+
+        return self.survey_repository.edit_survey(survey_id, name, title, description)
+
+    def update_question(self, question_id: int, text: str, category_weights: str, updated: datetime):
+        """ Updates a question if changes have been made and returns true.
+        If no changes have been made, nothing changes and false is returned """
+        return self.survey_repository.update_question(question_id, text, category_weights, updated)
+
+    def get_question(self, question_id):
+        """Gets the text, survey id, category weights, and the
+        time of creation of a question based on the questions id """
+        return self.survey_repository.get_question(question_id)
+
+    def get_question_answers(self, question_id):
+        """Gets the id:s, texts and points of the answers
+        from the question specified by the id given """
+        return self.survey_repository.get_question_answers(question_id)
+    
+    def create_category(self, name: str, description: str, content_links: list, created_at:datetime):
+        """
+        Creates a new category with given information.
+
+        Args:
+            name: Name of the category
+            description: Description of the category
+            content_links: Content links related to the category
+            created_at: Time of creating the question
+
+        Returns:
+            If succeeds: The DB id of the created category
+        """
+        return self.survey_repository.create_category(name, description, content_links, created_at)
+
 
 
 survey_service = SurveyService(SurveyRepository())

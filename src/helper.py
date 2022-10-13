@@ -29,8 +29,9 @@ def update_session(email, first_name, csrf_token_cookie):
 def clear_session():
     """ Logout the user and clear session properties
     """
-    _remove_from_session("csrf_token")
+    _remove_from_session("email")
     _remove_from_session("username")
+    _remove_from_session("csrf_token")
 
 
 def _remove_from_session(property_key):
@@ -84,3 +85,13 @@ def category_weights_as_json(categories: list, form: dict):
         category_list.append(category_dict)
 
     return json.dumps(category_list)
+
+
+def json_into_dictionary(json_file):
+    """ Takes category weights and makes them into
+    a dictionary where the keys are the category
+    names and the values are the multipliers """
+    categories = {}
+    for category in json_file:
+        categories[category["category"]] = category["multiplier"]
+    return categories

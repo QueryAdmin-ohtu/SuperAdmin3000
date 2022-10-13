@@ -1,20 +1,26 @@
 {% extends "layout.html" %}
+{% import "components.html" as components %}
 {% block content %}
 <container class="flex flex-col gap-4">
-  <h3>List of surveys</h3>
-  <br>
-  {{ no_surveys }}
-  {% for survey in surveys %}
-  <div>
-    <ul>
-      <li>Survey ID: {{survey[0]}}
-      <li><span>Title: {{survey[1]}}</span></li>
-      <li><span>Questions: {{survey[2]}}</span></li>
-      <li><span>Submissions: {{survey[3]}}</span></li>
-      <li><a href="/surveys/{{survey[0]}}"><button class="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">OPEN</button></a></li>
-    </ul>
-  </div>
-  <hr>
-  {% endfor %}
+    <div class="flex flex-col gap-1">
+        <h2>Surveys</h2>
+        <div class="flex flex-row gap-2 items-end">
+            <p class="text-gray-700 text-base">
+                Here you can see the active surveys. Click on the survey to view
+                additional
+                information!
+            </p>
+            <div class="grow h-14"></div>
+            {{ components.link_button("New survey", "/new_survey") }}
+        </div>
+    </div>
+
+    <div class="grid grid-cols-3 gap-4">
+        {{ no_surveys }}
+        {% for survey in surveys %}
+        {{ components.survey_card(survey) }}
+        {% endfor %}
+    </div>
+
 </container>
 {% endblock %}

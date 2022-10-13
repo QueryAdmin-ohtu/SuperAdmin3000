@@ -1,9 +1,9 @@
 from datetime import datetime
+#from matplotlib import category
 from flask import render_template, redirect, request, abort, Blueprint
 from flask import current_app as app
 import helper
 from services.survey_service import survey_service
-
 
 
 surveys = Blueprint("surveys", __name__)
@@ -28,7 +28,7 @@ def surveys_edit(survey_id):
 
     survey = survey_service.get_survey(survey_id)
 
-    return render_template("surveys/edit_survey.html", survey=survey, survey_id=survey_id)
+    return render_template("surveys/edit_survey.html", survey=survey, survey_id=survey_id, ENV=app.config["ENV"])
 
 
 @surveys.route("/surveys/update", methods=["POST"])
@@ -42,13 +42,10 @@ def surveys_update():
     survey_id = request.form["survey_id"]
     name = request.form["name"]
     title = request.form["title"]
-    survey = request.form["text"]
+    description = request.form["description"]
 
-    # TODO: Implement the SQL query for updating a survey
-    #  result = survey_service.update_survey(survey_id, name, title, text)
-
+    survey_service.edit_survey(survey_id, name, title, description)
     route = f"/surveys/{survey_id}"
-
     return redirect(route)
 
 
@@ -99,7 +96,8 @@ def view_survey(survey_id):
     survey = survey_service.get_survey(survey_id)
     questions = survey_service.get_questions_of_survey(survey_id)
 
-    return render_template("surveys/view_survey.html", survey=survey, questions=questions, survey_id=survey_id)
+    return render_template("surveys/view_survey.html", survey=survey,
+    questions=questions, survey_id=survey_id, ENV=app.config["ENV"])
 
 
 @surveys.route("/surveys/statistics/<survey_id>")
@@ -115,7 +113,8 @@ def surveys_statistics(survey_id):
     #  TODO: get statistics
     statistics = "JUGE STATS HERE!"
 
-    return render_template("surveys/statistics.html", survey=survey, statistics=statistics, survey_id=survey_id)
+    return render_template("surveys/statistics.html", survey=survey,
+    statistics=statistics, survey_id=survey_id, ENV=app.config["ENV"])
 
 
 @surveys.route("/add_question", methods=["POST"])
@@ -134,28 +133,119 @@ def add_question():
         return "Invalid weights"
     text = request.form["text"]
     survey_id = request.form["survey_id"]
+    question_id = request.form["question_id"]
     time = datetime.now()
-    survey_service.create_question(text, survey_id, category_weights, time)
+    if request.form["edit"]:
+        survey_service.update_question(
+            question_id, text, category_weights, time)
+    else:
+        survey_service.create_question(text, survey_id, category_weights, time)
     return redirect(f"/surveys/{survey_id}")
+
+
+@surveys.route("/add_answer", methods=["POST"])
+def add_answer():
+    """ Adds a new answer to a question to the database.
+    If the question doesn't exist, it is created first
+    """
+
+    if not helper.valid_token(request.form):
+        abort(400, 'Invalid CSRF token.')
+
+    question_id = request.form["question_id"]
+    time = datetime.now()
+
+    if not question_id:
+        text = request.form["text"]
+        survey_id = request.form["survey_id"]
+        categories = survey_service.get_all_categories()
+        try:
+            category_weights = helper.category_weights_as_json(
+                categories, request.form)
+        except ValueError:
+            return "Invalid weights"
+        question_id = survey_service.create_question(text, survey_id, category_weights, time)
+
+    answer_text = request.form["answer_text"]
+    points = request.form["points"]
+    if not points:
+        points = 0
+    try:
+        points = float(points)
+    except ValueError:
+        return "Invalid points"
+    survey_service.create_answer(answer_text, points, question_id, time)
+    return redirect(f"/questions/{question_id}")
+
+
+@surveys.route("/question/delete/<question_id>/<answer_id>", methods=["POST"])
+def delete_answer(question_id,answer_id):
+    """ Call database query for removal of a single answer
+    """
+    if not helper.logged_in():
+        return redirect("/")
+
+    survey_service.delete_answer_from_question(answer_id)
+    return redirect("/questions/" + question_id)
 
 
 @surveys.route("/<survey_id>/new_question", methods=["GET"])
 def new_question(survey_id):
-    """  Retuns the page for creating a new question.
+    """  Returns the page for creating a new question.
     """
-    stored_surveys = survey_service.get_all_surveys()
     stored_categories = survey_service.get_all_categories()
-    survey = survey_service.get_survey(survey_id)
-    # pylint: disable-next=line-too-long
-    return render_template("questions/new_question.html", ENV=app.config["ENV"], surveys=stored_surveys, categories=stored_categories, survey=survey)
+    weights = {}
+    return render_template("questions/new_question.html",
+                           ENV=app.config["ENV"], categories=stored_categories,
+                           survey_id=survey_id, weights=weights)
 
 
 @surveys.route("/surveys/delete/<survey_id>/<question_id>")
 def delete_question(question_id, survey_id):
-    """Call database query for removal of a single question
+    """ Call database query for removal of a single question
     """
     if not helper.logged_in():
         return redirect("/")
 
     survey_service.delete_question_from_survey(question_id)
     return redirect("/surveys/" + survey_id)
+
+
+@surveys.route("/questions/<question_id>")
+def edit_question(question_id):
+    """ Returns the page for creating a new question
+    where the inputs are filled with the information
+    from the question to be edited """
+    question = survey_service.get_question(question_id)
+    if len(question) < 4:
+        return redirect("/")
+    text = question[0]
+    survey_id = question[1]
+    created = question[2]
+    weights = question[3]
+    answers = survey_service.get_question_answers(question_id)
+    if weights:
+        weights = helper.json_into_dictionary(question[3])
+    stored_categories = survey_service.get_all_categories()
+    return render_template("questions/new_question.html",
+                           ENV=app.config["ENV"], text=text, survey_id=survey_id,
+                           weights=weights, categories=stored_categories,
+                           created=created, edit=True, question_id=question_id,
+                           answers = answers)
+
+
+@surveys.route("/add_category", methods=["POST"])
+def add_category():
+    """ Adds a new category to the database
+    """
+
+    if not helper.valid_token(request.form):
+        abort(400, 'Invalid CSRF token.')
+
+    name = request.form["name"]
+    description = request.form["description"]
+    content_links = request.form["content_links"]
+    #TO DO: CONVERT CONTENT_LINKS TO JSON WHEN REAL DATA FROM FRONTEND
+    created_at = datetime.now()
+    survey_service.create_category(name, description, content_links, created_at)
+    return redirect(request.url)
