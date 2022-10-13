@@ -1,4 +1,4 @@
-{% macro text_input(name, label_text, placeholder, is_required) %}
+{% macro text_input(name, label_text, placeholder, is_required, value = "") %}
 {# Text input field for a form
     On invalid miten?
 #}
@@ -7,14 +7,14 @@
 {% endif %}
 
 {% call field_wrapper_and_label(name, label_text) %}
-<input type="text" name="{{ name }}" placeholder="{{ placeholder }}"
-    class="bg-white border border-slate-300 text-gray-900 text-sm rounded-lg focus:ring-sky-500 focus:border-sky-500 block w-full p-2.5"
+<input type="text" name="{{ name }}" placeholder="{{ placeholder }}" value="{{ value }}"
+    class="bg-white border border-slate-300 text-gray-900 text-sm rounded-lg focus:invalid:border-rose-500 focus:ring-sky-500 focus:border-sky-500  block w-full p-2"
     {{ required_text }}>
 {% endcall %}
 
 {% endmacro %}
 
-{% macro text_area(name, label_text, placeholder, is_required) %}
+{% macro text_area(name, label_text, placeholder, is_required, value = "") %}
 {# Text area for form
     On invalid miten?
 #}
@@ -25,14 +25,16 @@
 
 {% call field_wrapper_and_label(name, label_text) %}
 <textarea type="text" name="{{ name }}" placeholder="{{ placeholder }}"
-    class="bg-white border border-slate-300 text-gray-900 text-sm rounded-lg focus:ring-sky-500 focus:border-sky-500 block w-full p-2.5"
-    {{ required_text }}></textarea>
+    class="bg-white border border-slate-300 text-gray-900 text-sm rounded-lg focus:invalid:border-rose-500 focus:ring-sky-500 focus:border-sky-500 block w-full p-2"
+    {{ required_text }}>{{ value }}</textarea>
 {% endcall %}
 
 {% endmacro %}
 
 {% macro submit_button(button_text) %}
-<button class="bg-sky-500 p-4 rounded w-full h-fit text-base text-white leading-tight focus:bg-sky-500 focus:ring-sky-500 focus:border-sky-500  transition duration-150 ease-in-out" type="submit" value="{{ button_text }}">
+<button
+    class="bg-sky-500 hover:bg-sky-600 p-4 rounded w-full h-fit text-lg text-white leading-tight focus:bg-sky-500 focus:ring-sky-500 focus:border-sky-500  transition duration-150 ease-in-out"
+    type="submit" value="{{ button_text }}">
     {{ button_text }}
 </button>
 {% endmacro %}

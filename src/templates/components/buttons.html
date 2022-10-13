@@ -7,12 +7,12 @@
             default: Default styling
             destructive: Red button
 #}
-{% set bg = "bg-blue-500" %}
-{% set bg_hover = "bg-blue-700" %}
+{% set bg = "bg-sky-500" %}
+{% set bg_hover = "bg-sky-700" %}
 
 {% if type == "destructive" %}
-{% set bg = "bg-red-500" %}
-{% set bg_hover = "bg-red-700" %}
+{% set bg = "bg-rose-500" %}
+{% set bg_hover = "bg-rose-700" %}
 {% endif %}
 
 <a href="{{ href }}"
@@ -29,12 +29,12 @@
             default: Default styling
             destructive: Red button
 #}
-{% set bg = "bg-blue-500" %}
-{% set bg_hover = "bg-blue-700" %}
+{% set bg = "bg-sky-500" %}
+{% set bg_hover = "bg-sky-700" %}
 
 {% if type == "destructive" %}
-{% set bg = "bg-red-500" %}
-{% set bg_hover = "bg-red-700" %}
+{% set bg = "bg-rose-500" %}
+{% set bg_hover = "bg-rose-700" %}
 {% endif %}
 <button
     class="{{ bg }} hover:{{ bg_hover }} p-2 block rounded w-fit h-fit text-sm text-white font-medium leading-tight uppercase focus:{{ bg_hover }} focus:ring-sky-500 focus:border-sky-500  transition duration-150 ease-in-out"
