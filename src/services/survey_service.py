@@ -236,6 +236,22 @@ class SurveyService:
             If succeeds: The DB id of the created category
         """
         return self.survey_repository.create_category(name, description, content_links)
+    
+    def add_admin(self, email: str):
+        """
+        Add the given email address to authorized users list
+        
+        Args:
+            email: Email address of the authorized user
+        
+        Returns:
+            If succeeds: The DB id of the authorized user
+        """
+        try:
+            if self._validate_email_address(email):
+                return self.survey_repository.add_admin(email)
+        except UserInputError:
+            return None
 
 
 
