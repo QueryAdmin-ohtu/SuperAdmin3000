@@ -381,6 +381,6 @@ class SurveyRepository:
             self.db_connection.session.execute(
                 sql, {"category_id": category_id})
             self.db_connection.session.commit()
-        except exc.SQLAlchemyError:
-            return None
+        except exc.SQLAlchemyError as exception:
+            return exception
         return True
