@@ -230,3 +230,19 @@ class TestSurveyRepository(unittest.TestCase):
             response = self.repo.get_all_categories()
 
         self.assertGreater(len(response), 2)
+    
+    def test_add_admin_with_invalid_data_returns_none(self):
+
+        with self.app.app_context():
+            response = self.repo.add_admin(
+                {"test": "test"}
+            )
+        
+        self.assertIsNone(response)
+    
+    def test_add_admin_with_valid_data_returns_id(self):
+
+        with self.app.app_context():
+            response = self.repo.add_admin("test@email.com")
+        
+        self.assertEqual(response, 9)
