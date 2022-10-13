@@ -1,4 +1,3 @@
-from datetime import datetime
 import re
 from repositories.survey_repository import SurveyRepository
 
@@ -47,8 +46,7 @@ class SurveyService:
 
         self._validate_survey_details(name, title, description)
 
-        created = datetime.now()
-        return self.survey_repository.create_survey(name, title, description, created)
+        return self.survey_repository.create_survey(name, title, description)
 
     def get_survey(self, survey_id: str):
         """
@@ -164,7 +162,7 @@ class SurveyService:
 
         return self.survey_repository.get_all_categories()
 
-    def create_question(self, text: str, survey_id: int, category_weights: str, time: datetime):
+    def create_question(self, text: str, survey_id: int, category_weights: str):
         """
         Creates a new questions with given information.
 
@@ -176,9 +174,9 @@ class SurveyService:
         Returns:
             If succeeds: The DB id of the created question
         """
-        return self.survey_repository.create_question(text, survey_id, category_weights, time)
+        return self.survey_repository.create_question(text, survey_id, category_weights)
 
-    def create_answer(self, text: str, points: int, question_id: int, time: datetime):
+    def create_answer(self, text: str, points: int, question_id: int):
         """
         Creates a new questions with given information.
 
@@ -190,7 +188,7 @@ class SurveyService:
         Returns:
             If succeeds: The DB id of the created answer
         """
-        return self.survey_repository.create_answer(text, points, question_id, time)
+        return self.survey_repository.create_answer(text, points, question_id)
 
     def edit_survey(self, survey_id: str, name: str, title: str, description: str):
         """
@@ -209,10 +207,10 @@ class SurveyService:
 
         return self.survey_repository.edit_survey(survey_id, name, title, description)
 
-    def update_question(self, question_id: int, text: str, category_weights: str, updated: datetime):
+    def update_question(self, question_id: int, text: str, category_weights: str):
         """ Updates a question if changes have been made and returns true.
         If no changes have been made, nothing changes and false is returned """
-        return self.survey_repository.update_question(question_id, text, category_weights, updated)
+        return self.survey_repository.update_question(question_id, text, category_weights)
 
     def get_question(self, question_id):
         """Gets the text, survey id, category weights, and the
@@ -224,7 +222,7 @@ class SurveyService:
         from the question specified by the id given """
         return self.survey_repository.get_question_answers(question_id)
     
-    def create_category(self, name: str, description: str, content_links: list, created_at:datetime):
+    def create_category(self, name: str, description: str, content_links: list):
         """
         Creates a new category with given information.
 
@@ -237,7 +235,7 @@ class SurveyService:
         Returns:
             If succeeds: The DB id of the created category
         """
-        return self.survey_repository.create_category(name, description, content_links, created_at)
+        return self.survey_repository.create_category(name, description, content_links)
 
 
 
