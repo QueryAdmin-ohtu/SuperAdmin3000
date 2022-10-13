@@ -186,3 +186,14 @@ class TestSurveyService(unittest.TestCase):
         email = "jorma@uotinennet"
         check = self.survey_service.add_admin(email)
         self.assertIsNone(check)
+    
+    def test_get_all_admins_calls_repo_correctly(self):
+        self.repo_mock.get_all_admins.return_value = [
+            ("1", "jorma@uotinen.net"), 
+            ("2", "uotinen@jorma.fi")]
+        check = self.survey_service.get_all_admins()
+        self.assertEqual(check, 
+        [
+            ("1", "jorma@uotinen.net"), 
+            ("2", "uotinen@jorma.fi")])
+        self.repo_mock.get_all_admins.assert_called()
