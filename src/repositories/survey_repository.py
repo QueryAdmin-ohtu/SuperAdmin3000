@@ -350,4 +350,6 @@ class SurveyRepository:
         """
         admins = self.db_connection.session.execute(
             sql).fetchall()
+        if not admins:
+            return None
         return admins
