@@ -150,10 +150,11 @@ class SurveyRepository:
     def get_all_surveys(self):
         """ Fetches all surveys, counts the questions
         for each survey and the amount of submissions
-        related to the survey returning a list
+        related to each survey
 
-        Returns: Array containing the survey id, title,
-        question count and submission count """
+        Returns: List where each item contains the survey
+        id, title, question count and submission count are 
+        included """
         sql = """
         SELECT
             s.id,
@@ -336,3 +337,17 @@ class SurveyRepository:
         except exc.SQLAlchemyError:
             return None
         return admin_id[0]
+    
+    def get_all_admins(self):
+        """ Fetches all authorized users from the database
+        
+        Returns:
+            List where each item contains a tuple with the id
+            and email of the authorized user """
+        sql = """
+        SELECT * FROM "Admins"
+        ORDER BY id
+        """
+        admins = self.db_connection.session.execute(
+            sql).fetchall()
+        return admins
