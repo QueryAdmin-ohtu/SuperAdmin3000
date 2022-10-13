@@ -236,7 +236,7 @@ class SurveyService:
         """Gets the id:s, texts and points of the answers
         from the question specified by the id given """
         return self.survey_repository.get_question_answers(question_id)
-    
+
     def create_category(self, name: str, description: str, content_links: list):
         """
         Creates a new category.
