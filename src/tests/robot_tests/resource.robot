@@ -9,6 +9,7 @@ ${URL}  http://localhost:5000
 ${BACKDOOR URL}  ${URL}/backdoor
 ${EDIT URL}  ${URL}/surveys/edit/1
 ${NEW URL}  ${URL}/new_survey
+${ADMIN URL}  ${URL}/admins
 
 *** Keywords ***
 Open And Configure Browser
@@ -35,3 +36,6 @@ Go To Survey
 Delete Question
     [Arguments]  ${survey_id}  ${question_id}
     Go To  ${URL}/delete/${survey_id}/${question_id}
+
+Go To Admins Page
+    Go To ${ADMIN URL}
