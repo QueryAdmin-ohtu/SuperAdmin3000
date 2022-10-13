@@ -172,3 +172,17 @@ class TestSurveyService(unittest.TestCase):
         self.assertEqual(check, 1)
         self.repo_mock.create_category.assert_called_with(
             name, description, content_links)
+    
+    def test_add_admin_calls_repo_correctly(self):
+        self.repo_mock.add_admin.return_value = 1
+        email = "jorma@uotinen.net"
+        check = self.survey_service.add_admin(
+            email)
+        self.assertEqual(check, 1)
+        self.repo_mock.add_admin.assert_called_with(
+            email)
+    
+    def test_add_admin_without_valid_email_returns_none(self):
+        email = "jorma@uotinennet"
+        check = self.survey_service.add_admin(email)
+        self.assertIsNone(check)
