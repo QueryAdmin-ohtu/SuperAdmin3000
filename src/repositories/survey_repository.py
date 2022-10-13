@@ -197,7 +197,7 @@ class SurveyRepository:
 
 
     def survey_exists(self, survey_name):
-        """Checks if a survey with identical name already exists
+        """Checks if a survey with identical name already exists. Case insensitive.
 
         Args:
             survey_name: Name of the new survey
@@ -205,8 +205,8 @@ class SurveyRepository:
         Returns:
             True if matching name found, False if not
         """
-        sql = "SELECT name FROM \"Surveys\" WHERE name=:survey_name"
-        result = self.db_connection.session.execute(sql, {"survey_name": survey_name})
+        sql = "SELECT name FROM \"Surveys\" WHERE lower(name)=:survey_name"
+        result = self.db_connection.session.execute(sql, {"survey_name": survey_name.lower()})
 
         survey_found = result.fetchone()
 

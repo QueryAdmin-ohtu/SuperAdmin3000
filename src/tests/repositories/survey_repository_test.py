@@ -55,6 +55,23 @@ class TestSurveyRepository(unittest.TestCase):
 
         self.assertIsNone(response)
 
+    def test_survey_with_the_same_name_exists(self):
+        with self.app.app_context():
+            self.repo.create_survey(
+                "MDZS",
+                "Rejoice!",
+                "WWX is dead!",
+                datetime.now()
+            )
+            response = self.repo.survey_exists("mdzs")
+
+            self.assertTrue(response)
+
+    def test_survey_with_the_same_name_doesnt_exist(self):
+        with self.app.app_context():
+            response = self.repo.survey_exists("totally nonexistent survey")
+            self.assertFalse(response)
+
     def test_get_survey_with_valid_id_returns_survey(self):
 
         with self.app.app_context():
@@ -245,3 +262,4 @@ class TestSurveyRepository(unittest.TestCase):
             response = self.repo.get_all_categories()
 
         self.assertGreater(len(response), 2)
+            
