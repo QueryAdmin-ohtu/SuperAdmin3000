@@ -101,7 +101,8 @@ def view_survey(survey_id):
     stored_categories = survey_service.get_all_categories()
 
     return render_template("surveys/view_survey.html", survey=survey,
-                           questions=questions, survey_id=survey_id, ENV=app.config["ENV"], categories=stored_categories)
+                           questions=questions, survey_id=survey_id,
+                           ENV=app.config["ENV"], categories=stored_categories)
 
 
 @surveys.route("/surveys/statistics/<survey_id>")
@@ -260,9 +261,9 @@ def edit_category_page(survey_id, category_id):
     description = category[2]
     content_links = category[3]
     return render_template("surveys/edit_category.html",
-                            ENV=app.config["ENV"], survey_id=survey_id,
-                            category_id=category_id, name=name, description=description,
-                            content_links=content_links, edit=True)
+                           ENV=app.config["ENV"], survey_id=survey_id,
+                           category_id=category_id, name=name, description=description,
+                           content_links=content_links, edit=True)
 
 
 @surveys.route("/edit_category", methods=["POST"])
@@ -278,18 +279,14 @@ def edit_category():
     description = request.form["description"]
     stay = request.form["stay"]
     edit = request.form["edit"]
-    time = datetime.now()
     new_content_links = []
 
-    # Updates existing content links when editing an existing survey  
+    # Updates existing content links when editing an existing survey
     if edit:
         category_id = request.form["category_id"]
-        category = survey_service.get_category(category_id)
-        content_links = category[3]
+        content_links = survey_service.get_category(category_id)[3]
         for i, item in enumerate(content_links):
-            url_form = request.form[f"url_{i}"]
-            type_form = request.form[f"type_{i}"]
-            new_content = {'url': url_form, 'type': type_form}
+            new_content = {'url': request.form[f"url_{i}"], 'type': request.form[f"type_{i}"]}
             new_content_links.append(new_content)
 
     # Adds a new content link, if there is one, to the end
@@ -303,20 +300,21 @@ def edit_category():
 
     if edit:
         survey_service.update_category(
-            category_id, name, description, new_content_links_json, time)
+            category_id, name, description, new_content_links_json)
     else:
         category_id = survey_service.create_category(
-            name, description, new_content_links_json, time)
+            name, description, new_content_links_json)
 
     if stay:
         return redirect(f"/edit_category/{survey_id}/{category_id}")
     return redirect(f"/surveys/{survey_id}")
 
+
 @surveys.route("/delete_category", methods=["POST"])
 def delete_category():
     """ Deletes a category from the database.
     Redirects back to survey page if succesfull.
-    Shows error message to user if not succesfull. 
+    Shows error message to user if not succesfull.
     """
 
     if not helper.valid_token(request.form):
@@ -324,8 +322,7 @@ def delete_category():
 
     category_id = request.form["category_id"]
     survey_id = request.form["survey_id"]
-    return_value=survey_service.delete_category(category_id)
-    if return_value==True:
+    return_value = survey_service.delete_category(category_id)
+    if return_value is True:
         return redirect(f"/surveys/{survey_id}")
     return str(return_value)
-

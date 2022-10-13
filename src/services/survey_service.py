@@ -238,37 +238,50 @@ class SurveyService:
         from the question specified by the id given """
         return self.survey_repository.get_question_answers(question_id)
 
-    def create_category(self, name: str, description: str, content_links: list, created_at: datetime):
+    def create_category(self, name: str, description: str, content_links: list):
         """
-        Creates a new category with given information.
+        Creates a new category.
 
         Args:
             name: Name of the category
             description: Description of the category
             content_links: Content links related to the category
-            created_at: Time of creating the question
 
         Returns:
             If succeeds: The DB id of the created category
+            If not: None
         """
-        return self.survey_repository.create_category(name, description, content_links, created_at)
+        return self.survey_repository.create_category(name, description, content_links)
 
-    def update_category(self, category_id: str, name: str, description: str, content_links: list, updated: datetime):
-        return self.survey_repository.update_category(category_id, name, description, content_links, updated)
+    def update_category(self, category_id: str, name: str, description: str, content_links: list):
+        """
+        Updates category information.
 
+        Args:
+            category_id: database if of the category to be updated
+            name: New name of the category
+            description: New description of the category
+            content_links: New content links related to the category
+
+        Returns:
+            If succeeds: The DB id of the created category
+            If not: False
+        """
+        return self.survey_repository.update_category(category_id, name, description, content_links)
 
     def delete_category(self, category_id: str):
         """
         Deletes category from the repository
 
         Args:
-            category_id: Db id of theh category
+            category_id: Db id of the category
 
         Returns:
             If succeeds: True
-            If not: False
+            If not: Database exception
         """
 
         return self.survey_repository.delete_category(category_id)
+
 
 survey_service = SurveyService(SurveyRepository())

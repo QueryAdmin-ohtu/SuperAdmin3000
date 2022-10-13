@@ -217,31 +217,101 @@ class TestSurveyRepository(unittest.TestCase):
         name = "name"
         description = "description"
         content_links = '[{"url":"https://www.eficode.com/cases/hansen","type":"Case Study"},{"url":"https://www.eficode.com/cases/basware","type":"Case Study"}]'
-        createdAt = datetime.now()
 
         with self.app.app_context():
             response = self.repo.create_category(
                 "name",
                 "description",
-                content_links,
-                createdAt)
+                content_links)
 
         self.assertGreater(response, 0)
 
-    def test_create_survey_with_invalid_data_returns_none(self):
-
+    def test_create_category_with_invalid_data_returns_none(self):
         with self.app.app_context():
             response = self.repo.create_category(
                 None,
                 "description",
-                "content_links",
-                datetime.now())
+                "content_links")
 
         self.assertIsNone(response)
 
     def test_get_all_categories_returns_multiple_categories(self):
-
         with self.app.app_context():
             response = self.repo.get_all_categories()
 
         self.assertGreater(len(response), 2)
+
+
+    def test_update_category_with_valid_data_returns_id(self):
+        with self.app.app_context():
+            categories=self.repo.get_all_categories()
+            category_id=categories[0][0]
+            name = "name"
+            description = "description"
+            content_links = '[{"url":"https://www.eficode.com/cases/hansen","type":"Case Study"},{"url":"https://www.eficode.com/cases/basware","type":"Case Study"}]'
+            response = self.repo.update_category(
+                category_id,
+                "name",
+                "description",
+                content_links)
+
+        self.assertGreaterEqual(response,0)
+
+    def test_update_category_with_invalid_data_returns_False(self):
+        with self.app.app_context():
+            category_id=-1
+            name = "name"
+            description = "description"
+            content_links = '[{"url":"https://www.eficode.com/cases/hansen","type":"Case Study"},{"url":"https://www.eficode.com/cases/basware","type":"Case Study"}]'
+            response = self.repo.update_category(
+                category_id,
+                "name",
+                "description",
+                content_links)
+        self.assertFalse(response)
+
+        with self.app.app_context():
+            category_id=2.5
+            name = "name"
+            description = "description"
+            content_links = '[{"url":"https://www.eficode.com/cases/hansen","type":"Case Study"},{"url":"https://www.eficode.com/cases/basware","type":"Case Study"}]'
+            response = self.repo.update_category(
+                category_id,
+                "name",
+                "description",
+                content_links)
+        self.assertFalse(response)
+
+        with self.app.app_context():
+            categories=self.repo.get_all_categories()
+            category_id=categories[0][0]
+            name = "name"
+            description = "description"
+            content_links = 'abc'
+            response = self.repo.update_category(
+                category_id,
+                "name",
+                "description",
+                content_links)
+        self.assertFalse(response)
+
+        with self.app.app_context():
+            categories=self.repo.get_all_categories()
+            category_id=categories[0][0]
+            name = "name"
+            description = "description"
+            content_links = [{"url":"https://www.eficode.com/cases/hansen","type":"Case Study"},{"url":"https://www.eficode.com/cases/basware","type":"Case Study"}]
+            response = self.repo.update_category(
+                category_id,
+                "name",
+                "description",
+                content_links)
+        self.assertFalse(response)
+    
+    def test_delete_category_deletes_existing_category(self):
+        with self.app.app_context():
+            categories=self.repo.get_all_categories()
+            category_id=categories[0][0]
+            self.repo.delete_category(category_id)
+            response = self.repo.get_category(category_id)
+        self.assertFalse(response)

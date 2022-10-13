@@ -1,4 +1,3 @@
-from datetime import time
 from sqlalchemy import exc
 
 from db import db
@@ -209,12 +208,14 @@ class SurveyRepository:
         return categories
 
     def get_category(self, category_id):
-        """ Looks up category based on 
-        id and returns its data in a list"""
+        """ Looks up category based on
+        id and returns its data in a list.
+        Return False if category is not found."""
         sql = """ SELECT * FROM "Categories" WHERE id=:id """
-        category = self.db_connection.session.execute(
-            sql, {"id": category_id}).fetchone()
-        if not category:
+        try:
+            category = self.db_connection.session.execute(
+                sql, {"id": category_id}).fetchone()
+        except exc.SQLAlchemyError:
             return False
         return category
 
@@ -298,12 +299,13 @@ class SurveyRepository:
             sql, {"question_id": question_id}).fetchone()
         return question
 
-    def create_category(self, name: str, description: str, content_links: list, created: time):
-        """ Inserts a new category to table Categories based
-        and returns Id.
+    def create_category(self, name: str, description: str, content_links: list):
+        """ Inserts a new category to database table Categories.
 
         Returns:
-            Id of the new category. """
+            Id of the new category if succesfull.
+            None if not succesfull """
+
         sql = """
         INSERT INTO "Categories"
         ("name", "description", "content_links", "createdAt","updatedAt")
@@ -313,55 +315,60 @@ class SurveyRepository:
             "name": name,
             "description": description,
             "content_links": content_links,
-            "createdAt": created,
-            "updatedAt": created
+            "createdAt": "NOW()",
+            "updatedAt": "NOW()"
         }
         try:
             category_id = self.db_connection.session.execute(
                 sql, values).fetchone()
             self.db_connection.session.commit()
-        except exc.SQLAlchemyError as exception:
-            print("meni erroriin", exception, flush=True)
-            print("-----------------------------------------------------------")
+        except exc.SQLAlchemyError:
             return None
         return category_id[0]
 
     def get_question_answers(self, question_id):
         """ Gets the id:s, texts and points from the answers of
         the question determined by the question_id given """
+
         sql = """ SELECT id, text, points FROM "Question_answers"
         WHERE "questionId"=:question_id """
         answers = self.db_connection.session.execute(
             sql, {"question_id": question_id}).fetchall()
         return answers
 
-    def update_category(self, category_id, name, description, content_links, updated):
-        sql = """ UPDATE "Categories" SET "name"=:name, "description"=:description, 
+    def update_category(self, category_id: str, name: str, description: str, content_links: list):
+        """ Updates category in the database.
+        If succesfull returns category_id."""
+
+        sql = """ UPDATE "Categories" SET "name"=:name, "description"=:description,
         "content_links"=:content_links, "updatedAt"=:updated 
         WHERE id=:category_id RETURNING id"""
 
         values = {"category_id": category_id, "name": name, "description": description,
-                  "content_links": content_links, "updated": updated}
+                  "content_links": content_links, "updated": "NOW()"}
+
         try:
             updated = self.db_connection.session.execute(
                 sql, values).fetchone()
             self.db_connection.session.commit()
-        except exc.SQLAlchemyError as exception:
+        except exc.SQLAlchemyError:
             return False
         if updated is not None:
             return updated[0]
         return None
 
-    def delete_category(self, category_id):
+    def delete_category(self, category_id: str):
         """ Deletes a category from the database
-        based on the category_id. """
-        check=self.get_category(category_id)
-        if check:
-            try:
-                sql = """ DELETE FROM "Categories" WHERE id=:category_id """
-                self.db_connection.session.execute(sql, {"category_id": category_id})
-                self.db_connection.session.commit()
-            except exc.SQLAlchemyError as exception:
-                print("exception", exception, flush=True)
-                return exception
+        based on the category_id. Returns True if successful. """
+
+        category_exists = self.get_category(category_id)
+        if not category_exists:
+            return False
+        try:
+            sql = """ DELETE FROM "Categories" WHERE id=:category_id """
+            self.db_connection.session.execute(
+                sql, {"category_id": category_id})
+            self.db_connection.session.commit()
+        except exc.SQLAlchemyError as exception:
+            return exception
         return True
