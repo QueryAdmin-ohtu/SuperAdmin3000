@@ -134,12 +134,12 @@ def add_question():
     text = request.form["text"]
     survey_id = request.form["survey_id"]
     question_id = request.form["question_id"]
-    time = datetime.now()
+
     if request.form["edit"]:
         survey_service.update_question(
-            question_id, text, category_weights, time)
+            question_id, text, category_weights)
     else:
-        survey_service.create_question(text, survey_id, category_weights, time)
+        survey_service.create_question(text, survey_id, category_weights)
     return redirect(f"/surveys/{survey_id}")
 
 
@@ -153,7 +153,6 @@ def add_answer():
         abort(400, 'Invalid CSRF token.')
 
     question_id = request.form["question_id"]
-    time = datetime.now()
 
     if not question_id:
         text = request.form["text"]
@@ -164,7 +163,7 @@ def add_answer():
                 categories, request.form)
         except ValueError:
             return "Invalid weights"
-        question_id = survey_service.create_question(text, survey_id, category_weights, time)
+        question_id = survey_service.create_question(text, survey_id, category_weights)
 
     answer_text = request.form["answer_text"]
     points = request.form["points"]
@@ -174,7 +173,7 @@ def add_answer():
         points = float(points)
     except ValueError:
         return "Invalid points"
-    survey_service.create_answer(answer_text, points, question_id, time)
+    survey_service.create_answer(answer_text, points, question_id)
     return redirect(f"/questions/{question_id}")
 
 

@@ -25,18 +25,16 @@ class SurveyRepository:
 
         return False
 
-    def create_survey(self, name, title, survey, created):
+    def create_survey(self, name, title, survey):
         """ Inserts a survey to table Surveys based
         on given parameters and returns the id """
         sql = """
         INSERT INTO "Surveys"
         (name,"createdAt","updatedAt",title_text,survey_text)
-        VALUES (:name, :createdAt, :updatedAt, :title_text, :survey_text)
+        VALUES (:name, NOW(), NOW(), :title_text, :survey_text)
         RETURNING id """
         values = {
             "name": name,
-            "createdAt": created,
-            "updatedAt": created,
             "title_text": title,
             "survey_text": survey
         }
@@ -50,7 +48,7 @@ class SurveyRepository:
 
         return survey_id[0]
 
-    def create_question(self, text, survey_id, category_weights, created):
+    def create_question(self, text, survey_id, category_weights):
         """ Inserts a new question to table Questions based
         on given parameters.
 
@@ -59,20 +57,18 @@ class SurveyRepository:
         sql = """
         INSERT INTO "Questions"
         ("text", "surveyId", "category_weights", "createdAt","updatedAt")
-        VALUES (:text, :survey_id, :category_weights, :createdAt, :updatedAt)
+        VALUES (:text, :survey_id, :category_weights, NOW(), NOW())
         RETURNING id """
         values = {
             "text": text,
             "survey_id": survey_id,
-            "category_weights": category_weights,
-            "createdAt": created,
-            "updatedAt": created
+            "category_weights": category_weights
         }
         question_id = db.session.execute(sql, values).fetchone()
         db.session.commit()
         return question_id[0]
 
-    def create_answer(self, text, points, question_id, created):
+    def create_answer(self, text, points, question_id):
         """ Inserts a new answer to table Question_answers based
         on given parameters.
 
@@ -81,27 +77,25 @@ class SurveyRepository:
         sql = """
         INSERT INTO "Question_answers"
         ("text", "points", "questionId", "createdAt","updatedAt")
-        VALUES (:text, :points, :question_id, :createdAt, :updatedAt)
+        VALUES (:text, :points, :question_id, NOW(), NOW())
         RETURNING id """
         values = {
             "text": text,
             "points": points,
-            "question_id": question_id,
-            "createdAt": created,
-            "updatedAt": created
+            "question_id": question_id
         }
         answer_id = db.session.execute(sql, values).fetchone()
         db.session.commit()
         return answer_id[0]
 
-    def update_question(self, question_id, text, category_weights, updated):
+    def update_question(self, question_id, text, category_weights):
         """ Updates a question from the table Questions
         based on given parameters. If text nor category
         weights have been changed, nothing will happen
         and False will be returned. Otherwise, changes
         will take place and True is returned """
         original = self.get_question(question_id)
-        sql = """ UPDATE "Questions" SET "updatedAt"=:updated
+        sql = """ UPDATE "Questions" SET "updatedAt"=NOW()
         WHERE id=:question_id """
         sql2 = False
         sql3 = False
@@ -120,7 +114,7 @@ class SurveyRepository:
 
         if sql2 or sql3:
             self.db_connection.session.execute(
-                sql, {"updated": updated, "question_id": question_id})
+                sql, {"question_id": question_id})
             self.db_connection.session.commit()
 
         return sql2 or sql3
@@ -308,7 +302,7 @@ class SurveyRepository:
             sql, {"question_id": question_id}).fetchone()
         return question
 
-    def create_category(self, name: str, description: str, content_links: list, created: time):
+    def create_category(self, name: str, description: str, content_links: list):
         """ Inserts a new category to table Categories based
         and returns Id.
 
@@ -317,14 +311,12 @@ class SurveyRepository:
         sql = """
         INSERT INTO "Categories"
         ("name", "description", "content_links", "createdAt","updatedAt")
-        VALUES (:name, :description, :content_links, :createdAt, :updatedAt)
+        VALUES (:name, :description, :content_links, NOW(), NOW())
         RETURNING id """
         values = {
             "name": name,
             "description": description,
-            "content_links": content_links,
-            "createdAt": created,
-            "updatedAt": created
+            "content_links": content_links
         }
         try:
             category_id = self.db_connection.session.execute(
