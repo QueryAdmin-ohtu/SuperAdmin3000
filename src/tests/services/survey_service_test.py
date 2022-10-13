@@ -193,3 +193,10 @@ class TestSurveyService(unittest.TestCase):
         check = self.survey_service.delete_category(category_id)
         self.assertEqual(check, 1)
         self.repo_mock.delete_category.assert_called_with(category_id)
+
+    def test_get_category_calls_repo_correctly(self):
+        self.repo_mock.get_category.return_value = 1
+        category_id=0
+        check = self.survey_service.get_category(category_id)
+        self.assertEqual(check, 1)
+        self.repo_mock.get_category.assert_called_with(category_id)

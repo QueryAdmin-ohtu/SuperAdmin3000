@@ -382,5 +382,5 @@ class SurveyRepository:
                 sql, {"category_id": category_id})
             self.db_connection.session.commit()
         except exc.SQLAlchemyError as exception:
-            return exception
+            raise exception
         return True

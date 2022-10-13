@@ -1,3 +1,4 @@
+from ast import excepthandler
 import unittest
 
 from repositories.survey_repository import SurveyRepository
@@ -317,8 +318,15 @@ class TestSurveyRepository(unittest.TestCase):
     
     def test_delete_category_deletes_existing_category(self):
         with self.app.app_context():
-            categories=self.repo.get_all_categories()
+            categories = self.repo.get_all_categories()
             category_id=categories[0][0]
-            self.repo.delete_category(category_id)
-            response = self.repo.get_category(category_id)
-        self.assertFalse(response)
+            response1 = self.repo.delete_category(category_id)
+            self.assertTrue(response1)
+            response2 = self.repo.get_category(category_id)
+            self.assertFalse(response2)
+
+    def test_delete_category_with_invalid_arguments(self):
+        with self.app.app_context():
+            with self.assertRaises(Exception):
+                self.repo.delete_category()
+                 
