@@ -189,7 +189,7 @@ class TestSurveyRepository(unittest.TestCase):
             response_get_deleted = self.repo.get_question_answers(question_id)
 
         self.assertTrue(response_delete)
-        self.assertEqual(len(response_get_deleted),4)
+        self.assertEqual(len(response_get_deleted), 4)
 
     def test_update_question_updates_question(self):
 

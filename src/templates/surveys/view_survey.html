@@ -18,7 +18,33 @@
 </div>
 <div>
     <div class="block p-6 rounded-lg shadow-lg bg-white max-w-4/5">
-        <h2 class="py-6">Questions</h2>
+        <h2 class="py-6">Survey categories</h2>
+        <div class="pb-6">
+            {{ components.link_button("Add category", "/edit_category/%s/new" % survey[0]) }}
+            <br>
+        </div>
+        {% if categories %}
+        <div>
+            {% for category in categories %}
+            {{category[1]}}: {{category[2]}}
+            {{ components.link_button("Edit", "/edit_category/%s/%s" %(survey[0],category[0])) }}
+            <form id="delete" class="m-1" onsubmit="return confirm('Are you sure you want to delete this category?')" action="/delete_category" method="POST">
+                <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
+                <input type="hidden" name="category_id" value="{{ category[0] }}">
+                <input type="hidden" name="survey_id" value="{{ survey_id }}">
+                {{ components.form_button("Delete", "delete", "delete", "destructive") }}
+            </form>
+            <br>
+            <hr>
+            {% endfor %}
+            {% else %}
+            <p>Survey has no categories 🥺</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="block p-6 rounded-lg shadow-lg bg-white max-w-4/5">
+        <h2 class="py-6">Survey questions</h2>
         <div class="pb-6">
             {{ components.link_button("Add question", "/%s/new_question" % survey[0]) }}
             <br>

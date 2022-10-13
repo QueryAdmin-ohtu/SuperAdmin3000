@@ -175,7 +175,8 @@ class TestSurveyService(unittest.TestCase):
         self.repo_mock.create_category.return_value = 1
         name = "name"
         description = "description"
-        content_links = [{"url":"https://www.eficode.com/cases/hansen","type":"Case Study"},{"url":"https://www.eficode.com/cases/basware","type":"Case Study"}]
+        content_links = [{"url": "https://www.eficode.com/cases/hansen", "type": "Case Study"},
+                         {"url": "https://www.eficode.com/cases/basware", "type": "Case Study"}]
         created_at = datetime(2022, 10, 6)
         check = self.survey_service.create_category(
             name, description, content_links, created_at)

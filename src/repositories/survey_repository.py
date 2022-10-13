@@ -208,6 +208,16 @@ class SurveyRepository:
 
         return categories
 
+    def get_category(self, category_id):
+        """ Looks up category based on 
+        id and returns its data in a list"""
+        sql = """ SELECT * FROM "Categories" WHERE id=:id """
+        category = self.db_connection.session.execute(
+            sql, {"id": category_id}).fetchone()
+        if not category:
+            return False
+        return category
+
     def delete_question_from_survey(self, question_id):
         """ Deletes a question in a given survey
 
@@ -298,7 +308,7 @@ class SurveyRepository:
         INSERT INTO "Categories"
         ("name", "description", "content_links", "createdAt","updatedAt")
         VALUES (:name, :description, :content_links, :createdAt, :updatedAt)
-        RETURNING id """
+        RETURNING "id" """
         values = {
             "name": name,
             "description": description,
@@ -310,11 +320,13 @@ class SurveyRepository:
             category_id = self.db_connection.session.execute(
                 sql, values).fetchone()
             self.db_connection.session.commit()
-        except exc.SQLAlchemyError:
+        except exc.SQLAlchemyError as exception:
+            print("meni erroriin", exception, flush=True)
+            print("-----------------------------------------------------------")
             return None
         return category_id[0]
-    
-    def get_question_answers(self,question_id):
+
+    def get_question_answers(self, question_id):
         """ Gets the id:s, texts and points from the answers of
         the question determined by the question_id given """
         sql = """ SELECT id, text, points FROM "Question_answers"
@@ -322,3 +334,34 @@ class SurveyRepository:
         answers = self.db_connection.session.execute(
             sql, {"question_id": question_id}).fetchall()
         return answers
+
+    def update_category(self, category_id, name, description, content_links, updated):
+        sql = """ UPDATE "Categories" SET "name"=:name, "description"=:description, 
+        "content_links"=:content_links, "updatedAt"=:updated 
+        WHERE id=:category_id RETURNING id"""
+
+        values = {"category_id": category_id, "name": name, "description": description,
+                  "content_links": content_links, "updated": updated}
+        try:
+            updated = self.db_connection.session.execute(
+                sql, values).fetchone()
+            self.db_connection.session.commit()
+        except exc.SQLAlchemyError as exception:
+            return False
+        if updated is not None:
+            return updated[0]
+        return None
+
+    def delete_category(self, category_id):
+        """ Deletes a category from the database
+        based on the category_id. """
+        check=self.get_category(category_id)
+        if check:
+            try:
+                sql = """ DELETE FROM "Categories" WHERE id=:category_id """
+                self.db_connection.session.execute(sql, {"category_id": category_id})
+                self.db_connection.session.commit()
+            except exc.SQLAlchemyError as exception:
+                print("exception", exception, flush=True)
+                return exception
+        return True

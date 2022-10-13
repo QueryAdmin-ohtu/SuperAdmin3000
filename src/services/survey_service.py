@@ -164,6 +164,20 @@ class SurveyService:
 
         return self.survey_repository.get_all_categories()
 
+    def get_category(self, category_id: str):
+        """
+        Returns category from the repository
+
+        Args:
+            category_id: Db id of category
+
+        Returns:
+            If succeeds: Survey
+            Not found: False
+        """
+
+        return self.survey_repository.get_category(category_id)
+
     def create_question(self, text: str, survey_id: int, category_weights: str, time: datetime):
         """
         Creates a new questions with given information.
@@ -223,8 +237,8 @@ class SurveyService:
         """Gets the id:s, texts and points of the answers
         from the question specified by the id given """
         return self.survey_repository.get_question_answers(question_id)
-    
-    def create_category(self, name: str, description: str, content_links: list, created_at:datetime):
+
+    def create_category(self, name: str, description: str, content_links: list, created_at: datetime):
         """
         Creates a new category with given information.
 
@@ -239,6 +253,22 @@ class SurveyService:
         """
         return self.survey_repository.create_category(name, description, content_links, created_at)
 
+    def update_category(self, category_id: str, name: str, description: str, content_links: list, updated: datetime):
+        return self.survey_repository.update_category(category_id, name, description, content_links, updated)
 
+
+    def delete_category(self, category_id: str):
+        """
+        Deletes category from the repository
+
+        Args:
+            category_id: Db id of theh category
+
+        Returns:
+            If succeeds: True
+            If not: False
+        """
+
+        return self.survey_repository.delete_category(category_id)
 
 survey_service = SurveyService(SurveyRepository())
