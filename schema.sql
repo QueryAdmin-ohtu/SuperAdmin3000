@@ -457,6 +457,7 @@ ALTER TABLE ONLY public."User_answers" ALTER COLUMN id SET DEFAULT nextval('publ
 ALTER TABLE ONLY public."Users" ALTER COLUMN id SET DEFAULT nextval('public."Users_id_seq"'::regclass);
 
 
+-- INSERTCOMMANDS:
 --
 -- Data for Name: Admins; Type: TABLE DATA; Schema: public; Owner: -
 --
@@ -522,7 +523,7 @@ INSERT INTO public."Industries" VALUES (10, 'Logistics & supply chain', '2022-09
 -- Data for Name: Organizations; Type: TABLE DATA; Schema: public; Owner: -
 --
 
-
+INSERT INTO public."Organizations" VALUES (1, 'Cyberdyne systems', '2022-09-26 14:03:28.604+00', '2022-09-26 14:03:28.604+00');
 
 --
 -- Data for Name: Question_answers; Type: TABLE DATA; Schema: public; Owner: -
@@ -588,7 +589,7 @@ INSERT INTO public."Survey_results" VALUES (3, 1, 'Dynamically fetched result te
 -- Data for Name: Survey_user_groups; Type: TABLE DATA; Schema: public; Owner: -
 --
 
-
+INSERT INTO public."Survey_user_groups" VALUES ('a81bc81b-dead-4e5d-abff-90865d1e13b2', 'The Cyberdyne Power Admins', 1, 1, '2022-09-26 14:03:28.609+00', '2022-09-26 14:03:28.609+00');
 
 --
 -- Data for Name: Surveys; Type: TABLE DATA; Schema: public; Owner: -
@@ -604,10 +605,15 @@ INSERT INTO public."Surveys" VALUES (3, 'Paras ohjelmointikieli', '2022-09-30 06
 --
 
 
-
+INSERT INTO public."User_answers" VALUES (1, 1, 1,  '2022-09-20 12:28:09.613+00', '2022-09-20 12:28:09.613+00', 1);
+    
 --
 -- Data for Name: Users; Type: TABLE DATA; Schema: public; Owner: -
 --
+
+
+
+INSERT INTO public."Users" VALUES (1, 'super@admin3k.com', 'a81bc81b-dead-4e5d-abff-90865d1e13b2', 1, '2022-09-20 12:28:09.613+00', '2022-09-20 12:28:09.613+00');
 
 
 
