@@ -314,3 +314,25 @@ class SurveyRepository:
         answers = self.db_connection.session.execute(
             sql, {"question_id": question_id}).fetchall()
         return answers
+    
+    def add_admin(self, email: str):
+        """ Inserts a new admin to the Admin table
+        
+        Returns:
+            Id of the new admin """
+        
+        sql = """
+        INSERT INTO "Admins" 
+            ("email")
+        VALUES 
+            (:email) 
+        RETURNING id
+        """
+        values = {"email": email}
+        try:
+            admin_id = self.db_connection.session.execute(
+                sql, values).fetchone()
+            self.db_connection.session.commit()
+        except exc.SQLAlchemyError:
+            return None
+        return admin_id[0]
