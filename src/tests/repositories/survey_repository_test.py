@@ -246,3 +246,10 @@ class TestSurveyRepository(unittest.TestCase):
             response = self.repo.add_admin("test@email.com")
         
         self.assertEqual(response, 9)
+    
+    def test_get_all_admins_returns_multiple_admins(self):
+
+        with self.app.app_context():
+            response = self.repo.get_all_admins()
+        
+        self.assertGreater(len(response), 1)
