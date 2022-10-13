@@ -193,10 +193,9 @@ class TestSurveyRepository(unittest.TestCase):
             text = "Breaking Bad"
             points = 9001
             question_id = 9
-            created = datetime.now()
 
             answer_id = self.repo.create_answer(
-                text, points, question_id, created)
+                text, points, question_id)
 
             response_delete = self.repo.delete_answer_from_question(
                 answer_id)
