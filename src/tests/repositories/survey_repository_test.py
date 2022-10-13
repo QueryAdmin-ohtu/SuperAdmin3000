@@ -1,5 +1,4 @@
 import unittest
-from datetime import datetime
 
 from repositories.survey_repository import SurveyRepository
 
@@ -48,6 +47,22 @@ class TestSurveyRepository(unittest.TestCase):
                 "text")
 
         self.assertIsNone(response)
+
+    def test_survey_with_the_same_name_exists(self):
+        with self.app.app_context():
+            self.repo.create_survey(
+                "MDZS",
+                "Rejoice!",
+                "WWX is dead!"
+            )
+            response = self.repo.survey_exists("mdzs")
+
+            self.assertTrue(response)
+
+    def test_survey_with_the_same_name_doesnt_exist(self):
+        with self.app.app_context():
+            response = self.repo.survey_exists("totally nonexistent survey")
+            self.assertFalse(response)
 
     def test_get_survey_with_valid_id_returns_survey(self):
 
@@ -253,3 +268,4 @@ class TestSurveyRepository(unittest.TestCase):
             response = self.repo.get_all_admins()
         
         self.assertGreater(len(response), 1)
+            
