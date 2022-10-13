@@ -252,7 +252,15 @@ class SurveyService:
                 return self.survey_repository.add_admin(email)
         except UserInputError:
             return None
-
+    
+    def get_all_admins(self):
+        """
+        Fetch all users authorized to use the application
+        
+        Returns:
+            List of tuples with each tuple containing the
+            id and email for each user """
+        return self.survey_repository.get_all_admins()
 
 
 survey_service = SurveyService(SurveyRepository())
