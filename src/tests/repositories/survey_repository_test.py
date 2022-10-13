@@ -319,7 +319,7 @@ class TestSurveyRepository(unittest.TestCase):
     def test_delete_category_deletes_existing_category(self):
         with self.app.app_context():
             categories = self.repo.get_all_categories()
-            category_id=categories[0][0]
+            category_id=categories[-1][0]
             response1 = self.repo.delete_category(category_id)
             self.assertTrue(response1)
             response2 = self.repo.get_category(category_id)
@@ -327,6 +327,7 @@ class TestSurveyRepository(unittest.TestCase):
 
     def test_delete_category_with_invalid_arguments(self):
         with self.app.app_context():
-            with self.assertRaises(Exception):
-                self.repo.delete_category()
+            response = self.repo.delete_category('abc')
+            self.assertFalse(response)
+
                  

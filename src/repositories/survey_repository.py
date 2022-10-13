@@ -373,14 +373,14 @@ class SurveyRepository:
         """ Deletes a category from the database
         based on the category_id. Returns True if successful. """
 
-        category_exists = self.get_category(category_id)
-        if not category_exists:
+        category = self.get_category(category_id)
+        if not category:
             return False
         try:
             sql = """ DELETE FROM "Categories" WHERE id=:category_id """
             self.db_connection.session.execute(
                 sql, {"category_id": category_id})
             self.db_connection.session.commit()
-        except exc.SQLAlchemyError as exception:
-            raise exception
+        except exc.SQLAlchemyError:
+            return None
         return True
