@@ -54,8 +54,7 @@ class TestSurveyRepository(unittest.TestCase):
             self.repo.create_survey(
                 "MDZS",
                 "Rejoice!",
-                "WWX is dead!",
-                datetime.now()
+                "WWX is dead!"
             )
             response = self.repo.survey_exists("mdzs")
 
