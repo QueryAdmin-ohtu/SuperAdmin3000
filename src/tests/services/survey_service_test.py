@@ -1,8 +1,5 @@
 import unittest
 from unittest.mock import Mock
-from datetime import datetime
-from freezegun import freeze_time
-#from matplotlib import category
 from services.survey_service import SurveyService, UserInputError
 
 
@@ -27,9 +24,6 @@ class TestSurveyService(unittest.TestCase):
         self.assertFalse(check)
         assert not self.repo_mock.authorized_google_login.called
 
-    # SurveyService assigns the current time to each survey. @freeze_time allows us to set the current
-    # datetime.now() time for tests
-    @freeze_time('2013-04-09')
     def test_create_survey_works_with_proper_arguments(self):
         self.repo_mock.create_survey.return_value = 1
         name = "Marsupial Survey"
@@ -38,7 +32,7 @@ class TestSurveyService(unittest.TestCase):
         check = self.survey_service.create_survey(name, title, description)
         self.assertEqual(check, 1)
         self.repo_mock.create_survey.assert_called_with(
-            name, title, description, datetime(2013, 4, 9))
+            name, title, description)
 
     def test_create_survey_with_no_name_does_not_work(self):
         name = ""
@@ -106,24 +100,22 @@ class TestSurveyService(unittest.TestCase):
         text = "text"
         survey_id = 1
         category_weights = []
-        time = datetime(2022, 10, 6)
         check = self.survey_service.create_question(
-            text, survey_id, category_weights, time)
+            text, survey_id, category_weights)
         self.assertEqual(check, 1)
         self.repo_mock.create_question.assert_called_with(
-            text, survey_id, category_weights, time)
+            text, survey_id, category_weights)
 
     def test_create_answer_calls_repo_correctly(self):
         self.repo_mock.create_answer.return_value = 9
         text = "Breaking Bad"
         question_id = 9
         points = 9001
-        time = datetime(2022, 10, 6)
         check = self.survey_service.create_answer(
-            text, points, question_id, time)
+            text, points, question_id)
         self.assertEqual(check, 9)
         self.repo_mock.create_answer.assert_called_with(
-            text, points, question_id, time)
+            text, points, question_id)
 
     def test_edit_survey_with_no_name_does_not_work(self):
         name = ""
@@ -164,21 +156,19 @@ class TestSurveyService(unittest.TestCase):
         text = "change"
         question_id = 6
         category_weights = []
-        time = datetime(2022, 10, 6)
         check = self.survey_service.update_question(
-            question_id, text, category_weights, time)
+            question_id, text, category_weights)
         self.assertEqual(check, 1)
         self.repo_mock.update_question.assert_called_with(
-            question_id, text, category_weights, time)
+            question_id, text, category_weights)
 
     def test_create_category_calls_repo_correctly(self):
         self.repo_mock.create_category.return_value = 1
         name = "name"
         description = "description"
         content_links = [{"url":"https://www.eficode.com/cases/hansen","type":"Case Study"},{"url":"https://www.eficode.com/cases/basware","type":"Case Study"}]
-        created_at = datetime(2022, 10, 6)
         check = self.survey_service.create_category(
-            name, description, content_links, created_at)
+            name, description, content_links)
         self.assertEqual(check, 1)
         self.repo_mock.create_category.assert_called_with(
-            name, description, content_links, created_at)
+            name, description, content_links)
