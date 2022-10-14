@@ -1,0 +1,37 @@
+{% extends "layout.html" %}
+{% import "components.html" as components %}
+{% block content %}
+
+<h1>Edit Category</h1>
+<form action="/edit_category" method="POST">
+    <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
+    <input type="hidden" name="survey_id" id="survey_id" value={{survey_id}}>
+    <input type="hidden" name="category_id" id="category_id" value={{category_id}}>
+    <input type="hidden" name="edit" id="edit" value="{{ edit }}">
+    <input type="hidden" name="stay" id="stay"></input>
+    <container class="flex flex-col gap-4">
+        <input type="submit" value="Submit">
+        <h3>Name</h3>
+        <textarea name="name" oninvalid="alert('Must have a name');" required>{{name}}</textarea>
+        <h3>Description</h3>
+        <textarea name="description" oninvalid="alert('Must have a description');" required>{{description}}</textarea>
+        <h3>Add new content link</h3>
+        URL:
+        <textarea name="new_url" rows="1" cols="100" style="border:solid 1px black"></textarea>
+        Type:
+        <textarea name="new_type" rows="1" cols="50" style="border:solid 1px black" ></textarea>
+        <button onclick="stayOnPage()" type="submit" formaction="/edit_category">Add</button>
+        <h3>Edit existing content links</h3>
+        <div>
+            {% for content in content_links %}
+            URL<br>
+            <textarea name="url_{{ loop.index0 }}" rows="1" cols="100" style="border:solid 1px black">{{ content['url'] }}</textarea> <br>
+            Type<br>  <textarea name="type_{{ loop.index0 }}" rows="1" cols="50" style="border:solid 1px black">{{ content['type'] }}</textarea> <br>
+            <br>
+            <hr>
+            {% endfor %}
+        </div>
+    </container>
+</form>
+{% endblock %}
+

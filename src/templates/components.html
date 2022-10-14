@@ -7,7 +7,7 @@
             2: Question count
             3: Submissions count
 #}
-<div id="survey-{{ survey[0] }}" style="cursor: pointer;" onclick="location.href='/surveys/{{ survey[0] }}';"
+<div name="test" id="survey-{{ survey[0] }}" style="cursor: pointer;" onclick="location.href='/surveys/{{ survey[0] }}';"
     class="flex-col max-w-full bg-white p-4 gap-2 rounded-lg border border-slate-300 hover:border-slate-400 hover:shadow-sm transition">
     <h3 class="text-gray-900 leading-tight">{{survey[1]}}</h3>
     <p class="text-slate-600 font-mono text-sm font-medium">id: {{ survey[0] }}</p>
@@ -17,7 +17,7 @@
 </div>
 {% endmacro %}
 
-{% macro link_button(text, href, type = "default") %}
+{% macro link_button(text, href, type = "default", id=None) %}
 {# Creates a button shaped link
     Args:
         text: Text to display on button
@@ -35,12 +35,12 @@
 {% endif %}
 
 <a href="{{ href }}"
-    class="p-2 block rounded w-fit h-fit {{ bg }} text-sm text-white font-medium leading-tight uppercase hover:{{ bg_hover }} focus:{{ bg_hover }} focus:outline-none focus:ring-0 transition duration-150 ease-in-out">
+    id={{id}} class="p-2 block rounded w-fit h-fit {{ bg }} text-sm text-white font-medium leading-tight uppercase hover:{{ bg_hover }} focus:{{ bg_hover }} focus:outline-none focus:ring-0 transition duration-150 ease-in-out">
     {{ text }}
 </a>
 {% endmacro %}
 
-{% macro form_button(text, name, value, type = "default") %}
+{% macro form_button(text, name, value, type = "default", id=None) %}
 {# Creates a form button that submits
     Args:
         text: Text to display on button
@@ -56,7 +56,7 @@
 {% set bg_hover = "bg-red-700" %}
 {% endif %}
 <button
-    class="{{ bg }} hover:{{ bg_hover }} p-2 block rounded w-fit h-fit text-sm text-white font-medium leading-tight uppercase focus:{{ bg_hover }} focus:outline-none focus:ring-0 transition duration-150 ease-in-out"
+    id={{id}} class="{{ bg }} hover:{{ bg_hover }} p-2 block rounded w-fit h-fit text-sm text-white font-medium leading-tight uppercase focus:{{ bg_hover }} focus:outline-none focus:ring-0 transition duration-150 ease-in-out"
     name="{{ name }}" value="{{ value }}">
     {{ text }}
 </button>
