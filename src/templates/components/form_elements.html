@@ -31,17 +31,33 @@
 
 {% endmacro %}
 
-{% macro submit_button(button_text) %}
+{% macro number_input(name, label_text, placeholder, is_required, min, max, step, value = "") %}
+
+{% call field_wrapper_and_label(name, label_text) %}
+<input type="number" value="{{ value }}" name="{{ name }}" id="weight" min="{{ min }}" max="{{ max }}" step="{{ step }}" placeholder="{{ placeholder }}"
+    class="font-mono bg-white border border-slate-300 text-gray-900 text-sm rounded-lg focus:invalid:border-rose-500 focus:ring-sky-500 focus:border-sky-500 block w-full p-2">
+{% endcall %}
+
+{% endmacro %}
+
+{% macro submit_button(button_text, type = "default", formaction = "") %}
+{% set bg = "sky-500" %}
+{% set bg_hover = "sky-700" %}
+
+{% if type == "destructive" %}
+{% set bg = "rose-500" %}
+{% set bg_hover = "rose-700" %}
+{% endif %}
 <button
-    class="bg-sky-500 hover:bg-sky-600 p-4 rounded w-full h-fit text-lg text-white leading-tight focus:bg-sky-500 focus:ring-sky-500 focus:border-sky-500  transition duration-150 ease-in-out"
-    type="submit" value="{{ button_text }}">
+    class="bg-{{ bg }} hover:bg-{{ bg_hover }} p-4 rounded w-full h-fit text-lg text-white leading-tight focus:ring-{{ bg }} focus:border-{{ bg }} transition duration-150 ease-in-out"
+    type="submit" value="{{ button_text }}" name="submit" formaction="{{ formaction }}">
     {{ button_text }}
 </button>
 {% endmacro %}
 
 {% macro field_wrapper_and_label(name, label_text) %}
 <div class="flex flex-col gap-2 w-full">
-    <label for="{{ name }}" class="text-gray-700 text-sm font-bold">{{ label_text }}</label>
+    <label for="{{ name }}" class="text-gray-700 text-sm font-bold w-max">{{ label_text }}</label>
     {{ caller() }}
 </div>
 {% endmacro %}

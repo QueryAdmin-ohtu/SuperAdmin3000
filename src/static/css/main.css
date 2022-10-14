@@ -624,8 +624,16 @@ p {
   }
 }
 
-.col-span-2 {
-  grid-column: span 2 / span 2;
+.absolute {
+  position: absolute;
+}
+
+.relative {
+  position: relative;
+}
+
+.left-1\/2 {
+  left: 50%;
 }
 
 .m-1 {
@@ -637,12 +645,24 @@ p {
   margin-right: auto;
 }
 
+.mb-4 {
+  margin-bottom: 1rem;
+}
+
 .mb-2 {
   margin-bottom: 0.5rem;
 }
 
-.mb-4 {
-  margin-bottom: 1rem;
+.mr-4 {
+  margin-right: 1rem;
+}
+
+.-ml-0\.5 {
+  margin-left: -0.125rem;
+}
+
+.-ml-0 {
+  margin-left: -0px;
 }
 
 .block {
@@ -695,6 +715,10 @@ p {
   height: 3.5rem;
 }
 
+.h-screen {
+  height: 100vh;
+}
+
 .w-full {
   width: 100%;
 }
@@ -705,8 +729,22 @@ p {
   width: fit-content;
 }
 
+.w-max {
+  width: -webkit-max-content;
+  width: -moz-max-content;
+  width: max-content;
+}
+
 .w-96 {
   width: 24rem;
+}
+
+.w-0\.5 {
+  width: 0.125rem;
+}
+
+.w-0 {
+  width: 0px;
 }
 
 .max-w-full {
@@ -715,6 +753,14 @@ p {
 
 .max-w-sm {
   max-width: 24rem;
+}
+
+.flex-shrink {
+  flex-shrink: 1;
+}
+
+.flex-grow {
+  flex-grow: 1;
 }
 
 .grow {
@@ -765,16 +811,12 @@ p {
   gap: 0.5rem;
 }
 
-.gap-1 {
-  gap: 0.25rem;
-}
-
-.gap-8 {
-  gap: 2rem;
-}
-
 .gap-6 {
   gap: 1.5rem;
+}
+
+.gap-1 {
+  gap: 0.25rem;
 }
 
 .space-y-6 > :not([hidden]) ~ :not([hidden]) {
@@ -807,6 +849,10 @@ p {
 
 .border-b {
   border-bottom-width: 1px;
+}
+
+.border-t {
+  border-top-width: 1px;
 }
 
 .border-slate-200 {
@@ -859,16 +905,6 @@ p {
   background-color: rgb(255 255 255 / var(--tw-bg-opacity));
 }
 
-.bg-blue-600 {
-  --tw-bg-opacity: 1;
-  background-color: rgb(37 99 235 / var(--tw-bg-opacity));
-}
-
-.bg-red-600 {
-  --tw-bg-opacity: 1;
-  background-color: rgb(220 38 38 / var(--tw-bg-opacity));
-}
-
 .bg-gray-50 {
   --tw-bg-opacity: 1;
   background-color: rgb(249 250 251 / var(--tw-bg-opacity));
@@ -877,6 +913,11 @@ p {
 .bg-blue-700 {
   --tw-bg-opacity: 1;
   background-color: rgb(29 78 216 / var(--tw-bg-opacity));
+}
+
+.bg-gray-600 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(75 85 99 / var(--tw-bg-opacity));
 }
 
 .p-4 {
@@ -923,6 +964,11 @@ p {
 .px-5 {
   padding-left: 1.25rem;
   padding-right: 1.25rem;
+}
+
+.py-5 {
+  padding-top: 1.25rem;
+  padding-bottom: 1.25rem;
 }
 
 .py-6 {
@@ -1057,14 +1103,14 @@ p {
   border-color: rgb(148 163 184 / var(--tw-border-opacity));
 }
 
-.hover\:bg-sky-600:hover {
+.hover\:bg-sky-700:hover {
   --tw-bg-opacity: 1;
-  background-color: rgb(2 132 199 / var(--tw-bg-opacity));
+  background-color: rgb(3 105 161 / var(--tw-bg-opacity));
 }
 
-.hover\:bg-blue-700:hover {
+.hover\:bg-rose-700:hover {
   --tw-bg-opacity: 1;
-  background-color: rgb(29 78 216 / var(--tw-bg-opacity));
+  background-color: rgb(190 18 60 / var(--tw-bg-opacity));
 }
 
 .hover\:bg-blue-800:hover {
@@ -1098,14 +1144,14 @@ p {
   border-color: rgb(59 130 246 / var(--tw-border-opacity));
 }
 
-.focus\:bg-sky-500:focus {
+.focus\:bg-sky-700:focus {
   --tw-bg-opacity: 1;
-  background-color: rgb(14 165 233 / var(--tw-bg-opacity));
+  background-color: rgb(3 105 161 / var(--tw-bg-opacity));
 }
 
-.focus\:bg-blue-700:focus {
+.focus\:bg-rose-700:focus {
   --tw-bg-opacity: 1;
-  background-color: rgb(29 78 216 / var(--tw-bg-opacity));
+  background-color: rgb(190 18 60 / var(--tw-bg-opacity));
 }
 
 .focus\:outline-none:focus {
@@ -1145,9 +1191,14 @@ p {
   border-color: rgb(244 63 94 / var(--tw-border-opacity));
 }
 
-.active\:bg-blue-800:active {
+.active\:bg-sky-800:active {
   --tw-bg-opacity: 1;
-  background-color: rgb(30 64 175 / var(--tw-bg-opacity));
+  background-color: rgb(7 89 133 / var(--tw-bg-opacity));
+}
+
+.active\:bg-rose-800:active {
+  --tw-bg-opacity: 1;
+  background-color: rgb(159 18 57 / var(--tw-bg-opacity));
 }
 
 @media (prefers-color-scheme: dark) {
@@ -1229,10 +1280,6 @@ p {
 }
 
 @media (min-width: 1024px) {
-  .lg\:order-last {
-    order: 9999;
-  }
-
   .lg\:col-span-2 {
     grid-column: span 2 / span 2;
   }
