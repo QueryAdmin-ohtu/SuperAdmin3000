@@ -119,11 +119,7 @@ class TestSurveyRepository(unittest.TestCase):
 
         self.assertFalse(response)
 
-    def test_get_question_returns_question(self):
-        with self.app.app_context():
-            response = self.repo.get_questions_of_survey(1)
-
-        self.assertGreater(len(response), 2)
+    
 
     def test_get_question_with_invalid_id_returns_none(self):
 
@@ -135,10 +131,17 @@ class TestSurveyRepository(unittest.TestCase):
     def test_delete_survey_deletes_existing_survey(self):
 
         with self.app.app_context():
+            print("RELATED QUESTIONS: ", self.repo.get_questions_of_survey(2))
             self.repo.delete_survey(2)
             response = self.repo.get_survey(2)
-
+            # Delete survey should delete all related questions, results and groups 
+            # Delete question deletes answers is unit tested.
+            # TODO: update test 
+            get_related_questions = self.repo.get_questions_of_survey(2)
+            get_related_survey_results = []
         self.assertFalse(response)
+        self.assertTrue(len(get_related_questions) == 0)
+        self.assertTrue(len(get_related_survey_results) == 0)
 
     def test_create_question_creates_question(self):
 
