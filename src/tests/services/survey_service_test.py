@@ -166,7 +166,8 @@ class TestSurveyService(unittest.TestCase):
         self.repo_mock.create_category.return_value = 1
         name = "name"
         description = "description"
-        content_links = [{"url":"https://www.eficode.com/cases/hansen","type":"Case Study"},{"url":"https://www.eficode.com/cases/basware","type":"Case Study"}]
+        content_links = [{"url": "https://www.eficode.com/cases/hansen", "type": "Case Study"},
+                         {"url": "https://www.eficode.com/cases/basware", "type": "Case Study"}]
         check = self.survey_service.create_category(
             name, description, content_links)
         self.assertEqual(check, 1)
@@ -197,3 +198,30 @@ class TestSurveyService(unittest.TestCase):
             ("1", "jorma@uotinen.net"), 
             ("2", "uotinen@jorma.fi")])
         self.repo_mock.get_all_admins.assert_called()
+
+    def test_update_category_calls_repo_correctly(self):
+        self.repo_mock.update_category.return_value = 1
+        category_id=0
+        name = "name"
+        description = "description"
+        content_links = [{"url": "https://www.eficode.com/cases/hansen", "type": "Case Study"},
+                         {"url": "https://www.eficode.com/cases/basware", "type": "Case Study"}]
+        check = self.survey_service.update_category(
+            category_id, name, description, content_links)
+        self.assertEqual(check, 1)
+        self.repo_mock.update_category.assert_called_with(
+            category_id, name, description, content_links)
+    
+    def test_delete_category_calls_repo_correctly(self):
+        self.repo_mock.delete_category.return_value = 1
+        category_id=0
+        check = self.survey_service.delete_category(category_id)
+        self.assertEqual(check, 1)
+        self.repo_mock.delete_category.assert_called_with(category_id)
+
+    def test_get_category_calls_repo_correctly(self):
+        self.repo_mock.get_category.return_value = 1
+        category_id=0
+        check = self.survey_service.get_category(category_id)
+        self.assertEqual(check, 1)
+        self.repo_mock.get_category.assert_called_with(category_id)
