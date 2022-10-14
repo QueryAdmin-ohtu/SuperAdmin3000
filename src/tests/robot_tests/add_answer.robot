@@ -14,16 +14,16 @@ Delete Existing Answers To Free Up Ids
     Login With Correct Credentials
     Go To Survey  1
     Click Button  EDIT
+    Expand Answer Card  1
     Click Button  Delete answer
-    Handle Alert  Accept
+    Expand Answer Card  1
     Click Button  Delete answer
-    Handle Alert  Accept
+    Expand Answer Card  1
     Click Button  Delete answer
-    Handle Alert  Accept
+    Expand Answer Card  1
     Click Button  Delete answer
-    Handle Alert  Accept
+    Expand Answer Card  1
     Click Button  Delete answer
-    Handle Alert  Accept
 
 Logged In User Can Add Answer To New Question
     Go To Survey  1
@@ -32,16 +32,17 @@ Logged In User Can Add Answer To New Question
     Set Question Text  Why
     Set Category Weight  44
     Add New Answer  Because  22
+    Expand Answer Card  1
     Page Should Contain  Why
-    Page Should Contain  44
+    Textfield Should Contain  cat1  44
     Page Should Contain  Because
-    Page Should Contain  22
-    Page Should Contain  Question answers
+    Textfield Should Contain  points-1  22
 
 Logged In User Can Add Answer While Editing Question
     Go To Survey  1
     Click Button  EDIT
     Add New Answer  Hammer  11
+    Expand Answer Card  1
     Page Should Contain  Hammer
 
 Points Must Be Numbers

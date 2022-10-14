@@ -28,7 +28,7 @@
                             {% endfor %}
                         </div>
                     </fieldset>
-                    {{ form_elements.submit_button("Save changes", "default", "/add_question") }}
+                    {{ form_elements.submit_button("Save changes", "submit", "default", "/add_question") }}
                 </div>
                 {% endcall %}
                 {% for answer in answers %}
@@ -41,7 +41,7 @@
                     <h3 class="text-slate-600">New answer</h3>
                     {{ form_elements.text_area("answer_text", "Answer", "", false) }}
                     {{ form_elements.number_input("points", "Points", "0", false, "-50", "50", "1") }}
-                    {{ form_elements.submit_button("Add answer", "creation", "/add_answer") }}
+                    {{ form_elements.submit_button("Add answer", "submit_answer", "creation", "/add_answer") }}
                 </div>
                 {% endcall %}
             </div>

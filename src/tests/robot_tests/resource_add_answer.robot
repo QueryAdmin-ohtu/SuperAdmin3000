@@ -8,7 +8,7 @@ Set Points
     Input Text  points  ${points}
 
 Submit Answer
-    Click Button  submit_answer
+    Click Button  Add answer
 
 Add New Answer
     [Arguments]  ${text}  ${points}
@@ -18,3 +18,7 @@ Add New Answer
 
 Add Answer Without Arguments
     Submit Answer
+
+Expand Answer Card
+    [Arguments]  ${answer_index}
+    Click Element  id:expandable-answer-${answer_index}
