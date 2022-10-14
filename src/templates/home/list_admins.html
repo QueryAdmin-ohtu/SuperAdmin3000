@@ -4,9 +4,21 @@
     <div class="flex flex-col gap-1">
         <h2>Authorized users</h2>
     </div>
-    <p class="text-gray-700 text-base">
-        Here you can see the authorized users and add new ones!
-    </p>
+    <div class="block p-6 rounded-lg shadow-lg bg-white max-w-4/5 h-full">
+        <p class="text-gray-700 text-base">
+            Add new user here!
+        </p>
+        <br>
+        <form action="/admins/new" method="POST">
+            <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">
+                Email
+            </label>    
+            <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
+            <input type="email" name="email" oninvalid="alert('Must enter a valid email address');" required>
+            <button type="submit" name="submit_email">ADD USER</button>
+        </form>
+    </div>
+    
     <div class="block p-6 rounded-lg shadow-lg bg-white max-w-4/5 h-full">
         <table>
             <thead>
