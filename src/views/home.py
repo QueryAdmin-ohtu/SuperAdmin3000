@@ -115,7 +115,7 @@ def list_admins():
     """ Returns the page with list of admins """
     if not helper.logged_in():
         return redirect("/")
-    
+
     admins = survey_service.get_all_admins()
     return render_template("home/list_admins.html", admins=admins, ENV=app.config["ENV"])
 

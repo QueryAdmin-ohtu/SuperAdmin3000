@@ -152,7 +152,7 @@ class SurveyRepository:
         related to each survey
 
         Returns: List where each item contains the survey
-        id, title, question count and submission count are 
+        id, title, question count and submission count are
         included """
         sql = """
         SELECT
@@ -348,13 +348,13 @@ class SurveyRepository:
         answers = self.db_connection.session.execute(
             sql, {"question_id": question_id}).fetchall()
         return answers
-    
+
     def add_admin(self, email: str):
         """ Inserts a new admin to the Admin table
-        
+
         Returns:
             Id of the new admin """
-        
+
         sql = """
         INSERT INTO "Admins" 
             ("email")
@@ -370,10 +370,10 @@ class SurveyRepository:
         except exc.SQLAlchemyError:
             return None
         return admin_id[0]
-    
+
     def get_all_admins(self):
         """ Fetches all authorized users from the database
-        
+
         Returns:
             List where each item contains a tuple with the id
             and email of the authorized user """
