@@ -47,6 +47,9 @@
 {% if type == "destructive" %}
 {% set bg = "rose-500" %}
 {% set bg_hover = "rose-700" %}
+{% elif type == "creation" %}
+{% set bg = "emerald-500" %}
+{% set bg_hover = "emerald-700" %}
 {% endif %}
 <button
     class="bg-{{ bg }} hover:bg-{{ bg_hover }} p-4 rounded w-full h-fit text-lg text-white leading-tight focus:ring-{{ bg }} focus:border-{{ bg }} transition duration-150 ease-in-out"
@@ -61,3 +64,5 @@
     {{ caller() }}
 </div>
 {% endmacro %}
+
+<div class="hover:bg-emerald-700 bg-emerald-500"></div>
