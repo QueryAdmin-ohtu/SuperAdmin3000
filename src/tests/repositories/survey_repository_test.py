@@ -5,6 +5,9 @@ from repositories.survey_repository import SurveyRepository
 
 from app import create_app
 
+text = "create question test"
+category_weights = '[{"category": "Category 1", "multiplier": 10.0}, {"category": "Category 2", "multiplier": 20.0}]'
+
 
 class TestSurveyRepository(unittest.TestCase):
     def setUp(self):
@@ -119,8 +122,6 @@ class TestSurveyRepository(unittest.TestCase):
 
         self.assertFalse(response)
 
-    
-
     def test_get_question_with_invalid_id_returns_none(self):
 
         with self.app.app_context():
@@ -129,26 +130,39 @@ class TestSurveyRepository(unittest.TestCase):
         self.assertIsNone(response)
 
     def test_delete_survey_deletes_existing_survey(self):
-
         with self.app.app_context():
-            print("RELATED QUESTIONS: ", self.repo.get_questions_of_survey(2))
-            self.repo.delete_survey(2)
-            response = self.repo.get_survey(2)
-            # Delete survey should delete all related questions, results and groups 
-            # Delete question deletes answers is unit tested.
-            # TODO: update test 
-            get_related_questions = self.repo.get_questions_of_survey(2)
-            get_related_survey_results = []
+            survey_id = self.repo.create_survey(
+                "Mock survey with little to no content",
+                "in test def test_delete_survey_deletes_existing_survey(self):",
+                "in survey_repository_test.py")
+            self.assertTrue(self.repo.get_survey(survey_id) != False)
+            self.repo.delete_survey(survey_id)
+            response = self.repo.get_survey(survey_id)
+        self.assertFalse(response)
+
+
+    # TODO: Add functionality to this test as data becomes available.
+    def test_delete_survey_deletes_related_data(self):
+        with self.app.app_context():
+            survey_id = self.repo.create_survey(
+                "Mock survey with little to no content",
+                "in test def test_delete_survey_deletes_existing_survey(self):",
+                "in survey_repository_test.py")
+            self.assertTrue(self.repo.get_survey(survey_id) != False)
+            self.repo.delete_survey(survey_id)
+            response = self.repo.get_survey(survey_id)
+            get_related_questions = self.repo.get_questions_of_survey(survey_id)
+            get_related_survey_results = [] 
         self.assertFalse(response)
         self.assertTrue(len(get_related_questions) == 0)
         self.assertTrue(len(get_related_survey_results) == 0)
 
+
     def test_create_question_creates_question(self):
 
         with self.app.app_context():
-            text = "create question test"
+            
             survey_id = 1
-            category_weights = '[{"category": "Category 1", "multiplier": 10.0}, {"category": "Category 2", "multiplier": 20.0}]'
 
             question_id = self.repo.create_question(
                 text, survey_id, category_weights)
@@ -160,9 +174,7 @@ class TestSurveyRepository(unittest.TestCase):
     def test_delete_question_from_survey_deletes_question(self):
         
         with self.app.app_context():
-            text = "create question test"
             survey_id = 1
-            category_weights = '[{"category": "Category 1", "multiplier": 10.0}, {"category": "Category 2", "multiplier": 20.0}]'
 
             question_id = self.repo.create_question(
                 text, survey_id, category_weights)
@@ -177,9 +189,7 @@ class TestSurveyRepository(unittest.TestCase):
     def test_delete_question_from_survey_deletes_question_answers(self):
         
         with self.app.app_context():
-            text = "Answer deletion test"
             survey_id = 1
-            category_weights = '[{"category": "Category 1", "multiplier": 10.0}, {"category": "Category 2", "multiplier": 20.0}]'
 
             question_id = self.repo.create_question(
                 text, survey_id, category_weights)
@@ -187,15 +197,11 @@ class TestSurveyRepository(unittest.TestCase):
             for i in range(10):
                 self.repo.create_answer("Test answer " + str(i), points=i*10, question_id=question_id)   
             self.assertTrue(len(self.repo.get_question_answers(question_id)) == 10)
-            response_delete = self.repo.delete_question_from_survey(
-                question_id)
-            response_get_deleted = self.repo.get_question(
+            self.repo.delete_question_from_survey(
                 question_id)
             response_get_answers = self.repo.get_question_answers(
                 question_id)
 
-        self.assertTrue(response_delete)
-        self.assertIsNone(response_get_deleted)
         self.assertTrue(len(response_get_answers) == 0)
 
     def test_delete_answer_from_question_deletes_answer(self):
@@ -213,7 +219,6 @@ class TestSurveyRepository(unittest.TestCase):
     def test_update_question_updates_question(self):
 
         with self.app.app_context():
-            text = "create question test"
             survey_id = 1
             category_weights = '[{"category": "Category 1", "multiplier": 10.0}, {"category": "Category 2", "multiplier": 20.0}]'
 

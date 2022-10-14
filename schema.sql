@@ -589,7 +589,7 @@ INSERT INTO public."Survey_results" VALUES (3, 1, 'Dynamically fetched result te
 -- Data for Name: Survey_user_groups; Type: TABLE DATA; Schema: public; Owner: -
 --
 
-INSERT INTO public."Survey_user_groups" VALUES ('a81bc81b-dead-4e5d-abff-90865d1e13b2', 'The Cyberdyne Power Admins', 1, 1, '2022-09-26 14:03:28.609+00', '2022-09-26 14:03:28.609+00');
+INSERT INTO public."Survey_user_groups" VALUES ('a81bc81b-dead-4e5d-abff-90865d1e13b2', 'Superior Admins', 1, 1, '2022-09-26 14:03:28.609+00', '2022-09-26 14:03:28.609+00');
 
 --
 -- Data for Name: Surveys; Type: TABLE DATA; Schema: public; Owner: -
