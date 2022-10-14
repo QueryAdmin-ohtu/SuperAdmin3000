@@ -171,7 +171,7 @@ class TestSurveyRepository(unittest.TestCase):
         self.assertTrue(response_delete)
         self.assertIsNone(response_get_deleted)
 
-    def test_delete_question_from_survey_deletes_answers(self):
+    def test_delete_question_from_survey_deletes_question_answers(self):
         
         with self.app.app_context():
             text = "Answer deletion test"
@@ -188,12 +188,12 @@ class TestSurveyRepository(unittest.TestCase):
                 question_id)
             response_get_deleted = self.repo.get_question(
                 question_id)
-            response_get_answer_one = self.repo.get_question_answers(
+            response_get_answers = self.repo.get_question_answers(
                 question_id)
 
         self.assertTrue(response_delete)
         self.assertIsNone(response_get_deleted)
-        self.assertTrue(len(response_get_answer_one) == 0)
+        self.assertTrue(len(response_get_answers) == 0)
 
     def test_delete_answer_from_question_deletes_answer(self):
 
