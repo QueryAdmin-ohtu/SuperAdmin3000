@@ -119,6 +119,16 @@ def list_admins():
     admins = survey_service.get_all_admins()
     return render_template("home/list_admins.html", admins=admins, ENV=app.config["ENV"])
 
+@home.route("/admins/new", methods=["POST"])
+def new_admin():
+    """ Adds an authorized user to the application """
+    if not helper.valid_token(request.form):
+        abort(403)
+    email = request.form["email"]
+    survey_service.add_admin(email)
+
+    return redirect("/admins")
+
 @home.route("/ping")
 def ping():
     """ Test function for general testing
