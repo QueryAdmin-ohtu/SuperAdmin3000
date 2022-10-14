@@ -1,5 +1,4 @@
 import unittest
-from datetime import datetime
 
 from repositories.survey_repository import SurveyRepository
 
@@ -190,14 +189,19 @@ class TestSurveyRepository(unittest.TestCase):
     def test_delete_answer_from_question_deletes_answer(self):
 
         with self.app.app_context():
-            question_id = 2
-            answer_id = 10
+            text = "Breaking Bad"
+            points = 9001
+            question_id = 9
+
+            answer_id = self.repo.create_answer(
+                text, points, question_id)
+
             response_delete = self.repo.delete_answer_from_question(
                 answer_id)
             response_get_deleted = self.repo.get_question_answers(question_id)
 
         self.assertTrue(response_delete)
-        self.assertEqual(len(response_get_deleted),4)
+        self.assertEqual(response_get_deleted,[])
 
     def test_update_question_updates_question(self):
 

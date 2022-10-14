@@ -3,6 +3,7 @@ from config import PORT, load_config
 from views.home import home
 from views.surveys import surveys
 from views.statistics import stats
+from views.logs import log
 from db import db
 
 
@@ -15,6 +16,7 @@ def create_app():
     app.register_blueprint(home)
     app.register_blueprint(surveys)
     app.register_blueprint(stats)
+    app.register_blueprint(log)
 
     db.init_app(app)
 
