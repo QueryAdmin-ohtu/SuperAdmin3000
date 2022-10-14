@@ -149,10 +149,11 @@ class SurveyRepository:
     def get_all_surveys(self):
         """ Fetches all surveys, counts the questions
         for each survey and the amount of submissions
-        related to the survey returning a list
+        related to each survey
 
-        Returns: Array containing the survey id, title,
-        question count and submission count """
+        Returns: List where each item contains the survey
+        id, title, question count and submission count are
+        included """
         sql = """
         SELECT
             s.id,
@@ -347,6 +348,44 @@ class SurveyRepository:
         answers = self.db_connection.session.execute(
             sql, {"question_id": question_id}).fetchall()
         return answers
+
+    def add_admin(self, email: str):
+        """ Inserts a new admin to the Admin table
+
+        Returns:
+            Id of the new admin """
+
+        sql = """
+        INSERT INTO "Admins" 
+            ("email")
+        VALUES 
+            (:email) 
+        RETURNING id
+        """
+        values = {"email": email}
+        try:
+            admin_id = self.db_connection.session.execute(
+                sql, values).fetchone()
+            self.db_connection.session.commit()
+        except exc.SQLAlchemyError:
+            return None
+        return admin_id[0]
+
+    def get_all_admins(self):
+        """ Fetches all authorized users from the database
+
+        Returns:
+            List where each item contains a tuple with the id
+            and email of the authorized user """
+        sql = """
+        SELECT * FROM "Admins"
+        ORDER BY id
+        """
+        admins = self.db_connection.session.execute(
+            sql).fetchall()
+        if not admins:
+            return None
+        return admins
 
     def update_category(self, category_id: str, name: str, description: str, content_links: list):
         """ Updates category in the database.

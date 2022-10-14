@@ -173,6 +173,31 @@ class TestSurveyService(unittest.TestCase):
         self.assertEqual(check, 1)
         self.repo_mock.create_category.assert_called_with(
             name, description, content_links)
+    
+    def test_add_admin_calls_repo_correctly(self):
+        self.repo_mock.add_admin.return_value = 1
+        email = "jorma@uotinen.net"
+        check = self.survey_service.add_admin(
+            email)
+        self.assertEqual(check, 1)
+        self.repo_mock.add_admin.assert_called_with(
+            email)
+    
+    def test_add_admin_without_valid_email_returns_none(self):
+        email = "jorma@uotinennet"
+        check = self.survey_service.add_admin(email)
+        self.assertIsNone(check)
+    
+    def test_get_all_admins_calls_repo_correctly(self):
+        self.repo_mock.get_all_admins.return_value = [
+            ("1", "jorma@uotinen.net"), 
+            ("2", "uotinen@jorma.fi")]
+        check = self.survey_service.get_all_admins()
+        self.assertEqual(check, 
+        [
+            ("1", "jorma@uotinen.net"), 
+            ("2", "uotinen@jorma.fi")])
+        self.repo_mock.get_all_admins.assert_called()
 
     def test_update_category_calls_repo_correctly(self):
         self.repo_mock.update_category.return_value = 1

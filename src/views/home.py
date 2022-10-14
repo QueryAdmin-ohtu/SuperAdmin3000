@@ -110,6 +110,24 @@ def backdoor_login():
             return abort(401)
     return redirect("/")
 
+@home.route("/admins", methods=["GET"])
+def list_admins():
+    """ Returns the page with list of admins """
+    if not helper.logged_in():
+        return redirect("/")
+
+    admins = survey_service.get_all_admins()
+    return render_template("home/list_admins.html", admins=admins, ENV=app.config["ENV"])
+
+@home.route("/admins/new", methods=["POST"])
+def new_admin():
+    """ Adds an authorized user to the application """
+    if not helper.valid_token(request.form):
+        abort(403)
+    email = request.form["email"]
+    survey_service.add_admin(email)
+
+    return redirect("/admins")
 
 @home.route("/ping")
 def ping():

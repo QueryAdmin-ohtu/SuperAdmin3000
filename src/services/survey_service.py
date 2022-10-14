@@ -252,6 +252,32 @@ class SurveyService:
         """
         return self.survey_repository.create_category(name, description, content_links)
 
+    def add_admin(self, email: str):
+        """
+        Add the given email address to authorized users list
+
+        Args:
+            email: Email address of the authorized user
+
+        Returns:
+            If succeeds: The DB id of the authorized user
+        """
+        try:
+            if self._validate_email_address(email):
+                admin_id = self.survey_repository.add_admin(email)
+                return admin_id
+        except UserInputError:
+            return None
+
+    def get_all_admins(self):
+        """
+        Fetch all users authorized to use the application
+
+        Returns:
+            List of tuples with each tuple containing the
+            id and email for each user """
+        return self.survey_repository.get_all_admins()
+
     def update_category(self, category_id: str, name: str, description: str, content_links: list):
         """
         Updates category information.

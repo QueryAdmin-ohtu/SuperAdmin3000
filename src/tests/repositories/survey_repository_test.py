@@ -250,6 +250,29 @@ class TestSurveyRepository(unittest.TestCase):
 
         self.assertGreater(len(response), 2)
 
+    def test_add_admin_with_invalid_data_returns_none(self):
+
+        with self.app.app_context():
+            response = self.repo.add_admin(
+                {"test": "test"}
+            )
+        
+        self.assertIsNone(response)
+    
+    def test_add_admin_with_valid_data_returns_id(self):
+
+        with self.app.app_context():
+            response = self.repo.add_admin("test@email.com")
+        
+        self.assertEqual(response, 9)
+    
+    def test_get_all_admins_returns_multiple_admins(self):
+
+        with self.app.app_context():
+            response = self.repo.get_all_admins()
+        
+        self.assertGreater(len(response), 1)
+
     def test_update_category_with_valid_data_returns_id(self):
         with self.app.app_context():
             categories=self.repo.get_all_categories()
@@ -332,5 +355,3 @@ class TestSurveyRepository(unittest.TestCase):
         with self.app.app_context():
             response = self.repo.delete_category('abc')
             self.assertFalse(response)
-
-                 
