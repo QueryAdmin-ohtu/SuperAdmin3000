@@ -38,4 +38,4 @@ Delete Question
     Go To  ${URL}/delete/${survey_id}/${question_id}
 
 Go To Admins Page
-    Go To ${ADMIN URL}
+    Go To  ${ADMIN URL}
