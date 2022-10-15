@@ -25,11 +25,11 @@
     <p>Current categories</p>
     <div>
         {% for category in categories %}
-        {{category[1]}}: {{category[2]}} {{ components.link_button("Edit - WIP", "/new_category") }}
+        {{category[1]}}: {{category[2]}} {{ buttons.link_button("Edit - WIP", "/new_category") }}
         <hr>
         {% endfor %}
     </div>
-    {{ components.link_button("New category", "/new_category") }}
+    {{ buttons.link_button("New category", "/new_category") }}
     {% endcall %}
 </div>
 {% endblock %}

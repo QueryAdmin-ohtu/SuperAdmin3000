@@ -13,7 +13,6 @@ Logged In User Can Add Answer To New Question
     Go To Backdoor Login Page
     Login With Correct Credentials
     Go To Survey  1
-<<<<<<< HEAD
     Click Button  EDIT
     Expand Answer Card  1
     Click Button  Delete answer
@@ -28,8 +27,6 @@ Logged In User Can Add Answer To New Question
 
 Logged In User Can Add Answer To New Question
     Go To Survey  1
-=======
->>>>>>> main
     Click Link  Add question
     Page Should Not Contain  Question answers
     Set Question Text  Why
@@ -67,14 +64,7 @@ Empty Points Are Interpreted As Zeros
 Logged In User Can Delete Answer
     Go To Survey  1
     Click Button  EDIT
-<<<<<<< HEAD
     Page Should Contain  Hammer
     Expand Answer Card  1
     Click Button  Delete answer
     Page Should Not Contain  Hammer
-=======
-    Page Should Contain  Strongly Disagree
-    Click Button  Delete answer
-    Handle Alert  Accept
-    Page Should Not Contain  Strongly Disagree
->>>>>>> main
