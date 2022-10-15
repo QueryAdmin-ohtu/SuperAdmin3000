@@ -189,7 +189,6 @@ class SurveyRepository:
 
         return questions
 
-
     def survey_exists(self, survey_name):
         """Checks if a survey with identical name already exists. Case insensitive.
 
@@ -200,14 +199,14 @@ class SurveyRepository:
             True if matching name found, False if not
         """
         sql = "SELECT name FROM \"Surveys\" WHERE lower(name)=:survey_name"
-        result = self.db_connection.session.execute(sql, {"survey_name": survey_name.lower()})
+        result = self.db_connection.session.execute(
+            sql, {"survey_name": survey_name.lower()})
 
         survey_found = result.fetchone()
 
         if survey_found:
             return True
         return False
-
 
     def get_all_categories(self):
         """ Fetches all categories from the database.

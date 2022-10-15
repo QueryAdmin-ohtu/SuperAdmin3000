@@ -1,4 +1,13 @@
 {% extends "layout.html" %}
+
 {% block content %}
-<p class="text-slate-600 font-mono text-sm font-medium">·̩̩̥͙＊*•̩̩͙✩•̩̩͙*˚·̩̩̥͙＊*•̩̩͙✩•̩̩͙*˚ fancy schmancy logs go here ˚*•̩̩͙✩•̩̩͙*˚＊·̩̩̥͙˚*•̩̩͙✩•̩̩͙*˚＊·̩̩̥͙</p> 
+
+<div class="text-slate-600 font-mono text-sm font-small">
+  
+{% for log in logs %}
+<p>{{ log }}</p>
+{% endfor %}
+
+</div>
+
 {% endblock %}

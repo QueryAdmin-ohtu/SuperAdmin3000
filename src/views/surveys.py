@@ -4,6 +4,7 @@ from flask import current_app as app
 import helper
 from services.survey_service import survey_service
 
+from logger.logger import Logger
 
 surveys = Blueprint("surveys", __name__)
 
@@ -166,7 +167,8 @@ def add_answer():
                 categories, request.form)
         except ValueError:
             return "Invalid weights"
-        question_id = survey_service.create_question(text, survey_id, category_weights)
+        question_id = survey_service.create_question(
+            text, survey_id, category_weights)
 
     answer_text = request.form["answer_text"]
     points = request.form["points"]
@@ -282,7 +284,8 @@ def edit_category():
         category_id = request.form["category_id"]
         content_links = survey_service.get_category(category_id)[3]
         for i, item in enumerate(content_links):
-            new_content = {'url': request.form[f"url_{i}"], 'type': request.form[f"type_{i}"]}
+            new_content = {
+                'url': request.form[f"url_{i}"], 'type': request.form[f"type_{i}"]}
             new_content_links.append(new_content)
 
     # Adds a new content link, if there is one, to the end
@@ -322,3 +325,11 @@ def delete_category():
     if return_value is True:
         return redirect(f"/surveys/{survey_id}")
     return str(return_value)
+
+
+# Save requestes to the log
+@surveys.before_request
+def before_request():
+
+    user = helper.current_user()
+    Logger(user).log_post_request(request)

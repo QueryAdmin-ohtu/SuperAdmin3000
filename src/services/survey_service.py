@@ -176,7 +176,6 @@ class SurveyService:
 
         return self.survey_repository.get_category(category_id)
 
-
     def create_question(self, text: str, survey_id: int, category_weights: str):
         """
         Creates a new questions with given information.
