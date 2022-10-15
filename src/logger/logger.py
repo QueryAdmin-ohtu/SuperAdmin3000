@@ -19,8 +19,9 @@ class Logger:
             return
 
         # Remove sensitive data
-        form_values = {k:v for (k,v) in request.form.items() if "token" not in k}
-        
+        form_values = {
+            k: v for (k, v) in request.form.items() if "token" not in k}
+
         self.write(f"POST:{request.path} FORM:{form_values}")
 
     def write(self, message, type="EVENT"):
@@ -32,11 +33,11 @@ class Logger:
             type: Type of the event
         Returns:
             String: The log entry in success, None in failure.
-       
+
         """
 
         return self._write(datetime.now(), self.username, message, event_type="EVENT")
-        
+
     def _write(self, time, user, message, event_type):
         """
         Adds an event of type to the log with current time stamp
@@ -50,7 +51,7 @@ class Logger:
             String: The log entry in success, None in failure.
         """
         date_string = time.strftime("%Y-%m-%d %H:%M:%S")
-        
+
         log_string = f"[{event_type}] {date_string} {user} {message}"
 
         try:
@@ -60,7 +61,7 @@ class Logger:
             return None
 
         return log_string
-            
+
     def read_all_events(self):
         """
         Reads event log from a file and returns an array
@@ -89,4 +90,3 @@ class Logger:
             return False
 
         return True
-        
