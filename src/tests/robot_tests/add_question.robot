@@ -15,7 +15,7 @@ Logged In User Can Add a New Question
     Click Element  id:survey-1
     Page Should Contain  Add question
     Click Link  Add question
-    Page Should Contain  Insert category weights
+    Page Should Contain  Category weights
     Add New Question  kysymys1  0.5
     Page Should Contain  kysymys1
 
