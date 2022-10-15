@@ -49,19 +49,22 @@ Points Must Be Numbers
     Go To Survey  1
     Click Link  Add question
     Add New Answer  Because  I say so
-    Page Should Contain  Invalid points
+    Expand Answer Card  1
+    Textfield Should Contain  points-1  0
+    Page Should Contain  Because
 
 Empty Points Are Interpreted As Zeros
     Click Element  id:survey-1
     Click Link  Add question
     Add Answer Without Arguments
-    Page Should Contain  Question answers
-    Page Should Contain  0
+    Page Should Contain  Answer 1:
+    Expand Answer Card  1
+    Textfield Should Contain  points-1  0
 
 Logged In User Can Delete Answer
     Go To Survey  1
     Click Button  EDIT
     Page Should Contain  Hammer
+    Expand Answer Card  1
     Click Button  Delete answer
-    Handle Alert  Accept
     Page Should Not Contain  Hammer

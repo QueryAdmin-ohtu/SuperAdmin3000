@@ -31,10 +31,10 @@
 
 {% endmacro %}
 
-{% macro number_input(name, label_text, placeholder, is_required, min, max, step, value = "") %}
+{% macro number_input(name, id, label_text, placeholder, is_required, min, max, step, value = "") %}
 
 {% call field_wrapper_and_label(name, label_text) %}
-<input type="number" value="{{ value }}" name="{{ name }}" id="weight" min="{{ min }}" max="{{ max }}" step="{{ step }}" placeholder="{{ placeholder }}"
+<input type="number" value="{{ value }}" name="{{ name }}" id="{{ id }}" min="{{ min }}" max="{{ max }}" step="{{ step }}" placeholder="{{ placeholder }}"
     class="font-mono bg-white border border-slate-300 text-gray-900 text-sm rounded-lg focus:invalid:border-rose-500 focus:ring-sky-500 focus:border-sky-500 block w-full p-2">
 {% endcall %}
 
@@ -51,9 +51,10 @@
 {% set bg = "emerald-500" %}
 {% set bg_hover = "emerald-700" %}
 {% endif %}
+{% set formaction_string = 'formaction=' ~ formaction %}
 <button
     class="bg-{{ bg }} hover:bg-{{ bg_hover }} p-4 rounded w-full h-fit text-lg text-white leading-tight focus:ring-{{ bg }} focus:border-{{ bg }} transition duration-150 ease-in-out"
-    type="submit" value="{{ button_text }}" name="submit" formaction="{{ formaction }}">
+    type="submit" value="{{ button_text }}" name="submit" {{ formaction_string if formaction != "" }}>
     {{ button_text }}
 </button>
 {% endmacro %}
