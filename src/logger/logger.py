@@ -13,7 +13,7 @@ class Logger:
 
     def log_post_request(self, request):
         """ Write the request to the log, if the requst contains string "POST
-        
+
         Returns:
             String: The log entry in success, None in failure.        
         """

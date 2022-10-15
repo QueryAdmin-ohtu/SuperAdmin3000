@@ -13,5 +13,5 @@ def logs():
         return redirect("/")
 
     logs = Logger().read_all_events()
-    
+
     return render_template("logs/logs.html", logs=logs)

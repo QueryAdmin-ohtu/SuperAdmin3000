@@ -16,7 +16,6 @@ class TestLogger(unittest.TestCase):
         setattr(self.request, "form", {"csrf_token": "SECRET",
                                        "public_field": "publicdata",
                                        "fieldB": "bb"})
-                                  
 
     @patch("builtins.open", mock_open(read_data="""[EVENT] 31-12-2099 15:55:55 This is an example event 
 [ERROR] 02-02-2100 11:11:11 This is a second example event"""))
@@ -24,7 +23,7 @@ class TestLogger(unittest.TestCase):
         result = self.logger.read_all_events()
 
         open.assert_called_with(self.filename, "r")
-        
+
         self.assertEqual(len(result), 2)
         self.assertTrue("example" in result[0])
         self.assertTrue("ERROR" in result[1])
@@ -32,13 +31,13 @@ class TestLogger(unittest.TestCase):
     @patch("builtins.open")
     def test_read_all_events_handles_wrong_filename(self, m):
         m.side_effect = IOError
-        
+
         result = self.logger.read_all_events()
 
-        open.assert_called_with(self.filename, "r")        
+        open.assert_called_with(self.filename, "r")
 
         self.assertIsNone(result)
-       
+
     @patch("builtins.open")
     def test_log_post_request_adds_log_entry(self, m):
 
@@ -46,11 +45,11 @@ class TestLogger(unittest.TestCase):
 
         self.assertTrue("public" in result)
         self.assertFalse("SECRET" in result)
-        
+
         open.assert_called_once_with(self.filename, "a")
         # TODO: fix this
         # open.write.assert_called_once_with(result)
-        
+
     @patch("builtins.open")
     def test_write_adds_log_entry(self, m):
         result = self.logger.write("This is a test02")
@@ -72,9 +71,8 @@ class TestLogger(unittest.TestCase):
     @patch("os.remove")
     def test_delete_log_handles_bad_filename(self, m):
         m.side_effect = IOError
-        
+
         result = self.logger._delete_log()
 
         self.assertFalse(result)
         m.assert_called_once_with(self.filename)
-        
