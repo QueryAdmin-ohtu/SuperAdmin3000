@@ -4,6 +4,7 @@ from flask import current_app as app
 import helper
 from services.survey_service import survey_service
 
+from logger.logger import Logger
 
 surveys = Blueprint("surveys", __name__)
 
@@ -322,3 +323,11 @@ def delete_category():
     if return_value is True:
         return redirect(f"/surveys/{survey_id}")
     return str(return_value)
+
+
+# Save requestes to the log
+@surveys.before_request
+def before_request():
+
+    user = helper.current_user()
+    Logger(user).log_post_request(request)
