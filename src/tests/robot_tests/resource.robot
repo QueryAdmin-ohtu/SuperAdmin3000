@@ -40,3 +40,9 @@ Delete Question
 
 Go To Admins Page
     Go To  ${ADMIN URL}
+
+Login Through Backdoor
+    Go To Backdoor Login Page
+    Set Username  rudolf
+    Set Password  secret
+    Click Button  Login
