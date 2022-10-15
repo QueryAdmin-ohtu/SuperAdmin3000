@@ -140,6 +140,8 @@ def ping():
     """
     return "pong"
 
+# Save requestes to the log
+
 
 @home.before_request
 def before_request():

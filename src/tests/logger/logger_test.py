@@ -17,9 +17,9 @@ class TestLogger(unittest.TestCase):
         self.assertEqual(len(result), 2)
         self.assertTrue("example" in result[0])
         self.assertTrue("ERROR" in result[1])
-        
+
         open.assert_called_with(self.filename, "r")
-        
+
     @patch("builtins.open")
     def test_log_event_adds_log_entry(self, m):
         result = self.logger.write("This is a test02")
@@ -29,4 +29,3 @@ class TestLogger(unittest.TestCase):
         open.assert_called_once_with(self.filename, "a")
         # TODO: fix this
         # open.write.assert_called_once_with(result)
-        
