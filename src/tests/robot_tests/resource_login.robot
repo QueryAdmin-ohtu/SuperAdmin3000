@@ -10,9 +10,6 @@ Set Password
 Submit Credentials
     Click Button  Login
 
-Logout
-    Click Button  Logout
-
 Login With Correct Credentials
     Set Username  rudolf
     Set Password  secret
