@@ -2,6 +2,7 @@ import re
 from repositories.survey_repository import SurveyRepository
 
 
+
 class UserInputError(Exception):
     pass
 
@@ -46,6 +47,8 @@ class SurveyService:
 
         self._validate_survey_details(name, title, description)
 
+        # TODO: Not final
+        Logger().write(f"{name} {title} {description}")
         return self.survey_repository.create_survey(name, title, description)
 
     def get_survey(self, survey_id: str):

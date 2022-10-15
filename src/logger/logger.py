@@ -1,26 +1,37 @@
 from datetime import datetime
 import os
 
+
 class Logger:
     """ A class for creating and reading logs of user operations
     """
 
-    def __init__(self, filename="superadmin.log"):
+    def __init__(self, username="ANONYMOUS", filename="superadmin.log"):
+
+        self.username = username
         self.filename = filename
 
-    def write(self, user, message, type="EVENT"):
+    def log_post_request(self, request):
+        """ Write the request to the log, if the requst contains string "POST
+        """
+
+        form_values = {k:v for (k,v) in request.form.items() if "token" not in k}
+        if request.method == "POST":
+            self.write(f"POST:{request.path} FORM:{form_values}")
+
+    def write(self, message, type="EVENT"):
         """
         Adds an event of type to the log with current time stamp
 
         Args:
-            user: Username
             message: Text to be logged
-            type: Type of the event("EVENT", "ERROR")
+            type: Type of the event
         Returns:
-            Boolean (True if write was successfull)
+            String: The log entry in success, None in failure.
        
         """
-        return self._write(datetime.now(), user, message, event_type="EVENT")
+
+        return self._write(datetime.now(), self.username, message, event_type="EVENT")
         
     def _write(self, time, user, message, event_type):
         """
@@ -32,19 +43,19 @@ class Logger:
             message: Text to be logged
             type: Type of the event("EVENT", "ERROR")
         Returns:
-            Boolean (True if write was successfull)
-       
+            String: The log entry in success, None in failure.
         """
-
-        log_string = f"[{event_type}] {time} {user} {message}"
+        date_string = time.strftime("%Y-%m-%d %H:%M:%S")
+        
+        log_string = f"[{event_type}] {date_string} {user} {message}"
 
         try:
             with open(self.filename, "a") as f:
-                f.write(log_string)
+                f.write(log_string + '\n')
         except IOError:
-            return False
+            return None
 
-        return True
+        return log_string
             
     def read_all_events(self):
         """
@@ -70,9 +81,8 @@ class Logger:
 
         try:
             os.remove(self.filename)
-        except:
+        except IOError:
             return False
 
         return True
         
-

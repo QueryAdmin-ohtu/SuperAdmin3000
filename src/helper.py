@@ -48,7 +48,15 @@ def logged_in():
     """
     return "username" in session
 
+def current_user():
+    """ Returns the username of the currently logged in user
+    """
+    if not logged_in():
+        return None
 
+    return session["username"]
+
+    
 def valid_token(form, tokenname="csrf_token"):
     """ Check if the token send with the form matches with the current
     session.
