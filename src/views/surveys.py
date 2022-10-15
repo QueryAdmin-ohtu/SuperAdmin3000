@@ -186,8 +186,8 @@ def add_answer():
 def delete_answer(question_id, answer_id):
     """ Call database query for removal of a single answer
     """
-    if not helper.logged_in():
-        return redirect("/")
+    if not helper.valid_token(request.form):
+        abort(400, 'Invalid CSRF token.')
 
     survey_service.delete_answer_from_question(answer_id)
     return redirect("/questions/" + question_id)
@@ -197,6 +197,9 @@ def delete_answer(question_id, answer_id):
 def new_question(survey_id):
     """  Returns the page for creating a new question.
     """
+    if not helper.logged_in():
+        return redirect("/")
+
     stored_categories = survey_service.get_all_categories()
     weights = {}
     return render_template("questions/new_question.html",
@@ -204,22 +207,26 @@ def new_question(survey_id):
                            survey_id=survey_id, weights=weights)
 
 
-@surveys.route("/surveys/delete/<survey_id>/<question_id>")
+@surveys.route("/surveys/delete/<survey_id>/<question_id>", methods=["POST"])
 def delete_question(question_id, survey_id):
     """ Call database query for removal of a single question
     """
-    if not helper.logged_in():
-        return redirect("/")
+    if not helper.valid_token(request.form):
+        abort(400, 'Invalid CSRF token.')
 
     survey_service.delete_question_from_survey(question_id)
     return redirect("/surveys/" + survey_id)
 
 
-@surveys.route("/questions/<question_id>")
+@surveys.route("/questions/<question_id>", methods=["GET"])
 def edit_question(question_id):
     """ Returns the page for creating a new question
     where the inputs are filled with the information
     from the question to be edited """
+
+    if not helper.logged_in():
+        return redirect("/")
+
     question = survey_service.get_question(question_id)
     if len(question) < 4:
         return redirect("/")
@@ -248,6 +255,9 @@ def edit_category_page(survey_id, category_id):
     # - Target is in the future to make categories survey specific.
     # - However, that cannot be done before Juuso has updated the prod database schema accordingly.
     # - Survey_id is currently passed along, but cannot be used before the prod database update.
+
+    if not helper.logged_in():
+        return redirect("/")
 
     # Returns an empty template for creating a new category
     if category_id == 'new':
