@@ -46,3 +46,6 @@ Login Through Backdoor
     Set Username  rudolf
     Set Password  secret
     Click Button  Login
+
+Logout
+    Click Button  Logout
