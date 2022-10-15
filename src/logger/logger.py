@@ -1,5 +1,5 @@
 from datetime import datetime
-
+import os
 
 class Logger:
     """ A class for creating and reading logs of user operations
@@ -8,7 +8,7 @@ class Logger:
     def __init__(self, filename="superadmin.log"):
         self.filename = filename
 
-    def log_event(self, user, message, type="EVENT"):
+    def write(self, user, message, type="EVENT"):
         """
         Adds an event of type to the log with current time stamp
 
@@ -20,9 +20,9 @@ class Logger:
             Boolean (True if write was successfull)
        
         """
-        self._log_event(datetime.now(), user, message, event_type="EVENT")
+        return self._write(datetime.now(), user, message, event_type="EVENT")
         
-    def _log_event(self, time, user, message, event_type):
+    def _write(self, time, user, message, event_type):
         """
         Adds an event of type to the log with current time stamp
 
@@ -46,7 +46,7 @@ class Logger:
 
         return True
             
-    def get_all_events(self):
+    def read_all_events(self):
         """
         Reads event log from a file and returns an array
         containing every line, or Null if error happens 
@@ -62,5 +62,17 @@ class Logger:
             return None
 
         return lines
+
+    def _delete_log(self):
+        """
+        Delete the log file
+        """
+
+        try:
+            os.remove(self.filename)
+        except:
+            return False
+
+        return True
         
 
