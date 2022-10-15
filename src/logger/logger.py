@@ -15,9 +15,13 @@ class Logger:
         """ Write the request to the log, if the requst contains string "POST
         """
 
+        if request.method != "POST":
+            return
+
+        # Remove sensitive data
         form_values = {k:v for (k,v) in request.form.items() if "token" not in k}
-        if request.method == "POST":
-            self.write(f"POST:{request.path} FORM:{form_values}")
+        
+        self.write(f"POST:{request.path} FORM:{form_values}")
 
     def write(self, message, type="EVENT"):
         """
