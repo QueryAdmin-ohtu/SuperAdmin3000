@@ -13,6 +13,9 @@ class Logger:
 
     def log_post_request(self, request):
         """ Write the request to the log, if the requst contains string "POST
+        
+        Returns:
+            String: The log entry in success, None in failure.        
         """
 
         if request.method != "POST":
@@ -22,7 +25,7 @@ class Logger:
         form_values = {
             k: v for (k, v) in request.form.items() if "token" not in k}
 
-        self.write(f"POST:{request.path} FORM:{form_values}")
+        return self.write(f"POST:{request.path} FORM:{form_values}")
 
     def write(self, message, type="EVENT"):
         """
