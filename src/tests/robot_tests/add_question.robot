@@ -16,7 +16,11 @@ Logged In User Can Add a New Question
     Page Should Contain  Add question
     Click Link  Add question
     Page Should Contain  Category weights
+<<<<<<< HEAD
     Add New Question  kysymys1  1
+=======
+    Add New Question  kysymys1  0.5
+>>>>>>> main
     Page Should Contain  kysymys1
 
 Invalid Category Weights Default to Zeros
