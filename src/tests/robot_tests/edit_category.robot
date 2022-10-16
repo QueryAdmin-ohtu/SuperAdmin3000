@@ -9,8 +9,7 @@ Test Setup  Go To Home Page
 *** Test Cases ***
 
 Logged In User Can Create Categories
-    Go To Backdoor Login Page
-    Login With Correct Credentials
+    Login Through Backdoor
     Go To Survey  1
     Page Should Contain  Survey categories
     Click Link  Add category

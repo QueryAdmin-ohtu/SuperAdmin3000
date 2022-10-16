@@ -202,7 +202,7 @@ class TestSurveyRepository(unittest.TestCase):
             response_get_deleted = self.repo.get_question_answers(question_id)
 
         self.assertTrue(response_delete)
-        self.assertEqual(response_get_deleted,[])
+        self.assertEqual(response_get_deleted, [])
 
     def test_update_question_updates_question(self):
 
@@ -256,27 +256,27 @@ class TestSurveyRepository(unittest.TestCase):
             response = self.repo.add_admin(
                 {"test": "test"}
             )
-        
+
         self.assertIsNone(response)
-    
+
     def test_add_admin_with_valid_data_returns_id(self):
 
         with self.app.app_context():
             response = self.repo.add_admin("test@email.com")
-        
+
         self.assertEqual(response, 9)
-    
+
     def test_get_all_admins_returns_multiple_admins(self):
 
         with self.app.app_context():
             response = self.repo.get_all_admins()
-        
+
         self.assertGreater(len(response), 1)
 
     def test_update_category_with_valid_data_returns_id(self):
         with self.app.app_context():
-            categories=self.repo.get_all_categories()
-            category_id=categories[0][0]
+            categories = self.repo.get_all_categories()
+            category_id = categories[0][0]
             name = "name"
             description = "description"
             content_links = '[{"url":"https://www.eficode.com/cases/hansen","type":"Case Study"},{"url":"https://www.eficode.com/cases/basware","type":"Case Study"}]'
@@ -286,11 +286,11 @@ class TestSurveyRepository(unittest.TestCase):
                 "description",
                 content_links)
 
-        self.assertGreaterEqual(response,0)
+        self.assertGreaterEqual(response, 0)
 
     def test_update_category_with_invalid_data_returns_False(self):
         with self.app.app_context():
-            category_id=-1
+            category_id = -1
             name = "name"
             description = "description"
             content_links = '[{"url":"https://www.eficode.com/cases/hansen","type":"Case Study"},{"url":"https://www.eficode.com/cases/basware","type":"Case Study"}]'
@@ -302,7 +302,7 @@ class TestSurveyRepository(unittest.TestCase):
         self.assertFalse(response)
 
         with self.app.app_context():
-            category_id=2.5
+            category_id = 2.5
             name = "name"
             description = "description"
             content_links = '[{"url":"https://www.eficode.com/cases/hansen","type":"Case Study"},{"url":"https://www.eficode.com/cases/basware","type":"Case Study"}]'
@@ -314,8 +314,8 @@ class TestSurveyRepository(unittest.TestCase):
         self.assertFalse(response)
 
         with self.app.app_context():
-            categories=self.repo.get_all_categories()
-            category_id=categories[0][0]
+            categories = self.repo.get_all_categories()
+            category_id = categories[0][0]
             name = "name"
             description = "description"
             content_links = 'abc'
@@ -327,18 +327,19 @@ class TestSurveyRepository(unittest.TestCase):
         self.assertFalse(response)
 
         with self.app.app_context():
-            categories=self.repo.get_all_categories()
-            category_id=categories[0][0]
+            categories = self.repo.get_all_categories()
+            category_id = categories[0][0]
             name = "name"
             description = "description"
-            content_links = [{"url":"https://www.eficode.com/cases/hansen","type":"Case Study"},{"url":"https://www.eficode.com/cases/basware","type":"Case Study"}]
+            content_links = [{"url": "https://www.eficode.com/cases/hansen", "type": "Case Study"}, {
+                "url": "https://www.eficode.com/cases/basware", "type": "Case Study"}]
             response = self.repo.update_category(
                 category_id,
                 "name",
                 "description",
                 content_links)
         self.assertFalse(response)
-    
+
     def test_delete_category_deletes_existing_category(self):
         with self.app.app_context():
             content_links = '[{"url":"https://www.eficode.com/cases/hansen","type":"Case Study"},{"url":"https://www.eficode.com/cases/basware","type":"Case Study"}]'

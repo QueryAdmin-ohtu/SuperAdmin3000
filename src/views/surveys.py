@@ -4,6 +4,7 @@ from flask import current_app as app
 import helper
 from services.survey_service import survey_service
 
+from logger.logger import Logger
 
 surveys = Blueprint("surveys", __name__)
 
@@ -166,7 +167,8 @@ def add_answer():
                 categories, request.form)
         except ValueError:
             return "Invalid weights"
-        question_id = survey_service.create_question(text, survey_id, category_weights)
+        question_id = survey_service.create_question(
+            text, survey_id, category_weights)
 
     answer_text = request.form["answer_text"]
     points = request.form["points"]
@@ -184,8 +186,8 @@ def add_answer():
 def delete_answer(question_id, answer_id):
     """ Call database query for removal of a single answer
     """
-    if not helper.logged_in():
-        return redirect("/")
+    if not helper.valid_token(request.form):
+        abort(400, 'Invalid CSRF token.')
 
     survey_service.delete_answer_from_question(answer_id)
     return redirect("/questions/" + question_id)
@@ -195,6 +197,9 @@ def delete_answer(question_id, answer_id):
 def new_question(survey_id):
     """  Returns the page for creating a new question.
     """
+    if not helper.logged_in():
+        return redirect("/")
+
     stored_categories = survey_service.get_all_categories()
     weights = {}
     return render_template("questions/new_question.html",
@@ -202,22 +207,26 @@ def new_question(survey_id):
                            survey_id=survey_id, weights=weights)
 
 
-@surveys.route("/surveys/delete/<survey_id>/<question_id>")
+@surveys.route("/surveys/delete/<survey_id>/<question_id>", methods=["POST"])
 def delete_question(question_id, survey_id):
     """ Call database query for removal of a single question
     """
-    if not helper.logged_in():
-        return redirect("/")
+    if not helper.valid_token(request.form):
+        abort(400, 'Invalid CSRF token.')
 
     survey_service.delete_question_from_survey(question_id)
     return redirect("/surveys/" + survey_id)
 
 
-@surveys.route("/questions/<question_id>")
+@surveys.route("/questions/<question_id>", methods=["GET"])
 def edit_question(question_id):
     """ Returns the page for creating a new question
     where the inputs are filled with the information
     from the question to be edited """
+
+    if not helper.logged_in():
+        return redirect("/")
+
     question = survey_service.get_question(question_id)
     if len(question) < 4:
         return redirect("/")
@@ -246,6 +255,9 @@ def edit_category_page(survey_id, category_id):
     # - Target is in the future to make categories survey specific.
     # - However, that cannot be done before Juuso has updated the prod database schema accordingly.
     # - Survey_id is currently passed along, but cannot be used before the prod database update.
+
+    if not helper.logged_in():
+        return redirect("/")
 
     # Returns an empty template for creating a new category
     if category_id == 'new':
@@ -282,7 +294,8 @@ def edit_category():
         category_id = request.form["category_id"]
         content_links = survey_service.get_category(category_id)[3]
         for i, item in enumerate(content_links):
-            new_content = {'url': request.form[f"url_{i}"], 'type': request.form[f"type_{i}"]}
+            new_content = {
+                'url': request.form[f"url_{i}"], 'type': request.form[f"type_{i}"]}
             new_content_links.append(new_content)
 
     # Adds a new content link, if there is one, to the end
@@ -322,3 +335,11 @@ def delete_category():
     if return_value is True:
         return redirect(f"/surveys/{survey_id}")
     return str(return_value)
+
+
+# Save requestes to the log
+@surveys.before_request
+def before_request():
+
+    user = helper.current_user()
+    Logger(user).log_post_request(request)
