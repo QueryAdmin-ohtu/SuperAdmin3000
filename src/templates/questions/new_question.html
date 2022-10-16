@@ -1,6 +1,6 @@
 {% extends "layout.html" %}
-{% import "components/form_elements.html" as form_elements %}
-{% import "components/survey_elements.html" as survey_elements %}
+{% import "components/macros/form_elements.html" as form_elements %}
+{% import "components/macros/survey_elements.html" as survey_elements %}
 {% block content %}
 <div class="flex flex-col gap-6 items-start w-full">
     <h1 class="text-slate-700">Question #1 of Name of Survey</h1>
@@ -28,7 +28,7 @@
                             {% endfor %}
                         </div>
                     </fieldset>
-                    {{ form_elements.submit_button("Save changes", "submit", "default", "/add_question") }}
+                    {{ form_elements.submit_button("Save changes", "default", "/add_question") }}
                 </div>
                 {% endcall %}
                 {% for answer in answers %}
@@ -41,7 +41,7 @@
                     <h3 class="text-slate-600">New answer</h3>
                     {{ form_elements.text_area("answer_text", "Answer", "", false) }}
                     {{ form_elements.number_input("points", "new-answer-points", "Points", "0", false, "-100", "100", "1") }}
-                    {{ form_elements.submit_button("Add answer", "submit_answer", "creation", "/add_answer") }}
+                    {{ form_elements.submit_button("Add answer", "creation", "/add_answer") }}
                 </div>
                 {% endcall %}
             </div>
