@@ -26,25 +26,50 @@ class Logger:
         if request.method not in self.log_requests:
             return
 
-        # Remove sensitive data
-        form_values = {
-            k: v for (k, v) in request.form.items() if "token" not in k}
+        # Remove sensitive data which should not be written in the log
+        form_dict = {
+            key: value for (key, value) in request.form.items()
+            if "token" not in key
+        }
 
-        return self.write(f"{request.method}:{request.path} FORM:{form_values}")
+        form_string = self.prettify(form_dict)
+        
+        return self.write(
+            f"{request.path:<20}{form_string}",
+            event_type=request.method
+        )
 
-    def write(self, message, type="EVENT"):
+    def prettify(self, form):
+        """ Format given form to printable form
+
+        Arguments:
+            Form dictionary
+        Returns:
+            String
+        """
+
+        return_string = "\n"
+
+        print(f"Formi: {form}", flush=True)
+
+        for (key, value) in form.items():
+            return_string += f"{'':<10}{key:<10}{value}\n"
+
+        return return_string
+    
+    def write(self, message, event_type="EVENT"):
         """
         Adds an event of type to the log with current time stamp
 
         Args:
             message: Text to be logged
-            type: Type of the event
+            event_type: Type of the event, such as POST or GET
         Returns:
             String: The log entry in success, None in failure.
 
         """
 
-        return self._write(datetime.now(), self.username, message, event_type="EVENT")
+        return self._write(datetime.now(), self.username, message, event_type)
 
     def _write(self, time, user, message, event_type):
         """
