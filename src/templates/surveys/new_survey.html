@@ -1,4 +1,5 @@
 {% extends "layout.html" %}
+{% import "components.html" as components %}
 {% block content %}
 <form action="/create_survey" method="POST">
     <container class="flex flex-col gap-4">
@@ -11,6 +12,14 @@
         <p>Survey text</p>
         <input type="text" name="survey" oninvalid="alert('Must have a flavor text');" required>
         <input type="submit" value="Create Survey">
+        <p>Current categories</p>
+        <div>
+            {% for category in categories %}
+                {{category[1]}}: {{category[2]}} {{ components.link_button("Edit - WIP", "/new_category") }}
+                <hr>
+            {% endfor %}
+        </div>
+        {{ components.link_button("New category", "/new_category") }}
     </container>
 </form>
 {% endblock %}

@@ -9,23 +9,9 @@ Test Setup  Go To Home Page
 
 *** Test Cases ***
 
-Delete Existing Answers To Free Up Ids
+Logged In User Can Add Answer To New Question
     Go To Backdoor Login Page
     Login With Correct Credentials
-    Go To Survey  1
-    Click Button  EDIT
-    Click Button  Delete answer
-    Handle Alert  Accept
-    Click Button  Delete answer
-    Handle Alert  Accept
-    Click Button  Delete answer
-    Handle Alert  Accept
-    Click Button  Delete answer
-    Handle Alert  Accept
-    Click Button  Delete answer
-    Handle Alert  Accept
-
-Logged In User Can Add Answer To New Question
     Go To Survey  1
     Click Link  Add question
     Page Should Not Contain  Question answers
@@ -60,7 +46,7 @@ Empty Points Are Interpreted As Zeros
 Logged In User Can Delete Answer
     Go To Survey  1
     Click Button  EDIT
-    Page Should Contain  Hammer
+    Page Should Contain  Strongly Disagree
     Click Button  Delete answer
     Handle Alert  Accept
-    Page Should Not Contain  Hammer
+    Page Should Not Contain  Strongly Disagree

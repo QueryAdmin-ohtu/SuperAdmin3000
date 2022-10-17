@@ -4,6 +4,7 @@
     <meta charset="utf-8">
     <title>Super Admin 3000</title>
     <link rel="stylesheet" href="/static/css/main.css">
+    <script src="/static/js/scripts.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     {% block head %}{% endblock %}
 </head>
@@ -20,6 +21,10 @@
                 class=" text-sky-600 hover:text-sky-700 hover:underline font-medium rounded-lg text-sm">Surveys</a>
                 <a href="/new_survey"
                 class=" text-sky-600 hover:text-sky-700 hover:underline font-medium rounded-lg text-sm">New survey</a>
+                <a href="/admins"
+                class=" text-sky-600 hover:text-sky-700 hover:underline font-medium rounded-lg text-sm">Admins</a>
+                <a href="/logs"
+                class=" text-sky-600 hover:text-sky-700 hover:underline font-medium rounded-lg text-sm">Logs</a>
                 Logged in as <b>{{ session.username }}</b>
                 <form action="/logout" method="POST" class="m-1">
                 <button type="submit"

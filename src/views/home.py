@@ -5,6 +5,8 @@ from google.oauth2 import id_token
 from google.auth.transport import requests
 
 import helper
+from logger.logger import Logger
+
 from services.survey_service import survey_service
 
 home = Blueprint("home", __name__)
@@ -111,8 +113,38 @@ def backdoor_login():
     return redirect("/")
 
 
+@home.route("/admins", methods=["GET"])
+def list_admins():
+    """ Returns the page with list of admins """
+    if not helper.logged_in():
+        return redirect("/")
+
+    admins = survey_service.get_all_admins()
+    return render_template("home/list_admins.html", admins=admins, ENV=app.config["ENV"])
+
+
+@home.route("/admins/new", methods=["POST"])
+def new_admin():
+    """ Adds an authorized user to the application """
+    if not helper.valid_token(request.form):
+        abort(403)
+    email = request.form["email"]
+    survey_service.add_admin(email)
+
+    return redirect("/admins")
+
+
 @home.route("/ping")
 def ping():
     """ Test function for general testing
     """
     return "pong"
+
+# Save requestes to the log
+
+
+@home.before_request
+def before_request():
+
+    user = helper.current_user()
+    Logger(user).log_post_request(request)
