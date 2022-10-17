@@ -2,12 +2,14 @@
 
 {% block content %}
 
-<div class="text-slate-600 font-mono text-sm font-small">
-  
-{% for log in logs %}
-<p>{{ log }}</p>
-{% endfor %}
+<h2>Event log</h2>
 
+<div>
+  {% for log in logs %}
+  <div class="whitespace-pre text-slate-600 font-mono text-sm font-small">
+    {{ log }}
+  </div>
+  {% endfor %}
 </div>
 
 {% endblock %}
