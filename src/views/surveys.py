@@ -13,7 +13,7 @@ surveys = Blueprint("surveys", __name__)
 def view_surveys():
     return redirect("/")
 
-@surveys.route("/surveys/new_survey")
+@surveys.route("/surveys/new-survey")
 def new_survey():
     """Renders the new survey page
     """

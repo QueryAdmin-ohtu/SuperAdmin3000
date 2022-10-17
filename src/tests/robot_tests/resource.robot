@@ -9,7 +9,7 @@ ${DELAY}  0 seconds
 ${URL}  http://localhost:5000
 ${BACKDOOR URL}  ${URL}/backdoor
 ${EDIT URL}  ${URL}/surveys/1/edit
-${NEW SURVEY URL}  ${URL}/surveys/new_survey
+${NEW SURVEY URL}  ${URL}/surveys/new-survey
 ${ADMIN URL}  ${URL}/admins
 
 *** Keywords ***
