@@ -3,13 +3,17 @@ from flask import render_template, redirect, request, abort, Blueprint
 from flask import current_app as app
 import helper
 from services.survey_service import survey_service
-
 from logger.logger import Logger
+
 
 surveys = Blueprint("surveys", __name__)
 
 
-@surveys.route("/new_survey")
+@surveys.route("/surveys")
+def surveys():
+    return redirect("/")
+
+@surveys.route("/surveys/new_survey")
 def new():
     """Renders the new survey page
     """
