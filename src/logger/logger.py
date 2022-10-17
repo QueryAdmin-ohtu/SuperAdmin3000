@@ -9,15 +9,18 @@ class Logger:
     def __init__(self,
                  username="ANONYMOUS",
                  filename="superadmin.log",
-                 log_requests=["POST"]):
+                 log_requests=["POST"],
+                 sensitive=["token", "password"]
+    ):
 
         self.username = username
         self.filename = filename
         self.log_requests = log_requests
+        self.sensitive = sensitive
 
     def log_post_request(self, request):
         """ Write the request to the log, if the requst contains string found in
-        the log_requests array
+        the log_requests array and is not sensitive data
 
         Returns:
             String: The log entry in success, None in failure.        
@@ -27,15 +30,21 @@ class Logger:
             return
 
         # Remove sensitive data which should not be written in the log
-        form_dict = {
-            key: value for (key, value) in request.form.items()
-            if "token" not in key
-        }
+        form_dict = {}
+        
+        for (key, value) in request.form.items():
+            sensitive_field = False
+            for s in self.sensitive:
+                if s in key:
+                    sensitive_field = True
+                    break
+            if not sensitive_field:
+                form_dict[key] = value
 
         form_string = self.prettify(form_dict)
         
         return self.write(
-            f"{request.path:<20}{form_string}",
+            f"{request.path}{form_string}",
             event_type=request.method
         )
 
@@ -49,8 +58,6 @@ class Logger:
         """
 
         return_string = "\n"
-
-        print(f"Formi: {form}", flush=True)
 
         for (key, value) in form.items():
             return_string += f"{'':<10}{key:<10}{value}\n"
