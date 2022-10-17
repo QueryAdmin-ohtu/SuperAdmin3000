@@ -29,6 +29,8 @@ jobs:
     - name: Install Dependencies using Poetry
       run: |
           poetry install
+    - name: Initialize test database
+      run: poetry run invoke init-db ${{ secrets.DATABASE_URI }}
     - name: Coverage report
       run: |
           poetry run coverage run --branch -m pytest
