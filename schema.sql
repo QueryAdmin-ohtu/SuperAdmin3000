@@ -470,7 +470,6 @@ INSERT INTO public."Admins" VALUES (5, 'me@juan.fi');
 INSERT INTO public."Admins" VALUES (6, 'niemi.leo@gmail.com');
 INSERT INTO public."Admins" VALUES (7, 'oskar.sjolund93@gmail.com');
 INSERT INTO public."Admins" VALUES (8, 'siljaorvokki@gmail.com');
-INSERT INTO public."Admins" VALUES (9, 'siljaorvokki@gmail.com');
 
 
 --
@@ -531,7 +530,6 @@ INSERT INTO public."Industries" VALUES (10, 'Logistics & supply chain', '2022-09
 -- Data for Name: Question_answers; Type: TABLE DATA; Schema: public; Owner: -
 --
 
-INSERT INTO public."Question_answers" VALUES (33, 'Strongly Agree', 4, 1, '2022-10-11 20:26:19.761893+00', '2022-10-11 20:26:19.761893+00');
 INSERT INTO public."Question_answers" VALUES (37, 'Answer 1', 35, 22, '2022-10-15 10:28:55.359005+00', '2022-10-15 10:28:55.359005+00');
 INSERT INTO public."Question_answers" VALUES (6, 'Strongly Disagree', 0, 2, '2022-09-26 14:17:29.764+00', '2022-09-26 14:17:29.764+00');
 INSERT INTO public."Question_answers" VALUES (7, 'Disagree', 1, 2, '2022-09-26 14:17:29.764+00', '2022-09-26 14:17:29.764+00');
