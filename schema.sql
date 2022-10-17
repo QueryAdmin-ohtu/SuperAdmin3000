@@ -3,7 +3,7 @@
 --
 
 -- Dumped from database version 14.5 (Ubuntu 14.5-1.pgdg20.04+1)
--- Dumped by pg_dump version 14.5
+-- Dumped by pg_dump version 14.5 (Ubuntu 14.5-0ubuntu0.22.04.1)
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -67,7 +67,8 @@ CREATE TABLE public."Categories" (
     description text NOT NULL,
     content_links json,
     "createdAt" timestamp with time zone NOT NULL,
-    "updatedAt" timestamp with time zone NOT NULL
+    "updatedAt" timestamp with time zone NOT NULL,
+    "surveyId" integer
 );
 
 
@@ -295,7 +296,8 @@ CREATE TABLE public."Surveys" (
     "createdAt" timestamp with time zone NOT NULL,
     "updatedAt" timestamp with time zone NOT NULL,
     title_text text,
-    survey_text text
+    survey_text text,
+    survey_config json
 );
 
 
@@ -468,17 +470,18 @@ INSERT INTO public."Admins" VALUES (5, 'me@juan.fi');
 INSERT INTO public."Admins" VALUES (6, 'niemi.leo@gmail.com');
 INSERT INTO public."Admins" VALUES (7, 'oskar.sjolund93@gmail.com');
 INSERT INTO public."Admins" VALUES (8, 'siljaorvokki@gmail.com');
+INSERT INTO public."Admins" VALUES (9, 'siljaorvokki@gmail.com');
 
 
 --
 -- Data for Name: Categories; Type: TABLE DATA; Schema: public; Owner: -
 --
 
-INSERT INTO public."Categories" VALUES (1, 'Category 1', 'Static descriptive text about the category 1.', '[{"url":"https://www.eficode.com/cases/hansen","type":"Case Study"},{"url":"https://www.eficode.com/cases/basware","type":"Case Study"}]', '2022-09-26 14:03:28.613+00', '2022-09-26 14:03:28.613+00');
-INSERT INTO public."Categories" VALUES (2, 'Category 2', 'Static descriptive text about the category 2.', '[{"url":"https://www.eficode.com/cases/hansen","type":"Case Study"},{"url":"https://www.eficode.com/cases/basware","type":"Case Study"}]', '2022-09-26 14:03:28.613+00', '2022-09-26 14:03:28.613+00');
-INSERT INTO public."Categories" VALUES (3, 'Category 3', 'Static descriptive text about the category 3.', '[{"url":"https://www.eficode.com/cases/hansen","type":"Case Study"},{"url":"https://www.eficode.com/cases/basware","type":"Case Study"}]', '2022-09-26 14:03:28.613+00', '2022-09-26 14:03:28.613+00');
-INSERT INTO public."Categories" VALUES (4, 'Category 4', 'Static descriptive text about the category 4.', '[{"url":"https://www.eficode.com/cases/hansen","type":"Case Study"},{"url":"https://www.eficode.com/cases/basware","type":"Case Study"}]', '2022-09-26 14:03:28.613+00', '2022-09-26 14:03:28.613+00');
-INSERT INTO public."Categories" VALUES (5, 'Category 5', 'Static descriptive text about the category 5.', '[{"url":"https://www.eficode.com/cases/hansen","type":"Case Study"},{"url":"https://www.eficode.com/cases/basware","type":"Case Study"}]', '2022-09-26 14:03:28.613+00', '2022-09-26 14:03:28.613+00');
+INSERT INTO public."Categories" VALUES (1, 'Category 1', 'Static descriptive text about the category 1.', '[{"url":"https://www.eficode.com/cases/hansen","type":"Case Study"},{"url":"https://www.eficode.com/cases/basware","type":"Case Study"}]', '2022-09-26 14:03:28.613+00', '2022-09-26 14:03:28.613+00', 1);
+INSERT INTO public."Categories" VALUES (2, 'Category 2', 'Static descriptive text about the category 2.', '[{"url":"https://www.eficode.com/cases/hansen","type":"Case Study"},{"url":"https://www.eficode.com/cases/basware","type":"Case Study"}]', '2022-09-26 14:03:28.613+00', '2022-09-26 14:03:28.613+00', 1);
+INSERT INTO public."Categories" VALUES (3, 'Category 3', 'Static descriptive text about the category 3.', '[{"url":"https://www.eficode.com/cases/hansen","type":"Case Study"},{"url":"https://www.eficode.com/cases/basware","type":"Case Study"}]', '2022-09-26 14:03:28.613+00', '2022-09-26 14:03:28.613+00', 1);
+INSERT INTO public."Categories" VALUES (4, 'Category 4', 'Static descriptive text about the category 4.', '[{"url":"https://www.eficode.com/cases/hansen","type":"Case Study"},{"url":"https://www.eficode.com/cases/basware","type":"Case Study"}]', '2022-09-26 14:03:28.613+00', '2022-09-26 14:03:28.613+00', 1);
+INSERT INTO public."Categories" VALUES (5, 'Category 5', 'Static descriptive text about the category 5.', '[{"url":"https://www.eficode.com/cases/hansen","type":"Case Study"},{"url":"https://www.eficode.com/cases/basware","type":"Case Study"}]', '2022-09-26 14:03:28.613+00', '2022-09-26 14:03:28.613+00', 1);
 
 
 --
@@ -528,11 +531,8 @@ INSERT INTO public."Industries" VALUES (10, 'Logistics & supply chain', '2022-09
 -- Data for Name: Question_answers; Type: TABLE DATA; Schema: public; Owner: -
 --
 
-INSERT INTO public."Question_answers" VALUES (1, 'Strongly Disagree', 0, 1, '2022-09-26 14:17:29.764+00', '2022-09-26 14:17:29.764+00');
-INSERT INTO public."Question_answers" VALUES (2, 'Disagree', 1, 1, '2022-09-26 14:17:29.764+00', '2022-09-26 14:17:29.764+00');
-INSERT INTO public."Question_answers" VALUES (3, 'Do not disagree or agree', 2, 1, '2022-09-26 14:17:29.764+00', '2022-09-26 14:17:29.764+00');
-INSERT INTO public."Question_answers" VALUES (4, 'Agree', 3, 1, '2022-09-26 14:17:29.764+00', '2022-09-26 14:17:29.764+00');
-INSERT INTO public."Question_answers" VALUES (5, 'Strongly Agree', 4, 1, '2022-09-26 14:17:29.764+00', '2022-09-26 14:17:29.764+00');
+INSERT INTO public."Question_answers" VALUES (33, 'Strongly Agree', 4, 1, '2022-10-11 20:26:19.761893+00', '2022-10-11 20:26:19.761893+00');
+INSERT INTO public."Question_answers" VALUES (37, 'Answer 1', 35, 22, '2022-10-15 10:28:55.359005+00', '2022-10-15 10:28:55.359005+00');
 INSERT INTO public."Question_answers" VALUES (6, 'Strongly Disagree', 0, 2, '2022-09-26 14:17:29.764+00', '2022-09-26 14:17:29.764+00');
 INSERT INTO public."Question_answers" VALUES (7, 'Disagree', 1, 2, '2022-09-26 14:17:29.764+00', '2022-09-26 14:17:29.764+00');
 INSERT INTO public."Question_answers" VALUES (8, 'Do not disagree or agree', 2, 2, '2022-09-26 14:17:29.764+00', '2022-09-26 14:17:29.764+00');
@@ -546,6 +546,11 @@ INSERT INTO public."Question_answers" VALUES (15, 'Strongly Agree', 4, 3, '2022-
 INSERT INTO public."Question_answers" VALUES (16, 'Strongly Disagree', 0, 4, '2022-09-26 14:17:29.764+00', '2022-09-26 14:17:29.764+00');
 INSERT INTO public."Question_answers" VALUES (17, 'Disagree', 1, 4, '2022-09-26 14:17:29.764+00', '2022-09-26 14:17:29.764+00');
 INSERT INTO public."Question_answers" VALUES (18, 'Do not disagree or agree', 2, 4, '2022-09-26 14:17:29.764+00', '2022-09-26 14:17:29.764+00');
+INSERT INTO public."Question_answers" VALUES (1, 'Strongly Disagree', 0, 1, '2022-10-11 03:33:26.05+00', '2022-10-11 03:33:26.05+00');
+INSERT INTO public."Question_answers" VALUES (2, 'Disagree', 1, 1, '2022-10-11 03:33:26.05+00', '2022-10-11 03:33:26.05+00');
+INSERT INTO public."Question_answers" VALUES (3, 'Do not disagree or agree', 2, 1, '2022-10-11 03:33:26.05+00', '2022-10-11 03:33:26.05+00');
+INSERT INTO public."Question_answers" VALUES (4, 'Agree', 3, 1, '2022-10-11 03:33:26.05+00', '2022-10-11 03:33:26.05+00');
+INSERT INTO public."Question_answers" VALUES (5, 'Strongly Agree', 4, 1, '2022-10-11 20:14:43.175518+00', '2022-10-11 20:14:43.175518+00');
 INSERT INTO public."Question_answers" VALUES (19, 'Agree', 3, 4, '2022-09-26 14:17:29.764+00', '2022-09-26 14:17:29.764+00');
 INSERT INTO public."Question_answers" VALUES (20, 'Strongly Agree', 4, 4, '2022-09-26 14:17:29.764+00', '2022-09-26 14:17:29.764+00');
 INSERT INTO public."Question_answers" VALUES (21, 'Strongly Disagree', 0, 5, '2022-09-26 14:17:29.764+00', '2022-09-26 14:17:29.764+00');
@@ -558,21 +563,32 @@ INSERT INTO public."Question_answers" VALUES (27, 'Disagree', 1, 6, '2022-09-26 
 INSERT INTO public."Question_answers" VALUES (28, 'Do not disagree or agree', 2, 6, '2022-09-26 14:17:29.764+00', '2022-09-26 14:17:29.764+00');
 INSERT INTO public."Question_answers" VALUES (29, 'Agree', 3, 6, '2022-09-26 14:17:29.764+00', '2022-09-26 14:17:29.764+00');
 INSERT INTO public."Question_answers" VALUES (30, 'Strongly Agree', 4, 6, '2022-09-26 14:17:29.764+00', '2022-09-26 14:17:29.764+00');
+INSERT INTO public."Question_answers" VALUES (31, 'Recursion', -12, 10, '2022-10-11 20:15:27.803627+00', '2022-10-11 20:15:27.803627+00');
+INSERT INTO public."Question_answers" VALUES (32, 'Neither', 0, 10, '2022-10-11 20:16:32.546871+00', '2022-10-11 20:16:32.546871+00');
 
 
 --
 -- Data for Name: Questions; Type: TABLE DATA; Schema: public; Owner: -
 --
 
-INSERT INTO public."Questions" VALUES (1, 'Question 1', 1, '[{"category": "Category 1", "multiplier": 1}, {"category": "Category 2", "multiplier": 1}, {"category": "Category 3", "multiplier": 0}, {"category": "Category 4", "multiplier": 0}, {"category": "Category 5", "multiplier": 0}]', '2022-09-26 14:17:29.76+00', '2022-09-26 14:17:29.76+00');
-INSERT INTO public."Questions" VALUES (2, 'Question 2', 1, '[{"category": "Category 1", "multiplier": 0}, {"category": "Category 2", "multiplier": 1}, {"category": "Category 3", "multiplier": 1}, {"category": "Category 4", "multiplier": 0}, {"category": "Category 5", "multiplier": 0}]', '2022-09-22 21:03:09.628167+00', '2022-09-22 21:03:09.628167+00');
-INSERT INTO public."Questions" VALUES (7, 'Question7', 1, NULL, '2022-09-26 19:16:45.279882+00', '2022-09-26 19:16:45.279882+00');
+INSERT INTO public."Questions" VALUES (2, 'Question 2', 1, '[{"category": "Category 1", "multiplier": 0}, {"category": "Category 2", "multiplier": 1}, {"category": "Category 3", "multiplier": 1}, {"category": "Category 4", "multiplier": 0}, {"category": "Category 5", "multiplier": 0}]', '2022-09-22 21:03:09.628167+00', '2022-10-10 11:04:38.351837+00');
+INSERT INTO public."Questions" VALUES (7, 'What is your favourite album of The Wombats?', 1, '[{"category": "Category 1", "multiplier": 0.0}, {"category": "Category 2", "multiplier": 0.0}, {"category": "Category 3", "multiplier": 0.0}, {"category": "Category 4", "multiplier": 0.0}, {"category": "Category 5", "multiplier": 0.0}]', '2022-09-26 19:16:45.279882+00', '2022-10-10 10:27:28.178901+00');
+INSERT INTO public."Questions" VALUES (3, 'Question 3', 1, '[{"category": "Category 1", "multiplier": 0}, {"category": "Category 2", "multiplier": 0}, {"category": "Category 3", "multiplier": 1}, {"category": "Category 4", "multiplier": 1}, {"category": "Category 5", "multiplier": 0}]', '2022-09-22 21:03:22.124125+00', '2022-10-10 10:24:30.983531+00');
+INSERT INTO public."Questions" VALUES (4, 'Question 4', 1, '[{"category": "Category 1", "multiplier": 0}, {"category": "Category 2", "multiplier": 0}, {"category": "Category 3", "multiplier": 0}, {"category": "Category 4", "multiplier": 1}, {"category": "Category 5", "multiplier": 1}]', '2022-09-22 21:31:09.984421+00', '2022-10-10 10:24:47.422924+00');
+INSERT INTO public."Questions" VALUES (10, 'Loops versus recursion? Which do you prefer?', 3, '[{"category": "Category 1", "multiplier": 0.0}, {"category": "Category 2", "multiplier": 0.0}, {"category": "Category 3", "multiplier": 0.0}, {"category": "Category 4", "multiplier": 0.0}, {"category": "Category 5", "multiplier": 0.0}]', '2022-10-06 11:03:30.170791+00', '2022-10-11 20:16:10.468685+00');
+INSERT INTO public."Questions" VALUES (1, 'Question 1', 1, '[{"category": "Category 1", "multiplier": 1}, {"category": "Category 2", "multiplier": 1}, {"category": "Category 3", "multiplier": 0}, {"category": "Category 4", "multiplier": 0}, {"category": "Category 5", "multiplier": 0}]', '2022-10-11 03:33:26.046+00', '2022-10-11 03:33:26.046+00');
+INSERT INTO public."Questions" VALUES (5, 'Question 5', 1, '[{"category": "Category 1", "multiplier": 1}, {"category": "Category 2", "multiplier": 0}, {"category": "Category 3", "multiplier": 0}, {"category": "Category 4", "multiplier": 0}, {"category": "Category 5", "multiplier": 1}]', '2022-09-26 14:17:29.76+00', '2022-10-10 10:25:02.388769+00');
+INSERT INTO public."Questions" VALUES (13, 'Do you enjoy Go and Rust?', 6, '[{"category": "Category 1", "multiplier": 1.0}, {"category": "Category 2", "multiplier": 0.0}, {"category": "Category 3", "multiplier": 0.0}, {"category": "Category 4", "multiplier": 1.0}, {"category": "Category 5", "multiplier": 0.0}]', '2022-10-10 10:30:07.728635+00', '2022-10-10 10:30:07.728635+00');
+INSERT INTO public."Questions" VALUES (14, 'Do you ever wonder about the perfect ratio of paddings and margins?', 6, '[{"category": "Category 1", "multiplier": 0.0}, {"category": "Category 2", "multiplier": 0.0}, {"category": "Category 3", "multiplier": 0.0}, {"category": "Category 4", "multiplier": 1.0}, {"category": "Category 5", "multiplier": 1.0}]', '2022-10-10 10:31:08.883819+00', '2022-10-10 10:31:08.883819+00');
+INSERT INTO public."Questions" VALUES (6, 'Question 6', 1, '[{"category": "Category 1", "multiplier": 1}, {"category": "Category 2", "multiplier": 1}, {"category": "Category 3", "multiplier": 1}, {"category": "Category 4", "multiplier": 1}, {"category": "Category 5", "multiplier": 1}]', '2022-09-26 14:17:29.76+00', '2022-10-10 10:25:50.175652+00');
+INSERT INTO public."Questions" VALUES (15, 'How many Javascript frameworks are you familiar with?', 6, '[{"category": "Category 1", "multiplier": 0.0}, {"category": "Category 2", "multiplier": 0.0}, {"category": "Category 3", "multiplier": 0.0}, {"category": "Category 4", "multiplier": 0.0}, {"category": "Category 5", "multiplier": 1.0}]', '2022-10-10 10:32:20.086087+00', '2022-10-10 10:32:27.685193+00');
+INSERT INTO public."Questions" VALUES (16, 'Do you enjoy fields of wheat?', 7, '[{"category": "Category 1", "multiplier": 1.0}, {"category": "Category 2", "multiplier": 1.0}, {"category": "Category 3", "multiplier": 0.0}, {"category": "Category 4", "multiplier": 0.0}, {"category": "Category 5", "multiplier": 0.0}]', '2022-10-10 10:34:52.938318+00', '2022-10-10 10:34:52.938318+00');
+INSERT INTO public."Questions" VALUES (17, 'Do you like the sound of seagulls?', 7, '[{"category": "Category 1", "multiplier": 0.0}, {"category": "Category 2", "multiplier": 0.0}, {"category": "Category 3", "multiplier": 1.0}, {"category": "Category 4", "multiplier": 1.0}, {"category": "Category 5", "multiplier": 1.0}]', '2022-10-10 10:35:12.984915+00', '2022-10-10 10:35:12.984915+00');
+INSERT INTO public."Questions" VALUES (18, 'Do you like travelling by train?', 7, '[{"category": "Category 1", "multiplier": 1.0}, {"category": "Category 2", "multiplier": 0.0}, {"category": "Category 3", "multiplier": 1.0}, {"category": "Category 4", "multiplier": 1.0}, {"category": "Category 5", "multiplier": 1.0}]', '2022-10-10 10:35:48.110123+00', '2022-10-10 10:35:48.110123+00');
+INSERT INTO public."Questions" VALUES (19, 'Do you speak Swedish?', 7, '[{"category": "Category 1", "multiplier": 1.0}, {"category": "Category 2", "multiplier": 0.0}, {"category": "Category 3", "multiplier": 0.0}, {"category": "Category 4", "multiplier": 0.0}, {"category": "Category 5", "multiplier": 0.0}]', '2022-10-10 10:36:03.291754+00', '2022-10-10 10:36:03.291754+00');
 INSERT INTO public."Questions" VALUES (8, 'Question 8', 1, NULL, '2022-09-26 19:33:13.8708+00', '2022-09-26 19:33:13.8708+00');
+INSERT INTO public."Questions" VALUES (22, 'This is a question', 1, '[{"category": "Category 1", "multiplier": 0.0}, {"category": "Category 2", "multiplier": 0.0}, {"category": "Category 3", "multiplier": 0.0}, {"category": "Category 4", "multiplier": 0.0}, {"category": "Category 5", "multiplier": 0.0}]', '2022-10-15 10:28:45.913521+00', '2022-10-15 10:28:45.913521+00');
 INSERT INTO public."Questions" VALUES (9, 'Which one is best: 1) Game of Thrones, 2) Breaking Bad, or 3) Narcos? ', 1, NULL, '2022-09-29 21:34:03.33838+00', '2022-09-29 21:34:03.33838+00');
-INSERT INTO public."Questions" VALUES (3, 'Question 3', 1, '[{"category": "Category 1", "multiplier": 0}, {"category": "Category 2", "multiplier": 0}, {"category": "Category 3", "multiplier": 1}, {"category": "Category 4", "multiplier": 1}, {"category": "Category 5", "multiplier": 0}]', '2022-09-22 21:03:22.124125+00', '2022-09-22 21:03:22.124125+00');
-INSERT INTO public."Questions" VALUES (4, 'Question 4', 1, '[{"category": "Category 1", "multiplier": 0}, {"category": "Category 2", "multiplier": 0}, {"category": "Category 3", "multiplier": 0}, {"category": "Category 4", "multiplier": 1}, {"category": "Category 5", "multiplier": 1}]', '2022-09-22 21:31:09.984421+00', '2022-09-22 21:31:09.984421+00');
-INSERT INTO public."Questions" VALUES (5, 'Question 5', 1, '[{"category": "Category 1", "multiplier": 1}, {"category": "Category 2", "multiplier": 0}, {"category": "Category 3", "multiplier": 0}, {"category": "Category 4", "multiplier": 0}, {"category": "Category 5", "multiplier": 1}]', '2022-09-26 14:17:29.76+00', '2022-09-26 14:17:29.76+00');
-INSERT INTO public."Questions" VALUES (6, 'Question 6', 1, '[{"category": "Category 1", "multiplier": 1}, {"category": "Category 2", "multiplier": 1}, {"category": "Category 3", "multiplier": 1}, {"category": "Category 4", "multiplier": 1}, {"category": "Category 5", "multiplier": 1}]', '2022-09-26 14:17:29.76+00', '2022-09-26 14:17:29.76+00');
 
 
 --
@@ -594,9 +610,11 @@ INSERT INTO public."Survey_results" VALUES (3, 1, 'Dynamically fetched result te
 -- Data for Name: Surveys; Type: TABLE DATA; Schema: public; Owner: -
 --
 
-INSERT INTO public."Surveys" VALUES (1, 'Survey 1', '2022-09-20 12:28:09.613+00', '2022-09-20 12:28:09.613+00', 'This will be survey title text', 'This will be survey flavor text');
-INSERT INTO public."Surveys" VALUES (2, 'Survey 2', '2022-09-20 12:36:57.525+00', '2022-09-20 12:36:57.525+00', 'This will be survey title text', 'This will be survey flavor text');
-INSERT INTO public."Surveys" VALUES (3, 'Paras ohjelmointikieli', '2022-09-30 06:55:00.222057+00', '2022-09-30 06:55:00.222057+00', 'Mikä on paras ohjelmointikieli?', 'Onko se python? Vaiko Java?');
+INSERT INTO public."Surveys" VALUES (1, 'Devops assessment', '2022-09-20 12:28:09.613+00', '2022-10-10 10:23:15.307082+00', 'Are you doing DevOps right?', 'DevOps practices and capabilities.', '[]');
+INSERT INTO public."Surveys" VALUES (2, 'Agile maturity assessment', '2022-10-11 03:33:26.008+00', '2022-10-11 03:33:26.008+00', 'How well are you doing Agile?', 'agile process maturity.', '[]');
+INSERT INTO public."Surveys" VALUES (3, 'test', '2022-09-30 06:55:00.222057+00', '2022-10-10 10:36:46.917718+00', 'Test1', 'Test 2', NULL);
+INSERT INTO public."Surveys" VALUES (6, 'Developer survey', '2022-10-10 10:29:40.528707+00', '2022-10-10 10:33:02.23283+00', 'What type of developer are you?', 'Are you more of a energy drink slurping back-end engineer or a coffee connoisseur front-end dev?', NULL);
+INSERT INTO public."Surveys" VALUES (7, 'City survey', '2022-10-10 10:34:07.535414+00', '2022-10-10 10:34:07.535414+00', 'What Finnish city would you be?', 'Are you more of a Hamina or Hanko type of person? Come and find out!', NULL);
 
 
 --
@@ -775,6 +793,14 @@ ALTER TABLE ONLY public."User_answers"
 
 ALTER TABLE ONLY public."Users"
     ADD CONSTRAINT "Users_pkey" PRIMARY KEY (id);
+
+
+--
+-- Name: Categories Categories_surveyId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public."Categories"
+    ADD CONSTRAINT "Categories_surveyId_fkey" FOREIGN KEY ("surveyId") REFERENCES public."Surveys"(id) ON UPDATE CASCADE ON DELETE SET NULL;
 
 
 --
