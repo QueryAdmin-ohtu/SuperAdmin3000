@@ -8,8 +8,8 @@ ${BROWSER}  headlesschrome
 ${DELAY}  0 seconds
 ${URL}  http://localhost:5000
 ${BACKDOOR URL}  ${URL}/backdoor
-${EDIT URL}  ${URL}/surveys/edit/1
-${NEW URL}  ${URL}/new_survey
+${EDIT URL}  ${URL}/surveys/1/edit
+${NEW SURVEY URL}  ${URL}/surveys/new_survey
 ${ADMIN URL}  ${URL}/admins
 
 *** Keywords ***
@@ -28,7 +28,7 @@ Go To Edit Surveys Page
     Go To  ${EDIT URL}
 
 Go To Create New Survey Page
-    Go To  ${NEW URL}
+    Go To  ${NEW SURVEY URL}
 
 Go To Survey
     [Arguments]  ${survey_id}

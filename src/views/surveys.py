@@ -10,11 +10,11 @@ surveys = Blueprint("surveys", __name__)
 
 
 @surveys.route("/surveys")
-def surveys():
+def view_surveys():
     return redirect("/")
 
 @surveys.route("/surveys/new_survey")
-def new():
+def new_survey():
     """Renders the new survey page
     """
     if not helper.logged_in():
