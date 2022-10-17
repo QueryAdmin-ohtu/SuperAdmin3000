@@ -6,26 +6,31 @@ class Logger:
     """ A class for creating and reading logs of user operations
     """
 
-    def __init__(self, username="ANONYMOUS", filename="superadmin.log"):
+    def __init__(self,
+                 username="ANONYMOUS",
+                 filename="superadmin.log",
+                 log_requests=["POST"]):
 
         self.username = username
         self.filename = filename
+        self.log_requests = log_requests
 
     def log_post_request(self, request):
-        """ Write the request to the log, if the requst contains string "POST
+        """ Write the request to the log, if the requst contains string found in
+        the log_requests array
 
         Returns:
             String: The log entry in success, None in failure.        
         """
 
-        if request.method != "POST":
+        if request.method not in self.log_requests:
             return
 
         # Remove sensitive data
         form_values = {
             k: v for (k, v) in request.form.items() if "token" not in k}
 
-        return self.write(f"POST:{request.path} FORM:{form_values}")
+        return self.write(f"{request.method}:{request.path} FORM:{form_values}")
 
     def write(self, message, type="EVENT"):
         """
