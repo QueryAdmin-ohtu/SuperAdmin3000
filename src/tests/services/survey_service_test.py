@@ -206,7 +206,7 @@ class TestSurveyService(unittest.TestCase):
         description = "description"
         content_links = [{"url": "https://www.eficode.com/cases/hansen", "type": "Case Study"},
                          {"url": "https://www.eficode.com/cases/basware", "type": "Case Study"}]
-        check = self.survey_service._update_category(
+        check = self.survey_service.update_category(
             category_id, name, description, content_links)
         self.assertEqual(check, 1)
         self.repo_mock.update_category.assert_called_with(
@@ -215,7 +215,7 @@ class TestSurveyService(unittest.TestCase):
     def test_delete_category_calls_repo_correctly(self):
         self.repo_mock.delete_category.return_value = 1
         category_id = 0
-        check = self.survey_service._delete_category(category_id)
+        check = self.survey_service.delete_category(category_id)
         self.assertEqual(check, 1)
         self.repo_mock.delete_category.assert_called_with(category_id)
 
