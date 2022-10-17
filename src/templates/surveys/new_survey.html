@@ -1,25 +1,35 @@
 {% extends "layout.html" %}
-{% import "components.html" as components %}
+{% import "components/macros/form_elements.html" as form_elements %}
+{% import "components/macros/buttons.html" as buttons %}
+{% import "components/macros/survey_elements.html" as survey_elements %}
 {% block content %}
-<form action="/create_survey" method="POST">
-    <container class="flex flex-col gap-4">
-        <h3>Create a new survey</h3>
-        <p>Name of survey</p>
-        <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
-        <input type="text" name="name" oninvalid="alert('Must have a name');" required>
-        <p>Title text</p>
-        <input type="text" name="title" oninvalid="alert('Must have a title');" required>
-        <p>Survey text</p>
-        <input type="text" name="survey" oninvalid="alert('Must have a flavor text');" required>
-        <input type="submit" value="Create Survey">
-        <p>Current categories</p>
-        <div>
-            {% for category in categories %}
-                {{category[1]}}: {{category[2]}} {{ components.link_button("Edit - WIP", "/new_category") }}
-                <hr>
-            {% endfor %}
+<div class="grid lg:grid-cols-2 grid-cols-1 gap-4 items-start">
+    <div class="flex flex-col gap-4">
+        <h2>Create a new survey</h2>
+        <p>
+            What is the survey all about? Give it a name, title and description.
+            After creating the survey you can add categories and questions.
+        </p>
+    </div>
+    {% call survey_elements.card() %}
+    <form action="/create_survey" method="POST">
+        <div class="flex flex-col gap-4 items-start">
+            <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
+            {{ form_elements.text_input("name", "Name", "DevOps Survey", true) }}
+            {{ form_elements.text_input("title", "Title", "Are you a DevOps bop or flop?", true) }}
+            {{ form_elements.text_area("survey", "Description", "Do you know the difference between docker and kubernetes? Define your skills here!",
+            true) }}
+            {{ form_elements.submit_button("Create survey") }}
         </div>
-        {{ components.link_button("New category", "/new_category") }}
-    </container>
-</form>
+    </form>
+    <p>Current categories</p>
+    <div>
+        {% for category in categories %}
+        {{category[1]}}: {{category[2]}} {{ buttons.link_button("Edit - WIP", "/new_category") }}
+        <hr>
+        {% endfor %}
+    </div>
+    {{ buttons.link_button("New category", "/new_category") }}
+    {% endcall %}
+</div>
 {% endblock %}

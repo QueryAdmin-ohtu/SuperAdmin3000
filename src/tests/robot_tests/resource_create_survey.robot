@@ -12,7 +12,7 @@ Set Survey Text
     Input Text  survey  ${text}
 
 Create A Survey
-    Click Button  Create Survey
+    Click Button  Create survey
 
 Make A Survey
     Set Survey Name  Testi

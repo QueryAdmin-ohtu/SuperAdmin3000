@@ -18,7 +18,7 @@ Logged In User Can Edit a Question
     Page Should Contain  changed
     Page Should Not Contain  Question 1
     Click Button  EDIT
-    Page Should Contain  99.0
+    Textfield Should Contain  cat1  99.0
     Page Should Contain  changed
 
 Editing Without Changing Anything Works

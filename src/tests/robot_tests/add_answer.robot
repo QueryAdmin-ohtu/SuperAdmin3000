@@ -13,40 +13,58 @@ Logged In User Can Add Answer To New Question
     Go To Backdoor Login Page
     Login With Correct Credentials
     Go To Survey  1
+    Click Button  EDIT
+    Expand Answer Card  1
+    Click Button  Delete answer
+    Expand Answer Card  1
+    Click Button  Delete answer
+    Expand Answer Card  1
+    Click Button  Delete answer
+    Expand Answer Card  1
+    Click Button  Delete answer
+    Expand Answer Card  1
+    Click Button  Delete answer
+
+Logged In User Can Add Answer To New Question
+    Go To Survey  1
     Click Link  Add question
     Page Should Not Contain  Question answers
     Set Question Text  Why
     Set Category Weight  44
     Add New Answer  Because  22
+    Expand Answer Card  1
     Page Should Contain  Why
-    Page Should Contain  44
+    Textfield Should Contain  cat1  44
     Page Should Contain  Because
-    Page Should Contain  22
-    Page Should Contain  Question answers
+    Textfield Should Contain  points-1  22
 
 Logged In User Can Add Answer While Editing Question
     Go To Survey  1
     Click Button  EDIT
     Add New Answer  Hammer  11
+    Expand Answer Card  1
     Page Should Contain  Hammer
 
 Points Must Be Numbers
     Go To Survey  1
     Click Link  Add question
     Add New Answer  Because  I say so
-    Page Should Contain  Invalid points
+    Expand Answer Card  1
+    Textfield Should Contain  points-1  0
+    Page Should Contain  Because
 
 Empty Points Are Interpreted As Zeros
     Click Element  id:survey-1
     Click Link  Add question
     Add Answer Without Arguments
-    Page Should Contain  Question answers
-    Page Should Contain  0
+    Page Should Contain  Answer 1:
+    Expand Answer Card  1
+    Textfield Should Contain  points-1  0
 
 Logged In User Can Delete Answer
     Go To Survey  1
     Click Button  EDIT
-    Page Should Contain  Strongly Disagree
+    Page Should Contain  Hammer
+    Expand Answer Card  1
     Click Button  Delete answer
-    Handle Alert  Accept
-    Page Should Not Contain  Strongly Disagree
+    Page Should Not Contain  Hammer
