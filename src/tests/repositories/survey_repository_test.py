@@ -359,3 +359,17 @@ class TestSurveyRepository(unittest.TestCase):
         with self.app.app_context():
             response = self.repo.delete_category('abc')
             self.assertFalse(response)
+
+    def test_get_categories_of_survey_returns_multiple_categories(self):
+        with self.app.app_context():
+            survey_id=1
+            response = self.repo.get_categories_of_survey(survey_id)
+
+        self.assertGreater(len(response), 2)
+
+    def test_get_categories_of_survey_returns_empty_list_if_survey_has_no_categories(self):
+        with self.app.app_context():
+            survey_id=2
+            response = self.repo.get_categories_of_survey(survey_id)
+
+        self.assertEqual(len(response), 0)

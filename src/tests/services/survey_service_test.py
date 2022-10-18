@@ -226,3 +226,11 @@ class TestSurveyService(unittest.TestCase):
         check = self.survey_service.get_category(category_id)
         self.assertEqual(check, 1)
         self.repo_mock.get_category.assert_called_with(category_id)
+
+    def test_get_categories_of_survey_calls_repo_correctly(self):
+        return_value=["1", "nimi", "kuvaus", []]
+        self.repo_mock.get_categories_of_survey.return_value = return_value
+        survey_id = 1
+        check = self.survey_service.get_categories_of_survey(survey_id)
+        self.assertEqual(check, return_value)
+        self.repo_mock.get_categories_of_survey.assert_called_with(survey_id)
