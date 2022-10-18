@@ -97,11 +97,11 @@ def view_survey(survey_id):
 
     survey = survey_service.get_survey(survey_id)
     questions = survey_service.get_questions_of_survey(survey_id)
-    stored_categories = survey_service.get_all_categories()
-
+    categories = survey_service.get_categories_of_survey(survey_id)
+    print(categories, flush=True)
     return render_template("surveys/view_survey.html", survey=survey,
                            questions=questions, survey_id=survey_id,
-                           ENV=app.config["ENV"], categories=stored_categories)
+                           ENV=app.config["ENV"], categories=categories)
 
 
 @surveys.route("/surveys/statistics/<survey_id>")

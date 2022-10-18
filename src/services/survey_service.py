@@ -176,6 +176,20 @@ class SurveyService:
 
         return self.survey_repository.get_category(category_id)
 
+    def get_categories_of_survey(self, survey_id: str):
+        """
+        Returns categories of the given survey from the repository
+
+        Args:
+            survey_id: Db id of the survey
+
+        Returns:
+            List of category_id's
+        """
+        categories=self.survey_repository.get_categories_of_survey(survey_id)
+
+        return categories
+    
     def create_question(self, text: str, survey_id: int, category_weights: str):
         """
         Creates a new questions with given information.

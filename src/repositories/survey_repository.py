@@ -233,6 +233,20 @@ class SurveyRepository:
             return False
         return category
 
+
+    def get_categories_of_survey(self, survey_id):
+        """ Fetches categories of a given survey from the database.
+
+        Returns:
+        An array containing id, name, description, content_links of the categories.
+        """
+        sql = """ SELECT id, name, description, content_links FROM "Categories" WHERE "surveyId"=:survey_id ORDER BY id"""
+        
+        categories = self.db_connection.session.execute(
+            sql, {"survey_id": survey_id}).fetchall()
+
+        return categories
+
     def delete_question_from_survey(self, question_id):
         """ Deletes a question in a given survey
 
