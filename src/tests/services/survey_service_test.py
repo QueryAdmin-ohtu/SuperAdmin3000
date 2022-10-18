@@ -164,15 +164,16 @@ class TestSurveyService(unittest.TestCase):
 
     def test_create_category_calls_repo_correctly(self):
         self.repo_mock.create_category.return_value = 1
+        survey_id="1"
         name = "name"
         description = "description"
         content_links = [{"url": "https://www.eficode.com/cases/hansen", "type": "Case Study"},
                          {"url": "https://www.eficode.com/cases/basware", "type": "Case Study"}]
         check = self.survey_service.create_category(
-            name, description, content_links)
+            survey_id, name, description, content_links)
         self.assertEqual(check, 1)
         self.repo_mock.create_category.assert_called_with(
-            name, description, content_links)
+            survey_id, name, description, content_links)
 
     def test_add_admin_calls_repo_correctly(self):
         self.repo_mock.add_admin.return_value = 1

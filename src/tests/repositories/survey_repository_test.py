@@ -229,6 +229,7 @@ class TestSurveyRepository(unittest.TestCase):
 
         with self.app.app_context():
             response = self.repo.create_category(
+                "1",
                 "name",
                 "description",
                 content_links)
@@ -238,6 +239,7 @@ class TestSurveyRepository(unittest.TestCase):
     def test_create_category_with_invalid_data_returns_none(self):
         with self.app.app_context():
             response = self.repo.create_category(
+                "1",
                 None,
                 "description",
                 "content_links")
@@ -344,6 +346,7 @@ class TestSurveyRepository(unittest.TestCase):
         with self.app.app_context():
             content_links = '[{"url":"https://www.eficode.com/cases/hansen","type":"Case Study"},{"url":"https://www.eficode.com/cases/basware","type":"Case Study"}]'
             category_id = self.repo.create_category(
+                "1",
                 "name",
                 "description",
                 content_links)
