@@ -15,7 +15,7 @@ class Logger:
         """ Write the request to the log, if the requst contains string "POST
 
         Returns:
-            String: The log entry in success, None in failure.        
+            String: The log entry in success, None in failure.
         """
 
         if request.method != "POST":
@@ -68,7 +68,7 @@ class Logger:
     def read_all_events(self):
         """
         Reads event log from a file and returns an array
-        containing every line, or Null if error happens 
+        containing every line, or Null if error happens
 
         Returns:
             An array of strings
