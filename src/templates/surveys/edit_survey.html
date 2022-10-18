@@ -1,29 +1,33 @@
 {% extends "layout.html" %}
+{% import "components/macros/form_elements.html" as form_elements %}
+{% import "components/macros/survey_elements.html" as survey_elements %}
 {% block content %}
-<container class="flex flex-col gap-4">
-  <h3>Edit survey</h3>
+<div class="grid lg:grid-cols-2 grid-cols-1 gap-4 items-start">
 
-  {% if survey %}
-  <div class="mb-6 lg:mb-0">
-    <div class="block p-6 rounded-lg shadow-lg bg-white max-w-1/5 h-full">
-      <p class="text-gray-700 text-base mb-4">
-        <form action="/surveys/update" method="POST">
-          <label>Name</label><br>
-          <input required name="name" type="text" class="border" value="{{ survey[1] }}"><br>
-          <label>Title</label><br>
-          <input required name="title" type="text" class="border" value="{{ survey[4] }}"><br>
-          <label>Survey text</label><br>
-          <input required name="description" type="text" class="border" value="{{ survey[5] }}"><br>
-          <input type="hidden" name="survey_id" type="text" class="border" readonly="readonly" value="{{ survey[0] }}"><br>
-          <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}"><br>
-          <button class="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-          onclick="return confirm('Edit this survey?')">SAVE</button><br>
-        </form>
-      </p>
+    <div class="flex flex-col gap-4">
+        <h2>Edit an existing survey</h2>
+        <p>
+            Edit the needed fields. Click save when you're done!
+        </p>
     </div>
-  </div>
-  {% else %}
-  There is no survey with ID: {{ survey_id }}
-  {% endif %}
-</container>
+    {% if survey %}
+    {% call survey_elements.card() %}
+    <form action="/surveys/update" method="POST">
+        <div class="flex flex-col gap-4 items-start">
+            <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
+            <input type="hidden" name="survey_id" type="text" class="border" readonly="readonly"
+                    value="{{ survey[0] }}">
+            {{ form_elements.text_input("name", "Name", "DevOps Survey", true, survey.name) }}
+            {{ form_elements.text_input("title", "Title", "Are you a DevOps bop or flop?", true, survey.title_text) }}
+            {{ form_elements.text_area("description", "Description", "Do you know the difference between docker and
+            kubernetes? Define your skills here!",
+            true, survey.survey_text) }}
+            {{ form_elements.submit_button("Save survey") }}
+        </div>
+    </form>
+    {% endcall %}
+    {% else %}
+    There is no survey with ID: {{ survey_id }}
+    {% endif %}
+</div>
 {% endblock %}

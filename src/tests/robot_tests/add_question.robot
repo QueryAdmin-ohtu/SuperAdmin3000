@@ -12,18 +12,22 @@ Logged In User Can Add a New Question
     Go To Backdoor Login Page
     Login With Correct Credentials
     Go To Home Page
-    Click Element  id:survey-1
+    Go To Survey  1
     Page Should Contain  Add question
     Click Link  Add question
     Page Should Contain  Category weights
-    Add New Question  kysymys1  0.5
+    Add New Question  kysymys1  1
     Page Should Contain  kysymys1
 
-Category Weights Must Be Numbers
-    Click Element  id:survey-1
+Invalid Category Weights Default to Zeros
+    Go To Survey  1
     Click Link  Add question
     Add New Question  kysymys2  abc
-    Page Should Contain  Invalid weights
+    Go To Home Page
+    Go To Survey  1
+    Page Should Contain  kysymys2
+    Edit Question By Table Row  14
+    Textfield Should Contain  cat1  0
 
 Empty Category Weights Are Interpreted As Zeros
     Click Element  id:survey-1

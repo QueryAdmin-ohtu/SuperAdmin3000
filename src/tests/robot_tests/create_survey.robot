@@ -21,17 +21,21 @@ Logged In User Can Create Surveys
 Logged In User Cannot Create Surveys Without Name
     Click Link  New survey
     Make Survey Without Name
-    Alert Should Be Present  Must have a name
+    Page Should Contain  Create a new survey
+    Page Should Not Contain  Statistics
+    Page Should Not Contain  Survey has no questions
 
 Logged In User Cannot Create Surveys Without Title
     Click Link  New survey
     Make Survey Without Title
-    Alert Should Be Present  Must have a title
+    Page Should Not Contain  Statistics
+    Page Should Not Contain  Survey has no questions
 
 Logged In User Cannot Create Surveys Without Text
     Click Link  New survey
     Make Survey Without Text
-    Alert Should Be Present  Must have a flavor text
+    Page Should Not Contain  Statistics
+    Page Should Not Contain  Survey has no questions
 
 A New Survey Does Not Contain Questions
     Click Link  New survey

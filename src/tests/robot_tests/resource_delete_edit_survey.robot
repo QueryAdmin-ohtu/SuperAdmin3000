@@ -24,7 +24,7 @@ Set Existing Survey Text
     Input Text  description  ${updated_text}
 
 Create A Survey
-    Click Button  Create Survey
+    Click Button  Create survey
 
 Delete The Survey
     Click Button  Delete survey
@@ -42,5 +42,4 @@ Edit Survey With Valid Info
     Set Existing Survey Name  test_name
     Set Existing Survey Title  test_title
     Set Existing Survey Text  test_text
-    Click Button  SAVE
-    Handle Alert  Accept
+    Click Button  Save survey

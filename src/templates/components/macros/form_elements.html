@@ -1,0 +1,109 @@
+{% macro text_input(name, label_text, placeholder, is_required, value = "") %}
+{# A text input with label
+    Args:
+        name: Name of input
+        label_text: Text to display in label
+        placeholder: A palceholder value
+        is_required: Is this value required in the form? Provide a bool.
+#}
+
+{% if is_required %}
+{% set required_text = 'required' %}
+{% endif %}
+
+{% call field_wrapper_and_label(name, label_text) %}
+<input type="text" name="{{ name }}" placeholder="{{ placeholder }}" value="{{ value }}"
+    class="bg-white border border-slate-300 text-gray-900 text-sm rounded-lg focus:invalid:border-rose-500 focus:ring-sky-500 focus:border-sky-500  block w-full p-2"
+    {{ required_text }}>
+{% endcall %}
+
+{% endmacro %}
+
+{% macro text_area(name, label_text, placeholder, is_required, value = "") %}
+{# A text area input with label
+    Args:
+        name: Name of input
+        label_text: Text to display in label
+        placeholder: A palceholder value
+        is_required: Is this value required in the form? Provide a bool.
+#}
+
+{% if is_required %}
+{% set required_text = 'required' %}
+{% endif %}
+
+{% call field_wrapper_and_label(name, label_text) %}
+<textarea type="text" name="{{ name }}" placeholder="{{ placeholder }}"
+    class="bg-white border border-slate-300 text-gray-900 text-sm rounded-lg focus:invalid:border-rose-500 focus:ring-sky-500 focus:border-sky-500 block w-full p-2"
+    {{ required_text }}>{{ value }}</textarea>
+{% endcall %}
+
+{% endmacro %}
+
+{% macro number_input(name, id, label_text, placeholder, is_required, min, max, step, value = "") %}
+{# A number input with label
+    Args:
+        name: Name of input
+        id: Id of input
+        label_text: Text to display in label
+        placeholder: A placeholder value
+        is_required: Is this value required in the form? Provide a bool.
+        min: Minimum value allowed
+        max: Maximum value allowed
+        step: Increment step of input
+        value: Current value
+#}
+{% if is_required %}
+{% set required_text = 'required' %}
+{% endif %}
+
+{% call field_wrapper_and_label(name, label_text) %}
+<input type="number" value="{{ value }}" name="{{ name }}" id="{{ id }}" min="{{ min }}" max="{{ max }}" step="{{ step }}" placeholder="{{ placeholder }}"
+    class="font-mono bg-white border border-slate-300 text-gray-900 text-sm rounded-lg focus:invalid:border-rose-500 focus:ring-sky-500 focus:border-sky-500 block w-full p-2"
+    {{ required_text }}>
+{% endcall %}
+
+{% endmacro %}
+
+{% macro submit_button(button_text, type = "default", formaction = "") %}
+{# A submit button for your form
+    Args:
+        button_text: Text to display in button
+        label_text: Text to display in the label
+        formaction: Specify formaction if needed
+#}
+{% set main_color = "sky-500" %}
+{% set secondary_color = "sky-700" %}
+
+{% if type == "destructive" %}
+{% set main_color = "rose-500" %}
+{% set secondary_color = "rose-700" %}
+{% elif type == "creation" %}
+{% set main_color = "emerald-500" %}
+{% set secondary_color = "emerald-700" %}
+{% endif %}
+
+{% set formaction_string = 'formaction=' ~ formaction %}
+
+<button
+    class="bg-{{ main_color }} hover:bg-{{ secondary_color }} p-4 rounded w-full h-fit text-lg text-white leading-tight focus:ring-{{ main_color }} focus:border-{{ main_color }} transition duration-150 ease-in-out"
+    type="submit" value="{{ button_text }}" name="submit" {{ formaction_string if formaction != "" }}>
+    {{ button_text }}
+</button>
+{% endmacro %}
+
+{% macro field_wrapper_and_label(name, label_text) %}
+{# Wraps a given form input in a flexbox and attaches an appropriate label.
+    This macro is used with the call block.
+    Args:
+        name: Name used in the input element
+        label_text: Text to display in the label
+#}
+<div class="flex flex-col gap-2 w-full">
+    <label for="{{ name }}" class="text-gray-700 text-sm font-bold w-max">{{ label_text }}</label>
+    {{ caller() }}
+</div>
+{% endmacro %}
+
+{# The HTML below is a fix for TailwindCSS to render a CSS containing colors used in these macros #}
+<div class="hover:bg-emerald-700 bg-emerald-500"></div>

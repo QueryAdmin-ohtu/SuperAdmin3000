@@ -1,0 +1,21 @@
+{% import "components/macros/survey_elements.html" as survey_elements %}
+
+{% call survey_elements.card() %}
+<h2 class="py-6">Questions</h2>
+<div class="pb-6">
+    {{ buttons.link_button("Add question", "/%s/new_question" % survey[0]) }}
+    <br>
+</div>
+{% if questions %}
+<div class="table-row-group">
+    {% for question in questions %}
+    {{ survey_elements.question_table_row(survey, question, loop.index) }}
+    <hr>
+    {% endfor %}
+    {% else %}
+    <p>Survey has no questions 🥺</p>
+    {% endif %}
+
+</div>
+
+{% endcall %}
