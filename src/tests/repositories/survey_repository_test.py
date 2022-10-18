@@ -220,6 +220,15 @@ class TestSurveyRepository(unittest.TestCase):
 
         self.assertTrue(len(response_get_answers) == 0)
 
+    def test_get_user_answers_returns_None_when_none_exist(self):
+
+        with self.app.app_context():
+            survey_id = 1
+            question_id = self.repo.create_question(
+                text, survey_id, category_weights)
+            result = self.repo.get_user_answers(question_id)
+        self.assertIsNone(result)
+
     def test_delete_answer_from_question_deletes_answer(self):
 
         with self.app.app_context():

@@ -236,6 +236,11 @@ class SurveyService:
         from the question specified by the id given """
         return self.survey_repository.get_question_answers(question_id)
 
+    def get_user_answers(self, answer_id):
+        "" """ Gets the id, user id and both question_answer_id AND Question_answer_id of
+        the answer determined by the given answer_id """
+        return self.survey_repository.get_user_answers(answer_id)
+
     def create_category(self, name: str, description: str, content_links: list):
         """
         Creates a new category.
