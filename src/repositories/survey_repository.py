@@ -327,7 +327,7 @@ class SurveyRepository:
             sql, {"question_id": question_id}).fetchone()
         return question
 
-    def create_category(self, name: str, description: str, content_links: list):
+    def create_category(self, survey_id:str, name: str, description: str, content_links: list):
         """ Inserts a new category to database table Categories.
 
         Returns:
@@ -336,10 +336,11 @@ class SurveyRepository:
 
         sql = """
         INSERT INTO "Categories"
-        ("name", "description", "content_links", "createdAt","updatedAt")
-        VALUES (:name, :description, :content_links, NOW(), NOW())
+        ("surveyId", "name", "description", "content_links", "createdAt","updatedAt")
+        VALUES (:survey_id, :name, :description, :content_links, NOW(), NOW())
         RETURNING id """
         values = {
+            "survey_id": survey_id,
             "name": name,
             "description": description,
             "content_links": content_links

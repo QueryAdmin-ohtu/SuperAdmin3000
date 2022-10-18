@@ -250,12 +250,13 @@ class SurveyService:
         from the question specified by the id given """
         return self.survey_repository.get_question_answers(question_id)
 
-    def create_category(self, name: str, description: str, content_links: list):
+    def create_category(self, survey_id:str, name: str, description: str, content_links: list):
         """
         Creates a new category.
 
         Args:
             name: Name of the category
+            survey_id: Id of the survey that the category is linked to
             description: Description of the category
             content_links: Content links related to the category
 
@@ -263,7 +264,7 @@ class SurveyService:
             If succeeds: The DB id of the created category
             If not: None
         """
-        return self.survey_repository.create_category(name, description, content_links)
+        return self.survey_repository.create_category(survey_id, name, description, content_links)
 
     def add_admin(self, email: str):
         """

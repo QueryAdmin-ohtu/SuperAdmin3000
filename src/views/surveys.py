@@ -129,15 +129,16 @@ def add_question():
     if not helper.valid_token(request.form):
         abort(400, 'Invalid CSRF token.')
 
-    categories = survey_service.get_all_categories()
+    text = request.form["text"]
+    survey_id = request.form["survey_id"]
+    question_id = request.form["question_id"]
+    categories = survey_service.get_categories_of_survey(survey_id)
+
     try:
         category_weights = helper.category_weights_as_json(
             categories, request.form)
     except ValueError:
         return "Invalid weights"
-    text = request.form["text"]
-    survey_id = request.form["survey_id"]
-    question_id = request.form["question_id"]
 
     if request.form["edit"]:
         survey_service.update_question(
@@ -161,7 +162,7 @@ def add_answer():
     if not question_id:
         text = request.form["text"]
         survey_id = request.form["survey_id"]
-        categories = survey_service.get_all_categories()
+        categories = survey_service.get_categories_of_survey(survey_id)
         try:
             category_weights = helper.category_weights_as_json(
                 categories, request.form)
@@ -200,10 +201,10 @@ def new_question(survey_id):
     if not helper.logged_in():
         return redirect("/")
 
-    stored_categories = survey_service.get_all_categories()
+    categories = survey_service.get_categories_of_survey(survey_id)
     weights = {}
     return render_template("questions/new_question.html",
-                           ENV=app.config["ENV"], categories=stored_categories,
+                           ENV=app.config["ENV"], categories=categories,
                            survey_id=survey_id, weights=weights)
 
 
@@ -237,10 +238,10 @@ def edit_question(question_id):
     answers = survey_service.get_question_answers(question_id)
     if weights:
         weights = helper.json_into_dictionary(question[3])
-    stored_categories = survey_service.get_all_categories()
+    categories = survey_service.get_categories_of_survey(survey_id)
     return render_template("questions/new_question.html",
                            ENV=app.config["ENV"], text=text, survey_id=survey_id,
-                           weights=weights, categories=stored_categories,
+                           weights=weights, categories=categories,
                            created=created, edit=True, question_id=question_id,
                            answers=answers)
 
@@ -312,7 +313,7 @@ def edit_category():
             category_id, name, description, new_content_links_json)
     else:
         category_id = survey_service.create_category(
-            name, description, new_content_links_json)
+            survey_id, name, description, new_content_links_json)
 
     if stay:
         return redirect(f"/edit_category/{survey_id}/{category_id}")
