@@ -212,7 +212,6 @@ class TestSurveyRepository(unittest.TestCase):
 
             for i in range(10):
                 self.repo.create_answer("Test answer " + str(i), points=i*10, question_id=question_id)   
-            self.assertTrue(len(self.repo.get_question_answers(question_id)) == 10)
             self.repo.delete_question_from_survey(
                 question_id)
             response_get_answers = self.repo.get_question_answers(
@@ -228,6 +227,18 @@ class TestSurveyRepository(unittest.TestCase):
                 text, survey_id, category_weights)
             result = self.repo.get_user_answers(question_id)
         self.assertIsNone(result)
+
+
+    def test_get_user_answers_returns_all_answers(self):
+
+        with self.app.app_context():
+            survey_id = 1
+            question_id = self.repo.create_question(
+            text, survey_id, category_weights)
+            for i in range(5):
+                self.repo.create_answer("Test answer " + str(i), points=i*10, question_id=question_id)
+            answers = self.repo.get_question_answers(question_id)
+        self.assertTrue(len(answers) == 5)
 
     def test_delete_answer_from_question_deletes_answer(self):
 
