@@ -14,8 +14,7 @@ def tests(ctx):
     ctx.run("pytest")
 
 @task
-def test_and_reset(ctx, db):
-    ctx.run("pytest")
+def reset_and_test(ctx, db):
 
     beginning1="psql -d"
     end1="-c 'drop table if exists \"Admins\", \"Categories\", \"Category_results\", \"Industries\", \"Organizations\", \"Question_answers\",   \"Questions\", \"Survey_results\", \"Survey_user_groups\", \"Surveys\", \"User_answers\", \"Users\" cascade;'"
@@ -38,6 +37,7 @@ def test_and_reset(ctx, db):
     ctx.run(clean)
     ctx.run("rm temp")
 
+    ctx.run("pytest")
 
 @task
 def coverage(ctx):
