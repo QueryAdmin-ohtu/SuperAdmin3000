@@ -233,6 +233,20 @@ class SurveyRepository:
             return False
         return category
 
+
+    def get_categories_of_survey(self, survey_id):
+        """ Fetches categories of a given survey from the database.
+
+        Returns:
+        An array containing id, name, description, content_links of the categories.
+        """
+        sql = """ SELECT id, name, description, content_links FROM "Categories" WHERE "surveyId"=:survey_id ORDER BY id"""
+        
+        categories = self.db_connection.session.execute(
+            sql, {"survey_id": survey_id}).fetchall()
+
+        return categories
+
     def delete_question_from_survey(self, question_id):
         """ Deletes a question in a given survey
 
@@ -313,7 +327,7 @@ class SurveyRepository:
             sql, {"question_id": question_id}).fetchone()
         return question
 
-    def create_category(self, name: str, description: str, content_links: list):
+    def create_category(self, survey_id:str, name: str, description: str, content_links: list):
         """ Inserts a new category to database table Categories.
 
         Returns:
@@ -322,10 +336,11 @@ class SurveyRepository:
 
         sql = """
         INSERT INTO "Categories"
-        ("name", "description", "content_links", "createdAt","updatedAt")
-        VALUES (:name, :description, :content_links, NOW(), NOW())
+        ("surveyId", "name", "description", "content_links", "createdAt","updatedAt")
+        VALUES (:survey_id, :name, :description, :content_links, NOW(), NOW())
         RETURNING id """
         values = {
+            "survey_id": survey_id,
             "name": name,
             "description": description,
             "content_links": content_links
