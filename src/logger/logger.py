@@ -10,7 +10,7 @@ class Logger:
                  username="ANONYMOUS",
                  filename="superadmin.log",
                  log_requests=["POST"],
-                 sensitive=["token", "password"]
+                 sensitive=["token", "password", "credential"]
     ):
 
         self.username = username
