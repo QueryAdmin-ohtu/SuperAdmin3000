@@ -1,0 +1,36 @@
+{% import "components/macros/form_elements.html" as form_elements %}
+<div id="modal"
+    class="fixed hidden z-50 inset-0 bg-gray-900 bg-opacity-60 overflow-y-auto h-full w-full px-4 modal tansition-all">
+    <div class="relative top-40 mx-auto shadow-xl rounded-md bg-slate-50 max-w-md">
+        <!-- Modal header -->
+        <div class="flex justify-between items-center bg-rose-500 text-white text-xl rounded-t-md px-4 py-2">
+            <h3>Delete survey?</h3>
+        </div>
+
+        <!-- Modal body -->
+        <div class="max-h-48 overflow-y-scroll p-4">
+            <p>Are you sure you want to delete this survey?</p>
+        </div>
+
+        <!-- Modal footer -->
+        <div class="px-4 py-2 border-t border-t-gray-500 flex justify-end items-center gap-2">
+            <button
+                class="bg-slate-50 m-0 hover:bg-slate-200 border-slate-200 border-2 p-4 rounded w-full h-fit text-lg text-slate-700 leading-tight focus:ring-slate-200 focus:border-slate-500 transition duration-150 ease-in-out"
+                type="submit" onclick="closeModal('modal')">
+                Cancel
+            </button>
+            <form id="delete" class="w-full m-0" action="/delete_survey" method="POST">
+                <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
+                <input type="hidden" name="id" value="{{ survey[0] }}">
+
+                <button
+                    class="bg-rose-500 hover:bg-rose-700 border-rose-500 border-2 p-4 rounded w-full h-fit text-lg text-white leading-tight focus:ring-slate-200 focus:border-slate-500 transition duration-150 ease-in-out"
+                    type="submit" value="{{ button_text }}" name="submit">
+                    Delete survey
+                </button>
+            </form>
+
+
+        </div>
+    </div>
+</div>

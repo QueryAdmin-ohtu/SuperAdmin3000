@@ -16,7 +16,7 @@
 {% endif %}
 
 <a href="{{ href }}"
-    id="{{ id }}" class="p-2 block rounded w-fit h-fit {{ bg }} text-sm text-white font-medium leading-tight uppercase hover:{{ bg_hover }} focus:{{ bg_hover }} focus:outline-none focus:ring-0 transition duration-150 ease-in-out">
+    id="{{ id }}" class="p-2 block rounded w-fit h-fit {{ bg }} text-sm text-white font-medium leading-tight hover:{{ bg_hover }} focus:{{ bg_hover }} focus:outline-none focus:ring-0 transition duration-150 ease-in-out">
     {{ text }}
 </a>
 {% endmacro %}
@@ -37,8 +37,35 @@
 {% set bg_hover = "bg-rose-700" %}
 {% endif %}
 <button
-    id="{{ id }}" class="{{ bg }} hover:{{ bg_hover }} p-2 block rounded w-fit h-fit text-sm text-white font-medium leading-tight uppercase focus:{{ bg_hover }} focus:ring-sky-500 focus:border-sky-500  transition duration-150 ease-in-out"
+    id="{{ id }}" class="{{ bg }} hover:{{ bg_hover }} p-2 block rounded w-fit h-fit text-sm text-white font-medium leading-tight focus:{{ bg_hover }} focus:ring-sky-500 focus:border-sky-500  transition duration-150 ease-in-out"
     name="{{ name }}" value="{{ value }}">
+    {{ text }}
+</button>
+{% endmacro %}
+
+{% macro modal_button(text, name, id, modal_id, type = "default") %}
+{# Creates a button that runs javascript on click
+    Args:
+        text: Text to display on button
+        type: A string degining style of button, defaults to default.
+            default: Default styling
+            destructive: Red button
+#}
+{% set main_color = "sky-500" %}
+{% set secondary_color = "sky-700" %}
+
+{% if type == "destructive" %}
+{% set main_color = "rose-500" %}
+{% set secondary_color = "rose-700" %}
+{% elif type == "creation" %}
+{% set main_color = "emerald-500" %}
+{% set secondary_color = "emerald-700" %}
+{% endif %}
+
+
+<button
+    class="bg-{{ main_color }} hover:bg-{{ secondary_color }} p-2 block rounded w-fit h-fit text-sm text-white font-medium leading-tight focus:ring-{{ main_color }} focus:border-{{ main_color }} transition duration-150 ease-in-out"
+    type="button" name="{{ name }}" id="{{ id }}" onclick="openModal('{{ modal_id }}')">
     {{ text }}
 </button>
 {% endmacro %}
