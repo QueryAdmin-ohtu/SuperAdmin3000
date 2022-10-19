@@ -51,6 +51,13 @@
                         EDIT
                     </button>
                 </a>
+                <form id="delete-question-{{ row_num }}" name="delete" action="/surveys/delete/{{survey[0]}}/{{question[0]}}" method="POST">
+                  <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
+                  {{ form_elements.submit_button("DELETE", type="destructive") }}
+                  <!-- TODO: Confirmation for deletion -->
+                </form>
+                
+                <!-- TODO: Remove commented out old version of the delete button
                 <a href="/surveys/delete/{{survey[0]}}/{{question[0]}}">
                     <button
                         id="delete-question-{{ row_num }}"
@@ -60,6 +67,7 @@
                         DELETE
                     </button>
                 </a>
+                -->
             </div>
         </div>
     </div>

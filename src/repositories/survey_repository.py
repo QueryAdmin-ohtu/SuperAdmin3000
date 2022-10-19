@@ -363,6 +363,20 @@ class SurveyRepository:
             sql, {"question_id": question_id}).fetchall()
         return answers
 
+    def get_user_answers(self, answer_id):
+        """ Gets the id, user id and both question_answer_id AND Question_answer_id of
+        the answer determined by the given answer_id """
+
+        sql = """ SELECT * FROM \"User_answers\"
+        WHERE "answer_id"=:answer_id"""
+        try:
+            answers = self.db_connection.session.execute(
+                sql, {"id": answer_id}).fetchall()
+        except exc.SQLAlchemyError:
+            return None
+        return answers
+
+
     def add_admin(self, email: str):
         """ Inserts a new admin to the Admin table
 
