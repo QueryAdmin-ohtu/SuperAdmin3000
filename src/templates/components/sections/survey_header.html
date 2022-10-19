@@ -7,7 +7,7 @@
     </div>
     <div class="flex items-start md:justify-end gap-2">
 
-        {{ buttons.link_button("Edit survey", "/surveys/edit/%s" % survey[0]) }}
+        {{ buttons.link_button("Edit survey", "/surveys/%s/edit" % survey[0]) }}
 
         <form id="delete" class="" onsubmit="return confirm('Are you sure you want to delete this survey?')"
             action="/delete_survey" method="POST">

@@ -25,8 +25,8 @@ def new_survey():
     return render_template("surveys/new_survey.html", ENV=app.config["ENV"], categories=stored_categories)
 
 
-@surveys.route("/surveys/edit/<survey_id>")
-def surveys_edit(survey_id):
+@surveys.route("/surveys/<survey_id>/edit")
+def edit_survey(survey_id):
     """Renders the edit survey page
     """
     if not helper.logged_in():
