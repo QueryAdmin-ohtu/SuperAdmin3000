@@ -63,8 +63,8 @@ def edit_survey_post(survey_id):
     route = f"/surveys/{survey_id}"
     return redirect(route)
 
-@surveys.route("/delete_survey", methods=["POST"])
-def delete_survey():
+@surveys.route("/surveys/<survey_id>/delete-survey", methods=["POST"])
+def delete_survey(survey_id):
     """ Takes survey id from new.html and calls
     a db function to delete the survey using the id
     and redirects to homepage if deletion succeeded,
