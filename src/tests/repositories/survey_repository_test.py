@@ -239,6 +239,7 @@ class TestSurveyRepository(unittest.TestCase):
                 self.repo.create_answer("Test answer " + str(i), points=i*10, question_id=question_id)
             answers = self.repo.get_question_answers(question_id)
         self.assertTrue(len(answers) == 5)
+        self.assertTrue(answers[0][1] == "Test answer 0" and answers[4][1] == "Test answer 4")
 
     def test_delete_answer_from_question_deletes_answer(self):
 
