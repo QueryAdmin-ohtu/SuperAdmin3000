@@ -62,14 +62,28 @@ def create_survey():
 
 @surveys.route("/delete_survey", methods=["POST"])
 def delete_survey():
-    """ Takes survey id from new.html and calls
-    a db function to delete the survey using the id
-    and redirects to homepage if deletion succeeded,
-    otherwise redirects back to the survey """
+    """ Takes the survey id from a hidden input
+    in the form and retrives the survey object
+    from the DB. Then comparess that the name of
+    the survey and the confirmation the user
+    wrote match.
+
+    If names match a db function is called to delete 
+    the survey using the id.
+
+    Succeeds: Redirect to home page
+    Fails: Redirect back to survey pages"""
 
     survey_id = request.form["id"]
+    confirmation_text = request.form["confirmation-text"]
+    survey_to_delete = survey_service.get_survey(survey_id)
+    
+    if survey_to_delete.name != confirmation_text:
+        return redirect(f"/surveys/{survey_id}")
+
     if survey_service.delete_survey(survey_id):
         return redirect("/")
+
     return redirect(f"/surveys/{survey_id}")
 
 
