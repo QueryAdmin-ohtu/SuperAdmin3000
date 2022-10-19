@@ -297,7 +297,7 @@ class SurveyService:
             id and email for each user """
         return self.survey_repository.get_all_admins()
 
-    def update_category(self, category_id: str, content_links: list, name: str=None, description: str=None,):
+    def update_category(self, category_id: str, content_links: list, name=None, description=None,):
         """
         Updates category information.
 
@@ -319,7 +319,7 @@ class SurveyService:
             category=self.get_category(category_id)
             description=category[2]
         
-        return self.survey_repository.update_category(category_id, name, description, content_links)
+        return self.survey_repository.update_category(category_id, content_links, name, description)
 
     def delete_category(self, category_id: str):
         """

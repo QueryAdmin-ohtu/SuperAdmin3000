@@ -415,7 +415,7 @@ class SurveyRepository:
             return None
         return admins
 
-    def update_category(self, category_id: str, name: str, description: str, content_links: list):
+    def update_category(self, category_id: str, content_links: list, name: str, description: str):
         """ Updates category in the database.
         If succesfull returns category_id."""
 
