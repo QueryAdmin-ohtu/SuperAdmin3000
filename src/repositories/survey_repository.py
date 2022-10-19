@@ -239,7 +239,8 @@ class SurveyRepository:
         Returns:
         An array containing id, name, description, content_links of the categories.
         """
-        sql = """ SELECT id, name, description, content_links FROM "Categories" WHERE "surveyId"=:survey_id ORDER BY id"""
+        sql = """ SELECT id, name, description, content_links FROM "Categories"
+        WHERE "surveyId"=:survey_id ORDER BY id"""
 
         categories = self.db_connection.session.execute(
             sql, {"survey_id": survey_id}).fetchall()
@@ -438,7 +439,7 @@ class SurveyRepository:
             return None
         return admins
 
-    def update_category(self, category_id: str, name: str, description: str, content_links: list):
+    def update_category(self, category_id: str, content_links: list, name: str, description: str):
         """ Updates category in the database.
         If succesfull returns category_id."""
 

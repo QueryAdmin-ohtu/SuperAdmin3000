@@ -32,8 +32,9 @@
 {% set required_text = 'required' %}
 {% endif %}
 
+
 {% call field_wrapper_and_label(name, label_text) %}
-<textarea type="text" name="{{ name }}" placeholder="{{ placeholder }}"
+<textarea type="text" name="{{name}}" placeholder="{{ placeholder }}"
     class="bg-white border border-slate-300 text-gray-900 text-sm rounded-lg focus:invalid:border-rose-500 focus:ring-sky-500 focus:border-sky-500 block w-full p-2"
     {{ required_text }}>{{ value }}</textarea>
 {% endcall %}
@@ -58,14 +59,14 @@
 {% endif %}
 
 {% call field_wrapper_and_label(name, label_text) %}
-<input type="number" value="{{ value }}" name="{{ name }}" id="{{ id }}" min="{{ min }}" max="{{ max }}" step="{{ step }}" placeholder="{{ placeholder }}"
+<input type="number" value="{{ value }}" name="{{ name }}" min="{{ min }}" max="{{ max }}" step="{{ step }}" placeholder="{{ placeholder }}" id="{{id}}"
     class="font-mono bg-white border border-slate-300 text-gray-900 text-sm rounded-lg focus:invalid:border-rose-500 focus:ring-sky-500 focus:border-sky-500 block w-full p-2"
     {{ required_text }}>
 {% endcall %}
 
 {% endmacro %}
 
-{% macro submit_button(button_text, type = "default", formaction = "") %}
+{% macro submit_button(button_text, type = "default", formaction = "", onclick=None) %}
 {# A submit button for your form
     Args:
         button_text: Text to display in button
@@ -87,7 +88,7 @@
 
 <button
     class="bg-{{ main_color }} hover:bg-{{ secondary_color }} p-4 rounded w-full h-fit text-lg text-white leading-tight focus:ring-{{ main_color }} focus:border-{{ main_color }} transition duration-150 ease-in-out"
-    type="submit" value="{{ button_text }}" name="submit" {{ formaction_string if formaction != "" }}>
+    type="submit" onclick="{{onclick}}" value="{{ button_text }}" name="submit" {{ formaction_string if formaction != "" }}>
     {{ button_text }}
 </button>
 {% endmacro %}
