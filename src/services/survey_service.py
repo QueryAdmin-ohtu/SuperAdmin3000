@@ -297,7 +297,7 @@ class SurveyService:
             id and email for each user """
         return self.survey_repository.get_all_admins()
 
-    def update_category(self, category_id: str, name: str, description: str, content_links: list):
+    def update_category(self, category_id: str, content_links: list, name: str=None, description: str=None,):
         """
         Updates category information.
 
@@ -311,6 +311,14 @@ class SurveyService:
             If succeeds: The DB id of the created category
             If not: False
         """
+        
+        if name==None:
+            category=self.get_category(category_id)
+            name=category[1]
+        if description==None:
+            category=self.get_category(category_id)
+            description=category[2]
+        
         return self.survey_repository.update_category(category_id, name, description, content_links)
 
     def delete_category(self, category_id: str):

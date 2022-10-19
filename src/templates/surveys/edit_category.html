@@ -3,48 +3,54 @@
 {% import "components/macros/survey_elements.html" as survey_elements %}
 {% block content %}
     {% if edit %}
-        <h1>Edit Category</h1>
+        <h2 class="text-slate-700">Edit category</h2>
     {% else %}
-        <h1>New Category</h1>
+        <h2 class="text-slate-700">New Category</h2>
     {% endif %}
-
-
-        <!-- {{ form_elements.text_area("text", "Question", "", false, text) }} -->
-        <form action="/edit_category" method="POST">
+    <br>
+    <form action="/edit_category" method="POST">
+        <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
+        <input type="hidden" name="survey_id" id="survey_id" value={{survey_id}}>
+        <input type="hidden" name="category_id" id="category_id" value={{category_id}}>
+        <input type="hidden" name="edit" id="edit" value="{{ edit }}">
+        <input type="hidden" name="stay" id="stay"></input>
+        <div class="flex flex-col gap-6">
+            {% call survey_elements.card() %}
+                {{ form_elements.text_area("name", "Name", "", true, name) }}
+                <br>
+                {{ form_elements.text_area("description", "Description", "", true, description) }}
+                <br>
+                {% if content_links %}
+                <br>
+                    <div>
+                        {% for content in content_links %}
+                        {{ form_elements.text_area('type_'+loop.index0 | string, "Content link type", "", false, value=content['type'])}}
+                        <br>
+                        {{ form_elements.text_area('url_'+loop.index0 | string, "Content link URL", "", false, value=content['url'])}}
+                        <br>
+                        <br>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+                {{ form_elements.submit_button("Save", "default", "/edit_category") }}
+            {% endcall %}
+        </div>
+    {% if edit %}
+        <br>
+        <br>
+        <h2 class="text-slate-700">Add content link</h2>
+        <br>
+        <form action="/add_content_link" method="POST">
             <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
             <input type="hidden" name="survey_id" id="survey_id" value={{survey_id}}>
             <input type="hidden" name="category_id" id="category_id" value={{category_id}}>
-            <input type="hidden" name="edit" id="edit" value="{{ edit }}">
-            <input type="hidden" name="stay" id="stay"></input>
-            <container class="flex flex-col gap-4">
-                {% call survey_elements.card() %}
-                    <input type="submit" value="Submit">
-                    <h3>Name</h3>
-                    <textarea name="name" oninvalid="alert('Must have a name');" required>{{name}}</textarea>
-                    <h3>Description</h3>
-                    <textarea name="description" oninvalid="alert('Must have a description');" required>{{description}}</textarea>
-                {% endcall %}    
-                {% call survey_elements.card() %}
-                    <h3>Add content link</h3>
-                    URL:
-                    <textarea name="new_url" rows="1" cols="100" style="border:solid 1px black"></textarea>
-                    Type:
-                    <textarea name="new_type" rows="1" cols="50" style="border:solid 1px black" ></textarea>
-                    <button onclick="stayOnPage()" type="submit" formaction="/edit_category">Add</button>
-                    {% if content_links %}
-                    <h3>Edit existing content links</h3>
-                    <div>
-                        {% for content in content_links %}
-                        URL<br>
-                        <textarea name="url_{{ loop.index0 }}" rows="1" cols="100" style="border:solid 1px black">{{ content['url'] }}</textarea> <br>
-                        Type<br>  <textarea name="type_{{ loop.index0 }}" rows="1" cols="50" style="border:solid 1px black">{{ content['type'] }}</textarea> <br>
-                        <br>
-                        <hr>
-                        {% endfor %}
-                    </div>
-                    {% endif %}
-                {% endcall %}    
-            </container>
-        </form> 
+            {% call survey_elements.card() %}
+                {{ form_elements.text_area("new_url", "URL", "", false)}}
+                <br>               
+                {{ form_elements.text_area("new_type", "Type", "", false)}}
+                <br>
+                {{ form_elements.submit_button("Add", "creation", "/add_content_link") }}
+            {% endcall %}
+    {% endif %}
 {% endblock %}
 

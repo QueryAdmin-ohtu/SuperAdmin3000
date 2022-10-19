@@ -251,12 +251,6 @@ def edit_category_page(survey_id, category_id):
     """  Returns a page for editing or creating a new category.
     """
 
-    # Temporary note for developers:
-    # - Currently all categories are available for all surveys.
-    # - Target is in the future to make categories survey specific.
-    # - However, that cannot be done before Juuso has updated the prod database schema accordingly.
-    # - Survey_id is currently passed along, but cannot be used before the prod database update.
-
     if not helper.logged_in():
         return redirect("/")
 
@@ -286,7 +280,6 @@ def edit_category():
     survey_id = request.form["survey_id"]
     name = request.form["name"]
     description = request.form["description"]
-    stay = request.form["stay"]
     edit = request.form["edit"]
     new_content_links = []
 
@@ -297,28 +290,53 @@ def edit_category():
         for i, item in enumerate(content_links):
             new_content = {
                 'url': request.form[f"url_{i}"], 'type': request.form[f"type_{i}"]}
-            new_content_links.append(new_content)
+            if new_content['url'] and new_content['type']:
+                new_content_links.append(new_content)
+        new_content_links_json = json.dumps(new_content_links)
+        survey_service.update_category(
+            category_id, new_content_links_json, name, description)
+        return redirect(f"/surveys/{survey_id}") # Unclear UX question - Where to return the user when saving changes.
 
-    # Adds a new content link, if there is one, to the end
+    # Creating a new survey
+    new_content_links_json = json.dumps(new_content_links)
+    category_id = survey_service.create_category(
+        survey_id, name, description, new_content_links_json)
+    return redirect(f"/edit_category/{survey_id}/{category_id}")
+
+
+@surveys.route("/add_content_link", methods=["POST"])
+def add_content_link():
+    """ Receives the inputs from the edit_category.html template.
+    Stores updated content link to the database.
+    """
+    if not helper.valid_token(request.form):
+        abort(400, 'Invalid CSRF token.')
+
+    survey_id = request.form["survey_id"]
+    new_content_links = []
+
+    # Updates existing content links in case there are unsaved changes
+    category_id = request.form["category_id"]
+    content_links = survey_service.get_category(category_id)[3]
+    for i, item in enumerate(content_links):
+        new_content = {
+            'url': request.form[f"url_{i}"], 'type': request.form[f"type_{i}"]}
+        new_content_links.append(new_content)
+
+    # Adds new content link to the end
     new_url = request.form["new_url"]
     new_type = request.form["new_type"]
     if new_url and new_type:
         new_content = {'url': new_url, 'type': new_type}
         new_content_links.append(new_content)
-
+    
     new_content_links_json = json.dumps(new_content_links)
 
-    if edit:
-        survey_service.update_category(
-            category_id, name, description, new_content_links_json)
-    else:
-        category_id = survey_service.create_category(
-            survey_id, name, description, new_content_links_json)
-
-    if stay:
-        return redirect(f"/edit_category/{survey_id}/{category_id}")
-    return redirect(f"/surveys/{survey_id}")
-
+    survey_service.update_category(
+        category_id, new_content_links_json)
+    return redirect(f"/edit_category/{survey_id}/{category_id}")
+    
+    
 
 @surveys.route("/delete_category", methods=["POST"])
 def delete_category():
