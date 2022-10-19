@@ -58,8 +58,8 @@ class Logger:
         log_string = f"[{event_type}] {date_string} {user} {message}"
 
         try:
-            with open(self.filename, "a") as f:
-                f.write(log_string + '\n')
+            with open(self.filename, "a") as file:
+                file.write(log_string + '\n')
         except IOError:
             return None
 
@@ -75,8 +75,8 @@ class Logger:
         """
 
         try:
-            with open(self.filename, "r") as f:
-                lines = f.readlines()
+            with open(self.filename, "r") as file:
+                lines = file.readlines()
         except IOError:
             return None
 
