@@ -97,8 +97,8 @@ def view_survey(survey_id):
                            ENV=app.config["ENV"], categories=categories)
 
 
-@surveys.route("/surveys/statistics/<survey_id>")
-def surveys_statistics(survey_id):
+@surveys.route("/surveys/<survey_id>/statistics")
+def survey_statistics(survey_id):
     """ Open up statistics for the given survey
     """
 
