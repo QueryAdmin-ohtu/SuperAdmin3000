@@ -9,8 +9,8 @@ from logger.logger import Logger
 surveys = Blueprint("surveys", __name__)
 
 
-@surveys.route("/surveys/new-survey")
-def new_survey():
+@surveys.route("/surveys/new-survey", methods=["GET"])
+def new_survey_view():
     """Renders the new survey page
     """
     if not helper.logged_in():
@@ -20,38 +20,9 @@ def new_survey():
 
     return render_template("surveys/new_survey.html", ENV=app.config["ENV"], categories=stored_categories)
 
-
-@surveys.route("/surveys/<survey_id>/edit", methods=["GET", "POST"])
-def edit_survey(survey_id):
-    """Renders edit survey page and handles editing requests
-    """
-    if request.method == "GET":
-        if not helper.logged_in():
-            return redirect("/")
-
-        survey = survey_service.get_survey(survey_id)
-
-        return render_template("surveys/edit_survey.html", survey=survey, ENV=app.config["ENV"])
-
-    if request.method == "POST":
-        if not helper.valid_token(request.form):
-            abort(403)
-
-        survey_id = request.form["survey_id"]
-        name = request.form["name"]
-        title = request.form["title"]
-        description = request.form["description"]
-
-        survey_service.edit_survey(survey_id, name, title, description)
-        route = f"/surveys/{survey_id}"
-        return redirect(route)
-
-
-@surveys.route("/create_survey", methods=["POST"])
-def create_survey():
-    """ Takes arguments from new.html
-    and calls a db function using them
-    which creates a survey into Surveys
+@surveys.route("/surveys/new-survey", methods=["POST"])
+def new_survey_post():
+    """Handles creation of new surveys
     """
 
     if not helper.valid_token(request.form):
@@ -65,6 +36,32 @@ def create_survey():
 
     return redirect(route)
 
+@surveys.route("/surveys/<survey_id>/edit", methods=["GET"])
+def edit_survey_view(survey_id):
+    """Renders edit survey page"""
+
+    if not helper.logged_in():
+        return redirect("/")
+
+    survey = survey_service.get_survey(survey_id)
+
+    return render_template("surveys/edit_survey.html", survey=survey, ENV=app.config["ENV"])
+
+@surveys.route("/surveys/<survey_id>/edit", methods=["POST"])
+def edit_survey_post(survey_id):
+    """Handles edit survey request"""
+
+    if not helper.valid_token(request.form):
+        abort(403)
+
+    survey_id = request.form["survey_id"]
+    name = request.form["name"]
+    title = request.form["title"]
+    description = request.form["description"]
+
+    survey_service.edit_survey(survey_id, name, title, description)
+    route = f"/surveys/{survey_id}"
+    return redirect(route)
 
 @surveys.route("/delete_survey", methods=["POST"])
 def delete_survey():
