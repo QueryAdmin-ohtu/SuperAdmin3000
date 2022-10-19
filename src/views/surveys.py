@@ -81,6 +81,11 @@ def delete_survey():
         abort(403)
 
     survey_id = request.form["id"]
+    confirmation_text = request.form["confirmation-text"]
+    survey_to_delete = survey_service.get_survey(survey_id)
+    
+    if survey_to_delete.name != confirmation_text:
+        return redirect(f"/surveys/{survey_id}")
     if survey_service.delete_survey(survey_id):
         return redirect("/")
     return redirect(f"/surveys/{survey_id}")
