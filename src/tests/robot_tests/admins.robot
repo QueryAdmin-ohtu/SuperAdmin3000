@@ -16,11 +16,11 @@ Logged In User Can Add New Admin
 
 Logged In User Can View Admins
     Go To Admins Page
-    Page Should Contain  Authorized users
+    Page Should Contain  Add new users here!
     Page Should Contain  9
     Page Should Contain  jorma@uotinen.net
 
 Logged Out User Cannot View Admins
     Logout
     Go To Admins Page
-    Page Should Not Contain  Authorized users
+    Page Should Not Contain  Add new users here!

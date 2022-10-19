@@ -1,4 +1,5 @@
 {% import "components/macros/survey_elements.html" as survey_elements %}
+{% import "components/macros/buttons.html" as buttons %}
 
 <div class="grid md:grid-cols-2 gap-6 lg:gap-8 items-center">
     <div class="flex flex-col gap-2">
@@ -6,15 +7,8 @@
         <h1 class="text-gray-900">{{ survey.title_text }}</h1>
     </div>
     <div class="flex items-start md:justify-end gap-2">
-
         {{ buttons.link_button("Edit survey", "/surveys/edit/%s" % survey[0]) }}
-
-        <form id="delete" class="" onsubmit="return confirm('Are you sure you want to delete this survey?')"
-            action="/delete_survey" method="POST">
-            <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
-            <input type="hidden" name="id" value="{{ survey[0] }}">
-            {{ buttons.form_button("Delete survey", "delete", "delete", "destructive") }}
-        </form>
+        {{ buttons.modal_button("Delete survey", "delete", "survey-delete-button", "modal", "destructive") }}
     </div>
 
 </div>

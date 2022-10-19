@@ -1,10 +1,24 @@
 {% extends "layout.html" %}
 {% import "components/macros/survey_elements.html" as survey_elements %}
 {% import "components/macros/buttons.html" as buttons %}
+{% block head %}
+<script type="text/javascript">
+    window.openModal = function (modalId) {
+        document.getElementById(modalId).style.display = 'block'
+        document.getElementsByTagName('body')[0].classList.add('overflow-y-hidden')
+    }
+
+    window.closeModal = function (modalId) {
+        document.getElementById(modalId).style.display = 'none'
+        document.getElementsByTagName('body')[0].classList.remove('overflow-y-hidden')
+    }
+</script>
+{% endblock %}
 {% block content %}
 
 {% if survey %}
 <div class="flex flex-col gap-6">
+    {% include "components/sections/survey_deletition_modal.html" %}
     {% include "components/sections/survey_header.html" %}
     {% include "components/sections/survey_categories.html" %}
     {% include "components/sections/survey_questions.html" %}

@@ -30,6 +30,19 @@ Delete The Survey
     Click Button  Delete survey
     Handle Alert  Accept
 
+Write Confirmation Text To Modal
+    [Arguments]  ${confirmation}
+    Input Text  confirmation-text  ${confirmation}
+
+Open Delete Modal
+    Click Button  id:survey-delete-button
+
+Click Delete Modal Cancel
+    Click Button  id:modal-cancel-button
+
+Click Delete Modal Delete
+    Click Button  id:modal-delete-button
+
 Make A Survey To Delete
     Go To Home Page
     Click Link  New survey

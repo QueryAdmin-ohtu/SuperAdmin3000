@@ -13,8 +13,6 @@ surveys = Blueprint("surveys", __name__)
 def new():
     """Renders the new survey page
     """
-    if not helper.logged_in():
-        return redirect("/")
 
     stored_categories = survey_service.get_all_categories()
 
@@ -25,8 +23,6 @@ def new():
 def surveys_edit(survey_id):
     """Renders the edit survey page
     """
-    if not helper.logged_in():
-        return redirect("/")
 
     survey = survey_service.get_survey(survey_id)
 
@@ -37,9 +33,6 @@ def surveys_edit(survey_id):
 def surveys_update():
     """ Form handler for updating an existing survey info
     """
-
-    if not helper.valid_token(request.form):
-        abort(403)
 
     survey_id = request.form["survey_id"]
     name = request.form["name"]
@@ -58,9 +51,6 @@ def create_survey():
     which creates a survey into Surveys
     """
 
-    if not helper.valid_token(request.form):
-        abort(403)
-
     name = request.form["name"]
     title = request.form["title"]
     survey = request.form["survey"]
@@ -72,17 +62,28 @@ def create_survey():
 
 @surveys.route("/delete_survey", methods=["POST"])
 def delete_survey():
-    """ Takes survey id from new.html and calls
-    a db function to delete the survey using the id
-    and redirects to homepage if deletion succeeded,
-    otherwise redirects back to the survey """
+    """ Takes the survey id from a hidden input
+    in the form and retrives the survey object
+    from the DB. Then comparess that the name of
+    the survey and the confirmation the user
+    wrote match.
 
-    if not helper.valid_token(request.form):
-        abort(403)
+    If names match a db function is called to delete 
+    the survey using the id.
+
+    Succeeds: Redirect to home page
+    Fails: Redirect back to survey pages"""
 
     survey_id = request.form["id"]
+    confirmation_text = request.form["confirmation-text"]
+    survey_to_delete = survey_service.get_survey(survey_id)
+    
+    if survey_to_delete.name != confirmation_text:
+        return redirect(f"/surveys/{survey_id}")
+
     if survey_service.delete_survey(survey_id):
         return redirect("/")
+
     return redirect(f"/surveys/{survey_id}")
 
 
@@ -91,9 +92,6 @@ def view_survey(survey_id):
     """ Looks up survey information based
     on the id with a db function and renders
     a page with the info from the survey """
-
-    if not helper.logged_in():
-        return redirect("/")
 
     survey = survey_service.get_survey(survey_id)
     questions = survey_service.get_questions_of_survey(survey_id)
@@ -109,9 +107,6 @@ def surveys_statistics(survey_id):
     """ Open up statistics for the given survey
     """
 
-    if not helper.logged_in():
-        return redirect("/")
-
     survey = survey_service.get_survey(survey_id)
 
     #  TODO: get statistics
@@ -125,9 +120,6 @@ def surveys_statistics(survey_id):
 def add_question():
     """ Adds a new question to the database
     """
-
-    if not helper.valid_token(request.form):
-        abort(400, 'Invalid CSRF token.')
 
     text = request.form["text"]
     survey_id = request.form["survey_id"]
@@ -153,9 +145,6 @@ def add_answer():
     """ Adds a new answer to a question to the database.
     If the question doesn't exist, it is created first
     """
-
-    if not helper.valid_token(request.form):
-        abort(400, 'Invalid CSRF token.')
 
     question_id = request.form["question_id"]
 
@@ -187,8 +176,6 @@ def add_answer():
 def delete_answer(question_id, answer_id):
     """ Call database query for removal of a single answer
     """
-    if not helper.valid_token(request.form):
-        abort(400, 'Invalid CSRF token.')
 
     survey_service.delete_answer_from_question(answer_id)
     return redirect("/questions/" + question_id)
@@ -212,8 +199,6 @@ def new_question(survey_id):
 def delete_question(question_id, survey_id):
     """ Call database query for removal of a single question
     """
-    if not helper.valid_token(request.form):
-        abort(400, 'Invalid CSRF token.')
 
     survey_service.delete_question_from_survey(question_id)
     return redirect("/surveys/" + survey_id)
@@ -224,9 +209,6 @@ def edit_question(question_id):
     """ Returns the page for creating a new question
     where the inputs are filled with the information
     from the question to be edited """
-
-    if not helper.logged_in():
-        return redirect("/")
 
     question = survey_service.get_question(question_id)
     if len(question) < 4:
@@ -274,8 +256,6 @@ def edit_category():
     """ Receives the inputs from the edit_category.html template.
     Stores updated category information to the database.
     """
-    if not helper.valid_token(request.form):
-        abort(400, 'Invalid CSRF token.')
 
     survey_id = request.form["survey_id"]
     name = request.form["name"]
@@ -345,9 +325,6 @@ def delete_category():
     Shows error message to user if not succesfull.
     """
 
-    if not helper.valid_token(request.form):
-        abort(403)
-
     category_id = request.form["category_id"]
     survey_id = request.form["survey_id"]
     return_value = survey_service.delete_category(category_id)
@@ -359,6 +336,12 @@ def delete_category():
 # Save requestes to the log
 @surveys.before_request
 def before_request():
+
+    if not helper.logged_in():
+        return redirect("/")
+
+    if request.method == "POST" and not helper.valid_token(request.form):
+        abort(400, 'Invalid CSRF token')
 
     user = helper.current_user()
     Logger(user).log_post_request(request)

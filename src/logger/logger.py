@@ -6,40 +6,77 @@ class Logger:
     """ A class for creating and reading logs of user operations
     """
 
-    def __init__(self, username="ANONYMOUS", filename="superadmin.log"):
+    def __init__(self,
+                 username="ANONYMOUS",
+                 filename="superadmin.log",
+                 log_requests=["POST"],
+                 sensitive=["token", "password", "credential"]
+                 ):
 
         self.username = username
         self.filename = filename
+        self.log_requests = log_requests
+        self.sensitive = sensitive
 
     def log_post_request(self, request):
-        """ Write the request to the log, if the requst contains string "POST
+        """ Write the request to the log, if the requst contains string found in
+        the log_requests array and is not sensitive data
 
         Returns:
             String: The log entry in success, None in failure.
         """
 
-        if request.method != "POST":
+        if request.method not in self.log_requests:
             return
 
-        # Remove sensitive data
-        form_values = {
-            k: v for (k, v) in request.form.items() if "token" not in k}
+        # Remove sensitive data which should not be written in the log
+        form_dict = {}
 
-        return self.write(f"POST:{request.path} FORM:{form_values}")
+        for (key, value) in request.form.items():
+            sensitive_field = False
+            for s in self.sensitive:
+                if s in key:
+                    sensitive_field = True
+                    break
+            if not sensitive_field:
+                form_dict[key] = value
 
-    def write(self, message, type="EVENT"):
+        form_string = self.prettify(form_dict)
+
+        return self.write(
+            f"{request.path}{form_string}",
+            event_type=request.method
+        )
+
+    def prettify(self, form):
+        """ Format given form to printable form
+
+        Arguments:
+            Form dictionary
+        Returns:
+            String
+        """
+
+        return_string = "\n"
+
+        for (key, value) in form.items():
+            return_string += f"{'':<5}{key:<20}{value}\n"
+
+        return return_string
+
+    def write(self, message, event_type="EVENT"):
         """
         Adds an event of type to the log with current time stamp
 
         Args:
             message: Text to be logged
-            type: Type of the event
+            event_type: Type of the event, such as POST or GET
         Returns:
             String: The log entry in success, None in failure.
 
         """
 
-        return self._write(datetime.now(), self.username, message, event_type="EVENT")
+        return self._write(datetime.now(), self.username, message, event_type)
 
     def _write(self, time, user, message, event_type):
         """
