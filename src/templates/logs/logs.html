@@ -4,12 +4,17 @@
 
 <h2>Event log</h2>
 
+{% if logs %}
 <div>
   {% for log in logs %}
-  <div class="whitespace-pre text-slate-600 font-mono text-sm font-small">
-    {{ log }}
-  </div>
+    <span class="whitespace-pre font-mono text-slate-600">{{ log }}</span>
   {% endfor %}
 </div>
+
+{% else %}
+
+No events in the log
+
+{% endif %}
 
 {% endblock %}

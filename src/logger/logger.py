@@ -60,7 +60,7 @@ class Logger:
         return_string = "\n"
 
         for (key, value) in form.items():
-            return_string += f"{'':<10}{key:<10}{value}\n"
+            return_string += f"{'':<5}{key:<20}{value}\n"
 
         return return_string
     
