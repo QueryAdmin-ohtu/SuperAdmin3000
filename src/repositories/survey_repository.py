@@ -233,15 +233,15 @@ class SurveyRepository:
             return False
         return category
 
-
     def get_categories_of_survey(self, survey_id):
         """ Fetches categories of a given survey from the database.
 
         Returns:
         An array containing id, name, description, content_links of the categories.
         """
-        sql = """ SELECT id, name, description, content_links FROM "Categories" WHERE "surveyId"=:survey_id ORDER BY id"""
-        
+        sql = """ SELECT id, name, description, content_links FROM "Categories"
+        WHERE "surveyId"=:survey_id ORDER BY id"""
+
         categories = self.db_connection.session.execute(
             sql, {"survey_id": survey_id}).fetchall()
 
@@ -327,7 +327,7 @@ class SurveyRepository:
             sql, {"question_id": question_id}).fetchone()
         return question
 
-    def create_category(self, survey_id:str, name: str, description: str, content_links: list):
+    def create_category(self, survey_id: str, name: str, description: str, content_links: list):
         """ Inserts a new category to database table Categories.
 
         Returns:
@@ -375,7 +375,6 @@ class SurveyRepository:
         except exc.SQLAlchemyError:
             return None
         return answers
-
 
     def add_admin(self, email: str):
         """ Inserts a new admin to the Admin table

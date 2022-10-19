@@ -295,7 +295,8 @@ def edit_category():
         new_content_links_json = json.dumps(new_content_links)
         survey_service.update_category(
             category_id, new_content_links_json, name, description)
-        return redirect(f"/surveys/{survey_id}") # Unclear UX question - Where to return the user when saving changes.
+        # Unclear UX question - Where to return the user when saving changes.
+        return redirect(f"/surveys/{survey_id}")
 
     # Creating a new survey
     new_content_links_json = json.dumps(new_content_links)
@@ -329,14 +330,13 @@ def add_content_link():
     if new_url and new_type:
         new_content = {'url': new_url, 'type': new_type}
         new_content_links.append(new_content)
-    
+
     new_content_links_json = json.dumps(new_content_links)
 
     survey_service.update_category(
         category_id, new_content_links_json)
     return redirect(f"/edit_category/{survey_id}/{category_id}")
-    
-    
+
 
 @surveys.route("/delete_category", methods=["POST"])
 def delete_category():

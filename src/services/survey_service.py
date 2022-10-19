@@ -186,10 +186,10 @@ class SurveyService:
         Returns:
             List of category_id's
         """
-        categories=self.survey_repository.get_categories_of_survey(survey_id)
+        categories = self.survey_repository.get_categories_of_survey(survey_id)
 
         return categories
-    
+
     def create_question(self, text: str, survey_id: int, category_weights: str):
         """
         Creates a new questions with given information.
@@ -255,7 +255,7 @@ class SurveyService:
         the answer determined by the given answer_id """
         return self.survey_repository.get_user_answers(answer_id)
 
-    def create_category(self, survey_id:str, name: str, description: str, content_links: list):
+    def create_category(self, survey_id: str, name: str, description: str, content_links: list):
         """
         Creates a new category.
 
@@ -311,14 +311,14 @@ class SurveyService:
             If succeeds: The DB id of the created category
             If not: False
         """
-        
-        if name==None:
-            category=self.get_category(category_id)
-            name=category[1]
-        if description==None:
-            category=self.get_category(category_id)
-            description=category[2]
-        
+
+        if name is None:
+            category = self.get_category(category_id)
+            name = category[1]
+        if description is None:
+            category = self.get_category(category_id)
+            description = category[2]
+
         return self.survey_repository.update_category(category_id, content_links, name, description)
 
     def delete_category(self, category_id: str):
