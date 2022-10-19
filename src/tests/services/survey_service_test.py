@@ -164,15 +164,16 @@ class TestSurveyService(unittest.TestCase):
 
     def test_create_category_calls_repo_correctly(self):
         self.repo_mock.create_category.return_value = 1
+        survey_id="1"
         name = "name"
         description = "description"
         content_links = [{"url": "https://www.eficode.com/cases/hansen", "type": "Case Study"},
                          {"url": "https://www.eficode.com/cases/basware", "type": "Case Study"}]
         check = self.survey_service.create_category(
-            name, description, content_links)
+            survey_id, name, description, content_links)
         self.assertEqual(check, 1)
         self.repo_mock.create_category.assert_called_with(
-            name, description, content_links)
+            survey_id, name, description, content_links)
 
     def test_add_admin_calls_repo_correctly(self):
         self.repo_mock.add_admin.return_value = 1
@@ -225,3 +226,19 @@ class TestSurveyService(unittest.TestCase):
         check = self.survey_service.get_category(category_id)
         self.assertEqual(check, 1)
         self.repo_mock.get_category.assert_called_with(category_id)
+
+    def test_get_categories_of_survey_calls_repo_correctly(self):
+        return_value=["1", "nimi", "kuvaus", []]
+        self.repo_mock.get_categories_of_survey.return_value = return_value
+        survey_id = 1
+        check = self.survey_service.get_categories_of_survey(survey_id)
+        self.assertEqual(check, return_value)
+        self.repo_mock.get_categories_of_survey.assert_called_with(survey_id)
+    
+    def test_get_user_answers_calls_repo_correctly(self):
+        return_values= [(1, "Test answer 1", 5), (2, "Test answer 2", 7)]
+        self.repo_mock.get_user_answers.return_value = return_values
+        question_id = 1
+        check = self.survey_service.get_user_answers(question_id)
+        self.assertEqual(check, return_values)
+        self.repo_mock.get_user_answers.assert_called_with(question_id)
