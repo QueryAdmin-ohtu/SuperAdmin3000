@@ -234,3 +234,11 @@ class TestSurveyService(unittest.TestCase):
         check = self.survey_service.get_categories_of_survey(survey_id)
         self.assertEqual(check, return_value)
         self.repo_mock.get_categories_of_survey.assert_called_with(survey_id)
+    
+    def test_get_user_answers_calls_repo_correctly(self):
+        return_values= [(1, "Test answer 1", 5), (2, "Test answer 2", 7)]
+        self.repo_mock.get_user_answers.return_value = return_values
+        question_id = 1
+        check = self.survey_service.get_user_answers(question_id)
+        self.assertEqual(check, return_values)
+        self.repo_mock.get_user_answers.assert_called_with(question_id)
