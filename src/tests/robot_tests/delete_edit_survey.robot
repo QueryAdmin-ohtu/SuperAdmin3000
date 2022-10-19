@@ -12,8 +12,26 @@ Delete An Existing Survey
     Go To Backdoor Login Page
     Login With Correct Credentials
     Make A Survey To Delete
-    Delete The Survey
+    Open Delete Modal
+    Write Confirmation Text To Modal  Must Not Contain
+    Click Delete Modal Delete
     Page Should Not Contain  Poistuisikohan
+
+Try To Delete A Survey But Write Invalid Confirmation Text
+    Go To Home Page
+    Make A Survey To Delete
+    Open Delete Modal
+    Write Confirmation Text To Modal  Masa Mainio
+    Click Delete Modal Delete
+    Page Should Contain  Poistuisikohan
+
+Deletition Modal Is Closed By Clicking Cancel
+    Go To Survey  1
+    Element Should Not Be Visible  id:modal
+    Open Delete Modal
+    Element Should Be Visible  id:modal
+    Click Delete Modal Cancel
+    Element Should Not Be Visible  id:modal
 
 Logged In User Can Edit Survey
     Go To Survey  1
