@@ -239,12 +239,8 @@ class SurveyRepository:
         Returns:
         An array containing id, name, description, content_links of the categories.
         """
-<<<<<<< HEAD
         sql = """ SELECT id, name, description, content_links FROM "Categories"
         WHERE "surveyId"=:survey_id ORDER BY id"""
-=======
-        sql = """ SELECT id, name, description, content_links FROM "Categories" WHERE "surveyId"=:survey_id ORDER BY id"""
->>>>>>> main
 
         categories = self.db_connection.session.execute(
             sql, {"survey_id": survey_id}).fetchall()

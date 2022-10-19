@@ -5,8 +5,6 @@ Library  SeleniumLibrary
 *** Variables ***
 ${BROWSER}  headlesschrome
 ${DELAY}  0 seconds
-# ${BROWSER}  chrome
-# ${DELAY}  1 seconds
 ${URL}  http://localhost:5000
 ${BACKDOOR URL}  ${URL}/backdoor
 ${EDIT URL}  ${URL}/surveys/edit/1
