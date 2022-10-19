@@ -19,31 +19,25 @@ Set Content Link Type
 Create New Category
     Set Category Name  nimi
     Set Category Description  kuvaus
-    Set Content Link Url  osoite
-    Set Content Link Type  tyyppi
-    Click Button  Submit
+    Click Button  Save
 
 Create New Category Without Name
     Set Category Description  kuvaus
-    Set Content Link Url  osoite
-    Set Content Link Type  tyyppi
-    Click Button  Submit
+    Click Button  Save
 
 Create New Category Without Description
     Set Category Name  nimi
-    Set Content Link Url  osoite
-    Set Content Link Type  tyyppi
-    Click Button  Submit
+    Click Button  Save
 
 Create New Category Without Content Links
     Set Category Name  abc
     Set Category Description  123
-    Click Button  Submit
+    Click Button  Save
 
 Edit Category Name and Description
     Set Category Name  uusi nimi
     Set Category Description  uusi kuvaus
-    Click Button  Submit
+    Click Button  Save
 
 Add Content Link
     Set Content Link Url  uusi url
@@ -53,4 +47,4 @@ Add Content Link
 Edit Content Link
     Input Text  url_0  kissa
     Input Text  type_0  koira
-    Click Button  Submit
+    Click Button  Save

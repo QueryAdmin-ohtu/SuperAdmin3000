@@ -21,13 +21,13 @@ Logged In User Cannot Create Categories Without Name
     Go To Survey  1
     Click Link  Add category
     Create New Category Without Name
-    Alert Should Be Present  Must have a name
+    Page Should Not Contain  Add content link
 
 Logged In User Cannot Create Categories Without Description
     Go To Survey  1
     Click Link  Add category
     Create New Category Without Description
-    Alert Should Be Present  Must have a description
+    Page Should Not Contain  Add content link
 
 Logged In User Can Create Categories Without Content Links
     Go To Survey  1
@@ -60,7 +60,7 @@ Logged In User Can Delete a Category Without Results
 Logged In User Can Edit Category Name and Description
     Go To Survey  1
     Click Link  edit_button_1
-    Page Should Contain  Edit Category
+    Page Should Contain  Edit category
     Edit Category Name and Description
     Page Should Contain  uusi nimi
     Page Should Contain  uusi kuvaus
