@@ -3,11 +3,11 @@
 {% import "components/macros/survey_elements.html" as survey_elements %}
 {% block content %}
 <div class="flex flex-col gap-6 items-start w-full">
-    <h1 class="text-slate-700">Question #1 of Name of Survey</h1>
-    <form class="w-full" action="/add_question" method="POST">
+    <h1 class="text-slate-700">Add question to {{ survey.name }}</h1>
+    <form class="w-full" action="/surveys/{{ survey.id }}/new-question" method="POST">
         <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
-        <input type="hidden" name="survey_id" id="survey_id" value={{survey_id}}>
-        <input type="hidden" name="question_id" id="question_id" value={{question_id}}>
+        <input type="hidden" name="survey_id" id="survey_id" value="{{ survey.id }}">
+        <input type="hidden" name="question_id" id="question_id" value="{{ question_id }}">
         <input type="hidden" name="edit" id="edit" value="{{ edit }}">
         <input type="hidden" name="created" id="created" value="{{ created }}">
         <div class="grid grid-cols-2 gap-4">
@@ -28,7 +28,7 @@
                             {% endfor %}
                         </div>
                     </fieldset>
-                    {{ form_elements.submit_button("Save changes", "default", "/add_question") }}
+                    {{ form_elements.submit_button("Save changes") }}
                 </div>
                 {% endcall %}
                 {% for answer in answers %}

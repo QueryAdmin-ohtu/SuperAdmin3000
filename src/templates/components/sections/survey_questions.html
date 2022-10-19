@@ -3,7 +3,7 @@
 {% call survey_elements.card() %}
 <h2 class="py-6">Questions</h2>
 <div class="pb-6">
-    {{ buttons.link_button("Add question", "/%s/new_question" % survey[0]) }}
+    {{ buttons.link_button("Add question", "/surveys/%s/new-question" % survey.id) }}
     <br>
 </div>
 {% if questions %}

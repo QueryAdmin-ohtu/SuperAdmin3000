@@ -114,8 +114,23 @@ def survey_statistics(survey_id):
                            statistics=statistics, survey_id=survey_id, ENV=app.config["ENV"])
 
 
-@surveys.route("/add_question", methods=["POST"])
-def add_question():
+@surveys.route("/surveys/<survey_id>/new-question", methods=["GET"])
+def new_question_view(survey_id):
+    """  Returns the page for creating a new question.
+    """
+    if not helper.logged_in():
+        return redirect("/")
+
+    survey = survey_service.get_survey(survey_id)
+    categories = survey_service.get_categories_of_survey(survey_id)
+    weights = {}
+    return render_template("questions/new_question.html",
+                           ENV=app.config["ENV"], categories=categories,
+                           survey=survey, weights=weights)
+
+
+@surveys.route("/surveys/<survey_id>/new-question", methods=["POST"])
+def new_question_post(survey_id):
     """ Adds a new question to the database
     """
 
@@ -186,19 +201,6 @@ def delete_answer(question_id, answer_id):
     survey_service.delete_answer_from_question(answer_id)
     return redirect("/questions/" + question_id)
 
-
-@surveys.route("/<survey_id>/new_question", methods=["GET"])
-def new_question(survey_id):
-    """  Returns the page for creating a new question.
-    """
-    if not helper.logged_in():
-        return redirect("/")
-
-    categories = survey_service.get_categories_of_survey(survey_id)
-    weights = {}
-    return render_template("questions/new_question.html",
-                           ENV=app.config["ENV"], categories=categories,
-                           survey_id=survey_id, weights=weights)
 
 
 @surveys.route("/surveys/delete/<survey_id>/<question_id>", methods=["POST"])
