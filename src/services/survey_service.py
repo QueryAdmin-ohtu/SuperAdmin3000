@@ -303,9 +303,9 @@ class SurveyService:
 
         Args:
             category_id: database if of the category to be updated
+            content_links: New content links related to the category
             name: New name of the category
             description: New description of the category
-            content_links: New content links related to the category
 
         Returns:
             If succeeds: The DB id of the created category
