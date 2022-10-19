@@ -415,6 +415,24 @@ class TestSurveyRepository(unittest.TestCase):
             response = self.repo.delete_category('abc')
             self.assertFalse(response)
 
+    def test_admin_exists_returns_true_when_admin_found(self):
+        email = "test@gmail.com"
+        with self.app.app_context():
+            response = self.repo._admin_exists(email)
+        self.assertTrue(response)
+
+    def test_admin_exists_returns_false_when_admin_not_found(self):
+        email = "noemail@gmail.com"
+        with self.app.app_context():
+            response = self.repo._admin_exists(email)
+        self.assertFalse(response)
+    
+    def test_add_admin_does_not_add_email_if_email_found_in_db(self):
+        email = "test@gmail.com"
+        with self.app.app_context():
+            response = self.repo.add_admin(email)
+        self.assertIsNone(response)
+
     def test_get_categories_of_survey_returns_multiple_categories(self):
         with self.app.app_context():
             survey_id = 1
