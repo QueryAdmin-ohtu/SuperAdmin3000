@@ -11,7 +11,7 @@ class Logger:
                  filename="superadmin.log",
                  log_requests=["POST"],
                  sensitive=["token", "password", "credential"]
-    ):
+                 ):
 
         self.username = username
         self.filename = filename
@@ -31,7 +31,7 @@ class Logger:
 
         # Remove sensitive data which should not be written in the log
         form_dict = {}
-        
+
         for (key, value) in request.form.items():
             sensitive_field = False
             for s in self.sensitive:
@@ -42,7 +42,7 @@ class Logger:
                 form_dict[key] = value
 
         form_string = self.prettify(form_dict)
-        
+
         return self.write(
             f"{request.path}{form_string}",
             event_type=request.method
@@ -63,7 +63,7 @@ class Logger:
             return_string += f"{'':<5}{key:<20}{value}\n"
 
         return return_string
-    
+
     def write(self, message, event_type="EVENT"):
         """
         Adds an event of type to the log with current time stamp

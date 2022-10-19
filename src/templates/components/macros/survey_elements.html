@@ -51,23 +51,11 @@
                         EDIT
                     </button>
                 </a>
-                <form id="delete-question-{{ row_num }}" name="delete" action="/surveys/delete/{{survey[0]}}/{{question[0]}}" method="POST">
+                <form id="delete-question-{{ row_num }}" name="delete" action="/surveys/delete/{{survey[0]}}/{{question[0]}}" method="POST" onsubmit="return confirm('Are you sure you want to delete this question?');">
                   <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
                   {{ form_elements.submit_button("DELETE", type="destructive") }}
-                  <!-- TODO: Confirmation for deletion -->
                 </form>
-                
-                <!-- TODO: Remove commented out old version of the delete button
-                <a href="/surveys/delete/{{survey[0]}}/{{question[0]}}">
-                    <button
-                        id="delete-question-{{ row_num }}"
-                        class="rounded-r inline-block px-6 py-2.5 bg-rose-500 text-white font-medium text-xs leading-tight uppercase hover:bg-rose-700 focus:bg-rose-700 focus:outline-none focus:ring-0 active:bg-rose-800 transition duration-150 ease-in-out"
-                        name="delete" value="delete"
-                        onclick="return confirm('Are you sure you want to delete this question?')">
-                        DELETE
-                    </button>
-                </a>
-                -->
+
             </div>
         </div>
     </div>
