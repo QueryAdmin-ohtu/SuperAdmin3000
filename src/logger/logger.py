@@ -23,7 +23,7 @@ class Logger:
         the log_requests array and is not sensitive data
 
         Returns:
-            String: The log entry in success, None in failure.        
+            String: The log entry in success, None in failure.
         """
 
         if request.method not in self.log_requests:
@@ -95,8 +95,8 @@ class Logger:
         log_string = f"[{event_type}] {date_string} {user} {message}"
 
         try:
-            with open(self.filename, "a") as f:
-                f.write(log_string + '\n')
+            with open(self.filename, "a") as file:
+                file.write(log_string + '\n')
         except IOError:
             return None
 
@@ -105,15 +105,15 @@ class Logger:
     def read_all_events(self):
         """
         Reads event log from a file and returns an array
-        containing every line, or Null if error happens 
+        containing every line, or Null if error happens
 
         Returns:
             An array of strings
         """
 
         try:
-            with open(self.filename, "r") as f:
-                lines = f.readlines()
+            with open(self.filename, "r") as file:
+                lines = file.readlines()
         except IOError:
             return None
 
