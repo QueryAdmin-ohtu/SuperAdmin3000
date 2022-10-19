@@ -155,6 +155,34 @@ def new_question_post(survey_id):
         survey_service.create_question(text, survey_id, category_weights)
     return redirect(f"/surveys/{survey_id}")
 
+@surveys.route("/surveys/<survey_id>/questions/<question_id>", methods=["GET"])
+def edit_question(survey_id, question_id):
+    """ Returns the page for editing the question
+    where the inputs are pre-filled"""
+
+    if not helper.logged_in():
+        return redirect("/")
+
+    question = survey_service.get_question(question_id)
+    if len(question) < 4:
+        return redirect("/")
+    text = question[0]
+    created = question[2]
+    weights = question[3]
+    answers = survey_service.get_question_answers(question_id)
+    if weights:
+        weights = helper.json_into_dictionary(question[3])
+
+    survey = survey_service.get_survey(survey_id)    
+    categories = survey_service.get_categories_of_survey(survey_id)
+
+    return render_template("questions/new_question.html",
+                           ENV=app.config["ENV"], text=text, survey=survey,
+                           weights=weights, categories=categories,
+                           created=created, edit=True, question_id=question_id,
+                           answers=answers)
+
+# ---------------------------
 
 @surveys.route("/add_answer", methods=["POST"])
 def add_answer():
@@ -213,32 +241,6 @@ def delete_question(question_id, survey_id):
     survey_service.delete_question_from_survey(question_id)
     return redirect("/surveys/" + survey_id)
 
-
-@surveys.route("/questions/<question_id>", methods=["GET"])
-def edit_question(question_id):
-    """ Returns the page for creating a new question
-    where the inputs are filled with the information
-    from the question to be edited """
-
-    if not helper.logged_in():
-        return redirect("/")
-
-    question = survey_service.get_question(question_id)
-    if len(question) < 4:
-        return redirect("/")
-    text = question[0]
-    survey_id = question[1]
-    created = question[2]
-    weights = question[3]
-    answers = survey_service.get_question_answers(question_id)
-    if weights:
-        weights = helper.json_into_dictionary(question[3])
-    categories = survey_service.get_categories_of_survey(survey_id)
-    return render_template("questions/new_question.html",
-                           ENV=app.config["ENV"], text=text, survey_id=survey_id,
-                           weights=weights, categories=categories,
-                           created=created, edit=True, question_id=question_id,
-                           answers=answers)
 
 
 @surveys.route("/edit_category/<survey_id>/<category_id>", methods=["GET"])
