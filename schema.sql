@@ -916,4 +916,3 @@ GRANT ALL ON LANGUAGE plpgsql TO wylkhmgvtlywtp;
 --
 -- PostgreSQL database dump complete
 --
-
