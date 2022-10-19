@@ -9,7 +9,7 @@ Test Setup  Go To Home Page
 Logged In User Can View Event Logs
     Login Through Backdoor
     Click link  Logs
-    Page Should Contain  EVENT
+    Page Should Contain  Event log
 
 Logged Out User Cannot View Event Logs
     Logout
