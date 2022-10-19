@@ -156,8 +156,8 @@ class TestSurveyRepository(unittest.TestCase):
             response = self.repo.get_survey(survey_id)
         self.assertFalse(response)
 
-
     # TODO: Add functionality to this test as data becomes available.
+
     def test_delete_survey_deletes_related_data(self):
         with self.app.app_context():
             survey_id = self.repo.create_survey(
@@ -167,17 +167,17 @@ class TestSurveyRepository(unittest.TestCase):
             self.assertTrue(self.repo.get_survey(survey_id) != False)
             self.repo.delete_survey(survey_id)
             response = self.repo.get_survey(survey_id)
-            get_related_questions = self.repo.get_questions_of_survey(survey_id)
-            get_related_survey_results = [] 
+            get_related_questions = self.repo.get_questions_of_survey(
+                survey_id)
+            get_related_survey_results = []
         self.assertFalse(response)
         self.assertTrue(len(get_related_questions) == 0)
         self.assertTrue(len(get_related_survey_results) == 0)
 
-
     def test_create_question_creates_question(self):
 
         with self.app.app_context():
-            
+
             survey_id = 1
 
             question_id = self.repo.create_question(
@@ -188,7 +188,7 @@ class TestSurveyRepository(unittest.TestCase):
         self.assertEqual(result.text, "create question test")
 
     def test_delete_question_from_survey_deletes_question(self):
-        
+
         with self.app.app_context():
             survey_id = 1
 
@@ -203,7 +203,7 @@ class TestSurveyRepository(unittest.TestCase):
         self.assertIsNone(response_get_deleted)
 
     def test_delete_question_from_survey_deletes_question_answers(self):
-        
+
         with self.app.app_context():
             survey_id = 1
 
@@ -211,7 +211,8 @@ class TestSurveyRepository(unittest.TestCase):
                 text, survey_id, category_weights)
 
             for i in range(10):
-                self.repo.create_answer("Test answer " + str(i), points=i*10, question_id=question_id)   
+                self.repo.create_answer(
+                    "Test answer " + str(i), points=i*10, question_id=question_id)
             self.repo.delete_question_from_survey(
                 question_id)
             response_get_answers = self.repo.get_question_answers(
@@ -228,18 +229,19 @@ class TestSurveyRepository(unittest.TestCase):
             result = self.repo.get_user_answers(question_id)
         self.assertIsNone(result)
 
-
     def test_get_user_answers_returns_all_answers(self):
 
         with self.app.app_context():
             survey_id = 1
             question_id = self.repo.create_question(
-            text, survey_id, category_weights)
+                text, survey_id, category_weights)
             for i in range(5):
-                self.repo.create_answer("Test answer " + str(i), points=i*10, question_id=question_id)
+                self.repo.create_answer(
+                    "Test answer " + str(i), points=i*10, question_id=question_id)
             answers = self.repo.get_question_answers(question_id)
         self.assertTrue(len(answers) == 5)
-        self.assertTrue(answers[0][1] == "Test answer 0" and answers[4][1] == "Test answer 4")
+        self.assertTrue(
+            answers[0][1] == "Test answer 0" and answers[4][1] == "Test answer 4")
 
     def test_delete_answer_from_question_deletes_answer(self):
 
@@ -415,14 +417,14 @@ class TestSurveyRepository(unittest.TestCase):
 
     def test_get_categories_of_survey_returns_multiple_categories(self):
         with self.app.app_context():
-            survey_id=1
+            survey_id = 1
             response = self.repo.get_categories_of_survey(survey_id)
 
         self.assertGreater(len(response), 2)
 
     def test_get_categories_of_survey_returns_empty_list_if_survey_has_no_categories(self):
         with self.app.app_context():
-            survey_id=2
+            survey_id = 2
             response = self.repo.get_categories_of_survey(survey_id)
 
         self.assertEqual(len(response), 0)

@@ -308,6 +308,6 @@ def before_request():
 
     if request.method == "POST" and not helper.valid_token(request.form):
         abort(400, 'Invalid CSRF token')
-        
+
     user = helper.current_user()
     Logger(user).log_post_request(request)
