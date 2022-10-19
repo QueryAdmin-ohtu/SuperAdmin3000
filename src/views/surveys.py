@@ -9,10 +9,6 @@ from logger.logger import Logger
 surveys = Blueprint("surveys", __name__)
 
 
-@surveys.route("/surveys")
-def view_surveys():
-    return redirect("/")
-
 @surveys.route("/surveys/new-survey")
 def new_survey():
     """Renders the new survey page
@@ -25,34 +21,30 @@ def new_survey():
     return render_template("surveys/new_survey.html", ENV=app.config["ENV"], categories=stored_categories)
 
 
-@surveys.route("/surveys/<survey_id>/edit")
+@surveys.route("/surveys/<survey_id>/edit", methods=["GET", "POST"])
 def edit_survey(survey_id):
-    """Renders the edit survey page
+    """Renders edit survey page and handles editing requests
     """
-    if not helper.logged_in():
-        return redirect("/")
+    if request.method == "GET":
+        if not helper.logged_in():
+            return redirect("/")
 
-    survey = survey_service.get_survey(survey_id)
+        survey = survey_service.get_survey(survey_id)
 
-    return render_template("surveys/edit_survey.html", survey=survey, survey_id=survey_id, ENV=app.config["ENV"])
+        return render_template("surveys/edit_survey.html", survey=survey, ENV=app.config["ENV"])
 
+    if request.method == "POST":
+        if not helper.valid_token(request.form):
+            abort(403)
 
-@surveys.route("/surveys/update", methods=["POST"])
-def surveys_update():
-    """ Form handler for updating an existing survey info
-    """
+        survey_id = request.form["survey_id"]
+        name = request.form["name"]
+        title = request.form["title"]
+        description = request.form["description"]
 
-    if not helper.valid_token(request.form):
-        abort(403)
-
-    survey_id = request.form["survey_id"]
-    name = request.form["name"]
-    title = request.form["title"]
-    description = request.form["description"]
-
-    survey_service.edit_survey(survey_id, name, title, description)
-    route = f"/surveys/{survey_id}"
-    return redirect(route)
+        survey_service.edit_survey(survey_id, name, title, description)
+        route = f"/surveys/{survey_id}"
+        return redirect(route)
 
 
 @surveys.route("/create_survey", methods=["POST"])
@@ -340,6 +332,11 @@ def delete_category():
     if return_value is True:
         return redirect(f"/surveys/{survey_id}")
     return str(return_value)
+
+@surveys.route("/surveys")
+def view_surveys():
+    """Redirecting method"""
+    return redirect("/")
 
 
 # Save requestes to the log

@@ -12,7 +12,7 @@
     </div>
     {% if survey %}
     {% call survey_elements.card() %}
-    <form action="/surveys/update" method="POST">
+    <form action="/surveys/{{ survey[0] }}/edit" method="POST">
         <div class="flex flex-col gap-4 items-start">
             <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
             <input type="hidden" name="survey_id" type="text" class="border" readonly="readonly"
