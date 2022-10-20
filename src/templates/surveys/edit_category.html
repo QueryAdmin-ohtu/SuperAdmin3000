@@ -45,9 +45,9 @@
             <input type="hidden" name="survey_id" id="survey_id" value={{survey_id}}>
             <input type="hidden" name="category_id" id="category_id" value={{category_id}}>
             {% call survey_elements.card() %}
-                {{ form_elements.text_area("new_url", "URL", "", false)}}
-                <br>               
                 {{ form_elements.text_area("new_type", "Type", "", false)}}
+                <br>
+                {{ form_elements.text_area("new_url", "URL", "", false)}}
                 <br>
                 {{ form_elements.submit_button("Add", "creation", "/add_content_link") }}
             {% endcall %}
