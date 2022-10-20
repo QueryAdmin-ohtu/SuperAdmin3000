@@ -124,14 +124,14 @@ def new_question_view(survey_id):
     survey = survey_service.get_survey(survey_id)
     categories = survey_service.get_categories_of_survey(survey_id)
     weights = {}
-    return render_template("questions/new_question.html",
+    return render_template("questions/edit_question.html",
                            ENV=app.config["ENV"], categories=categories,
                            survey=survey, weights=weights)
 
 
 @surveys.route("/surveys/<survey_id>/new-question", methods=["POST"])
 def new_question_post(survey_id):
-    """ Adds a new question to the database
+    """ Adds a new question or edits an existing question
     """
 
     if not helper.valid_token(request.form):
@@ -152,8 +152,9 @@ def new_question_post(survey_id):
         survey_service.update_question(
             question_id, text, category_weights)
     else:
-        survey_service.create_question(text, survey_id, category_weights)
-    return redirect(f"/surveys/{survey_id}")
+        question_id = survey_service.create_question(text, survey_id, category_weights)
+    return redirect(f"/surveys/{survey_id}/questions/{question_id}")
+
 
 @surveys.route("/surveys/<survey_id>/questions/<question_id>", methods=["GET"])
 def edit_question(survey_id, question_id):
@@ -176,16 +177,15 @@ def edit_question(survey_id, question_id):
     survey = survey_service.get_survey(survey_id)    
     categories = survey_service.get_categories_of_survey(survey_id)
 
-    return render_template("questions/new_question.html",
+    return render_template("questions/edit_question.html",
                            ENV=app.config["ENV"], text=text, survey=survey,
                            weights=weights, categories=categories,
                            created=created, edit=True, question_id=question_id,
                            answers=answers)
 
-# ---------------------------
 
-@surveys.route("/add_answer", methods=["POST"])
-def add_answer():
+@surveys.route("/surveys/<survey_id>/questions/<question_id>/new-answer", methods=["POST"])
+def add_answer(survey_id, question_id):
     """ Adds a new answer to a question to the database.
     If the question doesn't exist, it is created first
     """
@@ -195,17 +195,17 @@ def add_answer():
 
     question_id = request.form["question_id"]
 
-    if not question_id:
-        text = request.form["text"]
-        survey_id = request.form["survey_id"]
-        categories = survey_service.get_categories_of_survey(survey_id)
-        try:
-            category_weights = helper.category_weights_as_json(
-                categories, request.form)
-        except ValueError:
-            return "Invalid weights"
-        question_id = survey_service.create_question(
-            text, survey_id, category_weights)
+    # if not question_id:
+    #     text = request.form["text"]
+    #     survey_id = request.form["survey_id"]
+    #     categories = survey_service.get_categories_of_survey(survey_id)
+    #     try:
+    #         category_weights = helper.category_weights_as_json(
+    #             categories, request.form)
+    #     except ValueError:
+    #         return "Invalid weights"
+    #     question_id = survey_service.create_question(
+    #         text, survey_id, category_weights)
 
     answer_text = request.form["answer_text"]
     points = request.form["points"]
@@ -216,7 +216,7 @@ def add_answer():
     except ValueError:
         return "Invalid points"
     survey_service.create_answer(answer_text, points, question_id)
-    return redirect(f"/questions/{question_id}")
+    return redirect(f"/surveys/{survey_id}/questions/{question_id}")
 
 
 @surveys.route("/question/delete/<question_id>/<answer_id>", methods=["POST"])
