@@ -219,15 +219,15 @@ def add_answer(survey_id, question_id):
     return redirect(f"/surveys/{survey_id}/questions/{question_id}")
 
 
-@surveys.route("/question/delete/<question_id>/<answer_id>", methods=["POST"])
-def delete_answer(question_id, answer_id):
+@surveys.route("/surveys/<survey_id>/question/<question_id>/answers/<answer_id>", methods=["POST"])
+def delete_answer(survey_id, question_id, answer_id):
     """ Call database query for removal of a single answer
     """
     if not helper.valid_token(request.form):
         abort(400, 'Invalid CSRF token.')
 
     survey_service.delete_answer_from_question(answer_id)
-    return redirect("/questions/" + question_id)
+    return redirect(f"/surveys/{survey_id}/questions/{question_id}")
 
 
 

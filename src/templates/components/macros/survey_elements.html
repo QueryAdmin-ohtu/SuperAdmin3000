@@ -70,9 +70,10 @@
 </div>
 {% endmacro %}
 
-{% macro answer_card(answer, question_id, index) %}
+{% macro answer_card(survey, answer, question_id, index) %}
 {# An expandable card element for displaying question answers.
     Args:
+        survey: The survey object
         answer: The answer object
         question_id: Id of the question the answer is associated with
         index: The index of the loop rendering the answers (loop.index)
@@ -86,8 +87,7 @@
         {{ form_elements.number_input("points-" ~ index, "points-" ~ index, "Points", "", false, "-50", "50", "1",
         answer[2]) }}
         <div class="flex flex-grow"></div>
-        {{ form_elements.submit_button("Delete answer", "destructive", "/question/delete/" ~ question_id ~ "/" ~
-        answer[0]) }}
+        {{ form_elements.submit_button("Delete answer", "destructive", "/surveys/%s/question/%s/answers/%s" % (survey.id, question_id, answer.id)) }}
     </div>
 </details>
 {% endcall %}

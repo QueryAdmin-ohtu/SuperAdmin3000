@@ -15,8 +15,10 @@ Logged In User Can Edit a Question
     Go To Survey  1
     Click Button  EDIT
     Add New Question  changed  99.0
+    Click Button  Save changes
     Page Should Contain  changed
     Page Should Not Contain  Question 1
+    Go To Survey  1
     Click Button  EDIT
     Textfield Should Contain  cat1  99.0
     Page Should Contain  changed
