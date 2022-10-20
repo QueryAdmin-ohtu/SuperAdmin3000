@@ -188,19 +188,6 @@ def add_answer(survey_id, question_id):
     """
 
     question_id = request.form["question_id"]
-
-    # if not question_id:
-    #     text = request.form["text"]
-    #     survey_id = request.form["survey_id"]
-    #     categories = survey_service.get_categories_of_survey(survey_id)
-    #     try:
-    #         category_weights = helper.category_weights_as_json(
-    #             categories, request.form)
-    #     except ValueError:
-    #         return "Invalid weights"
-    #     question_id = survey_service.create_question(
-    #         text, survey_id, category_weights)
-
     answer_text = request.form["answer_text"]
     points = request.form["points"]
     if not points:
