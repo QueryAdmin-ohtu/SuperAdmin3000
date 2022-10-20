@@ -13,8 +13,6 @@ surveys = Blueprint("surveys", __name__)
 def new_survey_view():
     """Renders the new survey page
     """
-    if not helper.logged_in():
-        return redirect("/")
 
     stored_categories = survey_service.get_all_categories()
 
@@ -24,9 +22,6 @@ def new_survey_view():
 def new_survey_post():
     """Handles creation of new surveys
     """
-
-    if not helper.valid_token(request.form):
-        abort(403)
 
     name = request.form["name"]
     title = request.form["title"]
@@ -65,17 +60,28 @@ def edit_survey_post(survey_id):
 
 @surveys.route("/surveys/<survey_id>/delete-survey", methods=["POST"])
 def delete_survey(survey_id):
-    """ Takes survey id from new.html and calls
-    a db function to delete the survey using the id
-    and redirects to homepage if deletion succeeded,
-    otherwise redirects back to the survey """
+    """ Takes the survey id from a hidden input
+    in the form and retrives the survey object
+    from the DB. Then comparess that the name of
+    the survey and the confirmation the user
+    wrote match.
 
-    if not helper.valid_token(request.form):
-        abort(403)
+    If names match a db function is called to delete 
+    the survey using the id.
+
+    Succeeds: Redirect to home page
+    Fails: Redirect back to survey pages"""
 
     survey_id = request.form["id"]
+    confirmation_text = request.form["confirmation-text"]
+    survey_to_delete = survey_service.get_survey(survey_id)
+    
+    if survey_to_delete.name != confirmation_text:
+        return redirect(f"/surveys/{survey_id}")
+
     if survey_service.delete_survey(survey_id):
         return redirect("/")
+
     return redirect(f"/surveys/{survey_id}")
 
 
@@ -84,9 +90,6 @@ def view_survey(survey_id):
     """ Looks up survey information based
     on the id with a db function and renders
     a page with the info from the survey """
-
-    if not helper.logged_in():
-        return redirect("/")
 
     survey = survey_service.get_survey(survey_id)
     questions = survey_service.get_questions_of_survey(survey_id)
@@ -101,9 +104,6 @@ def view_survey(survey_id):
 def survey_statistics(survey_id):
     """ Open up statistics for the given survey
     """
-
-    if not helper.logged_in():
-        return redirect("/")
 
     survey = survey_service.get_survey(survey_id)
 
@@ -133,9 +133,6 @@ def new_question_view(survey_id):
 def new_question_post(survey_id):
     """ Adds a new question or edits an existing question
     """
-
-    if not helper.valid_token(request.form):
-        abort(400, 'Invalid CSRF token.')
 
     text = request.form["text"]
     survey_id = request.form["survey_id"]
@@ -190,9 +187,6 @@ def add_answer(survey_id, question_id):
     If the question doesn't exist, it is created first
     """
 
-    if not helper.valid_token(request.form):
-        abort(400, 'Invalid CSRF token.')
-
     question_id = request.form["question_id"]
 
     # if not question_id:
@@ -223,8 +217,6 @@ def add_answer(survey_id, question_id):
 def delete_answer(survey_id, question_id, answer_id):
     """ Call database query for removal of a single answer
     """
-    if not helper.valid_token(request.form):
-        abort(400, 'Invalid CSRF token.')
 
     survey_service.delete_answer_from_question(answer_id)
     return redirect(f"/surveys/{survey_id}/questions/{question_id}")
@@ -235,24 +227,15 @@ def delete_answer(survey_id, question_id, answer_id):
 def delete_question(question_id, survey_id):
     """ Call database query for removal of a single question
     """
-    if not helper.valid_token(request.form):
-        abort(400, 'Invalid CSRF token.')
 
     survey_service.delete_question_from_survey(question_id)
     return redirect("/surveys/" + survey_id)
-
 
 
 @surveys.route("/edit_category/<survey_id>/<category_id>", methods=["GET"])
 def edit_category_page(survey_id, category_id):
     """  Returns a page for editing or creating a new category.
     """
-
-    # Temporary note for developers:
-    # - Currently all categories are available for all surveys.
-    # - Target is in the future to make categories survey specific.
-    # - However, that cannot be done before Juuso has updated the prod database schema accordingly.
-    # - Survey_id is currently passed along, but cannot be used before the prod database update.
 
     if not helper.logged_in():
         return redirect("/")
@@ -277,13 +260,10 @@ def edit_category():
     """ Receives the inputs from the edit_category.html template.
     Stores updated category information to the database.
     """
-    if not helper.valid_token(request.form):
-        abort(400, 'Invalid CSRF token.')
 
     survey_id = request.form["survey_id"]
     name = request.form["name"]
     description = request.form["description"]
-    stay = request.form["stay"]
     edit = request.form["edit"]
     new_content_links = []
 
@@ -294,9 +274,41 @@ def edit_category():
         for i, item in enumerate(content_links):
             new_content = {
                 'url': request.form[f"url_{i}"], 'type': request.form[f"type_{i}"]}
-            new_content_links.append(new_content)
+            if new_content['url'] and new_content['type']:
+                new_content_links.append(new_content)
+        new_content_links_json = json.dumps(new_content_links)
+        survey_service.update_category(
+            category_id, new_content_links_json, name, description)
+        # Unclear UX question - Where to return the user when saving changes.
+        return redirect(f"/surveys/{survey_id}")
 
-    # Adds a new content link, if there is one, to the end
+    # Creating a new survey
+    new_content_links_json = json.dumps(new_content_links)
+    category_id = survey_service.create_category(
+        survey_id, name, description, new_content_links_json)
+    return redirect(f"/edit_category/{survey_id}/{category_id}")
+
+
+@surveys.route("/add_content_link", methods=["POST"])
+def add_content_link():
+    """ Receives the inputs from the edit_category.html template.
+    Stores updated content link to the database.
+    """
+    if not helper.valid_token(request.form):
+        abort(400, 'Invalid CSRF token.')
+
+    survey_id = request.form["survey_id"]
+    new_content_links = []
+
+    # Updates existing content links in case there are unsaved changes
+    category_id = request.form["category_id"]
+    content_links = survey_service.get_category(category_id)[3]
+    for i, item in enumerate(content_links):
+        new_content = {
+            'url': request.form[f"url_{i}"], 'type': request.form[f"type_{i}"]}
+        new_content_links.append(new_content)
+
+    # Adds new content link to the end
     new_url = request.form["new_url"]
     new_type = request.form["new_type"]
     if new_url and new_type:
@@ -305,16 +317,9 @@ def edit_category():
 
     new_content_links_json = json.dumps(new_content_links)
 
-    if edit:
-        survey_service.update_category(
-            category_id, name, description, new_content_links_json)
-    else:
-        category_id = survey_service.create_category(
-            survey_id, name, description, new_content_links_json)
-
-    if stay:
-        return redirect(f"/edit_category/{survey_id}/{category_id}")
-    return redirect(f"/surveys/{survey_id}")
+    survey_service.update_category(
+        category_id, new_content_links_json)
+    return redirect(f"/edit_category/{survey_id}/{category_id}")
 
 
 @surveys.route("/delete_category", methods=["POST"])
@@ -323,9 +328,6 @@ def delete_category():
     Redirects back to survey page if succesfull.
     Shows error message to user if not succesfull.
     """
-
-    if not helper.valid_token(request.form):
-        abort(403)
 
     category_id = request.form["category_id"]
     survey_id = request.form["survey_id"]
@@ -343,6 +345,12 @@ def view_surveys():
 # Save requestes to the log
 @surveys.before_request
 def before_request():
+
+    if not helper.logged_in():
+        return redirect("/")
+
+    if request.method == "POST" and not helper.valid_token(request.form):
+        abort(400, 'Invalid CSRF token')
 
     user = helper.current_user()
     Logger(user).log_post_request(request)

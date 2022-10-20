@@ -1,37 +1,38 @@
 {% extends "layout.html" %}
+{% import "components/macros/form_elements.html" as form_elements %}
+{% import "components/macros/buttons.html" as buttons %}
+{% import "components/macros/survey_elements.html" as survey_elements %}
 {% block content %}
-<container class="flex flex-col gap-4">
+<container class="grid lg:grid-cols-2 grid-cols-1 gap-4 items-start">
     <div class="flex flex-col gap-1">
-        <h2>Authorized users</h2>
-    </div>
-    <div class="block p-6 rounded-lg shadow-lg bg-white max-w-4/5 h-full">
-        <p class="text-gray-700 text-base">
-            Add new user here!
+        <p>
+            Add new users here!
         </p>
-        <br>
-        <form action="/admins/new" method="POST">
-            <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">
-                Email
-            </label>    
-            <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
-            <input type="email" name="email" oninvalid="alert('Must enter a valid email address');" required>
-            <button type="submit" name="submit_email">ADD USER</button>
-        </form>
     </div>
-    
-    <div class="block p-6 rounded-lg shadow-lg bg-white max-w-4/5 h-full">
-        <table>
-            <thead>
+    {% call survey_elements.card() %}
+        <form action="/admins/new" method="POST">
+            <div class="flex flex-col gap-4 items-start">
+            <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
+                {{ form_elements.text_input("email", "Email", "", true, "") }}
+                {{ form_elements.submit_button("Add user", "default", "/admins/new") }}
+            </div>
+        </form>
+    {% endcall %}
+    </div>
+
+    <div class="flex flex-col gap-4 items-start">
+        <table class="min-w-full">
+            <thead class="border-b">
                 <tr>
-                    <th>id</th>
-                    <th>Email</th>
+                    <th class="text-sm font-medium text-gray-900 px-6 py-4 text-left">id</th>
+                    <th class="text-sm font-medium text-gray-900 px-6 py-4 text-left">Email</th>
                 </tr>
             </thead>
             <tbody>
             {% for admin in admins %}
                 <tr>
-                    <td>{{admin[0]}}</td>
-                    <td>{{admin[1]}}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{{admin[0]}}</td>
+                    <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">{{admin[1]}}</td>
                 </tr>
             {% endfor %}
             </tbody>

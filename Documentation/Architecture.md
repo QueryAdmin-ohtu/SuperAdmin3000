@@ -18,7 +18,38 @@
 - Simple HTML/CSS pages are displayed.
 
 ### TailwindCSS
+
 This project uses TailwindCSS. To create a CSS file with the needed TailwindCSS utility classes install the [standalone TailwindCLI](https://tailwindcss.com/blog/standalone-cli). After insatllation run from the root of the project:
+
+#### Intallation od standalone Tailwind in linux
+
+Download the executable:
+```
+$ wget https://github.com/tailwindlabs/tailwindcss/releases/download/v3.1.8/tailwindcss-linux-x64
+```
+
+Change the filename:
+```
+$ mv tailwindcss-linux-x64 tailwindcss
+```
+
+Allow execution:
+```
+$ chmod +x tailwindcss
+```
+
+Move the file to a directory in your `PATH`. For example a `bin` in your home directory:
+```
+$ mv tailwindcss ~/bin
+```
+Or to the `/usr/bin`, so the program will be available to everyone:
+```
+$ sudo mv tailwindcss /usr/bin
+```
+
+#### Running Tailwind
+
+Launch the Tailwind from the project root directory:
 ```
 tailwindcss -c src/static/tailwind.config.js -i src/static/src/style.css -o src/static/css/main.css --watch
 ```
