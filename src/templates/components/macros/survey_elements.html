@@ -45,7 +45,7 @@
     <div class="table-cell pr-4">
         <div class="flex items-center">
             <div class="inline-flex" role="group">
-                <a href="/questions/{{ question[0] }}">
+                <a href="/surveys/{{ survey.id }}/questions/{{ question.id }}">
                     <button id="edit-question-{{ row_num }}"
                         class="bg-sky-500 hover:bg-sky-700 p-4 rounded w-full h-fit text-lg text-white leading-tight focus:ring-sky-500 focus:border-sky-700 transition duration-150 ease-in-out">
                         EDIT
@@ -66,9 +66,10 @@
 </div>
 {% endmacro %}
 
-{% macro answer_card(answer, question_id, index) %}
+{% macro answer_card(survey, answer, question_id, index) %}
 {# An expandable card element for displaying question answers.
     Args:
+        survey: The survey object
         answer: The answer object
         question_id: Id of the question the answer is associated with
         index: The index of the loop rendering the answers (loop.index)
@@ -82,8 +83,7 @@
         {{ form_elements.number_input("points-" ~ index, "points-" ~ index, "Points", "", false, "-50", "50", "1",
         answer[2]) }}
         <div class="flex flex-grow"></div>
-        {{ form_elements.submit_button("Delete answer", "destructive", "/question/delete/" ~ question_id ~ "/" ~
-        answer[0]) }}
+        {{ form_elements.submit_button("Delete answer", "destructive", "/surveys/%s/question/%s/answers/%s" % (survey.id, question_id, answer.id)) }}
     </div>
 </details>
 {% endcall %}

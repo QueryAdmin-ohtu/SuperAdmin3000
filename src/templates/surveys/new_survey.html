@@ -12,7 +12,7 @@
         </p>
     </div>
     {% call survey_elements.card() %}
-    <form action="/create_survey" method="POST">
+    <form action="/surveys/new-survey" method="POST">
         <div class="flex flex-col gap-4 items-start">
             <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
             {{ form_elements.text_input("name", "Name", "DevOps Survey", true) }}

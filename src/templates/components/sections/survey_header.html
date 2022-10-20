@@ -7,7 +7,7 @@
         <h1 class="text-gray-900">{{ survey.title_text }}</h1>
     </div>
     <div class="flex items-start md:justify-end gap-2">
-        {{ buttons.link_button("Edit survey", "/surveys/edit/%s" % survey[0]) }}
+        {{ buttons.link_button("Edit survey", "/surveys/%s/edit" % survey[0]) }}
         {{ buttons.modal_button("Delete survey", "delete", "survey-delete-button", "modal", "destructive") }}
     </div>
 
