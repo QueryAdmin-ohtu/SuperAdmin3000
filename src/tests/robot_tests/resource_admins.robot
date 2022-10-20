@@ -4,4 +4,4 @@ Set Admin Email
     Input Text  email  ${email}
 
 Add New User
-    Click Button  ADD USER
+    Click Button  Add user

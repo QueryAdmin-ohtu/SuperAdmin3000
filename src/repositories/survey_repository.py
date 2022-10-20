@@ -239,7 +239,8 @@ class SurveyRepository:
         Returns:
         An array containing id, name, description, content_links of the categories.
         """
-        sql = """ SELECT id, name, description, content_links FROM "Categories" WHERE "surveyId"=:survey_id ORDER BY id"""
+        sql = """ SELECT id, name, description, content_links FROM "Categories"
+        WHERE "surveyId"=:survey_id ORDER BY id"""
 
         categories = self.db_connection.session.execute(
             sql, {"survey_id": survey_id}).fetchall()
@@ -376,26 +377,51 @@ class SurveyRepository:
         return answers
 
     def add_admin(self, email: str):
-        """ Inserts a new admin to the Admin table
+        """ Inserts a new admin to the Admin table if it does not
+        exist already
 
         Returns:
             Id of the new admin """
 
-        sql = """
-        INSERT INTO "Admins" 
-            ("email")
-        VALUES 
-            (:email) 
-        RETURNING id
-        """
-        values = {"email": email}
-        try:
-            admin_id = self.db_connection.session.execute(
-                sql, values).fetchone()
-            self.db_connection.session.commit()
-        except exc.SQLAlchemyError:
-            return None
-        return admin_id[0]
+        if not self._admin_exists(email):
+            sql = """
+            INSERT INTO "Admins" (email)
+            VALUES (:email)
+            RETURNING id
+            """
+            values = {"email": email}
+
+            try:
+                admin_id = self.db_connection.session.execute(
+                    sql, values).fetchone()
+                self.db_connection.session.commit()
+            except exc.SQLAlchemyError:
+                return None
+            return admin_id[0]
+        return None
+
+    def _admin_exists(self, email):
+            """ Test if the given email is already one of the
+            authorized users
+
+            Returns:
+                True if yes,
+                False if no """
+
+            values = {"email": email}
+            sql = """
+            SELECT *
+            FROM "Admins"
+            WHERE email=:email
+            """
+            try:
+                result = self.db_connection.session.execute(
+                    sql, values).fetchone()
+            except exc.SQLAlchemyError:
+                return False
+            if not result:
+                return False
+            return True
 
     def get_all_admins(self):
         """ Fetches all authorized users from the database
@@ -413,7 +439,7 @@ class SurveyRepository:
             return None
         return admins
 
-    def update_category(self, category_id: str, name: str, description: str, content_links: list):
+    def update_category(self, category_id: str, content_links: list, name: str, description: str):
         """ Updates category in the database.
         If succesfull returns category_id."""
 

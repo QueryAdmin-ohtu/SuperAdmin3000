@@ -846,6 +846,7 @@ p {
 
 .overflow-y-scroll {
   overflow-y: scroll;
+}
 
 .whitespace-pre {
   white-space: pre;
@@ -1290,7 +1291,8 @@ p {
 .focus\:border-slate-500:focus {
   --tw-border-opacity: 1;
   border-color: rgb(100 116 139 / var(--tw-border-opacity));
-  
+}
+
 .focus\:border-sky-500:focus {
   --tw-border-opacity: 1;
   border-color: rgb(14 165 233 / var(--tw-border-opacity));
