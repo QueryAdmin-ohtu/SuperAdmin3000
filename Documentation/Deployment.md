@@ -73,3 +73,11 @@ If the database copy `schema.sql` should be created with `pg_dump` command, sele
 ```
 pg_dump --inserts --no-owner postgresql://username:password@server:5432/database
 ```
+
+### Database index reset
+
+In the project root there is a shell script for resetting the index counters to the maximum values, if they have been set incorrectly during database export or import. It takes the local database name, or remote database URI as an argument
+
+```
+$ ./reset-db-sequences.sh localdb
+```
