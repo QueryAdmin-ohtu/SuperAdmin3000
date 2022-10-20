@@ -1,7 +1,7 @@
 {% import "components/macros/form_elements.html" as form_elements %}
 <div id="modal"
     class="fixed hidden z-50 inset-0 bg-slate-900 bg-opacity-60 overflow-y-auto h-full w-full modal tansition-all backdrop-blur-sm">
-    <form id="delete" action="/delete_survey" method="POST">
+    <form id="delete" action="/surveys/{{ survey.id }}/delete-survey" method="POST">
         <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
         <input type="hidden" name="id" value="{{ survey[0] }}">
         <!-- Modal -->
