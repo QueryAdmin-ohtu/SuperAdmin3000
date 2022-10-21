@@ -98,6 +98,12 @@ class TestSurveyRepository(unittest.TestCase):
             after = self.repo.get_survey(1)
         self.assertGreater(after, before)
 
+    def survey_updated_at_remains_unaltered_without_changes(self):
+        with self.app.app_context():
+            before = self.repo.get_survey(1)
+            after = self.repo.get_survey(1)
+        self.assertEqual(after, before)
+
     def test_get_all_surveys_calls_returns_multiple_surveys(self):
 
         with self.app.app_context():
