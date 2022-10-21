@@ -78,6 +78,7 @@ class SurveyRepository:
         }
         question_id = db.session.execute(sql, values).fetchone()
         db.session.commit()
+        self.update_survey_updated_at(survey_id)
         return question_id[0]
 
     def create_answer(self, text, points, question_id):
@@ -128,7 +129,7 @@ class SurveyRepository:
             self.db_connection.session.execute(
                 sql, {"question_id": question_id})
             self.db_connection.session.commit()
-
+        
         return sql2 or sql3
 
     def delete_survey(self, survey_id):
@@ -260,6 +261,22 @@ class SurveyRepository:
 
         return categories
 
+    def get_survey_id_from_question_id(self, question_id):
+        """ Returns the id of the parent survey
+        Args:
+            question_id: Id of the question
+        
+        Returns:
+            If succeeds: survey_id
+        """
+        sql = "Select \"surveyId\" from \"Questions\"  WHERE \"id\"=:question_id"
+        result = self.db_connection.session.execute(
+            sql, {"question_id": question_id}).fetchall()
+        db.session.commit()
+        if result:
+            return result[0]
+        return None
+
     def delete_question_from_survey(self, question_id):
         """ Deletes a question in a given survey
 
@@ -270,12 +287,15 @@ class SurveyRepository:
             If succeeds: True
             If not found: False
         """
+        survey_id = self.get_survey_id_from_question_id(question_id=question_id)
+        
         sql = "DELETE FROM \"Questions\" WHERE \"id\"=:question_id"
         result = self.db_connection.session.execute(
             sql, {"question_id": question_id})
         db.session.commit()
         if not result:
             return False
+        self.update_survey_updated_at(survey_id[0])
         return True
 
     def delete_answer_from_question(self, answer_id):

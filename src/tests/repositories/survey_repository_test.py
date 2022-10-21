@@ -90,6 +90,14 @@ class TestSurveyRepository(unittest.TestCase):
             after = self.repo.get_survey(1)
         self.assertGreater(after, before)
 
+    def test_delete_question_updates_survey_updated_at(self):
+        with self.app.app_context():
+            question_id = self.repo.create_question("Has my existence made any diffrence in the end?", 1, category_weights)
+            before = self.repo.get_survey(1)
+            self.repo.delete_question_from_survey(question_id)
+            after = self.repo.get_survey(1)
+        self.assertGreater(after, before)
+
     def test_get_all_surveys_calls_returns_multiple_surveys(self):
 
         with self.app.app_context():
