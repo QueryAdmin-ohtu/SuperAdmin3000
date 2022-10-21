@@ -82,6 +82,14 @@ class TestSurveyRepository(unittest.TestCase):
 
         self.assertFalse(response)
 
+    def test_update_survey_updated_at_changes_updated_field(self):
+
+        with self.app.app_context():
+            before = self.repo.get_survey(1)
+            self.repo.update_survey_updated_at(1)
+            after = self.repo.get_survey(1)
+        self.assertGreater(after, before)
+
     def test_get_all_surveys_calls_returns_multiple_surveys(self):
 
         with self.app.app_context():

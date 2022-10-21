@@ -47,6 +47,19 @@ class SurveyRepository:
 
         return survey_id[0]
 
+    def update_survey_updated_at(self, survey_id):
+        """ Updates the surveys updatedAt field.
+        
+        Returns: 
+            The new date.
+        """
+        sql = """ UPDATE "Surveys" SET "updatedAt"=NOW()
+        WHERE id=:survey_id """
+        self.db_connection.session.execute(
+            sql, {"survey_id": survey_id})
+        self.db_connection.session.commit()
+        return sql
+
     def create_question(self, text, survey_id, category_weights):
         """ Inserts a new question to table Questions based
         on given parameters.
