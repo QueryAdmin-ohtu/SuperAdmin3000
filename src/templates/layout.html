@@ -10,34 +10,59 @@
 </head>
 
 <body>
-    <div class="p-4 border-b border-slate-200 bg-slate-100 content-center">
-        <div class="mx-auto container grid grid-cols-2">
-            <header class="flex flex-col">
-                <h1 class="text-slate-800"><a href="/">🤖 Super Admin 3000</a></h1>
-                <p class="text-slate-400 font-mono"><i><small>Environment: {{ENV}}</small></i></p>
-            </header>
-            <nav class="flex flex-row gap-4 items-center justify-end">
-                <a href="/"
-                class=" text-sky-600 hover:text-sky-700 hover:underline font-medium rounded-lg text-sm">Surveys</a>
-                <a href="/surveys/new-survey"
-                class=" text-sky-600 hover:text-sky-700 hover:underline font-medium rounded-lg text-sm">New survey</a>
-                <a href="/admins"
-                class=" text-sky-600 hover:text-sky-700 hover:underline font-medium rounded-lg text-sm">Admins</a>
-                <a href="/logs"
-                class=" text-sky-600 hover:text-sky-700 hover:underline font-medium rounded-lg text-sm">Logs</a>
-                Logged in as <b>{{ session.username }}</b>
-                <form action="/logout" method="POST" class="m-1">
-                <button type="submit"
-                    class=" text-sky-600 hover:text-sky-700 hover:underline focus:ring-4 font-medium rounded-lg text-sm">Logout</button>
-                <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
-                </form>
-            </nav>
-        </div>
+
+<div class="max-w-md mx-auto bg-slate-100 rounded-xl overflow-hidden md:max-w-4xl border">
+  <div class="md:flex">
+    <div class="md:shrink-0">
+      <div class="p-8"
+      <header>
+        <h1 class="text-slate-800"><a href="/">🤖 Super Admin 3000</a></h1>
+        <p class="text-slate-400 font-mono"><i><small>Environment: {{ENV}}</small></i></p>
+      </header>
+      </div>
     </div>
+    <div class="p-8">
+      
+        <nav class="flex flex-row gap-4 items-center justify-end">
+          <div>
+            <a href="/"
+                class="text-sky-600 hover:text-sky-700 hover:underline font-medium rounded-lg text-sm">Surveys</a>
+          </div>
+          
+          <div>
+            <a href="/surveys/new-survey"
+               class="text-sky-600 hover:text-sky-700 hover:underline font-medium rounded-lg text-sm">New survey</a>
+          </div>
+          
+          <div>
+            <a href="/admins"
+               class="text-sky-600 hover:text-sky-700 hover:underline font-medium rounded-lg text-sm">Admins</a>
+          </div>
+          
+          <div>
+            <a href="/logs"
+               class="text-sky-600 hover:text-sky-700 hover:underline font-medium rounded-lg text-sm">Logs</a>
+          </div>
+          
+          <div>
+            Logged in as <b>{{ session.username }}</b>
+            <form action="/logout" method="POST" class="m-1">
+              <button type="submit"
+                      class=" text-sky-600 hover:text-sky-700 hover:underline focus:ring-4 font-medium rounded-lg text-sm">Logout</button>
+              <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
+            </form>
+          </div>
+        </nav>
+
+    </div>
+  </div>
+</div>
+
+
     <div class="px-4 w-full flex flex-col">
-        <div class="container mx-auto py-8">
-            {% block content %}{% endblock %}
-        </div>
+      <div class="container mx-auto py-8">
+        {% block content %}{% endblock %}
+      </div>
     </div>
 </body>
 
