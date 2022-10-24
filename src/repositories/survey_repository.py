@@ -491,6 +491,8 @@ class SurveyRepository:
         except exc.SQLAlchemyError:
             return False
         if updated is not None:
+            category = self.get_category(category_id)
+            self.update_survey_updated_at(category[6])
             return updated[0]
         return None
 
@@ -508,4 +510,5 @@ class SurveyRepository:
             self.db_connection.session.commit()
         except exc.SQLAlchemyError as exception:
             return exception
+        self.update_survey_updated_at(category[6])
         return True
