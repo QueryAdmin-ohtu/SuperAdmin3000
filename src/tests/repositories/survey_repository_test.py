@@ -111,6 +111,30 @@ class TestSurveyRepository(unittest.TestCase):
             print("After:", after)
         self.assertGreater(after, before)
 
+    def update_category_updates_survey_updated_at(self):
+        content_links = '[{"url":"https://www.eficode.com/cases/hansen","type":"Case Study"},{"url":"https://www.eficode.com/cases/basware","type":"Case Study"}]'
+        with self.app.app_context():
+            before = self.repo.get_survey(1)[3]
+            self.repo.update_category(
+                "1",
+                "name",
+                "improved description",
+                content_links)
+            after = self.repo.get_survey(1)[3]
+        self.assertGreater(after, before)
+
+    def delete_category_updates_survey_updated_at(self):
+        content_links = '[{"url":"https://www.eficode.com/cases/hansen","type":"Case Study"},{"url":"https://www.eficode.com/cases/basware","type":"Case Study"}]'
+        with self.app.app_context():
+            category = self.repo.create_category(
+                "1",
+                "name",
+                "description",
+                content_links)
+            before = self.repo.get_survey(1)[3]
+            self.repo.delete_category(category)
+            after = self.repo.get_survey(1)[3]
+        self.assertGreater(after, before)
 
     def survey_updated_at_remains_unaltered_without_changes(self):
         with self.app.app_context():
