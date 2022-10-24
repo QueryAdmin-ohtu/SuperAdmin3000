@@ -85,18 +85,32 @@ class TestSurveyRepository(unittest.TestCase):
     def test_update_survey_updated_at_changes_updated_field(self):
 
         with self.app.app_context():
-            before = self.repo.get_survey(1)
+            before = self.repo.get_survey(1)[3]
             self.repo.update_survey_updated_at(1)
-            after = self.repo.get_survey(1)
+            after = self.repo.get_survey(1)[3]
         self.assertGreater(after, before)
 
     def test_delete_question_updates_survey_updated_at(self):
         with self.app.app_context():
             question_id = self.repo.create_question("Has my existence made any diffrence in the end?", 1, category_weights)
-            before = self.repo.get_survey(1)
+            before = self.repo.get_survey(1)[3]
             self.repo.delete_question_from_survey(question_id)
-            after = self.repo.get_survey(1)
+            after = self.repo.get_survey(1)[3]
         self.assertGreater(after, before)
+    
+    def test_create_category_updates_survey_updated_at(self):
+        content_links = '[{"url":"https://www.eficode.com/cases/hansen","type":"Case Study"},{"url":"https://www.eficode.com/cases/basware","type":"Case Study"}]'
+        with self.app.app_context():
+            before = self.repo.get_survey(1)[3]
+            self.repo.create_category(
+                "1",
+                "name",
+                "description",
+                content_links)
+            after = self.repo.get_survey(1)[3]
+            print("After:", after)
+        self.assertGreater(after, before)
+
 
     def survey_updated_at_remains_unaltered_without_changes(self):
         with self.app.app_context():

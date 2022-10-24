@@ -384,6 +384,7 @@ class SurveyRepository:
             self.db_connection.session.commit()
         except exc.SQLAlchemyError:
             return None
+        self.update_survey_updated_at(survey_id)
         return category_id[0]
 
     def get_question_answers(self, question_id):
