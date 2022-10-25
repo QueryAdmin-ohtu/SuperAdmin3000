@@ -48,7 +48,7 @@ Logged In User Cannot Delete a Category With Results
     Page Should Contain  Survey categories
     Click Button  delete_button_1
     Handle Alert  Accept
-    Page Should Contain  psycopg2.errors.ForeignKeyViolation
+    Page Should Contain  Could not delete category because it has results linked to it
 
 Logged In User Can Delete a Category Without Results
     Go To Survey  1
