@@ -111,7 +111,9 @@ class SurveyRepository:
         }
         answer_id = db.session.execute(sql, values).fetchone()
         db.session.commit()
+        survey_id = self.get_survey_id_from_question_id(question_id)
         self.update_question_updated_at(question_id)
+        self.update_survey_updated_at(survey_id)
         return answer_id[0]
 
     def update_question(self, question_id, text, category_weights):
@@ -143,7 +145,7 @@ class SurveyRepository:
                 sql, {"question_id": question_id})
             self.db_connection.session.commit()
         self.update_question_updated_at(question_id)
-        self.update_survey_updated_at(survey_id[0])
+        self.update_survey_updated_at(survey_id)
         return sql2 or sql3
 
     def delete_survey(self, survey_id):
@@ -288,7 +290,7 @@ class SurveyRepository:
             sql, {"question_id": question_id}).fetchall()
         db.session.commit()
         if result:
-            return result[0]
+            return result[0][0]
         return None
 
     def delete_question_from_survey(self, question_id):
@@ -309,7 +311,7 @@ class SurveyRepository:
         db.session.commit()
         if not result:
             return False
-        self.update_survey_updated_at(survey_id[0])
+        self.update_survey_updated_at(survey_id)
         return True
 
     def get_question_id_from_answer_id(self, answer_id):
@@ -325,7 +327,7 @@ class SurveyRepository:
             sql, {"answer_id": answer_id}).fetchall()
         db.session.commit()
         if result:
-            return result[0]
+            return result[0][0]
         return None
 
     def delete_answer_from_question(self, answer_id):
@@ -340,14 +342,14 @@ class SurveyRepository:
         """
         sql = "DELETE FROM \"Question_answers\" WHERE \"id\"=:answer_id"
         question_id = self.get_question_id_from_answer_id(answer_id)
-        survey_id = self.get_survey_id_from_question_id(question_id[0])
+        survey_id = self.get_survey_id_from_question_id(question_id)
         result = self.db_connection.session.execute(
             sql, {"answer_id": answer_id})
         db.session.commit()
         if not result:
             return False
-        self.update_question_updated_at(question_id[0])
-        self.update_survey_updated_at(survey_id[0])  
+        self.update_question_updated_at(question_id)
+        self.update_survey_updated_at(survey_id)
         return True
 
     def edit_survey(self, survey_id, name, title, description):
