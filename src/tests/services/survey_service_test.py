@@ -255,3 +255,11 @@ class TestSurveyService(unittest.TestCase):
         check = self.survey_service.get_user_answers(question_id)
         self.assertEqual(check, return_values)
         self.repo_mock.get_user_answers.assert_called_with(question_id)
+
+    def test_delete_question_calls_repo_correctly(self):
+        return_value = True
+        self.repo_mock.delete_question_from_survey.return_value = return_value
+        question_id = 1
+        check = self.survey_service.delete_question_from_survey(question_id)
+        self.repo_mock.delete_question_from_survey.assert_called_with(question_id)
+        self.assertEqual(check, return_value)

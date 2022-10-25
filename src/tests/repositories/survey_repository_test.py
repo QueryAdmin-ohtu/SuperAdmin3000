@@ -411,7 +411,7 @@ class TestSurveyRepository(unittest.TestCase):
                 "name",
                 "description",
                 content_links)
-
+        self.assertTrue(response != None)
         self.assertGreaterEqual(response, 0)
 
     def test_update_category_with_invalid_data_returns_False(self):
@@ -513,5 +513,4 @@ class TestSurveyRepository(unittest.TestCase):
         with self.app.app_context():
             survey_id = 2
             response = self.repo.get_categories_of_survey(survey_id)
-
         self.assertEqual(len(response), 0)

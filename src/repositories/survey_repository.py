@@ -511,7 +511,7 @@ class SurveyRepository:
 
     def update_category(self, category_id: str, content_links: list, name: str, description: str):
         """ Updates category in the database.
-        If succesfull returns category_id."""
+        If succesful returns category_id."""
 
         sql = """ UPDATE "Categories" SET "name"=:name, "description"=:description,
         "content_links"=:content_links, "updatedAt"=:updated 
@@ -523,7 +523,6 @@ class SurveyRepository:
         try:
             updated = self.db_connection.session.execute(
                 sql, values).fetchone()
-            self.db_connection.session.commit()
         except exc.SQLAlchemyError:
             return False
         if updated is not None:
