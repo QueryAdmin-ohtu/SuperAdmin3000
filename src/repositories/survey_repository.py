@@ -51,14 +51,26 @@ class SurveyRepository:
         """ Updates the surveys updatedAt field.
         
         Returns: 
-            The new date.
+            True if successful
         """
         sql = """ UPDATE "Surveys" SET "updatedAt"=NOW()
         WHERE id=:survey_id """
         self.db_connection.session.execute(
             sql, {"survey_id": survey_id})
         self.db_connection.session.commit()
-        return sql
+        return True
+
+    def update_question_updated_at(self, question_id):
+        """ Updates the questions updatedAt field.
+
+        Returns:
+            True if successful
+        """
+        sql = """ UPDATE "Questions" SET "updatedAt"=NOW() WHERE id=:question_id """
+        self.db_connection.session.execute(
+            sql, {"question_id": question_id})
+        self.db_connection.session.commit()
+        return True
 
     def create_question(self, text, survey_id, category_weights):
         """ Inserts a new question to table Questions based
@@ -112,7 +124,7 @@ class SurveyRepository:
         WHERE id=:question_id """
         sql2 = False
         sql3 = False
-
+        survey_id = self.get_survey_id_from_question_id(question_id)  
         if text != original[0]:
             sql2 = """ UPDATE "Questions" SET text=:text
             WHERE id=:question_id """
@@ -129,7 +141,8 @@ class SurveyRepository:
             self.db_connection.session.execute(
                 sql, {"question_id": question_id})
             self.db_connection.session.commit()
-        
+        self.update_question_updated_at(question_id)
+        self.update_survey_updated_at(survey_id[0])
         return sql2 or sql3
 
     def delete_survey(self, survey_id):
@@ -287,7 +300,7 @@ class SurveyRepository:
             If succeeds: True
             If not found: False
         """
-        survey_id = self.get_survey_id_from_question_id(question_id=question_id)
+        survey_id = self.get_survey_id_from_question_id(question_id)
         
         sql = "DELETE FROM \"Questions\" WHERE \"id\"=:question_id"
         result = self.db_connection.session.execute(
