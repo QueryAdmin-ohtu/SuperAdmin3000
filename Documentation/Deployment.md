@@ -57,6 +57,22 @@ When the container is succesfully running the application can be accessed at [ht
 
 ## Database rebuild
 
+
+PostgreSQL database server should be up and running. It can be started with command:
+```
+start-pg.sh
+```
+
+## Database initialization and counter reset
+
+### Shortcuts
+
+Executing the database initializations described below can be run before app launch:
+```
+invoke reset-and-start localdb
+invoke reset-and-test localdb
+```
+
 PostgreSQL database server should be up and running. It can be started with command:
 ```
 start-pg.sh
