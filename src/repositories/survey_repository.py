@@ -523,6 +523,7 @@ class SurveyRepository:
         try:
             updated = self.db_connection.session.execute(
                 sql, values).fetchone()
+            self.db_connection.session.commit()
         except exc.SQLAlchemyError:
             return False
         if updated is not None:
