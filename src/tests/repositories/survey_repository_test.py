@@ -82,8 +82,22 @@ class TestSurveyRepository(unittest.TestCase):
 
         self.assertFalse(response)
 
-    def test_update_survey_updated_at_changes_updated_field(self):
+    def test_get_survey_id_from_question_id_returns_correct_value(self):
+        with self.app.app_context():
+            survey_id = self.repo.create_survey("Algorithms", "Sorting algorithms", "Have fun with sorting!")
+            question_id = self.repo.create_question("In which situations can a bubble sorting algorithm be useful?", survey_id, category_weights)
+            received_id = self.repo.get_survey_id_from_question_id(question_id)
+        self.assertTrue(received_id == survey_id)
+    
+    def test_get_question_id_from_answer_id_returns_correct_value(self):
+        with self.app.app_context():
+            survey_id = self.repo.create_survey("Data structures", "Storing information", "Have fun with storing!")
+            question_id = self.repo.create_question("What are the drawbacks of hashmaps?", survey_id, category_weights)
+            answer_id = self.repo.create_answer(text="Slow lookup times when looking by key",points=-10, question_id=question_id)
+            received_id = self.repo.get_question_id_from_answer_id(answer_id)
+        self.assertTrue(received_id == question_id)
 
+    def test_update_survey_updated_at_changes_updated_field(self):
         with self.app.app_context():
             before = self.repo.get_survey(1)[3]
             self.repo.update_survey_updated_at(1)
