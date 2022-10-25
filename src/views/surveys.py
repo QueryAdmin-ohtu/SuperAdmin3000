@@ -332,7 +332,7 @@ def delete_category():
         flash("Succesfully deleted category", "confirmation")
         return redirect(f"/surveys/{survey_id}")
     
-    flash("Could not delete category because it has questions linked to it", "warning")
+    flash("Could not delete category because it has results linked to it", "error")
     return redirect(f"/surveys/{survey_id}")
 
 @surveys.route("/surveys")
