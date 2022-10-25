@@ -1,4 +1,4 @@
-from flask import render_template, redirect, Blueprint
+from flask import render_template, redirect, Blueprint, flash
 from flask import current_app as app
 import helper
 
@@ -10,6 +10,7 @@ log = Blueprint("logs", __name__)
 @log.route("/logs")
 def logs():
     if not helper.logged_in():
+        flash("Log in to use the application", "error")
         return redirect("/")
 
     logs = Logger().read_all_events()

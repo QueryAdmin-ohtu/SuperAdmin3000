@@ -1,8 +1,8 @@
 import json
-from flask import render_template, redirect, request, abort, Blueprint
+from flask import render_template, redirect, request, abort, Blueprint, flash
 from flask import current_app as app
 import helper
-from services.survey_service import survey_service
+from services.survey_service import UserInputError, survey_service
 from logger.logger import Logger
 
 
@@ -26,10 +26,16 @@ def new_survey_post():
     name = request.form["name"]
     title = request.form["title"]
     survey = request.form["survey"]
-    survey_id = survey_service.create_survey(name, title, survey)
-    route = f"/surveys/{survey_id}"
+    try:
+        survey_id = survey_service.create_survey(name, title, survey)
+        route = f"/surveys/{survey_id}"
 
-    return redirect(route)
+        flash(f"Created new survey: {name}", "confirmation")
+        return redirect(route)
+
+    except UserInputError as error:
+        flash(str(error), "error")
+        return redirect(request.base_url)
 
 @surveys.route("/surveys/<survey_id>/edit", methods=["GET"])
 def edit_survey_view(survey_id):
@@ -77,11 +83,14 @@ def delete_survey(survey_id):
     survey_to_delete = survey_service.get_survey(survey_id)
     
     if survey_to_delete.name != confirmation_text:
+        flash("Confirmation did not match name of survey", "error")
         return redirect(f"/surveys/{survey_id}")
 
     if survey_service.delete_survey(survey_id):
+        flash(f"{survey_to_delete.name} survey was deleted", "confirmation")
         return redirect("/")
 
+    flash("Survey could not be deleted", "error")
     return redirect(f"/surveys/{survey_id}")
 
 
@@ -320,8 +329,11 @@ def delete_category():
     survey_id = request.form["survey_id"]
     return_value = survey_service.delete_category(category_id)
     if return_value is True:
+        flash("Succesfully deleted category", "confirmation")
         return redirect(f"/surveys/{survey_id}")
-    return str(return_value)
+    
+    flash("Could not delete category because it has results linked to it", "error")
+    return redirect(f"/surveys/{survey_id}")
 
 @surveys.route("/surveys")
 def view_surveys():
@@ -334,6 +346,7 @@ def view_surveys():
 def before_request():
 
     if not helper.logged_in():
+        flash("Log in to use the application", "error")
         return redirect("/")
 
     if request.method == "POST" and not helper.valid_token(request.form):
