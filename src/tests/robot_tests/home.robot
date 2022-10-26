@@ -29,3 +29,8 @@ Logged Out User Should Be On Login Page
     Go To Home Page
     Page Should Contain  Please login with your Google account:
 
+Logged Out User Trying To Create Surveys Is Redirected To Login And Displayed Notification
+    Go To Create New Survey Page
+    Page Should Contain  Please login with your Google account:
+    Notification Is Displayed
+

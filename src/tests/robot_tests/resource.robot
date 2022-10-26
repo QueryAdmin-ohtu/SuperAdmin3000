@@ -48,3 +48,9 @@ Login Through Backdoor
 
 Logout
     Click Button  Logout
+
+Notification Is Displayed
+    Element Should Be Visible  id:notification
+
+Notification Is Not Displayed
+    Element Should Not Be Visible  id:notification

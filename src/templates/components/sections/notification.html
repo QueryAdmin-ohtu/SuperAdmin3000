@@ -1,0 +1,71 @@
+{# {% set category = "error" %} #}
+{# {% set message = "This is an error" %} #}
+
+{% macro notification_icon(category) %}
+{% if category == "confirmation" %}
+<svg xmlns="http://www.w3.org/2000/svg" class="stroke-emerald-500 h-6 w-6" fill="none" viewBox="0 0 24 24">
+    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+        d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+</svg>
+{% elif category == "warning" %}
+<svg xmlns="http://www.w3.org/2000/svg" class="stroke-amber-500 h-6 w-6" fill="none" viewBox="0 0 24 24">
+    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+        d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+</svg>
+{% else %}
+<svg xmlns="http://www.w3.org/2000/svg" class="stroke-rose-500 h-6 w-6" fill="none" viewBox="0 0 24 24">
+    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+        d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+</svg>
+{% endif %}
+{% endmacro %}
+
+{% macro notification_bar(category) %}
+{% if category == "confirmation" %}
+<div class="flex-grow border-t border-emerald-500 border-2 rounded-xl shadow-md shadow-emerald-200"></div>
+{% elif category == "warning" %}
+<div class="flex-grow border-t border-amber-500 border-2 rounded-xl shadow-md shadow-amber-200"></div>
+{% else %}
+<div class="flex-grow border-t border-rose-500 border-2 rounded-xl shadow-md shadow-rose-200"></div>
+{% endif %}
+{% endmacro %}
+
+{% macro notification_category_text(category) %}
+{% if category == "confirmation" %}
+<span class="font-medium text-emerald-500">Success</span>
+{% elif category == "warning" %}
+<span class="font-medium text-amber-500">Warning</span>
+{% else %}
+<span class="font-medium text-rose-500">Error</span>
+{% endif %}
+{% endmacro %}
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+{% if messages %}
+{% for category, message in messages %}
+<div id="notification" class="flex flex-col items-center">
+    <div class="bg-slate-100 w-full overflow-hidden max-w-4xl border rounded-md p-4">
+        <div class="flex flex-col gap-2">
+            <div class="flex flex-row gap-2 items-center">
+                {{ notification_icon(category) }}
+                <div class="flex flex-col items-start">
+                    {{ notification_category_text(category) }}
+                    <p class="text-base text-slate-800">{{ message }}</p>
+                </div>
+                <div class="flex-grow"></div>
+                <!-- TODO: Upgrade X to an actual icon in future. Or maybe just text saying dismiss? -->
+                <button class="text-slate-400 font-medium" type="button" onclick="dismissNotification()"
+                    id="modal-cancel-button">
+                    X
+                </button>
+            </div>
+            <div class="relative flex items-center">
+                {{ notification_bar(category) }}
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endfor %}
+{% endif %}
+{% endwith %}

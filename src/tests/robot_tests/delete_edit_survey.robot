@@ -16,6 +16,8 @@ Delete An Existing Survey
     Write Confirmation Text To Modal  Must Not Contain
     Click Delete Modal Delete
     Page Should Not Contain  Poistuisikohan
+    Notification Is Displayed
+    Page Should Contain  survey was deleted
 
 Try To Delete A Survey But Write Invalid Confirmation Text
     Go To Home Page
@@ -24,6 +26,8 @@ Try To Delete A Survey But Write Invalid Confirmation Text
     Write Confirmation Text To Modal  Masa Mainio
     Click Delete Modal Delete
     Page Should Contain  Poistuisikohan
+    Notification Is Displayed
+    Page Should Contain  Confirmation did not match name of survey
 
 Deletition Modal Is Closed By Clicking Cancel
     Go To Survey  1
@@ -32,12 +36,15 @@ Deletition Modal Is Closed By Clicking Cancel
     Element Should Be Visible  id:modal
     Click Delete Modal Cancel
     Element Should Not Be Visible  id:modal
+    Notification Is Not Displayed
 
 Logged In User Can Edit Survey
     Go To Survey  1
     ${updated}=  Get Text  updated
     Click Link  Edit survey
     Edit Survey With Valid Info
+    Notification Is Displayed
+    Page Should Contain  Test_name survey was updated
     Page Should Contain  test_name
     Page Should Contain  test_title
     Page Should Contain  test_text
