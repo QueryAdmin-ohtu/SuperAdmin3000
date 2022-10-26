@@ -15,29 +15,13 @@ def tests(ctx):
 
 @task
 def reset_and_test(ctx, db):
-
-    beginning1="psql -d"
-    end1="-c 'drop table if exists \"Admins\", \"Categories\", \"Category_results\", \"Industries\", \"Organizations\", \"Question_answers\",   \"Questions\", \"Survey_results\", \"Survey_user_groups\", \"Surveys\", \"User_answers\", \"Users\" cascade;'"
-    drop_tables=' '.join([beginning1,db,end1])
-    ctx.run(drop_tables)
-
-    beginning2="psql -d"
-    end2="-f schema.sql"
-    create_tables=' '.join([beginning2,db,end2])
-    ctx.run(create_tables)
-
-    beginning3="psql"
-    end3="-Atq -f reset.sql -o temp"
-    update_sequences=' '.join([beginning3,db,end3])
-    ctx.run(update_sequences)
-
-    beginning4="psql"
-    end4="-f temp"
-    clean=' '.join([beginning4,db,end4])
-    ctx.run(clean)
-    ctx.run("rm temp")
-
+    init_db(ctx, db)
     ctx.run("pytest")
+
+@task
+def reset_and_start(ctx, db):
+    init_db(ctx, db)
+    start(ctx)
 
 @task
 def coverage(ctx):
@@ -79,13 +63,6 @@ def init_db(ctx, db):
     create_tables=' '.join([beginning2,db,end2])
     ctx.run(create_tables)
 
-    beginning3="psql"
-    end3="-Atq -f reset.sql -o temp"
-    update_sequences=' '.join([beginning3,db,end3])
-    ctx.run(update_sequences)
+    ctx.run(f"./reset-db-sequences.sh {db}")
 
-    beginning4="psql"
-    end4="-f temp"
-    clean=' '.join([beginning4,db,end4])
-    ctx.run(clean)
-    ctx.run("rm temp")
+
