@@ -528,3 +528,19 @@ class TestSurveyRepository(unittest.TestCase):
             survey_id = 2
             response = self.repo.get_categories_of_survey(survey_id)
         self.assertEqual(len(response), 0)
+
+    def test_sucessful_update_category_returns_category(self):
+        with self.app.app_context():
+            content_links = '[{"url":"https://www.eficode.com/cases/hansen","type":"Case Study"},{"url":"https://www.eficode.com/cases/basware","type":"Case Study"}]'
+            category_id = self.repo.create_category(
+                "1",
+                "name",
+                "description",
+                content_links)
+            updated_category = self.repo.update_category(
+                category_id,
+                content_links,
+                "A more descriptive name",
+                "An actual description")
+        self.assertTrue(updated_category != None)
+        self.assertEquals(updated_category, category_id)
