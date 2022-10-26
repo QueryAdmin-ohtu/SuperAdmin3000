@@ -60,9 +60,15 @@ def edit_survey_post(survey_id):
     title = request.form["title"]
     description = request.form["description"]
 
-    survey_service.edit_survey(survey_id, name, title, description)
-    route = f"/surveys/{survey_id}"
-    return redirect(route)
+    try: 
+        survey_service.edit_survey(survey_id, name, title, description)
+        route = f"/surveys/{survey_id}"
+        flash(f"{name.capitalize()} survey was updated", "confirmation")
+        return redirect(route)
+
+    except UserInputError as error:
+        flash(str(error), "error")
+        return redirect(request.base_url)
 
 @surveys.route("/surveys/<survey_id>/delete-survey", methods=["POST"])
 def delete_survey(survey_id):
