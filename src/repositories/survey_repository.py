@@ -1,3 +1,4 @@
+from tkinter.tix import Select
 from sqlalchemy import exc
 
 from db import db
@@ -475,3 +476,30 @@ class SurveyRepository:
         except exc.SQLAlchemyError as exception:
             return exception
         return True
+
+    def get_number_of_submissions(self, survey_id):
+        """ Finds and returns the number of distinct users who have 
+        submitted answers to a survey."""
+        
+        sql = """
+        SELECT
+            s.id,
+            COUNT(DISTINCT ua.id) AS submissions
+        FROM "Surveys" AS s
+        LEFT JOIN "Questions" AS q
+            ON s.id = q."surveyId"
+        LEFT JOIN "Question_answers" AS qa
+            ON q.id = qa."questionId"
+        LEFT JOIN "User_answers" AS ua
+            ON qa.id = ua."questionAnswerId"
+        WHERE s.id=:survey_id
+        GROUP BY s.id
+        """
+        submissions = self.db_connection.session.execute(
+            sql, {"survey_id": survey_id}).fetchone()
+
+        if not submissions:
+            return None
+        return submissions
+
+
