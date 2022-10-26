@@ -14,6 +14,8 @@ Logged In User Can Create Surveys
     Go To Home Page
     Click Link  New survey
     Make A Survey
+    Element Should Be Visible  id:notification
+    Page Should Contain  Testi survey was created
     Page Should Contain  Testi
     Page Should Contain  Toimiikohan
     Page Should Contain  Surveyn tekeminen testauksessa
