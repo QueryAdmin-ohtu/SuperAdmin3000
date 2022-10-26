@@ -32,25 +32,34 @@
 
 {% macro notification_category_text(category) %}
 {% if category == "confirmation" %}
-<span class="font-medium text-emerald-500">Success:</span>
+<span class="font-medium text-emerald-500">Success</span>
 {% elif category == "warning" %}
-<span class="font-medium text-amber-500">Warning:</span>
+<span class="font-medium text-amber-500">Warning</span>
 {% else %}
-<span class="font-medium text-rose-500">Error:</span>
+<span class="font-medium text-rose-500">Error</span>
 {% endif %}
 {% endmacro %}
 
 {% with messages = get_flashed_messages(with_categories=true) %}
 {% if messages %}
 {% for category, message in messages %}
-<div class="flex flex-col items-center">
+<div id="notification" class="flex flex-col items-center">
     <div class="bg-slate-100 w-full overflow-hidden max-w-4xl border rounded-md p-4">
-        <div class="flex flex-col">
-            <div class="flex flex-row gap-2">
+        <div class="flex flex-col gap-2">
+            <div class="flex flex-row gap-2 items-center">
                 {{ notification_icon(category) }}
-                <p class="text-base text-slate-800">{{ notification_category_text(category) }} {{ message }}!</p>
+                <div class="flex flex-col items-start">
+                    {{ notification_category_text(category) }}
+                    <p class="text-base text-slate-800">{{ message }}</p>
+                </div>
+                <div class="flex-grow"></div>
+                <!-- TODO: Upgrade X to an actual icon in future. Or maybe just text saying dismiss? -->
+                <button class="text-slate-400 font-medium" type="button" onclick="dismissNotification()"
+                    id="modal-cancel-button">
+                    X
+                </button>
             </div>
-            <div class="relative flex pt-2 items-center">
+            <div class="relative flex items-center">
                 {{ notification_bar(category) }}
             </div>
         </div>

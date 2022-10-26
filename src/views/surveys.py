@@ -30,7 +30,7 @@ def new_survey_post():
         survey_id = survey_service.create_survey(name, title, survey)
         route = f"/surveys/{survey_id}"
 
-        flash(f"Created new survey: {name}", "confirmation")
+        flash(f"{name.capitalize()} survey was created", "confirmation")
         return redirect(route)
 
     except UserInputError as error:
@@ -87,7 +87,7 @@ def delete_survey(survey_id):
         return redirect(f"/surveys/{survey_id}")
 
     if survey_service.delete_survey(survey_id):
-        flash(f"{survey_to_delete.name} survey was deleted", "confirmation")
+        flash(f"{survey_to_delete.name.capitalize()} survey was deleted", "confirmation")
         return redirect("/")
 
     flash("Survey could not be deleted", "error")
