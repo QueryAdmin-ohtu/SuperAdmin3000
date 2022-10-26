@@ -10,3 +10,5 @@ if [ $# -ne 1 ]; then
 fi
 
 psql $1 -Atq -f reset.sql -o temp && psql $1 -f temp && rm temp
+
+echo Sequences in the database $1 have been reset
