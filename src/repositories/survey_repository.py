@@ -484,7 +484,7 @@ class SurveyRepository:
         sql = """
         SELECT
             s.id,
-            COUNT(DISTINCT ua.id) AS submissions
+            COUNT(DISTINCT ua."userId") AS submissions
         FROM "Surveys" AS s
         LEFT JOIN "Questions" AS q
             ON s.id = q."surveyId"
@@ -502,4 +502,26 @@ class SurveyRepository:
             return None
         return submissions
 
+    def get_answer_distribution(self, survey_id):
+        sql = """
+        SELECT
+            s.id AS survey_id,
+            q.id AS question_id,
+            q.text AS question,
+            qa.text AS answer,
+            COUNT(*)
+        FROM "Surveys" AS s
+        LEFT JOIN "Questions" AS q
+            ON s.id = q."surveyId"
+        LEFT JOIN "Question_answers" AS qa
+            ON q.id = qa."questionId"
+        LEFT JOIN "User_answers" AS ua
+            ON qa.id = ua."questionAnswerId"
+        WHERE s.id=:survey_id
+        GROUP BY s.id, q.id, q.text, qa.text
+        """
+        result = self.db_connection.session.execute(
+            sql, {"survey_id": survey_id}).fetchall()
+
+        return result
 
