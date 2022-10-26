@@ -213,18 +213,23 @@ class TestSurveyService(unittest.TestCase):
         self.repo_mock.update_category.assert_called_with(
             category_id, content_links, name, description)
 
-    # def test_update_category_calls_repo_correctly_without_name_and_description(self):
-    #     self.repo_mock.update_category.return_value = 1
-    #     category_id = 0
-    #     content_links = [{"url": "https://www.eficode.com/cases/hansen", "type": "Case Study"},
-    #                      {"url": "https://www.eficode.com/cases/basware", "type": "Case Study"}]
-    #     check = self.survey_service.update_category(
-    #         category_id, content_links)
-    #     self.assertEqual(check, 1)
-    #     name=self.get_category(category_id)[1]
-    #     description=self.get_category(category_id)[2]
-    #     self.repo_mock.update_category.assert_called_with(
-    #         category_id, content_links, name, description)
+    def test_update_category_calls_repo_correctly_without_name_and_description(self):
+        self.repo_mock.get_category.return_value = (1, 
+        'Category 1', 
+        'Static descriptive text about the category 1.', 
+        [{'url': 'https://www.eficode.com/cases/hansen', 'type': 'Case Study'}, {'url': 'https://www.eficode.com/cases/basware', 'type': 'Case Study'}], 
+        'created_time_here', 
+        'updated_time_here',
+        1)
+        category_id = 0
+        content_links = [{"url": "https://www.eficode.com/cases/hansen", "type": "Case Study"},
+                         {"url": "https://www.eficode.com/cases/basware", "type": "Case Study"}]
+        self.survey_service.update_category(
+            category_id, content_links)
+        name = self.repo_mock.get_category(category_id)[1]
+        description = self.repo_mock.get_category(category_id)[2]
+        self.repo_mock.update_category.assert_called_with(
+            category_id, content_links, name, description)
 
     def test_delete_category_calls_repo_correctly(self):
         self.repo_mock.delete_category.return_value = 1
