@@ -653,6 +653,14 @@ p {
   z-index: 50;
 }
 
+.col-span-full {
+  grid-column: 1 / -1;
+}
+
+.col-end-7 {
+  grid-column-end: 7;
+}
+
 .m-1 {
   margin: 0.25rem;
 }
@@ -718,6 +726,14 @@ p {
   height: 3.5rem;
 }
 
+.h-7 {
+  height: 1.75rem;
+}
+
+.h-5 {
+  height: 1.25rem;
+}
+
 .h-fit {
   height: -webkit-fit-content;
   height: -moz-fit-content;
@@ -730,18 +746,6 @@ p {
 
 .h-full {
   height: 100%;
-}
-
-.h-10 {
-  height: 2.5rem;
-}
-
-.h-5 {
-  height: 1.25rem;
-}
-
-.h-7 {
-  height: 1.75rem;
 }
 
 .max-h-48 {
@@ -812,12 +816,24 @@ p {
   grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
+.grid-rows-1 {
+  grid-template-rows: repeat(1, minmax(0, 1fr));
+}
+
 .flex-row {
   flex-direction: row;
 }
 
 .flex-col {
   flex-direction: column;
+}
+
+.place-content-between {
+  place-content: space-between;
+}
+
+.content-start {
+  align-content: flex-start;
 }
 
 .items-start {
@@ -854,6 +870,18 @@ p {
 
 .gap-6 {
   gap: 1.5rem;
+}
+
+.gap-10 {
+  gap: 2.5rem;
+}
+
+.gap-20 {
+  gap: 5rem;
+}
+
+.gap-96 {
+  gap: 24rem;
 }
 
 .space-y-6 > :not([hidden]) ~ :not([hidden]) {
