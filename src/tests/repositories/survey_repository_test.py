@@ -446,3 +446,27 @@ class TestSurveyRepository(unittest.TestCase):
             response = self.repo.get_categories_of_survey(survey_id)
 
         self.assertEqual(len(response), 0)
+
+    def test_number_of_submissions(self):
+        with self.app.app_context():
+            survey_id = self.repo.create_survey(
+                "Elephants", "What kind of an elephant are you?", "The amazing elephant survey!")
+            question_id = self.repo.create_question(
+                "Describe the size of your ears?", survey_id, 
+                '[{"category": "Size", "multiplier": 1.0}]')
+            answer_id_1 = self.repo.create_answer("Huge", 5, question_id)
+            answer_id_2 = self.repo.create_answer("Nonexistent", 0, question_id)
+
+            user_id_1 = self.repo._add_user()
+            user_id_2 = self.repo._add_user()
+            user_id_3 = self.repo._add_user()
+
+            self.repo._add_user_answer(user_id_1, answer_id_1)
+            self.repo._add_user_answer(user_id_2, answer_id_1)
+            self.repo._add_user_answer(user_id_3, answer_id_2)
+
+            result = self.repo.get_number_of_submissions(survey_id)
+        
+        self.assertEqual(result, 3)
+            
+
