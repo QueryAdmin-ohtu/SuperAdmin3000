@@ -239,12 +239,13 @@ def edit_category_page(survey_id, category_id):
     """  Returns a page for editing or creating a new category.
     """
 
-    if not helper.logged_in():
-        return redirect("/")
-
+    survey_path = f"/surveys/{survey_id}"
     # Returns an empty template for creating a new category
     if category_id == 'new':
-        return render_template("surveys/edit_category.html", ENV=app.config["ENV"], survey_id=survey_id)
+        return render_template("surveys/edit_category.html",
+        ENV=app.config["ENV"],
+        survey_id=survey_id,
+        survey_path=survey_path)
 
     # Prefills the template for editing an existing category
     category = survey_service.get_category(category_id)
@@ -252,9 +253,14 @@ def edit_category_page(survey_id, category_id):
     description = category[2]
     content_links = category[3]
     return render_template("surveys/edit_category.html",
-                           ENV=app.config["ENV"], survey_id=survey_id,
-                           category_id=category_id, name=name, description=description,
-                           content_links=content_links, edit=True)
+                           ENV=app.config["ENV"],
+                           survey_id=survey_id,
+                           category_id=category_id,
+                           name=name,
+                           description=description,
+                           content_links=content_links,
+                           edit=True,
+                           survey_path=survey_path)
 
 
 @surveys.route("/edit_category", methods=["POST"])
