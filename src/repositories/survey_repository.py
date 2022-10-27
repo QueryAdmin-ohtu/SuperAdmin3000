@@ -401,27 +401,27 @@ class SurveyRepository:
         return None
 
     def _admin_exists(self, email):
-            """ Test if the given email is already one of the
-            authorized users
+        """ Test if the given email is already one of the
+        authorized users
 
-            Returns:
-                True if yes,
-                False if no """
+        Returns:
+            True if yes,
+            False if no """
 
-            values = {"email": email}
-            sql = """
-            SELECT *
-            FROM "Admins"
-            WHERE email=:email
-            """
-            try:
-                result = self.db_connection.session.execute(
-                    sql, values).fetchone()
-            except exc.SQLAlchemyError:
-                return False
-            if not result:
-                return False
-            return True
+        values = {"email": email}
+        sql = """
+        SELECT *
+        FROM "Admins"
+        WHERE email=:email
+        """
+        try:
+            result = self.db_connection.session.execute(
+                sql, values).fetchone()
+        except exc.SQLAlchemyError:
+            return False
+        if not result:
+            return False
+        return True
 
     def get_all_admins(self):
         """ Fetches all authorized users from the database
@@ -477,10 +477,10 @@ class SurveyRepository:
         return True
 
     def get_number_of_submissions(self, survey_id):
-        """ Finds and returns the number of distinct users who have 
+        """ Finds and returns the number of distinct users who have
         submitted answers to a survey."""
-        
-        # TODO: filter by dates
+
+        # TODO: filter by dates/groups
 
         sql = """
         SELECT
@@ -506,11 +506,11 @@ class SurveyRepository:
     def get_answer_distribution(self, survey_id):
         """ Finds and returns the distribution of user answers
         over the answer options of a survey.
-        
-        Returns question id, question text, answer id, answer text, 
+
+        Returns a table with question id, question text, answer id, answer text,
         user answer counts"""
 
-        # TODO: filter by dates
+        # TODO: filter by dates/groups
 
         sql = """
         SELECT
@@ -536,10 +536,10 @@ class SurveyRepository:
 
     def _add_user(self):
         """Adds a user to database for testing purposes
-        
+
         Returns user id"""
-        
-        sql="""INSERT INTO "Users" ("createdAt", "updatedAt") 
+
+        sql="""INSERT INTO "Users" ("createdAt", "updatedAt")
             VALUES (NOW(), NOW()) RETURNING id"""
         user_id = self.db_connection.session.execute(sql).fetchone()[0]
         db.session.commit()
@@ -548,7 +548,7 @@ class SurveyRepository:
     def _add_user_answer(self, user_id, question_answer_id):
         """Adds a user answer to database for testing purposes"""
 
-        sql="""INSERT INTO "User_answers" 
+        sql="""INSERT INTO "User_answers"
             ("userId", "questionAnswerId", "createdAt", "updatedAt")
             VALUES (:user_id, :question_answer_id, NOW(), NOW())"""
         values = {"user_id": user_id, "question_answer_id": question_answer_id}

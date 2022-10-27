@@ -66,7 +66,7 @@ def delete_survey(survey_id):
     the survey and the confirmation the user
     wrote match.
 
-    If names match a db function is called to delete 
+    If names match a db function is called to delete
     the survey using the id.
 
     Succeeds: Redirect to home page
@@ -75,7 +75,7 @@ def delete_survey(survey_id):
     survey_id = request.form["id"]
     confirmation_text = request.form["confirmation-text"]
     survey_to_delete = survey_service.get_survey(survey_id)
-    
+
     if survey_to_delete.name != confirmation_text:
         return redirect(f"/surveys/{survey_id}")
 
@@ -171,7 +171,7 @@ def edit_question(survey_id, question_id):
     if weights:
         weights = helper.json_into_dictionary(question[3])
 
-    survey = survey_service.get_survey(survey_id)    
+    survey = survey_service.get_survey(survey_id)
     categories = survey_service.get_categories_of_survey(survey_id)
 
     return render_template("questions/edit_question.html",
@@ -328,11 +328,9 @@ def view_surveys():
     """Redirecting method"""
     return redirect("/")
 
-
-# Save requestes to the log
 @surveys.before_request
 def before_request():
-
+    """Save requests to the event log"""
     if not helper.logged_in():
         return redirect("/")
 
