@@ -534,3 +534,46 @@ class TestSurveyRepository(unittest.TestCase):
                 "An actual description")
         self.assertTrue(updated_category != None)
         self.assertEquals(updated_category, category_id)
+
+    def _create_survey_and_add_user_answers(self):
+        with self.app.app_context():
+            survey_id = self.repo.create_survey(
+                "Elephants", "What kind of an elephant are you?", "The amazing elephant survey!")
+            question_id_1 = self.repo.create_question(
+                "Describe the size of your ears?", survey_id, 
+                '[{"category": "Size", "multiplier": 1.0}]')
+            answer_id_1 = self.repo.create_answer("Huge", 5, question_id_1)
+            answer_id_2 = self.repo.create_answer("Nonexistent", 0, question_id_1)
+            question_id_2 = self.repo.create_question(
+                "Where do you prefer to hang out?", survey_id, 
+                '[{"category": "Habitat", "multiplier": 1.0}]')
+            answer_id_3 = self.repo.create_answer("Forest", 5, question_id_2)
+            answer_id_4 = self.repo.create_answer("Savannah", 0, question_id_2)
+
+            user_id_1 = self.repo._add_user()
+            user_id_2 = self.repo._add_user()
+            user_id_3 = self.repo._add_user()
+
+            self.repo._add_user_answer(user_id_1, answer_id_1)
+            self.repo._add_user_answer(user_id_2, answer_id_1)
+            self.repo._add_user_answer(user_id_3, answer_id_2)
+            self.repo._add_user_answer(user_id_1, answer_id_4)
+            self.repo._add_user_answer(user_id_2, answer_id_3)
+            self.repo._add_user_answer(user_id_3, answer_id_4)
+
+        return survey_id
+
+    def test_number_of_submissions(self):
+        survey_id = self._create_survey_and_add_user_answers()
+        with self.app.app_context():
+            result = self.repo.get_number_of_submissions(survey_id)
+        
+        self.assertEqual(result, 3)
+
+    def test_answer_distribution(self):
+        survey_id = self._create_survey_and_add_user_answers()
+        with self.app.app_context():
+            result = self.repo.get_answer_distribution(survey_id)
+        
+        self.assertEqual(result[0][4], 2)
+        self.assertEqual(result[1][4], 1)

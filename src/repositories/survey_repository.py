@@ -24,7 +24,7 @@ class SurveyRepository:
 
         return False
 
-    def create_survey(self, name, title, survey):
+    def create_survey(self, name, title, survey_text):
         """ Inserts a survey to table Surveys based
         on given parameters and returns the id """
         sql = """
@@ -35,7 +35,7 @@ class SurveyRepository:
         values = {
             "name": name,
             "title_text": title,
-            "survey_text": survey
+            "survey_text": survey_text
         }
 
         try:
@@ -471,27 +471,27 @@ class SurveyRepository:
         return None
 
     def _admin_exists(self, email):
-            """ Test if the given email is already one of the
-            authorized users
+        """ Test if the given email is already one of the
+        authorized users
 
-            Returns:
-                True if yes,
-                False if no """
+        Returns:
+            True if yes,
+            False if no """
 
-            values = {"email": email}
-            sql = """
-            SELECT *
-            FROM "Admins"
-            WHERE email=:email
-            """
-            try:
-                result = self.db_connection.session.execute(
-                    sql, values).fetchone()
-            except exc.SQLAlchemyError:
-                return False
-            if not result:
-                return False
-            return True
+        values = {"email": email}
+        sql = """
+        SELECT *
+        FROM "Admins"
+        WHERE email=:email
+        """
+        try:
+            result = self.db_connection.session.execute(
+                sql, values).fetchone()
+        except exc.SQLAlchemyError:
+            return False
+        if not result:
+            return False
+        return True
 
     def get_all_admins(self):
         """ Fetches all authorized users from the database
@@ -548,3 +548,83 @@ class SurveyRepository:
             return exception
         self.update_survey_updated_at(category[6])
         return True
+
+    def get_number_of_submissions(self, survey_id):
+        """ Finds and returns the number of distinct users who have
+        submitted answers to a survey."""
+
+        # TODO: filter by dates/groups
+
+        sql = """
+        SELECT
+            s.id,
+            COUNT(DISTINCT ua."userId") AS submissions
+        FROM "Surveys" AS s
+        LEFT JOIN "Questions" AS q
+            ON s.id = q."surveyId"
+        LEFT JOIN "Question_answers" AS qa
+            ON q.id = qa."questionId"
+        LEFT JOIN "User_answers" AS ua
+            ON qa.id = ua."questionAnswerId"
+        WHERE s.id=:survey_id
+        GROUP BY s.id
+        """
+        submissions = self.db_connection.session.execute(
+            sql, {"survey_id": survey_id}).fetchone()
+
+        if not submissions:
+            return None
+        return submissions.submissions
+
+    def get_answer_distribution(self, survey_id):
+        """ Finds and returns the distribution of user answers
+        over the answer options of a survey.
+
+        Returns a table with question id, question text, answer id, answer text,
+        user answer counts"""
+
+        # TODO: filter by dates/groups
+
+        sql = """
+        SELECT
+            q.id AS question_id,
+            q.text AS question,
+            qa.id AS answer_id,
+            qa.text AS answer,
+            COUNT(ua.id)
+        FROM "Surveys" AS s
+        LEFT JOIN "Questions" AS q
+            ON s.id = q."surveyId"
+        LEFT JOIN "Question_answers" AS qa
+            ON q.id = qa."questionId"
+        LEFT JOIN "User_answers" AS ua
+            ON qa.id = ua."questionAnswerId"
+        WHERE s.id=:survey_id
+        GROUP BY q.id, q.text, qa.id, qa.text
+        """
+        result = self.db_connection.session.execute(
+            sql, {"survey_id": survey_id}).fetchall()
+
+        return result
+
+    def _add_user(self):
+        """Adds a user to database for testing purposes
+
+        Returns user id"""
+
+        sql="""INSERT INTO "Users" ("createdAt", "updatedAt")
+            VALUES (NOW(), NOW()) RETURNING id"""
+        user_id = self.db_connection.session.execute(sql).fetchone()[0]
+        db.session.commit()
+        return user_id
+
+    def _add_user_answer(self, user_id, question_answer_id):
+        """Adds a user answer to database for testing purposes"""
+
+        sql="""INSERT INTO "User_answers"
+            ("userId", "questionAnswerId", "createdAt", "updatedAt")
+            VALUES (:user_id, :question_answer_id, NOW(), NOW())"""
+        values = {"user_id": user_id, "question_answer_id": question_answer_id}
+
+        self.db_connection.session.execute(sql, values)
+        db.session.commit()
