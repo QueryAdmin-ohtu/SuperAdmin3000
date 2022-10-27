@@ -502,13 +502,16 @@ class SurveyRepository:
         return submissions
 
     def get_answer_distribution(self, survey_id):
+        """ Finds and returns the distribution of user answers
+        over the answer options of a survey"""
         sql = """
         SELECT
             s.id AS survey_id,
             q.id AS question_id,
             q.text AS question,
             qa.text AS answer,
-            COUNT(*)
+            qa.id AS answer_id,
+            COUNT(ua.id)
         FROM "Surveys" AS s
         LEFT JOIN "Questions" AS q
             ON s.id = q."surveyId"
@@ -517,7 +520,7 @@ class SurveyRepository:
         LEFT JOIN "User_answers" AS ua
             ON qa.id = ua."questionAnswerId"
         WHERE s.id=:survey_id
-        GROUP BY s.id, q.id, q.text, qa.text
+        GROUP BY s.id, q.id, q.text, qa.text, qa.id
         """
         result = self.db_connection.session.execute(
             sql, {"survey_id": survey_id}).fetchall()
