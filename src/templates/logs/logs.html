@@ -1,8 +1,16 @@
 {% extends "layout.html" %}
+{% import "components/macros/buttons.html" as buttons %}
 
 {% block content %}
 
 <h2>Event log</h2>
+
+
+{% if reverse %}
+{{ buttons.link_button("Newest first", "/logs") }}
+{% else %}
+{{ buttons.link_button("Oldest first", "/logs/oldestfirst") }}
+{% endif %}
 
 {% if logs %}
 <div>
