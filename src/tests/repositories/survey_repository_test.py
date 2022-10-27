@@ -417,8 +417,6 @@ class TestSurveyRepository(unittest.TestCase):
         with self.app.app_context():
             categories = self.repo.get_all_categories()
             category_id = categories[0][0]
-            name = "name"
-            description = "description"
             content_links = '[{"url":"https://www.eficode.com/cases/hansen","type":"Case Study"},{"url":"https://www.eficode.com/cases/basware","type":"Case Study"}]'
             response = self.repo.update_category(
                 category_id,
@@ -431,8 +429,6 @@ class TestSurveyRepository(unittest.TestCase):
     def test_update_category_with_invalid_data_returns_False(self):
         with self.app.app_context():
             category_id = -1
-            name = "name"
-            description = "description"
             content_links = '[{"url":"https://www.eficode.com/cases/hansen","type":"Case Study"},{"url":"https://www.eficode.com/cases/basware","type":"Case Study"}]'
             response = self.repo.update_category(
                 category_id,
@@ -443,8 +439,6 @@ class TestSurveyRepository(unittest.TestCase):
 
         with self.app.app_context():
             category_id = 2.5
-            name = "name"
-            description = "description"
             content_links = '[{"url":"https://www.eficode.com/cases/hansen","type":"Case Study"},{"url":"https://www.eficode.com/cases/basware","type":"Case Study"}]'
             response = self.repo.update_category(
                 category_id,
@@ -456,8 +450,6 @@ class TestSurveyRepository(unittest.TestCase):
         with self.app.app_context():
             categories = self.repo.get_all_categories()
             category_id = categories[0][0]
-            name = "name"
-            description = "description"
             content_links = 'abc'
             response = self.repo.update_category(
                 category_id,
@@ -469,8 +461,6 @@ class TestSurveyRepository(unittest.TestCase):
         with self.app.app_context():
             categories = self.repo.get_all_categories()
             category_id = categories[0][0]
-            name = "name"
-            description = "description"
             content_links = [{"url": "https://www.eficode.com/cases/hansen", "type": "Case Study"}, {
                 "url": "https://www.eficode.com/cases/basware", "type": "Case Study"}]
             response = self.repo.update_category(
