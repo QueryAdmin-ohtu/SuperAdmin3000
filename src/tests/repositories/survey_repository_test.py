@@ -82,6 +82,89 @@ class TestSurveyRepository(unittest.TestCase):
 
         self.assertFalse(response)
 
+    def test_get_survey_id_from_question_id_returns_correct_value(self):
+        with self.app.app_context():
+            survey_id = self.repo.create_survey("Algorithms", "Sorting algorithms", "Have fun with sorting!")
+            question_id = self.repo.create_question("In which situations can a bubble sorting algorithm be useful?", survey_id, category_weights)
+            received_id = self.repo.get_survey_id_from_question_id(question_id)
+        self.assertTrue(received_id == survey_id)
+    
+    def test_get_question_id_from_answer_id_returns_correct_value(self):
+        with self.app.app_context():
+            survey_id = self.repo.create_survey("Data structures", "Storing information", "Have fun with storing!")
+            question_id = self.repo.create_question("What are the drawbacks of hashmaps?", survey_id, category_weights)
+            answer_id = self.repo.create_answer(text="Slow lookup times when looking by key",points=-10, question_id=question_id)
+            received_id = self.repo.get_question_id_from_answer_id(answer_id)
+        self.assertTrue(received_id == question_id)
+
+    def test_update_survey_updated_at_changes_updated_field(self):
+        with self.app.app_context():
+            before = self.repo.get_survey(1)[3]
+            self.repo.update_survey_updated_at(1)
+            after = self.repo.get_survey(1)[3]
+        self.assertGreater(after, before)
+
+    def test_delete_question_answer_updates_survey_updated_at(self):
+        with self.app.app_context():
+            question_id = self.repo.create_question("What brings you comfort?", 1, category_weights)
+            answer_id = self.repo.create_answer("Unit tests", question_id, 5)
+            before = self.repo.get_survey(1)[3]
+            self.repo.delete_answer_from_question(answer_id)
+            after = self.repo.get_survey(1)[3]
+        self.assertGreater(after, before)
+
+    def test_delete_question_updates_survey_updated_at(self):
+        with self.app.app_context():
+            question_id = self.repo.create_question("Has my existence made any difference in the end?", 1, category_weights)
+            before = self.repo.get_survey(1)[3]
+            self.repo.delete_question_from_survey(question_id)
+            after = self.repo.get_survey(1)[3]
+        self.assertGreater(after, before)
+    
+    def test_create_category_updates_survey_updated_at(self):
+        content_links = '[{"url":"https://www.eficode.com/cases/hansen","type":"Case Study"},{"url":"https://www.eficode.com/cases/basware","type":"Case Study"}]'
+        with self.app.app_context():
+            before = self.repo.get_survey(1)[3]
+            self.repo.create_category(
+                "1",
+                "name",
+                "description",
+                content_links)
+            after = self.repo.get_survey(1)[3]
+            print("After:", after)
+        self.assertGreater(after, before)
+
+    def update_category_updates_survey_updated_at(self):
+        content_links = '[{"url":"https://www.eficode.com/cases/hansen","type":"Case Study"},{"url":"https://www.eficode.com/cases/basware","type":"Case Study"}]'
+        with self.app.app_context():
+            before = self.repo.get_survey(1)[3]
+            self.repo.update_category(
+                "1",
+                "name",
+                "improved description",
+                content_links)
+            after = self.repo.get_survey(1)[3]
+        self.assertGreater(after, before)
+
+    def delete_category_updates_survey_updated_at(self):
+        content_links = '[{"url":"https://www.eficode.com/cases/hansen","type":"Case Study"},{"url":"https://www.eficode.com/cases/basware","type":"Case Study"}]'
+        with self.app.app_context():
+            category = self.repo.create_category(
+                "1",
+                "name",
+                "description",
+                content_links)
+            before = self.repo.get_survey(1)[3]
+            self.repo.delete_category(category)
+            after = self.repo.get_survey(1)[3]
+        self.assertGreater(after, before)
+
+    def survey_updated_at_remains_unaltered_without_changes(self):
+        with self.app.app_context():
+            before = self.repo.get_survey(1)
+            after = self.repo.get_survey(1)
+        self.assertEqual(after, before)
+
     def test_get_all_surveys_calls_returns_multiple_surveys(self):
 
         with self.app.app_context():
@@ -334,22 +417,18 @@ class TestSurveyRepository(unittest.TestCase):
         with self.app.app_context():
             categories = self.repo.get_all_categories()
             category_id = categories[0][0]
-            name = "name"
-            description = "description"
             content_links = '[{"url":"https://www.eficode.com/cases/hansen","type":"Case Study"},{"url":"https://www.eficode.com/cases/basware","type":"Case Study"}]'
             response = self.repo.update_category(
                 category_id,
                 "name",
                 "description",
                 content_links)
-
+        self.assertTrue(response != None)
         self.assertGreaterEqual(response, 0)
 
     def test_update_category_with_invalid_data_returns_False(self):
         with self.app.app_context():
             category_id = -1
-            name = "name"
-            description = "description"
             content_links = '[{"url":"https://www.eficode.com/cases/hansen","type":"Case Study"},{"url":"https://www.eficode.com/cases/basware","type":"Case Study"}]'
             response = self.repo.update_category(
                 category_id,
@@ -360,8 +439,6 @@ class TestSurveyRepository(unittest.TestCase):
 
         with self.app.app_context():
             category_id = 2.5
-            name = "name"
-            description = "description"
             content_links = '[{"url":"https://www.eficode.com/cases/hansen","type":"Case Study"},{"url":"https://www.eficode.com/cases/basware","type":"Case Study"}]'
             response = self.repo.update_category(
                 category_id,
@@ -373,8 +450,6 @@ class TestSurveyRepository(unittest.TestCase):
         with self.app.app_context():
             categories = self.repo.get_all_categories()
             category_id = categories[0][0]
-            name = "name"
-            description = "description"
             content_links = 'abc'
             response = self.repo.update_category(
                 category_id,
@@ -386,8 +461,6 @@ class TestSurveyRepository(unittest.TestCase):
         with self.app.app_context():
             categories = self.repo.get_all_categories()
             category_id = categories[0][0]
-            name = "name"
-            description = "description"
             content_links = [{"url": "https://www.eficode.com/cases/hansen", "type": "Case Study"}, {
                 "url": "https://www.eficode.com/cases/basware", "type": "Case Study"}]
             response = self.repo.update_category(
@@ -444,8 +517,23 @@ class TestSurveyRepository(unittest.TestCase):
         with self.app.app_context():
             survey_id = 2
             response = self.repo.get_categories_of_survey(survey_id)
-
         self.assertEqual(len(response), 0)
+
+    def test_sucessful_update_category_returns_category(self):
+        with self.app.app_context():
+            content_links = '[{"url":"https://www.eficode.com/cases/hansen","type":"Case Study"},{"url":"https://www.eficode.com/cases/basware","type":"Case Study"}]'
+            category_id = self.repo.create_category(
+                "1",
+                "name",
+                "description",
+                content_links)
+            updated_category = self.repo.update_category(
+                category_id,
+                content_links,
+                "A more descriptive name",
+                "An actual description")
+        self.assertTrue(updated_category != None)
+        self.assertEquals(updated_category, category_id)
 
     def _create_survey_and_add_user_answers(self):
         with self.app.app_context():
@@ -489,5 +577,3 @@ class TestSurveyRepository(unittest.TestCase):
         
         self.assertEqual(result[0][4], 2)
         self.assertEqual(result[1][4], 1)
-            
-

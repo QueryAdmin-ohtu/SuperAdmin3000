@@ -1,4 +1,4 @@
-from flask import render_template, redirect, request, abort, Blueprint
+from flask import render_template, redirect, request, abort, Blueprint, flash
 from flask import current_app as app
 
 from google.oauth2 import id_token
@@ -69,7 +69,8 @@ def google_login():
         # Invalid token
         pass
 
-    return "You are not authorized to use the service. Please contact your administrator."
+    flash("You are not authorized to use the service. Please contact your administrator.", "error")
+    return redirect("/")
 
 
 @home.route("/logout", methods=["POST"])
@@ -117,6 +118,7 @@ def backdoor_login():
 def list_admins():
     """ Returns the page with list of admins """
     if not helper.logged_in():
+        flash("Log in to use the application", "error")
         return redirect("/")
 
     admins = survey_service.get_all_admins()

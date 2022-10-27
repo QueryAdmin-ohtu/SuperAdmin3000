@@ -47,6 +47,31 @@ class SurveyRepository:
 
         return survey_id[0]
 
+    def update_survey_updated_at(self, survey_id):
+        """ Updates the surveys updatedAt field.
+        
+        Returns: 
+            True if successful
+        """
+        sql = """ UPDATE "Surveys" SET "updatedAt"=NOW()
+        WHERE id=:survey_id """
+        self.db_connection.session.execute(
+            sql, {"survey_id": survey_id})
+        self.db_connection.session.commit()
+        return True
+
+    def update_question_updated_at(self, question_id):
+        """ Updates the given questions updatedAt field.
+
+        Returns:
+            True if successful
+        """
+        sql = """ UPDATE "Questions" SET "updatedAt"=NOW() WHERE id=:question_id """
+        self.db_connection.session.execute(
+            sql, {"question_id": question_id})
+        self.db_connection.session.commit()
+        return True
+
     def create_question(self, text, survey_id, category_weights):
         """ Inserts a new question to table Questions based
         on given parameters.
@@ -65,6 +90,7 @@ class SurveyRepository:
         }
         question_id = db.session.execute(sql, values).fetchone()
         db.session.commit()
+        self.update_survey_updated_at(survey_id)
         return question_id[0]
 
     def create_answer(self, text, points, question_id):
@@ -85,6 +111,9 @@ class SurveyRepository:
         }
         answer_id = db.session.execute(sql, values).fetchone()
         db.session.commit()
+        survey_id = self.get_survey_id_from_question_id(question_id)
+        self.update_question_updated_at(question_id)
+        self.update_survey_updated_at(survey_id)
         return answer_id[0]
 
     def update_question(self, question_id, text, category_weights):
@@ -98,7 +127,7 @@ class SurveyRepository:
         WHERE id=:question_id """
         sql2 = False
         sql3 = False
-
+        survey_id = self.get_survey_id_from_question_id(question_id)  
         if text != original[0]:
             sql2 = """ UPDATE "Questions" SET text=:text
             WHERE id=:question_id """
@@ -115,7 +144,8 @@ class SurveyRepository:
             self.db_connection.session.execute(
                 sql, {"question_id": question_id})
             self.db_connection.session.commit()
-
+        self.update_question_updated_at(question_id)
+        self.update_survey_updated_at(survey_id)
         return sql2 or sql3
 
     def delete_survey(self, survey_id):
@@ -247,6 +277,22 @@ class SurveyRepository:
 
         return categories
 
+    def get_survey_id_from_question_id(self, question_id):
+        """ Returns the id of the parent survey
+        Args:
+            question_id: Id of the question
+        
+        Returns:
+            If succeeds: survey_id
+        """
+        sql = "Select \"surveyId\" from \"Questions\"  WHERE \"id\"=:question_id"
+        result = self.db_connection.session.execute(
+            sql, {"question_id": question_id}).fetchall()
+        db.session.commit()
+        if result:
+            return result[0][0]
+        return None
+
     def delete_question_from_survey(self, question_id):
         """ Deletes a question in a given survey
 
@@ -257,13 +303,32 @@ class SurveyRepository:
             If succeeds: True
             If not found: False
         """
+        survey_id = self.get_survey_id_from_question_id(question_id)
+        
         sql = "DELETE FROM \"Questions\" WHERE \"id\"=:question_id"
         result = self.db_connection.session.execute(
             sql, {"question_id": question_id})
         db.session.commit()
         if not result:
             return False
+        self.update_survey_updated_at(survey_id)
         return True
+
+    def get_question_id_from_answer_id(self, answer_id):
+        """ Returns the id of the parent question
+        Args:
+            answer_id: Id of the answer
+        
+        Returns:
+            If succeeds: question_id
+        """
+        sql = "Select \"questionId\" from \"Question_answers\"  WHERE \"id\"=:answer_id"
+        result = self.db_connection.session.execute(
+            sql, {"answer_id": answer_id}).fetchall()
+        db.session.commit()
+        if result:
+            return result[0][0]
+        return None
 
     def delete_answer_from_question(self, answer_id):
         """ Deletes a answer in a given question
@@ -276,11 +341,15 @@ class SurveyRepository:
             If not found: False
         """
         sql = "DELETE FROM \"Question_answers\" WHERE \"id\"=:answer_id"
+        question_id = self.get_question_id_from_answer_id(answer_id)
+        survey_id = self.get_survey_id_from_question_id(question_id)
         result = self.db_connection.session.execute(
             sql, {"answer_id": answer_id})
         db.session.commit()
         if not result:
             return False
+        self.update_question_updated_at(question_id)
+        self.update_survey_updated_at(survey_id)
         return True
 
     def edit_survey(self, survey_id, name, title, description):
@@ -320,8 +389,8 @@ class SurveyRepository:
 
     def get_question(self, question_id):
         """ Gets the text, survey id, category weights,
-        and creation time of a question """
-        sql = """ SELECT text, "surveyId", "createdAt", category_weights
+        creation and update time of a question """
+        sql = """ SELECT text, "surveyId", "createdAt", category_weights, "updatedAt"
         FROM "Questions" WHERE id=:question_id """
         question = self.db_connection.session.execute(
             sql, {"question_id": question_id}).fetchone()
@@ -351,6 +420,7 @@ class SurveyRepository:
             self.db_connection.session.commit()
         except exc.SQLAlchemyError:
             return None
+        self.update_survey_updated_at(survey_id)
         return category_id[0]
 
     def get_question_answers(self, question_id):
@@ -441,7 +511,7 @@ class SurveyRepository:
 
     def update_category(self, category_id: str, content_links: list, name: str, description: str):
         """ Updates category in the database.
-        If succesfull returns category_id."""
+        If succesful returns category_id."""
 
         sql = """ UPDATE "Categories" SET "name"=:name, "description"=:description,
         "content_links"=:content_links, "updatedAt"=:updated 
@@ -457,6 +527,8 @@ class SurveyRepository:
         except exc.SQLAlchemyError:
             return False
         if updated is not None:
+            category = self.get_category(category_id)
+            self.update_survey_updated_at(category[6])
             return updated[0]
         return None
 
@@ -474,6 +546,7 @@ class SurveyRepository:
             self.db_connection.session.commit()
         except exc.SQLAlchemyError as exception:
             return exception
+        self.update_survey_updated_at(category[6])
         return True
 
     def get_number_of_submissions(self, survey_id):
