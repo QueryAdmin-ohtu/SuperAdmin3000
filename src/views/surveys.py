@@ -41,9 +41,6 @@ def new_survey_post():
 def edit_survey_view(survey_id):
     """Renders edit survey page"""
 
-    if not helper.logged_in():
-        return redirect("/")
-
     survey = survey_service.get_survey(survey_id)
 
     return render_template("surveys/edit_survey.html", survey=survey, ENV=app.config["ENV"])
@@ -51,9 +48,6 @@ def edit_survey_view(survey_id):
 @surveys.route("/surveys/<survey_id>/edit", methods=["POST"])
 def edit_survey_post(survey_id):
     """Handles edit survey request"""
-
-    if not helper.valid_token(request.form):
-        abort(403)
 
     survey_id = request.form["survey_id"]
     name = request.form["name"]
@@ -308,8 +302,6 @@ def add_content_link():
     """ Receives the inputs from the edit_category.html template.
     Stores updated content link to the database.
     """
-    if not helper.valid_token(request.form):
-        abort(400, 'Invalid CSRF token.')
 
     survey_id = request.form["survey_id"]
     new_content_links = []
