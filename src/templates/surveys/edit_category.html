@@ -1,11 +1,18 @@
 {% extends "layout.html" %}
 {% import "components/macros/form_elements.html" as form_elements %}
 {% import "components/macros/survey_elements.html" as survey_elements %}
+{% import "components/macros/buttons.html" as buttons %}
 {% block content %}
     {% if edit %}
-        <h2 class="text-slate-700">Edit category</h2>
+        <div class="flex justify-between">
+            <h2 class="text-slate-700">Edit category</h2>
+            {{ buttons.link_button("Back", survey_path) }}
+        </div>
     {% else %}
-        <h2 class="text-slate-700">New Category</h2>
+        <div class="flex justify-between">
+            <h2 class="text-slate-700">New Category</h2>
+            {{ buttons.link_button("Back", survey_path) }}
+        </div>
     {% endif %}
     <br>
     <form action="/edit_category" method="POST">
