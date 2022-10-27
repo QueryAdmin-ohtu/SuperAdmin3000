@@ -1,4 +1,3 @@
-from tkinter.tix import Select
 from sqlalchemy import exc
 
 from db import db
