@@ -1,6 +1,5 @@
 {% import "components/macros/survey_elements.html" as survey_elements %}
 {% import "components/macros/buttons.html" as buttons %}
-{% import "components/macros/tooltip.html" as tooltip %}
 
 <div class="grid md:grid-cols-2 gap-6 lg:gap-8 items-center">
     <div class="flex flex-col gap-2">
@@ -10,7 +9,6 @@
     <div class="flex items-start md:justify-end gap-2">
         {{ buttons.link_button("Edit survey", "/surveys/%s/edit" % survey[0]) }}
         {{ buttons.modal_button("Delete survey", "delete", "survey-delete-button", "modal", "destructive") }}
-        {{ tooltip.tooltip() }}
     </div>
 
 </div>

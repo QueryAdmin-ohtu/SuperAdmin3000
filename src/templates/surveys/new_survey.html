@@ -2,6 +2,7 @@
 {% import "components/macros/form_elements.html" as form_elements %}
 {% import "components/macros/buttons.html" as buttons %}
 {% import "components/macros/survey_elements.html" as survey_elements %}
+{% import "components/macros/tooltip.html" as tooltip %}
 {% block content %}
 <div class="grid lg:grid-cols-2 grid-cols-1 gap-4 items-start">
     <div class="flex flex-col gap-4">
@@ -15,7 +16,11 @@
     <form action="/surveys/new-survey" method="POST">
         <div class="flex flex-col gap-4 items-start">
             <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
-            {{ form_elements.text_input("name", "Name", "DevOps Survey", true) }}
+            <div class="flex flex-row gap-2 w-full items-end">
+                {{ form_elements.text_input("name", "Name", "DevOps Survey", true) }}
+                {{ tooltip.tooltip("A short name for your survey.") }}                
+            </div>
+            
             {{ form_elements.text_input("title", "Title", "Are you a DevOps bop or flop?", true) }}
             {{ form_elements.text_area("survey", "Description", "Do you know the difference between docker and kubernetes? Define your skills here!",
             true) }}
