@@ -335,7 +335,7 @@ class SurveyService:
 
         return self.survey_repository.delete_category(category_id)
     
-    def _get_number_of_submissions(self, survey_id):
+    def get_number_of_submissions_for_survey(self, survey_id):
         """
         Fetches the number of submissions for the given
         survey
@@ -346,7 +346,7 @@ class SurveyService:
 
         return self.survey_repository.get_number_of_submissions(survey_id)
     
-    def _get_answer_distribution(self, survey_id):
+    def get_answer_distribution_for_survey_questions(self, survey_id):
         """
         Fetches the distribution of user answers over the
         answer options of a survey
