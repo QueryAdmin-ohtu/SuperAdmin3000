@@ -34,4 +34,47 @@
     p {
         @apply text-base;
     }
+
+    .tooltip {
+        @apply relative;
+        @apply inline-block;
+    }
+      
+    .tooltip .tooltiptext {
+        @apply text-sm;
+        @apply bg-white;
+        @apply text-slate-700;
+        @apply shadow-sm;
+        @apply rounded-lg;
+        @apply  border;
+        @apply border-slate-300;
+        @apply w-40; /* 10rem */
+        @apply max-w-xs;
+        @apply text-center;
+        @apply p-2;
+        @apply absolute;
+        @apply z-10;
+        visibility: hidden;
+        bottom: 125%;
+        left: 50%;
+        margin-left: calc((10rem / 2) * -1); /*  (width/2)*-1 */
+        opacity: 0;
+        transition: opacity 0.3s;
+    }
+      
+    .tooltip .tooltiptext::after {
+        content: "";
+        position: absolute;
+        top: 100%;
+        left: 50%;
+        margin-left: -5px;
+        border-width: 5px;
+        border-style: solid;
+        border-color: #64748b transparent transparent transparent;
+      }
+      
+    .tooltip:hover .tooltiptext {
+        visibility: visible;
+        opacity: 1;
+    }
 }

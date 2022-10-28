@@ -11,11 +11,9 @@
 {% set required_text = 'required' %}
 {% endif %}
 
-{% call field_wrapper_and_label(name, label_text) %}
 <input type="text" name="{{ name }}" placeholder="{{ placeholder }}" value="{{ value }}"
     class="bg-white border border-slate-300 text-gray-900 text-sm rounded-lg focus:invalid:border-rose-500 focus:ring-sky-500 focus:border-sky-500  block w-full p-2"
     {{ required_text }}>
-{% endcall %}
 
 {% endmacro %}
 
@@ -33,11 +31,9 @@
 {% endif %}
 
 
-{% call field_wrapper_and_label(name, label_text) %}
 <textarea type="text" name="{{name}}" placeholder="{{ placeholder }}"
     class="bg-white border border-slate-300 text-gray-900 text-sm rounded-lg focus:invalid:border-rose-500 focus:ring-sky-500 focus:border-sky-500 block w-full p-2"
     {{ required_text }}>{{ value }}</textarea>
-{% endcall %}
 
 {% endmacro %}
 
@@ -58,11 +54,9 @@
 {% set required_text = 'required' %}
 {% endif %}
 
-{% call field_wrapper_and_label(name, label_text) %}
 <input type="number" value="{{ value }}" name="{{ name }}" min="{{ min }}" max="{{ max }}" step="{{ step }}" placeholder="{{ placeholder }}" id="{{id}}"
     class="font-mono bg-white border border-slate-300 text-gray-900 text-sm rounded-lg focus:invalid:border-rose-500 focus:ring-sky-500 focus:border-sky-500 block w-full p-2"
     {{ required_text }}>
-{% endcall %}
 
 {% endmacro %}
 
@@ -93,17 +87,8 @@
 </button>
 {% endmacro %}
 
-{% macro field_wrapper_and_label(name, label_text) %}
-{# Wraps a given form input in a flexbox and attaches an appropriate label.
-    This macro is used with the call block.
-    Args:
-        name: Name used in the input element
-        label_text: Text to display in the label
-#}
-<div class="flex flex-col gap-2 w-full">
-    <label for="{{ name }}" class="text-gray-700 text-sm font-bold w-max">{{ label_text }}</label>
-    {{ caller() }}
-</div>
+{% macro label(name, label_text) %}
+<label for="{{ name }}" class="text-gray-700 text-sm font-bold w-max">{{ label_text }}</label>
 {% endmacro %}
 
 {# The HTML below is a fix for TailwindCSS to render a CSS containing colors used in these macros #}
