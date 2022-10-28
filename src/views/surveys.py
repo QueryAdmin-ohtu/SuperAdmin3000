@@ -54,7 +54,7 @@ def edit_survey_post(survey_id):
     title = request.form["title"]
     description = request.form["description"]
 
-    try: 
+    try:
         survey_service.edit_survey(survey_id, name, title, description)
         route = f"/surveys/{survey_id}"
         flash(f"{name.capitalize()} survey was updated", "confirmation")
