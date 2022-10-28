@@ -31,6 +31,24 @@ class TestSurveyRepository(unittest.TestCase):
             response = self.repo.authorized_google_login(valid_email)
 
         self.assertFalse(response)
+    
+    def test_get_all_surveys_with_correct_question_counts(self):
+
+        with self.app.app_context():
+            response = self.repo.get_all_surveys_with_question_count()
+
+        first_survey_with_questions = response[0][2]
+        self.assertEqual(first_survey_with_questions, 12)
+        second_survey_without_questions = response[1][2]
+        self.assertEqual(second_survey_without_questions, 0)
+        third_survey_with_a_question = response[2][2]
+        self.assertEqual(third_survey_with_a_question, 1)
+    
+    def test_get_all_surveys_returns_correct_amount_of_surveys(self):
+
+        with self.app.app_context():
+            response = self.repo.get_all_surveys_with_question_count()
+        self.assertEqual(len(response), 7)
 
     def test_create_survey_with_valid_data_returns_id(self):
 
@@ -164,13 +182,6 @@ class TestSurveyRepository(unittest.TestCase):
             before = self.repo.get_survey(1)
             after = self.repo.get_survey(1)
         self.assertEqual(after, before)
-
-    def test_get_all_surveys_calls_returns_multiple_surveys(self):
-
-        with self.app.app_context():
-            response = self.repo.get_all_surveys()
-
-        self.assertGreater(len(response), 2)
 
     def test_get_questions_of_survey_returns_questions(self):
 
