@@ -35,7 +35,7 @@
                             <div class="flex flex-col gap-2 w-24">
                                 {{ form_elements.label("cat" ~ category[0], category[1])}}
                                 {{ form_elements.number_input("cat" ~ category[0], "cat-" ~ category[0] ~ "-weight",
-                                category[1], "0", false, "-100", "100",
+                                category[1], "0.1", false, "-100", "100",
                                 "1",
                                 weights[category[1]]) }}
                             </div>
