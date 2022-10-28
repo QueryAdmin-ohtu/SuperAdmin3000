@@ -16,14 +16,24 @@
     <form action="/surveys/new-survey" method="POST">
         <div class="flex flex-col gap-4 items-start">
             <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
-            <div class="flex flex-row gap-2 w-full items-end">
+            <div class="flex flex-col gap-2 w-full">
+                {{ form_elements.label("name", "Name") }}
                 {{ form_elements.text_input("name", "Name", "DevOps Survey", true) }}
-                {{ tooltip.tooltip("A short name for your survey.") }}                
             </div>
-            
-            {{ form_elements.text_input("title", "Title", "Are you a DevOps bop or flop?", true) }}
-            {{ form_elements.text_area("survey", "Description", "Do you know the difference between docker and kubernetes? Define your skills here!",
-            true) }}
+            <div class="flex flex-col gap-2 w-full">
+                {{ form_elements.label("title", "Title") }}
+                {{ form_elements.text_input("title", "Title", "Are you a DevOps bop or flop?", true) }}
+            </div>
+            <div class="flex flex-col gap-2 w-full">
+                <div class="flex flex-row gap-2 w-full">
+                    {{ form_elements.label("survey", "Description")}}
+                    {{ tooltip.tooltip("A flavor text for the survey") }}
+                </div>
+                {{ form_elements.text_area("survey", "Description", "Do you know the difference between docker and
+                kubernetes? Define your skills here!",
+                true) }}
+            </div>
+
             {{ form_elements.submit_button("Create survey") }}
         </div>
     </form>

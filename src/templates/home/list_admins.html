@@ -8,8 +8,11 @@
     <div class="flex flex-col px-6 py-4">
         <form action="/admins/new" method="POST">
             <div class="flex flex-col gap-4 items-start">
-            <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
-                {{ form_elements.text_input("email", "Email address", "", true, "") }}
+                <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
+                <div class="flex flex-col gap-2 w-full">
+                    {{ form_elements.label("email", "Email address") }}
+                    {{ form_elements.text_input("email", "Email address", "", true, "") }}
+                </div>
                 {{ form_elements.submit_button("Add user", "default", "/admins/new") }}
             </div>
         </form>
@@ -22,16 +25,16 @@
             </tr>
         </thead>
         <tbody>
-        {% for admin in admins %}
+            {% for admin in admins %}
             <tr>
                 <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-500 text-left">{{admin[0]}}</td>
                 <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-500 text-left">{{admin[1]}}</td>
             </tr>
-        {% endfor %}
+            {% endfor %}
         </tbody>
     </table>
     {% endcall %}
     </div>
-<br>
+    <br>
 </container>
 {% endblock %}
