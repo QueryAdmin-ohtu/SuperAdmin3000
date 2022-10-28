@@ -35,7 +35,7 @@ class TestSurveyRepository(unittest.TestCase):
     def test_get_all_surveys_with_correct_question_counts(self):
 
         with self.app.app_context():
-            response = self.repo.get_all_surveys_with_question_count()
+            response = self.repo.get_all_surveys()
 
         first_survey_with_questions = response[0][2]
         self.assertEqual(first_survey_with_questions, 12)
@@ -47,8 +47,19 @@ class TestSurveyRepository(unittest.TestCase):
     def test_get_all_surveys_returns_correct_amount_of_surveys(self):
 
         with self.app.app_context():
-            response = self.repo.get_all_surveys_with_question_count()
+            response = self.repo.get_all_surveys()
         self.assertEqual(len(response), 7)
+    
+    def test_get_all_surveys_returns_correct_submission_count(self):
+        self._create_survey_and_add_user_answers()
+        
+        with self.app.app_context():
+            response = self.repo.get_all_surveys()
+
+        submissions_first_survey = response[0][3]
+        self.assertEqual(submissions_first_survey, 0)
+        submissions_last_survey = response[7][3]
+        self.assertEqual(submissions_last_survey, 3)
 
     def test_create_survey_with_valid_data_returns_id(self):
 
