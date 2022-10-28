@@ -2,9 +2,14 @@
 {% import "components/macros/form_elements.html" as form_elements %}
 {% import "components/macros/survey_elements.html" as survey_elements %}
 {% import "components/macros/tooltip.html" as tooltip %}
+{% import "components/macros/buttons.html" as buttons %}
+
 {% block content %}
-<div class="flex flex-col gap-6 items-start w-full">
+<div class="flex justify-between">
     <h1 class="text-slate-700">Add question to {{ survey.name }}</h1>
+    {{ buttons.link_button("Back", survey_path) }}
+</div>
+<div class="flex flex-col gap-6 items-start w-full">
     <form class="w-full" action="/surveys/{{ survey.id }}/new-question" method="POST">
         <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
         <input type="hidden" name="survey_id" id="survey_id" value="{{ survey.id }}">

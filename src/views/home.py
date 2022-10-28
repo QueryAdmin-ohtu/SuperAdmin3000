@@ -142,11 +142,8 @@ def ping():
     """
     return "pong"
 
-# Save requestes to the log
-
-
 @home.before_request
 def before_request():
-
+    """Save requests to the log"""
     user = helper.current_user()
     Logger(user).log_post_request(request)

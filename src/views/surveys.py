@@ -41,9 +41,6 @@ def new_survey_post():
 def edit_survey_view(survey_id):
     """Renders edit survey page"""
 
-    if not helper.logged_in():
-        return redirect("/")
-
     survey = survey_service.get_survey(survey_id)
 
     return render_template("surveys/edit_survey.html", survey=survey, ENV=app.config["ENV"])
@@ -51,9 +48,6 @@ def edit_survey_view(survey_id):
 @surveys.route("/surveys/<survey_id>/edit", methods=["POST"])
 def edit_survey_post(survey_id):
     """Handles edit survey request"""
-
-    if not helper.valid_token(request.form):
-        abort(403)
 
     survey_id = request.form["survey_id"]
     name = request.form["name"]
@@ -78,7 +72,7 @@ def delete_survey(survey_id):
     the survey and the confirmation the user
     wrote match.
 
-    If names match a db function is called to delete 
+    If names match a db function is called to delete
     the survey using the id.
 
     Succeeds: Redirect to home page
@@ -87,7 +81,7 @@ def delete_survey(survey_id):
     survey_id = request.form["id"]
     confirmation_text = request.form["confirmation-text"]
     survey_to_delete = survey_service.get_survey(survey_id)
-    
+
     if survey_to_delete.name != confirmation_text:
         flash("Confirmation did not match name of survey", "error")
         return redirect(f"/surveys/{survey_id}")
@@ -133,15 +127,17 @@ def survey_statistics(survey_id):
 def new_question_view(survey_id):
     """  Returns the page for creating a new question.
     """
-    if not helper.logged_in():
-        return redirect("/")
 
     survey = survey_service.get_survey(survey_id)
     categories = survey_service.get_categories_of_survey(survey_id)
     weights = {}
+    survey_path = f"/surveys/{survey_id}"
     return render_template("questions/edit_question.html",
-                           ENV=app.config["ENV"], categories=categories,
-                           survey=survey, weights=weights)
+                           ENV=app.config["ENV"],
+                           categories=categories,
+                           survey=survey,
+                           weights=weights,
+                           survey_path=survey_path)
 
 
 @surveys.route("/surveys/<survey_id>/new-question", methods=["POST"])
@@ -173,9 +169,6 @@ def edit_question(survey_id, question_id):
     """ Returns the page for editing the question
     where the inputs are pre-filled"""
 
-    if not helper.logged_in():
-        return redirect("/")
-
     question = survey_service.get_question(question_id)
     if len(question) < 4:
         return redirect("/")
@@ -186,14 +179,21 @@ def edit_question(survey_id, question_id):
     if weights:
         weights = helper.json_into_dictionary(question[3])
 
-    survey = survey_service.get_survey(survey_id)    
+    survey = survey_service.get_survey(survey_id)
     categories = survey_service.get_categories_of_survey(survey_id)
+    survey_path = f"/surveys/{survey_id}"
 
     return render_template("questions/edit_question.html",
-                           ENV=app.config["ENV"], text=text, survey=survey,
-                           weights=weights, categories=categories,
-                           created=created, edit=True, question_id=question_id,
-                           answers=answers)
+                           ENV=app.config["ENV"],
+                           text=text,
+                           survey=survey,
+                           weights=weights,
+                           categories=categories,
+                           created=created,
+                           edit=True,
+                           question_id=question_id,
+                           answers=answers,
+                           survey_path=survey_path)
 
 
 @surveys.route("/surveys/<survey_id>/questions/<question_id>/new-answer", methods=["POST"])
@@ -239,12 +239,13 @@ def edit_category_page(survey_id, category_id):
     """  Returns a page for editing or creating a new category.
     """
 
-    if not helper.logged_in():
-        return redirect("/")
-
+    survey_path = f"/surveys/{survey_id}"
     # Returns an empty template for creating a new category
     if category_id == 'new':
-        return render_template("surveys/edit_category.html", ENV=app.config["ENV"], survey_id=survey_id)
+        return render_template("surveys/edit_category.html",
+        ENV=app.config["ENV"],
+        survey_id=survey_id,
+        survey_path=survey_path)
 
     # Prefills the template for editing an existing category
     category = survey_service.get_category(category_id)
@@ -252,9 +253,14 @@ def edit_category_page(survey_id, category_id):
     description = category[2]
     content_links = category[3]
     return render_template("surveys/edit_category.html",
-                           ENV=app.config["ENV"], survey_id=survey_id,
-                           category_id=category_id, name=name, description=description,
-                           content_links=content_links, edit=True)
+                           ENV=app.config["ENV"],
+                           survey_id=survey_id,
+                           category_id=category_id,
+                           name=name,
+                           description=description,
+                           content_links=content_links,
+                           edit=True,
+                           survey_path=survey_path)
 
 
 @surveys.route("/edit_category", methods=["POST"])
@@ -296,8 +302,6 @@ def add_content_link():
     """ Receives the inputs from the edit_category.html template.
     Stores updated content link to the database.
     """
-    if not helper.valid_token(request.form):
-        abort(400, 'Invalid CSRF token.')
 
     survey_id = request.form["survey_id"]
     new_content_links = []
@@ -346,11 +350,9 @@ def view_surveys():
     """Redirecting method"""
     return redirect("/")
 
-
-# Save requestes to the log
 @surveys.before_request
 def before_request():
-
+    """Save requests to the event log"""
     if not helper.logged_in():
         flash("Log in to use the application", "error")
         return redirect("/")

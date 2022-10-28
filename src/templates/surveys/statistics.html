@@ -1,25 +1,28 @@
 {% extends "layout.html" %}
 {% block content %}
-
-{% if survey %}
-<h1>Statistics</h1>
-<h2>Survey: {{ survey[1] }} ID: {{ survey[0] }}</h2>
-
-<div>
-<ul>
-  <li>Created: {{ survey[2] }}</li>
-  <li>Updated: {{ survey[3] }}</li>
-  <li>Title: {{ survey[4] }}</li>
-  <li>Text: {{ survey[5] }}</li>
-</ul>
+<div class="grid lg:grid-cols-2 grid-cols-1 gap-4 items-start">
+    <div class="flex flex-col gap-4">
+        <h1 class="text-gray-900 leading-tight">Survey title</h1>
+        <div id="stats" class="flex-col max-w-full bg-white p-4 gap-2 rounded-lg border border-slate-300">
+            <h3 class="text-gray-900 leading-tight">Statistics</h3>
+            <br>
+            <p class="text-slate-600 font-mono text-sm font-medium">Total submissions: </p>
+            <div class="grow h-7"></div>
+            {% for answer in answers %}
+            {% endfor %}
+        </div>
+        <div id="answered" class="flex-col max-w-full bg-white p-4 gap-2 rounded-lg border border-slate-300">
+            <h3 class="text-gray-900 leading-tight">List of users</h3>
+            <div class="grow h-5"></div>
+            <table class="min-w-full">
+                <thead class="border-b">
+                    <tr>
+                        <th class="px-6 py-4 whitespace-nowrap font-mono font-medium text-gray-900 text-left">User</th>
+                        <th class="px-6 py-4 whitespace-nowrap font-mono font-medium text-gray-900 text-left">Group</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
 </div>
-<div>
-
-  {{ statistics }}
-</div>
-
-{% else %}
-There is no survey with ID: {{ survey_id }}
-{% endif %}
-
 {% endblock %}

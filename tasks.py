@@ -65,4 +65,7 @@ def init_db(ctx, db):
 
     ctx.run(f"./reset-db-sequences.sh {db}")
 
-
+@task
+def reset_and_e2etests(ctx, db):
+    init_db(ctx, db)
+    e2etests(ctx)
