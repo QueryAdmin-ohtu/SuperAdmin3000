@@ -19,9 +19,8 @@ Logged In User Can See Surveys On Home Page
     Go To Home Page
     Page Should Contain  Here you can see the active surveys.
     Page Should Contain  Questions: 15
-    Page Should Contain  Submissions: 3
-    Page Should Contain  Questions: 0
     Page Should Contain  Submissions: 0
+    Page Should Contain  Questions: 0
     Page Should Contain  How well are you doing Agile?
 
 Logged Out User Should Be On Login Page
