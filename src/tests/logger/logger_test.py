@@ -23,10 +23,21 @@ class TestLogger(unittest.TestCase):
         result = self.logger.read_all_events()
 
         open.assert_called_with(self.filename, "r")
-
+            
         self.assertEqual(len(result), 2)
         self.assertTrue("example" in result[0])
         self.assertTrue("ERROR" in result[1])
+
+    @patch("builtins.open", mock_open(read_data="first line\n   second, indented line\nthird_line"))
+    def test_read_all_events_indented_lines_are_appended_to_the_string(self):
+        result = self.logger.read_all_events()
+
+        self.assertEqual(len(result), 2)        
+
+        self.assertTrue("first" in result[0])
+        self.assertTrue("second" in result[0])
+        self.assertTrue("third" in result[1])
+        
 
     @patch("builtins.open")
     def test_read_all_events_handles_wrong_filename(self, m):
