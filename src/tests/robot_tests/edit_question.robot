@@ -29,6 +29,7 @@ Editing Without Changing Anything Works
     Add Question Without Arguments
     Page Should Contain  changed
 
+
 User Can Set Category Weights With A Precision Of 0.1
     Go To Survey  1
     Click Button  EDIT
@@ -42,3 +43,11 @@ User Can Not Set Category Weights With A Precision Of 0.01
     Add New Question  invalid_weight  1.11
     Click Button  Save changes
     Page Should Not Contain  invalid_weight
+
+Back Button Opens Correct Survey Page
+    Go To Survey  1
+    Click Button  EDIT
+    Click Link  Back
+    Page Should Contain  test_name
+    Page Should Contain  test_title
+    Page Should Contain  test_text
