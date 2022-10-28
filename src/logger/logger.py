@@ -117,6 +117,20 @@ class Logger:
         except IOError:
             return None
 
+        log_list = []
+        current_entry = ""
+        
+        for line in lines:
+            # indented lines in the log file contain details of the entry
+            if line.startswith(" "):
+                current_entry += f"\n{line}"
+            else:
+                if current_entry:
+                    log_list.append(current_entry)
+                current_entry = line
+
+        log_list.append(current_entry)
+        
         return lines
 
     def _delete_log(self):
