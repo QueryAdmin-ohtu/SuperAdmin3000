@@ -18,6 +18,7 @@ def logs():
 
     return render_template("logs/logs.html", logs=event_logs, reverse=False)
 
+
 @log.route("/logs/oldestfirst")
 def logs_reversed():
     """View reversed logs"""

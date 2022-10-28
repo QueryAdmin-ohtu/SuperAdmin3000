@@ -49,7 +49,7 @@ class SurveyRepository:
 
     def update_survey_updated_at(self, survey_id):
         """ Updates the surveys updatedAt field.
-        
+
         Returns: 
             True if successful
         """
@@ -127,7 +127,7 @@ class SurveyRepository:
         WHERE id=:question_id """
         sql2 = False
         sql3 = False
-        survey_id = self.get_survey_id_from_question_id(question_id)  
+        survey_id = self.get_survey_id_from_question_id(question_id)
         if text != original[0]:
             sql2 = """ UPDATE "Questions" SET text=:text
             WHERE id=:question_id """
@@ -282,7 +282,7 @@ class SurveyRepository:
         """ Returns the id of the parent survey
         Args:
             question_id: Id of the question
-        
+
         Returns:
             If succeeds: survey_id
         """
@@ -305,7 +305,7 @@ class SurveyRepository:
             If not found: False
         """
         survey_id = self.get_survey_id_from_question_id(question_id)
-        
+
         sql = "DELETE FROM \"Questions\" WHERE \"id\"=:question_id"
         result = self.db_connection.session.execute(
             sql, {"question_id": question_id})
@@ -319,7 +319,7 @@ class SurveyRepository:
         """ Returns the id of the parent question
         Args:
             answer_id: Id of the answer
-        
+
         Returns:
             If succeeds: question_id
         """
@@ -613,7 +613,7 @@ class SurveyRepository:
 
         Returns user id"""
 
-        sql="""INSERT INTO "Users" ("createdAt", "updatedAt")
+        sql = """INSERT INTO "Users" ("createdAt", "updatedAt")
             VALUES (NOW(), NOW()) RETURNING id"""
         user_id = self.db_connection.session.execute(sql).fetchone()[0]
         db.session.commit()
@@ -622,7 +622,7 @@ class SurveyRepository:
     def _add_user_answer(self, user_id, question_answer_id):
         """Adds a user answer to database for testing purposes"""
 
-        sql="""INSERT INTO "User_answers"
+        sql = """INSERT INTO "User_answers"
             ("userId", "questionAnswerId", "createdAt", "updatedAt")
             VALUES (:user_id, :question_answer_id, NOW(), NOW())"""
         values = {"user_id": user_id, "question_answer_id": question_answer_id}
