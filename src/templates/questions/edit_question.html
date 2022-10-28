@@ -23,7 +23,7 @@
                         <div class="flex flex-row gap-4">
                             {% for category in categories %}
                             {{ form_elements.number_input("cat" ~ category[0], "cat-" ~ category[0] ~ "-weight", category[1], "0", false, "-100", "100",
-                            "1",
+                            "0.1",
                             weights[category[1]]) }}
                             {% endfor %}
                         </div>
