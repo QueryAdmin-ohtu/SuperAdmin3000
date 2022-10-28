@@ -25,24 +25,64 @@
 
                 <nav class="flex flex-row gap-4 items-center justify-end">
                     <div>
+                        {% if (
+                            (('surveys' in url_for(request.endpoint, **request.view_args) and (url_for(request.endpoint, **request.view_args) != '/surveys/new-survey')) 
+                            or (url_for(request.endpoint, **request.view_args) == '/'))
+                            or ('edit' in url_for(request.endpoint, **request.view_args))
+                            ) 
+                        %}
+
                         <a href="/"
-                            class="text-sky-600 hover:text-sky-700 hover:underline font-medium rounded-lg text-sm">Surveys</a>
+                            class="text-sky-900 hover:text-sky-700 hover:underline font-medium rounded-lg text-sm"><strong>Surveys</strong></a>
+
+                        {% else %}
+                        
+                        <a href="/"
+                            class="text-sky-600 hover:text-sky-700 hover:underline font-medium rounded-lg text-sm">Surveys</a> 
+                        
+                        {% endif %}
                     </div>
 
                     <div>
-                        <a href="/surveys/new-survey"
-                            class="text-sky-600 hover:text-sky-700 hover:underline font-medium rounded-lg text-sm">New
-                            survey</a>
+                        {% if  url_for(request.endpoint, **request.view_args) == '/surveys/new-survey' %}
+
+                            <a href="/surveys/new-survey"
+                                class="text-sky-900 hover:text-sky-700 hover:underline font-medium rounded-lg text-sm"><strong>New survey</strong></a>
+                        
+                        {% else %}
+                        
+                                <a href="/surveys/new-survey"
+                                class="text-sky-600 hover:text-sky-700 hover:underline font-medium rounded-lg text-sm">New survey</a>
+                        
+                        {% endif %}
                     </div>
 
                     <div>
+                        {% if  url_for(request.endpoint, **request.view_args) == '/admins' %}
+
+                        <a href="/admins"
+                        class="text-sky-900 hover:text-sky-700 hover:underline font-medium rounded-lg text-sm"><Strong>Admins</Strong></a>
+                        
+                        {% else %}
+                        
                         <a href="/admins"
                             class="text-sky-600 hover:text-sky-700 hover:underline font-medium rounded-lg text-sm">Admins</a>
+                        
+                        {% endif %}
                     </div>
 
                     <div>
+                        {% if  url_for(request.endpoint, **request.view_args) == '/logs' %}
+
+                        <a href="/logs"
+                            class="text-sky-900 hover:text-sky-700 hover:underline font-medium rounded-lg text-sm"><strong>Logs</strong></a>    
+                        
+                        {% else %}
+
                         <a href="/logs"
                             class="text-sky-600 hover:text-sky-700 hover:underline font-medium rounded-lg text-sm">Logs</a>
+
+                        {% endif %}
                     </div>
 
                     <div>
