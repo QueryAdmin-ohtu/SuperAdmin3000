@@ -15,8 +15,9 @@ def logs():
 
     event_logs = Logger().read_all_events()
     event_logs.reverse()
-    
+
     return render_template("logs/logs.html", logs=event_logs, reverse=False)
+
 
 @log.route("/logs/oldestfirst")
 def logs_reversed():
@@ -25,5 +26,5 @@ def logs_reversed():
         return redirect("/")
 
     event_logs = Logger().read_all_events()
-    
+
     return render_template("logs/logs.html", logs=event_logs, reverse=True)
