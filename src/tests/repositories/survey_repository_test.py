@@ -84,16 +84,21 @@ class TestSurveyRepository(unittest.TestCase):
 
     def test_get_survey_id_from_question_id_returns_correct_value(self):
         with self.app.app_context():
-            survey_id = self.repo.create_survey("Algorithms", "Sorting algorithms", "Have fun with sorting!")
-            question_id = self.repo.create_question("In which situations can a bubble sorting algorithm be useful?", survey_id, category_weights)
+            survey_id = self.repo.create_survey(
+                "Algorithms", "Sorting algorithms", "Have fun with sorting!")
+            question_id = self.repo.create_question(
+                "In which situations can a bubble sorting algorithm be useful?", survey_id, category_weights)
             received_id = self.repo.get_survey_id_from_question_id(question_id)
         self.assertTrue(received_id == survey_id)
-    
+
     def test_get_question_id_from_answer_id_returns_correct_value(self):
         with self.app.app_context():
-            survey_id = self.repo.create_survey("Data structures", "Storing information", "Have fun with storing!")
-            question_id = self.repo.create_question("What are the drawbacks of hashmaps?", survey_id, category_weights)
-            answer_id = self.repo.create_answer(text="Slow lookup times when looking by key",points=-10, question_id=question_id)
+            survey_id = self.repo.create_survey(
+                "Data structures", "Storing information", "Have fun with storing!")
+            question_id = self.repo.create_question(
+                "What are the drawbacks of hashmaps?", survey_id, category_weights)
+            answer_id = self.repo.create_answer(
+                text="Slow lookup times when looking by key", points=-10, question_id=question_id)
             received_id = self.repo.get_question_id_from_answer_id(answer_id)
         self.assertTrue(received_id == question_id)
 
@@ -106,7 +111,8 @@ class TestSurveyRepository(unittest.TestCase):
 
     def test_delete_question_answer_updates_survey_updated_at(self):
         with self.app.app_context():
-            question_id = self.repo.create_question("What brings you comfort?", 1, category_weights)
+            question_id = self.repo.create_question(
+                "What brings you comfort?", 1, category_weights)
             answer_id = self.repo.create_answer("Unit tests", question_id, 5)
             before = self.repo.get_survey(1)[3]
             self.repo.delete_answer_from_question(answer_id)
@@ -115,12 +121,13 @@ class TestSurveyRepository(unittest.TestCase):
 
     def test_delete_question_updates_survey_updated_at(self):
         with self.app.app_context():
-            question_id = self.repo.create_question("Has my existence made any difference in the end?", 1, category_weights)
+            question_id = self.repo.create_question(
+                "Has my existence made any difference in the end?", 1, category_weights)
             before = self.repo.get_survey(1)[3]
             self.repo.delete_question_from_survey(question_id)
             after = self.repo.get_survey(1)[3]
         self.assertGreater(after, before)
-    
+
     def test_create_category_updates_survey_updated_at(self):
         content_links = '[{"url":"https://www.eficode.com/cases/hansen","type":"Case Study"},{"url":"https://www.eficode.com/cases/basware","type":"Case Study"}]'
         with self.app.app_context():
@@ -499,7 +506,7 @@ class TestSurveyRepository(unittest.TestCase):
         with self.app.app_context():
             response = self.repo._admin_exists(email)
         self.assertFalse(response)
-    
+
     def test_add_admin_does_not_add_email_if_email_found_in_db(self):
         email = "test@gmail.com"
         with self.app.app_context():
@@ -540,12 +547,13 @@ class TestSurveyRepository(unittest.TestCase):
             survey_id = self.repo.create_survey(
                 "Elephants", "What kind of an elephant are you?", "The amazing elephant survey!")
             question_id_1 = self.repo.create_question(
-                "Describe the size of your ears?", survey_id, 
+                "Describe the size of your ears?", survey_id,
                 '[{"category": "Size", "multiplier": 1.0}]')
             answer_id_1 = self.repo.create_answer("Huge", 5, question_id_1)
-            answer_id_2 = self.repo.create_answer("Nonexistent", 0, question_id_1)
+            answer_id_2 = self.repo.create_answer(
+                "Nonexistent", 0, question_id_1)
             question_id_2 = self.repo.create_question(
-                "Where do you prefer to hang out?", survey_id, 
+                "Where do you prefer to hang out?", survey_id,
                 '[{"category": "Habitat", "multiplier": 1.0}]')
             answer_id_3 = self.repo.create_answer("Forest", 5, question_id_2)
             answer_id_4 = self.repo.create_answer("Savannah", 0, question_id_2)
@@ -567,13 +575,13 @@ class TestSurveyRepository(unittest.TestCase):
         survey_id = self._create_survey_and_add_user_answers()
         with self.app.app_context():
             result = self.repo.get_number_of_submissions(survey_id)
-        
+
         self.assertEqual(result, 3)
 
     def test_answer_distribution(self):
         survey_id = self._create_survey_and_add_user_answers()
         with self.app.app_context():
             result = self.repo.get_answer_distribution(survey_id)
-        
+
         self.assertEqual(result[0][4], 2)
         self.assertEqual(result[1][4], 1)

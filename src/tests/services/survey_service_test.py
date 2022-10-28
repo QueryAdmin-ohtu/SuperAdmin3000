@@ -214,13 +214,14 @@ class TestSurveyService(unittest.TestCase):
             category_id, content_links, name, description)
 
     def test_update_category_calls_repo_correctly_without_name_and_description(self):
-        self.repo_mock.get_category.return_value = (1, 
-        'Category 1', 
-        'Static descriptive text about the category 1.', 
-        [{'url': 'https://www.eficode.com/cases/hansen', 'type': 'Case Study'}, {'url': 'https://www.eficode.com/cases/basware', 'type': 'Case Study'}], 
-        'created_time_here', 
-        'updated_time_here',
-        1)
+        self.repo_mock.get_category.return_value = (1,
+                                                    'Category 1',
+                                                    'Static descriptive text about the category 1.',
+                                                    [{'url': 'https://www.eficode.com/cases/hansen', 'type': 'Case Study'}, {
+                                                        'url': 'https://www.eficode.com/cases/basware', 'type': 'Case Study'}],
+                                                    'created_time_here',
+                                                    'updated_time_here',
+                                                    1)
         category_id = 0
         content_links = [{"url": "https://www.eficode.com/cases/hansen", "type": "Case Study"},
                          {"url": "https://www.eficode.com/cases/basware", "type": "Case Study"}]
@@ -266,5 +267,6 @@ class TestSurveyService(unittest.TestCase):
         self.repo_mock.delete_question_from_survey.return_value = return_value
         question_id = 1
         check = self.survey_service.delete_question_from_survey(question_id)
-        self.repo_mock.delete_question_from_survey.assert_called_with(question_id)
+        self.repo_mock.delete_question_from_survey.assert_called_with(
+            question_id)
         self.assertEqual(check, return_value)
