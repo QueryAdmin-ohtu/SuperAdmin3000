@@ -11,13 +11,20 @@ Test Setup  Go To Home Page
 Logged In User Can Add a New Question
     Go To Backdoor Login Page
     Login With Correct Credentials
-    Go To Home Page
     Go To Survey  1
     Page Should Contain  Add question
     Click Link  Add question
     Page Should Contain  Category weights
     Add New Question  kysymys1  1
     Page Should Contain  kysymys1
+
+Back Button Opens Correct Survey Page
+    Go To Survey  1
+    Click Link  Add question
+    Click Link  Back
+    Page Should Contain  Devops assessment
+    Page Should Contain  Are you doing DevOps right?
+    Page Should Contain  DevOps practices and capabilities.
 
 Invalid Category Weights Default to Zeros
     Go To Survey  1
