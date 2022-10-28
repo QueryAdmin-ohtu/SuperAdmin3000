@@ -176,21 +176,26 @@ class SurveyRepository:
             return False
         return survey
 
-    def get_all_surveys_with_question_count(self):
-        """ Fetches all surveys, counts the questions
-        for each survey
+    def get_all_surveys(self):
+        """ Fetches all surveys, counts the questions and
+        submissions for each survey
 
         Returns: List where each item contains the survey
-        id, title and question count are included
+        id, title, question count and submission count
         """
         sql = """
         SELECT
             s.id,
             s.title_text,
-            COUNT(DISTINCT q.id) AS questions
+            COUNT(DISTINCT q.id) AS questions,
+            COUNT(DISTINCT ua."userId") AS submissions
         FROM "Surveys" AS s
         LEFT JOIN "Questions" AS q
             ON s.id = q."surveyId"
+        LEFT JOIN "Question_answers" AS qa
+            ON q.id = qa."questionId"
+        LEFT JOIN "User_answers" AS ua
+            ON qa.id = ua."questionAnswerId"
         GROUP BY s.id
         """
         surveys = self.db_connection.session.execute(sql).fetchall()
