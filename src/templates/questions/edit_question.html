@@ -1,6 +1,7 @@
 {% extends "layout.html" %}
 {% import "components/macros/form_elements.html" as form_elements %}
 {% import "components/macros/survey_elements.html" as survey_elements %}
+{% import "components/macros/tooltip.html" as tooltip %}
 {% block content %}
 <div class="flex flex-col gap-6 items-start w-full">
     <h1 class="text-slate-700">Add question to {{ survey.name }}</h1>
@@ -18,8 +19,9 @@
                         {{ form_elements.label("text", "Question") }}
                         {{ form_elements.text_area("text", "Question", "", false, text) }}
                     </div>
-                    <div class="relative flex py-5 items-center">
-                        <span class="flex-shrink text-slate-600 mr-4">Category weights</span>
+                    <div class="relative flex py-5 items-center gap-2">
+                        <span class="flex-shrink text-slate-600">Category weights</span>
+                        {{ tooltip.tooltip("Category weights affect how each questions points are calculated") }}
                         <div class="flex-grow border-t border-slate-200"></div>
                     </div>
                     <fieldset>
@@ -53,8 +55,9 @@
                     </div>
                     <div class="flex flex-col gap-2 w-full">
                         {{ form_elements.label("points", "Points")}}
-                        {{ form_elements.number_input("points", "new-answer-points", "Points", "0", false, "-100", "100",
-                    "1") }}
+                        {{ form_elements.number_input("points", "new-answer-points", "Points", "0", false, "-100",
+                        "100",
+                        "1") }}
                     </div>
                     {{ form_elements.submit_button("Add answer", "creation", "/surveys/%s/questions/%s/new-answer" %
                     (survey.id, question_id)) }}

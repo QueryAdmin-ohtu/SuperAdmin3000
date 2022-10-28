@@ -470,6 +470,7 @@ p {
   border-color: rgb(203 213 225 / var(--tw-border-opacity));
   width: 10rem;
   /* 10rem */
+  max-width: 20rem;
   text-align: center;
   padding: 0.5rem;
   position: absolute;
@@ -478,7 +479,7 @@ p {
   bottom: 125%;
   left: 50%;
   margin-left: calc((10rem / 2) * -1);
-  /* With divided by 2 times -1 */
+  /*  (width/2)*-1 */
   opacity: 0;
   transition: opacity 0.3s;
 }

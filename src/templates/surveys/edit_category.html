@@ -1,6 +1,7 @@
 {% extends "layout.html" %}
 {% import "components/macros/form_elements.html" as form_elements %}
 {% import "components/macros/survey_elements.html" as survey_elements %}
+{% import "components/macros/tooltip.html" as tooltip %}
 {% block content %}
 {% if edit %}
 <h2 class="text-slate-700">Edit category</h2>
@@ -27,8 +28,9 @@
             {% if content_links %}
             <div class="flex flex-col gap-2 w-full">
                 {% for content in content_links %}
-                <div class="relative flex py-5 items-center">
-                    <span class="flex-shrink text-slate-600 mr-4">Content link {{ loop.index }}</span>
+                <div class="relative flex py-5 items-center gap-2">
+                    <span class="flex-shrink text-slate-600 ">Content link {{ loop.index }}</span>
+                    {{ tooltip.tooltip("A content link is displayed to the user after filling the survey") }}
                     <div class="flex-grow border-t border-slate-200"></div>
                 </div>
                 <div class="flex flex-col gap-2 w-full">
