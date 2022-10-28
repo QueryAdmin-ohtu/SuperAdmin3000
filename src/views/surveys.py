@@ -18,6 +18,7 @@ def new_survey_view():
 
     return render_template("surveys/new_survey.html", ENV=app.config["ENV"], categories=stored_categories)
 
+
 @surveys.route("/surveys/new-survey", methods=["POST"])
 def new_survey_post():
     """Handles creation of new surveys
@@ -37,6 +38,7 @@ def new_survey_post():
         flash(str(error), "error")
         return redirect(request.base_url)
 
+
 @surveys.route("/surveys/<survey_id>/edit", methods=["GET"])
 def edit_survey_view(survey_id):
     """Renders edit survey page"""
@@ -44,6 +46,7 @@ def edit_survey_view(survey_id):
     survey = survey_service.get_survey(survey_id)
 
     return render_template("surveys/edit_survey.html", survey=survey, ENV=app.config["ENV"])
+
 
 @surveys.route("/surveys/<survey_id>/edit", methods=["POST"])
 def edit_survey_post(survey_id):
@@ -54,7 +57,7 @@ def edit_survey_post(survey_id):
     title = request.form["title"]
     description = request.form["description"]
 
-    try: 
+    try:
         survey_service.edit_survey(survey_id, name, title, description)
         route = f"/surveys/{survey_id}"
         flash(f"{name.capitalize()} survey was updated", "confirmation")
@@ -63,6 +66,7 @@ def edit_survey_post(survey_id):
     except UserInputError as error:
         flash(str(error), "error")
         return redirect(request.base_url)
+
 
 @surveys.route("/surveys/<survey_id>/delete-survey", methods=["POST"])
 def delete_survey(survey_id):
@@ -87,7 +91,8 @@ def delete_survey(survey_id):
         return redirect(f"/surveys/{survey_id}")
 
     if survey_service.delete_survey(survey_id):
-        flash(f"{survey_to_delete.name.capitalize()} survey was deleted", "confirmation")
+        flash(
+            f"{survey_to_delete.name.capitalize()} survey was deleted", "confirmation")
         return redirect("/")
 
     flash("Survey could not be deleted", "error")
@@ -160,7 +165,8 @@ def new_question_post(survey_id):
         survey_service.update_question(
             question_id, text, category_weights)
     else:
-        question_id = survey_service.create_question(text, survey_id, category_weights)
+        question_id = survey_service.create_question(
+            text, survey_id, category_weights)
     return redirect(f"/surveys/{survey_id}/questions/{question_id}")
 
 
@@ -224,7 +230,6 @@ def delete_answer(survey_id, question_id, answer_id):
     return redirect(f"/surveys/{survey_id}/questions/{question_id}")
 
 
-
 @surveys.route("/surveys/delete/<survey_id>/<question_id>", methods=["POST"])
 def delete_question(question_id, survey_id):
     """ Call database query for removal of a single question
@@ -243,9 +248,9 @@ def edit_category_page(survey_id, category_id):
     # Returns an empty template for creating a new category
     if category_id == 'new':
         return render_template("surveys/edit_category.html",
-        ENV=app.config["ENV"],
-        survey_id=survey_id,
-        survey_path=survey_path)
+                               ENV=app.config["ENV"],
+                               survey_id=survey_id,
+                               survey_path=survey_path)
 
     # Prefills the template for editing an existing category
     category = survey_service.get_category(category_id)
@@ -341,14 +346,16 @@ def delete_category():
     if return_value is True:
         flash("Succesfully deleted category", "confirmation")
         return redirect(f"/surveys/{survey_id}")
-    
+
     flash("Could not delete category because it has results linked to it", "error")
     return redirect(f"/surveys/{survey_id}")
+
 
 @surveys.route("/surveys")
 def view_surveys():
     """Redirecting method"""
     return redirect("/")
+
 
 @surveys.before_request
 def before_request():
