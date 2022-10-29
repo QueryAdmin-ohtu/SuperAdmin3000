@@ -5,14 +5,15 @@
 <<<<<<< HEAD
 {% import "components/macros/tooltip.html" as tooltip %}
 {% block content %}
+
 {% if edit %}
 <div class="flex justify-between">
-    <h2 class="text-slate-700">Edit category</h2>
+    <h2 class="text-slate-700">Edit a category in {{ survey.name }}</h2>
     {{ buttons.link_button("Back", survey_path) }} 
 </div>
 {% else %}
 <div class="flex justify-between">
-    <h2 class="text-slate-700">New Category</h2>
+    <h2 class="text-slate-700">New category for {{ survey.name }}</h2>
     {{ buttons.link_button("Back", survey_path) }}
 </div>
 {% endif %}
