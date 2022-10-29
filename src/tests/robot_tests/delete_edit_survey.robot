@@ -7,6 +7,12 @@ Suite Teardown  Close Browser
 Test Setup  Go To Home Page
 
 *** Test Cases ***
+Survey View Contains Survey Name
+    Go To Backdoor Login Page
+    Login With Correct Credentials    
+    Go To Survey  1
+    Page Should Contain  Devops assessment
+    Logout
 
 Delete An Existing Survey
     Go To Backdoor Login Page
