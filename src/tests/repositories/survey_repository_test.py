@@ -183,16 +183,16 @@ class TestSurveyRepository(unittest.TestCase):
         self.assertEqual(second_survey_without_questions, 0)
         third_survey_with_a_question = response[2][2]
         self.assertEqual(third_survey_with_a_question, 1)
-    
+
     def test_get_all_surveys_returns_correct_amount_of_surveys(self):
 
         with self.app.app_context():
             response = self.repo.get_all_surveys()
         self.assertEqual(len(response), 7)
-    
+
     def test_get_all_surveys_returns_correct_submission_count(self):
         self._create_survey_and_add_user_answers()
-        
+
         with self.app.app_context():
             response = self.repo.get_all_surveys()
 

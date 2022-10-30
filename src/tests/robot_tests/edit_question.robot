@@ -29,6 +29,10 @@ Editing Without Changing Anything Works
     Add Question Without Arguments
     Page Should Contain  changed
 
+Edit Question View Should Display Survey Name
+    Go To Survey  1
+    Click Button  EDIT
+    Page Should Contain  test_name
 
 User Can Set Category Weights With A Precision Of 0.1
     Go To Survey  1

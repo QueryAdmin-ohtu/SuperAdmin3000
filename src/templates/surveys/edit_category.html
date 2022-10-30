@@ -5,14 +5,15 @@
 <<<<<<< HEAD
 {% import "components/macros/tooltip.html" as tooltip %}
 {% block content %}
+
 {% if edit %}
 <div class="flex justify-between">
-    <h2 class="text-slate-700">Edit category</h2>
+    <h2 class="text-slate-700">Edit a category in {{ survey.name }}</h2>
     {{ buttons.link_button("Back", survey_path) }} 
 </div>
 {% else %}
 <div class="flex justify-between">
-    <h2 class="text-slate-700">New Category</h2>
+    <h2 class="text-slate-700">New category for {{ survey.name }}</h2>
     {{ buttons.link_button("Back", survey_path) }}
 </div>
 {% endif %}
@@ -51,6 +52,11 @@
                     {{ form_elements.text_area('url_'+loop.index0 | string, "Content link URL", "", false,
                     value=content['url'])}}
                 </div>
+                <!-- Delete button clears the url and submits the form.
+                     The form handler wont add a content link with an empty url field -->
+                {% set clear_url = "document.getElementsByName('url_" ~ loop.index0 ~ "')[0].value=''" %}
+                {% set button_id = "delete_url_" ~ loop.index0 %}
+                {{ form_elements.submit_button("Delete", type="destructive", onclick=clear_url, id=button_id) }}
                 {% endfor %}
             </div>
             {% endif %}
