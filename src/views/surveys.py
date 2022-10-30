@@ -136,13 +136,11 @@ def new_question_view(survey_id):
     survey = survey_service.get_survey(survey_id)
     categories = survey_service.get_categories_of_survey(survey_id)
     weights = {}
-    survey_path = f"/surveys/{survey_id}"
     return render_template("questions/edit_question.html",
                            ENV=app.config["ENV"],
                            categories=categories,
                            survey=survey,
-                           weights=weights,
-                           survey_path=survey_path)
+                           weights=weights)
 
 
 @surveys.route("/surveys/<survey_id>/new-question", methods=["POST"])
@@ -187,7 +185,6 @@ def edit_question(survey_id, question_id):
 
     survey = survey_service.get_survey(survey_id)
     categories = survey_service.get_categories_of_survey(survey_id)
-    survey_path = f"/surveys/{survey_id}"
 
     return render_template("questions/edit_question.html",
                            ENV=app.config["ENV"],
@@ -198,8 +195,7 @@ def edit_question(survey_id, question_id):
                            created=created,
                            edit=True,
                            question_id=question_id,
-                           answers=answers,
-                           survey_path=survey_path)
+                           answers=answers)
 
 
 @surveys.route("/surveys/<survey_id>/questions/<question_id>/new-answer", methods=["POST"])
