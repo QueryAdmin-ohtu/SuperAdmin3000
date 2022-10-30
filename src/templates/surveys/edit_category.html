@@ -55,7 +55,8 @@
                 <!-- Delete button clears the url and submits the form.
                      The form handler wont add a content link with an empty url field -->
                 {% set clear_url = "document.getElementsByName('url_" ~ loop.index0 ~ "')[0].value=''" %}
-                {{ form_elements.submit_button("Delete", type="destructive", onclick=clear_url) }}
+                {% set button_id = "delete_url_" ~ loop.index0 %}
+                {{ form_elements.submit_button("Delete", type="destructive", onclick=clear_url, id=button_id) }}
                 {% endfor %}
             </div>
             {% endif %}
