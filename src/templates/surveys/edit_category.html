@@ -8,12 +8,12 @@
 {% if edit %}
 <div class="flex justify-between">
     <h2 class="text-slate-700">Edit category</h2>
-    {{ buttons.link_button("Back", survey_path) }} 
+    {{ buttons.link_button("Back", "/surveys/%s" % survey_id) }} 
 </div>
 {% else %}
 <div class="flex justify-between">
     <h2 class="text-slate-700">New Category</h2>
-    {{ buttons.link_button("Back", survey_path) }}
+    {{ buttons.link_button("Back", "/surveys/%s" % survey_id) }}
 </div>
 {% endif %}
 {% call survey_elements.card() %}
