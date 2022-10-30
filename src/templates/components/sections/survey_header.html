@@ -15,7 +15,10 @@
 <div class="grid lg:grid-cols-3 gap-6 lg:gap-8">
     <p class="text-gray-700 text-base mb-4 lg:col-span-2">{{ survey.survey_text }}</p>
     {% call survey_elements.card() %}
-    <h5 class="text-gray-900 text-xl leading-tight font-medium mb-2">Statistics</h5>
+    <div class="flex justify-between">
+        <h5 class="text-gray-900 text-xl leading-tight font-medium mb-2">Statistics</h5>
+        {{ buttons.link_button("Detailed statistics", "/surveys/%s/statistics" % survey_id) }}
+    </div>
     <p class="text-gray-900 text-base mb-4">
     <ul>
         <li class="font-mono text-sm">Created {{ survey[2] }}</li>
