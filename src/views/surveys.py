@@ -162,11 +162,18 @@ def new_question_post(survey_id):
         return "Invalid weights"
 
     if request.form["edit"]:
+        original_answers = eval(request.form["answers"])
+        new_answers = []
+        for i in range(len(original_answers)):
+            answer_id = original_answers[i][0]
+            answer = request.form[f"answer-{i+1}"]
+            points = request.form[f"points-{i+1}"]
+            new_answers.append((answer_id,answer,points))
+
         survey_service.update_question(
-            question_id, text, category_weights)
+            question_id, text, category_weights, original_answers, new_answers)
     else:
-        question_id = survey_service.create_question(
-            text, survey_id, category_weights)
+        question_id = survey_service.create_question(text, survey_id, category_weights)
     return redirect(f"/surveys/{survey_id}/questions/{question_id}")
 
 

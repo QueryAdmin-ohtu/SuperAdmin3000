@@ -116,18 +116,19 @@ class SurveyRepository:
         self.update_survey_updated_at(survey_id)
         return answer_id[0]
 
-    def update_question(self, question_id, text, category_weights):
-        """ Updates a question from the table Questions
-        based on given parameters. If text nor category
-        weights have been changed, nothing will happen
-        and False will be returned. Otherwise, changes
-        will take place and True is returned """
+    def update_question(self, question_id, text, category_weights, original_answers, new_answers):
+        """ Checks if the parameters of the question determined by the question_id
+        match the parameters given to the function. These parameters include the
+        text and category weights of the question and the contents of the answers
+        belonging to the question. If these parameters match, nothing is changed
+        and False is returned, otherwise the parameters will be updated to match
+        the ones given to the function and True will be returned. """
         original = self.get_question(question_id)
-        sql = """ UPDATE "Questions" SET "updatedAt"=NOW()
-        WHERE id=:question_id """
         sql2 = False
         sql3 = False
+        answers_updated = False
         survey_id = self.get_survey_id_from_question_id(question_id)
+
         if text != original[0]:
             sql2 = """ UPDATE "Questions" SET text=:text
             WHERE id=:question_id """
@@ -140,13 +141,41 @@ class SurveyRepository:
             self.db_connection.session.execute(
                 sql3, {"category_weights": category_weights, "question_id": question_id})
 
-        if sql2 or sql3:
-            self.db_connection.session.execute(
-                sql, {"question_id": question_id})
+        if original_answers:
+            answers_updated = self.update_answers(original_answers, new_answers)
+
+        if sql2 or sql3 or answers_updated:
             self.db_connection.session.commit()
-        self.update_question_updated_at(question_id)
-        self.update_survey_updated_at(survey_id)
-        return sql2 or sql3
+            self.update_question_updated_at(question_id)
+            self.update_survey_updated_at(survey_id)
+
+        return sql2 or sql3 or answers_updated
+
+    def update_answers(self,original_answers, new_answers):
+        """ Goes through the given list of answer ids and
+        checks if the current information matches with the
+        information from the lists given. If everything
+        matches False is returned and otherwise True """
+        updated = False
+        for i in range(len(new_answers)):
+            if original_answers[i] != new_answers[i]:
+                updated = True
+                sql = """
+                UPDATE "Question_answers"
+                SET 
+                    text=:text,
+                    points=:points,
+                    "updatedAt"=NOW()
+                WHERE id=:answer_id
+                """
+                values = {
+                "text": new_answers[i][1],
+                "points": new_answers[i][2],
+                "answer_id": new_answers[i][0]}
+                db.session.execute(sql,values)
+        if updated:
+            db.session.commit()
+        return updated
 
     def delete_survey(self, survey_id):
         """ Deletes a survey from Surveys after deleting all
