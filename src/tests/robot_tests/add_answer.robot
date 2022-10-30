@@ -3,6 +3,7 @@ Resource  resource.robot
 Resource  resource_login.robot
 Resource  resource_add_question.robot
 Resource  resource_add_answer.robot
+Resource  resource_create_survey.robot
 Suite Setup  Open And Configure Browser
 Suite Teardown  Close Browser
 Test Setup  Go To Home Page
@@ -71,3 +72,18 @@ Logged In User Can Delete Answer
     Expand Answer Card  1
     Click Button  Delete answer
     Page Should Not Contain  Hammer
+
+Logged In User Can Edit Answer
+    Click Link  New survey
+    Make A Survey
+    Click Link  Add question
+    Click Button  Save changes
+    Add New Answer  Do Not  44
+    Expand Answer Card  1
+    Page Should Contain  Do Not
+    Edit Answer  toivo  12  1
+    Click Button  Save changes
+    Expand Answer Card  1
+    Page Should Not Contain  Do Not
+    Page Should Contain  toivo
+    Textfield Should Contain  points-1  12

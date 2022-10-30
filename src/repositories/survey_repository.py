@@ -50,7 +50,7 @@ class SurveyRepository:
     def update_survey_updated_at(self, survey_id):
         """ Updates the surveys updatedAt field.
 
-        Returns: 
+        Returns:
             True if successful
         """
         sql = """ UPDATE "Surveys" SET "updatedAt"=NOW()

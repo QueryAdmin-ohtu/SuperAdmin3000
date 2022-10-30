@@ -238,7 +238,8 @@ class SurveyService:
     def update_question(self, question_id: int, text: str, category_weights: str, original_answers, new_answers):
         """ Updates a question if changes have been made and returns true.
         If no changes have been made, nothing changes and false is returned """
-        return self.survey_repository.update_question(question_id, text, category_weights, original_answers, new_answers)
+        return self.survey_repository.update_question(
+            question_id, text, category_weights, original_answers, new_answers)
 
     def get_question(self, question_id):
         """Gets the text, survey id, category weights, and the

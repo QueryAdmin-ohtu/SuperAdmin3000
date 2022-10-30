@@ -22,3 +22,8 @@ Add Answer Without Arguments
 Expand Answer Card
     [Arguments]  ${answer_index}
     Click Element  id:expandable-answer-${answer_index}
+
+Edit Answer
+    [Arguments]  ${text}  ${points}  ${id}
+    Input Text  answer-${id}  ${text}
+    Input Text  points-${id}  ${points}
