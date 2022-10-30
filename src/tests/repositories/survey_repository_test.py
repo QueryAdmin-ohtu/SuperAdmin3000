@@ -384,7 +384,7 @@ class TestSurveyRepository(unittest.TestCase):
             new_text = "update question test"
 
             result_update = self.repo.update_question(
-                question_id, new_text, category_weights)
+                question_id, new_text, category_weights,[],[])
 
             result_get_new = self.repo.get_question(question_id)
 
