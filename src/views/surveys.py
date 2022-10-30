@@ -246,7 +246,7 @@ def edit_category_page(survey_id, category_id):
 
     survey_path = f"/surveys/{survey_id}"
     survey = survey_service.get_survey(survey_id)
-    
+
     # Returns an empty template for creating a new category
     if category_id == 'new':
         return render_template("surveys/edit_category.html",
