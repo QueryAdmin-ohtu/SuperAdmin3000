@@ -391,6 +391,21 @@ class TestSurveyRepository(unittest.TestCase):
         self.assertTrue(result_update)
         self.assertEqual(result_get_new.text, "update question test")
 
+    def test_update_question_updates_answers(self):
+
+        with self.app.app_context():
+            question_id = 10
+            question = self.repo.get_question(question_id)
+            original_answers = self.repo.get_question_answers(question_id)
+            new_answers = [(original_answers[0][0],"changed",2),(original_answers[1][0],"muutettu",-2)]
+            changed = self.repo.update_question(question_id, question[0], question[3],
+            original_answers,new_answers)
+            changed_answers = self.repo.get_question_answers(question_id)
+            self.assertTrue(changed)
+            self.assertEqual(new_answers, changed_answers)
+            self.repo.update_question(question_id, question[0], question[3],
+            changed_answers,original_answers)
+
     def test_create_category_with_valid_data_returns_id(self):
         content_links = '[{"url":"https://www.eficode.com/cases/hansen","type":"Case Study"},{"url":"https://www.eficode.com/cases/basware","type":"Case Study"}]'
 
