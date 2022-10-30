@@ -52,6 +52,8 @@
                     {{ form_elements.text_area('url_'+loop.index0 | string, "Content link URL", "", false,
                     value=content['url'])}}
                 </div>
+                {% set deletepath = "/edit_category/" ~ survey_id ~ "/" ~ category_id ~ "/deletelink/" ~ loop.index0 %}
+                {{ buttons.link_button("Delete", deletepath) }}
                 {% endfor %}
             </div>
             {% endif %}
