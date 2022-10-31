@@ -16,9 +16,6 @@ Add New Answer
     Set Points  ${points}
     Submit Answer
 
-Add Answer Without Arguments
-    Submit Answer
-
 Expand Answer Card
     [Arguments]  ${answer_index}
     Click Element  id:expandable-answer-${answer_index}

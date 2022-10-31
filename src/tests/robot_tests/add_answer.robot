@@ -60,7 +60,8 @@ Empty Points Are Interpreted As Zeros
     Click Element  id:survey-1
     Click Link  Add question
     Click Button  Save changes
-    Add Answer Without Arguments
+    Set Answer Text  No More
+    Click Button  Save changes
     Page Should Contain  Answer 1:
     Expand Answer Card  1
     Textfield Should Contain  points-1  0
