@@ -20,7 +20,7 @@ Logged In User Can Create Categories
 Back Button Opens Correct Survey Page On New Category Page
     Go To Survey  1
     Click Link  Add category
-    Click Link  Back
+    Click Link  Back to survey
     Page Should Contain  test_name
     Page Should Contain  test_title
     Page Should Contain  test_text
@@ -28,7 +28,7 @@ Back Button Opens Correct Survey Page On New Category Page
 Back Button Opens Correct Survey Page On Edit Category Page
     Go To Survey  1
     Click Link  edit_button_1
-    Click Link  Back
+    Click Link  Back to survey
     Page Should Contain  test_name
     Page Should Contain  test_title
     Page Should Contain  test_text
