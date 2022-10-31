@@ -8,7 +8,7 @@ Set Points
     Input Text  points  ${points}
 
 Submit Answer
-    Click Button  Add answer
+    Click Button  Save changes
 
 Add New Answer
     [Arguments]  ${text}  ${points}

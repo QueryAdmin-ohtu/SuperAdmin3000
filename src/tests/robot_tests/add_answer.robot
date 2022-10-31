@@ -73,7 +73,7 @@ Logged In User Can Delete Answer
     Click Button  Delete answer
     Page Should Not Contain  Hammer
 
-Logged In User Can Edit Answer
+Logged In User Can Edit Answers And Question While Creating Answer
     Click Link  New survey
     Make A Survey
     Click Link  Add question
@@ -82,8 +82,11 @@ Logged In User Can Edit Answer
     Expand Answer Card  1
     Page Should Contain  Do Not
     Edit Answer  toivo  12  1
-    Click Button  Save changes
+    Set Question Text  Beautiful
+    Add New Answer  Join Us  6
     Expand Answer Card  1
     Page Should Not Contain  Do Not
     Page Should Contain  toivo
+    Page Should Contain  Join Us
+    Page Should Contain  Beautiful
     Textfield Should Contain  points-1  12
