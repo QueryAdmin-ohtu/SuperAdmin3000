@@ -20,5 +20,4 @@ def statistics(survey_id):
     return render_template("surveys/statistics.html",
                            ENV=app.config["ENV"],
                            submissions=submissions,
-                           answer_distribution=answer_distribution,
-                           asd = "koira")
+                           answer_distribution=answer_distribution)
