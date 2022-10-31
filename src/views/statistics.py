@@ -19,5 +19,6 @@ def statistics(survey_id):
 
     return render_template("surveys/statistics.html",
                            ENV=app.config["ENV"],
+                           survey_id=survey_id,
                            submissions=submissions,
                            answer_distribution=answer_distribution)

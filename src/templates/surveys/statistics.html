@@ -1,8 +1,12 @@
 {% extends "layout.html" %}
+{% import "components/macros/buttons.html" as buttons %}
 {% block content %}
 <div class="grid lg:grid-cols-2 grid-cols-1 gap-4 items-start">
     <div class="flex flex-col gap-4">
-        <h1 class="text-gray-900 leading-tight">Survey title</h1>
+        <div class="flex justify-between">
+            <h1 class="text-gray-900 leading-tight">Survey title</h1>
+            {{ buttons.link_button("Back to survey", "/surveys/%s" % survey_id) }}
+        </div>
         <div id="stats" class="flex-col max-w-full bg-white p-4 gap-2 rounded-lg border border-slate-300">
             <div class="flex justify-between">
                 <h3 class="text-gray-900 leading-tight">Statistics</h3>
