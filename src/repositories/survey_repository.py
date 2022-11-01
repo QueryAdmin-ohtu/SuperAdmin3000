@@ -476,6 +476,28 @@ class SurveyRepository:
             return None
         return answers
 
+    def get_users_who_answered_survey(self, survey_id):
+        """ Returns a list of users who have answered a given survey
+        """
+        sql = """
+        SELECT
+            DISTINCT "u"."id",
+            "u"."email",
+            "u"."groupId"
+        FROM
+            "Users" as u
+        LEFT JOIN "User_answers" as ua
+            ON "u"."id" = "ua"."userId"
+        LEFT JOIN "Question_answers" as qa
+            ON "ua"."questionAnswerId" = "qa"."id"
+        LEFT JOIN "Questions" as q
+            ON "q"."id" = "qa"."questionId"
+        LEFT JOIN "Surveys" as s
+            ON "s"."id" = "q"."surveyId"
+        WHERE s.id=:surveyId
+        """
+        values = { "surveyId": survey_id}
+
     def add_admin(self, email: str):
         """ Inserts a new admin to the Admin table if it does not
         exist already
