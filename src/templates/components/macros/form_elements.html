@@ -88,7 +88,7 @@
 {% endmacro %}
 
 {% macro label(name, label_text) %}
-<label for="{{ name }}" class="text-gray-700 text-sm font-bold w-max">{{ label_text }}</label>
+<label for="{{ name }}" class="text-gray-700 text-sm font-bold truncate">{{ label_text }}</label>
 {% endmacro %}
 
 {# The HTML below is a fix for TailwindCSS to render a CSS containing colors used in these macros #}
