@@ -1,5 +1,6 @@
 from ast import excepthandler
 import unittest
+import uuid
 
 from repositories.survey_repository import SurveyRepository
 
@@ -7,7 +8,6 @@ from app import create_app
 
 text = "create question test"
 category_weights = '[{"category": "Category 1", "multiplier": 10.0}, {"category": "Category 2", "multiplier": 20.0}]'
-
 
 class TestSurveyRepository(unittest.TestCase):
     def setUp(self):
@@ -595,25 +595,38 @@ class TestSurveyRepository(unittest.TestCase):
             answer_id_3 = self.repo.create_answer("Forest", 5, question_id_2)
             answer_id_4 = self.repo.create_answer("Savannah", 0, question_id_2)
 
+            group_id =  self.repo._add_user_group(survey_id)
+
             user_id_1 = self.repo._add_user()
             user_id_2 = self.repo._add_user()
-            user_id_3 = self.repo._add_user()
+            user_id_3 = self.repo._add_user(group_id)
 
             self.repo._add_user_answers(user_id_1, [answer_id_1, answer_id_4])
             self.repo._add_user_answers(user_id_2, [answer_id_1, answer_id_3])
             self.repo._add_user_answers(user_id_3, [answer_id_2, answer_id_4])
 
-        return survey_id
+        return survey_id, group_id
 
     def test_number_of_submissions(self):
-        survey_id = self._create_survey_and_add_user_answers()
+        survey_id, group_id = self._create_survey_and_add_user_answers()
         with self.app.app_context():
             result = self.repo.get_number_of_submissions(survey_id)
 
         self.assertEqual(result, 3)
 
+    def test_number_of_submissions_per_user_group(self):
+        survey_id, group_id = self._create_survey_and_add_user_answers()
+        group_id_1 = uuid.uuid4()
+        group_id_2 = group_id
+        with self.app.app_context():
+            result_1 = self.repo.get_number_of_submissions(survey_id, group_id_1)
+            result_2 = self.repo.get_number_of_submissions(survey_id, group_id_2)
+
+        self.assertEqual(result_1, None)
+        self.assertEqual(result_2, 1)
+
     def test_answer_distribution(self):
-        survey_id = self._create_survey_and_add_user_answers()
+        survey_id, group_id = self._create_survey_and_add_user_answers()
         with self.app.app_context():
             result = self.repo.get_answer_distribution(survey_id)
 

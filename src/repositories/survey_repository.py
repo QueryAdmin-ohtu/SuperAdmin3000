@@ -1,4 +1,5 @@
 from sqlalchemy import exc
+import uuid
 
 from db import db
 
@@ -579,11 +580,11 @@ class SurveyRepository:
         self.update_survey_updated_at(category[6])
         return True
 
-    def get_number_of_submissions(self, survey_id):
+    def get_number_of_submissions(self, survey_id, user_group_id=None):
         """ Finds and returns the number of distinct users who have
         submitted answers to a survey."""
 
-        # TODO: filter by dates/groups
+        # TODO: filter by dates
 
         sql = """
         SELECT
@@ -596,11 +597,15 @@ class SurveyRepository:
             ON q.id = qa."questionId"
         LEFT JOIN "User_answers" AS ua
             ON qa.id = ua."questionAnswerId"
-        WHERE s.id=:survey_id
+        LEFT JOIN "Users" AS u
+            ON u.id = ua."userId"
+        WHERE 
+            s.id=:survey_id
+            AND (u."groupId"=:group_id OR :group_id IS NULL)
         GROUP BY s.id
         """
         submissions = self.db_connection.session.execute(
-            sql, {"survey_id": survey_id}).fetchone()
+            sql, {"survey_id": survey_id, "group_id": user_group_id}).fetchone()
 
         if not submissions:
             return None
@@ -637,16 +642,27 @@ class SurveyRepository:
 
         return result
 
-    def _add_user(self):
+    def _add_user(self, user_group=None):
         """Adds a user to database for testing purposes
 
         Returns user id"""
 
-        sql = """INSERT INTO "Users" ("createdAt", "updatedAt")
-            VALUES (NOW(), NOW()) RETURNING id"""
-        user_id = self.db_connection.session.execute(sql).fetchone()[0]
+        sql = """INSERT INTO "Users" ("groupId", "createdAt", "updatedAt")
+            VALUES (:group_id, NOW(), NOW()) RETURNING id"""
+        user_id = self.db_connection.session.execute(sql, {"group_id": user_group}).fetchone()[0]
         db.session.commit()
         return user_id
+
+    def _add_user_group(self, survey_id):
+        """Adds a user group to database for testing purposes. 
+        
+        Returns database id"""
+        group_id = uuid.uuid4()
+        sql = """INSERT INTO "Survey_user_groups" (id, "surveyId", "createdAt", "updatedAt")
+            VALUES (:group_id, :survey_id, NOW(), NOW()) RETURNING id"""
+        group_id = self.db_connection.session.execute(sql, {"group_id": group_id, "survey_id": survey_id}).fetchone()[0]
+        db.session.commit()
+        return group_id
 
     def _add_user_answers(self, user_id, question_answer_ids: list):
         """Adds user answers to database for testing purposes"""
