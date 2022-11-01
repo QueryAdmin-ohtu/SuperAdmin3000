@@ -217,7 +217,7 @@ class SurveyRepository:
             s.id,
             s.title_text,
             COUNT(DISTINCT q.id) AS questions,
-            COUNT(DISTINCT ua."userId") AS submissions
+            COUNT(DISTINCT ua."createdAt") AS submissions
         FROM "Surveys" AS s
         LEFT JOIN "Questions" AS q
             ON s.id = q."surveyId"
@@ -588,7 +588,7 @@ class SurveyRepository:
         sql = """
         SELECT
             s.id,
-            COUNT(DISTINCT ua."userId") AS submissions
+            COUNT(DISTINCT ua."createdAt") AS submissions
         FROM "Surveys" AS s
         LEFT JOIN "Questions" AS q
             ON s.id = q."surveyId"
@@ -649,13 +649,14 @@ class SurveyRepository:
         db.session.commit()
         return user_id
 
-    def _add_user_answer(self, user_id, question_answer_id):
-        """Adds a user answer to database for testing purposes"""
+    def _add_user_answers(self, user_id, question_answer_ids: list):
+        """Adds user answers to database for testing purposes"""
 
-        sql = """INSERT INTO "User_answers"
-            ("userId", "questionAnswerId", "createdAt", "updatedAt")
-            VALUES (:user_id, :question_answer_id, NOW(), NOW())"""
-        values = {"user_id": user_id, "question_answer_id": question_answer_id}
+        for id in question_answer_ids:
+            sql = """INSERT INTO "User_answers"
+                ("userId", "questionAnswerId", "createdAt", "updatedAt")
+                VALUES (:user_id, :question_answer_id, NOW(), NOW())"""
+            values = {"user_id": user_id, "question_answer_id": id}
 
-        self.db_connection.session.execute(sql, values)
+            self.db_connection.session.execute(sql, values)
         db.session.commit()
