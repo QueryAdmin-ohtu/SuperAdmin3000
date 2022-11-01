@@ -1,5 +1,4 @@
 from sqlalchemy import exc
-from datetime import datetime
 
 from db import db
 
@@ -652,7 +651,6 @@ class SurveyRepository:
     def _add_user_answers(self, user_id, question_answer_ids: list):
         """Adds user answers to database for testing purposes"""
 
-        # timestamp = datetime.now()
         for id in question_answer_ids:
             sql = """INSERT INTO "User_answers"
                 ("userId", "questionAnswerId", "createdAt", "updatedAt")
