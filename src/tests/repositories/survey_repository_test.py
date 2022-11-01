@@ -599,12 +599,9 @@ class TestSurveyRepository(unittest.TestCase):
             user_id_2 = self.repo._add_user()
             user_id_3 = self.repo._add_user()
 
-            self.repo._add_user_answer(user_id_1, answer_id_1)
-            self.repo._add_user_answer(user_id_2, answer_id_1)
-            self.repo._add_user_answer(user_id_3, answer_id_2)
-            self.repo._add_user_answer(user_id_1, answer_id_4)
-            self.repo._add_user_answer(user_id_2, answer_id_3)
-            self.repo._add_user_answer(user_id_3, answer_id_4)
+            self.repo._add_user_answers(user_id_1, [answer_id_1, answer_id_4])
+            self.repo._add_user_answers(user_id_2, [answer_id_1, answer_id_3])
+            self.repo._add_user_answers(user_id_3, [answer_id_2, answer_id_4])
 
         return survey_id
 
