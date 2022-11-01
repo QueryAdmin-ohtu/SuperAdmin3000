@@ -14,3 +14,9 @@ Logged In User Can View Event Logs
 Logged Out User Cannot View Event Logs
     Logout
     Page Should Contain  Please login
+
+Logged In User Can Change The The Log Sort Order
+    Login Through Backdoor
+    Click Link  Logs
+    Click Link  Oldest first
+    Page Should Contain  Newest first

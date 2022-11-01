@@ -152,7 +152,6 @@ def new_question_post(survey_id):
     survey_id = request.form["survey_id"]
     question_id = request.form["question_id"]
     categories = survey_service.get_categories_of_survey(survey_id)
-
     try:
         category_weights = helper.category_weights_as_json(
             categories, request.form)
@@ -160,11 +159,30 @@ def new_question_post(survey_id):
         return "Invalid weights"
 
     if request.form["edit"]:
+
+        original_answers = eval(request.form["answers"])
+        new_answers = []
+        for i in range(len(original_answers)):
+            answer_id = original_answers[i][0]
+            answer = request.form[f"answer-{i+1}"]
+            points = request.form[f"points-{i+1}"]
+            new_answers.append((answer_id,answer,points))
         survey_service.update_question(
-            question_id, text, category_weights)
+            question_id, text, category_weights, original_answers, new_answers)
+
+        answer_text = request.form["answer_text"]
+        point = request.form["points"]
+        if not point:
+            point = 0
+        try:
+            point = float(point)
+        except ValueError:
+            return "Invalid points"
+        if answer_text:
+            survey_service.create_answer(answer_text, point, question_id)
+
     else:
-        question_id = survey_service.create_question(
-            text, survey_id, category_weights)
+        question_id = survey_service.create_question(text, survey_id, category_weights)
     return redirect(f"/surveys/{survey_id}/questions/{question_id}")
 
 
@@ -198,25 +216,6 @@ def edit_question(survey_id, question_id):
                            answers=answers)
 
 
-@surveys.route("/surveys/<survey_id>/questions/<question_id>/new-answer", methods=["POST"])
-def add_answer(survey_id, question_id):
-    """ Adds a new answer to a question to the database.
-    If the question doesn't exist, it is created first
-    """
-
-    question_id = request.form["question_id"]
-    answer_text = request.form["answer_text"]
-    points = request.form["points"]
-    if not points:
-        points = 0
-    try:
-        points = float(points)
-    except ValueError:
-        return "Invalid points"
-    survey_service.create_answer(answer_text, points, question_id)
-    return redirect(f"/surveys/{survey_id}/questions/{question_id}")
-
-
 @surveys.route("/surveys/<survey_id>/question/<question_id>/answers/<answer_id>", methods=["POST"])
 def delete_answer(survey_id, question_id, answer_id):
     """ Call database query for removal of a single answer
@@ -241,11 +240,14 @@ def edit_category_page(survey_id, category_id):
     """
 
     survey_path = f"/surveys/{survey_id}"
+    survey = survey_service.get_survey(survey_id)
+
     # Returns an empty template for creating a new category
     if category_id == 'new':
         return render_template("surveys/edit_category.html",
                                ENV=app.config["ENV"],
                                survey_id=survey_id,
+                               survey=survey,
                                survey_path=survey_path)
 
     # Prefills the template for editing an existing category
@@ -256,6 +258,7 @@ def edit_category_page(survey_id, category_id):
     return render_template("surveys/edit_category.html",
                            ENV=app.config["ENV"],
                            survey_id=survey_id,
+                           survey=survey,
                            category_id=category_id,
                            name=name,
                            description=description,

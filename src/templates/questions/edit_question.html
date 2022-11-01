@@ -6,8 +6,12 @@
 
 {% block content %}
 <div class="flex justify-between">
-    <h1 class="text-slate-700">Add question to {{ survey.name }}</h1>
-    {{ buttons.link_button("Back to survey", "/surveys/%s" % survey[0]) }}
+  {% if edit %}
+  <h1 class="text-slate-700">Edit a question in {{ survey.name }}</h1>
+  {% else %}
+  <h1 class="text-slate-700">Add a question to {{ survey.name }}</h1>
+  {% endif %}
+  {{ buttons.link_button("Back to survey", "/surveys/%s" % survey[0]) }}
 </div>
 <div class="flex flex-col gap-6 items-start w-full">
     <form class="w-full" action="/surveys/{{ survey.id }}/new-question" method="POST">
@@ -15,6 +19,7 @@
         <input type="hidden" name="survey_id" id="survey_id" value="{{ survey.id }}">
         <input type="hidden" name="question_id" id="question_id" value="{{ question_id }}">
         <input type="hidden" name="edit" id="edit" value="{{ edit }}">
+        <input type="hidden" name="answers" id="answers" value="{{ answers }}">
         <input type="hidden" name="created" id="created" value="{{ created }}">
         <div class="grid grid-cols-2 gap-4">
             <div class="flex flex-col gap-6">
@@ -63,8 +68,6 @@
                         "100",
                         "1") }}
                     </div>
-                    {{ form_elements.submit_button("Add answer", "creation", "/surveys/%s/questions/%s/new-answer" %
-                    (survey.id, question_id)) }}
                 </div>
                 {% endcall %}
             </div>

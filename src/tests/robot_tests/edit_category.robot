@@ -17,6 +17,11 @@ Logged In User Can Create Categories
     Page Should Contain  nimi
     Page Should Contain  kuvaus
 
+Category Edit View Should Display Survey Name
+    Go To Survey  1
+    Click Link  edit_button_1
+    Page Should Contain  test_name
+
 Back Button Opens Correct Survey Page On New Category Page
     Go To Survey  1
     Click Link  Add category
@@ -77,7 +82,7 @@ Logged In User Can Delete a Category Without Results
 Logged In User Can Edit Category Name and Description
     Go To Survey  1
     Click Link  edit_button_1
-    Page Should Contain  Edit category
+    Page Should Contain  Edit a category
     Edit Category Name and Description
     Page Should Contain  uusi nimi
     Page Should Contain  uusi kuvaus
@@ -96,3 +101,11 @@ Logged In User Can Edit a Content Link
     Click Link  edit_button_1
     Page Should Contain  kissa
     Page Should Contain  koira
+
+Logged In User Can Delete a Content Link
+    Go To Survey  1
+    Click Link  edit_button_1
+    Page Should Contain  kissa    
+    Click Button  delete_url_0
+    Click Link  edit_button_1
+    Page Should Not Contain  kissa

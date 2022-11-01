@@ -60,7 +60,7 @@
 
 {% endmacro %}
 
-{% macro submit_button(button_text, type = "default", formaction = "", onclick=None) %}
+{% macro submit_button(button_text, type = "default", formaction = "", onclick=None, id=None) %}
 {# A submit button for your form
     Args:
         button_text: Text to display in button
@@ -82,13 +82,13 @@
 
 <button
     class="bg-{{ main_color }} hover:bg-{{ secondary_color }} p-4 rounded w-full h-fit text-lg text-white leading-tight focus:ring-{{ main_color }} focus:border-{{ main_color }} transition duration-150 ease-in-out"
-    type="submit" onclick="{{onclick}}" value="{{ button_text }}" name="submit" {{ formaction_string if formaction != "" }}>
+    type="submit" onclick="{{onclick}}" value="{{ button_text }}" name="submit" id={{id}} {{ formaction_string if formaction != "" }}>
     {{ button_text }}
 </button>
 {% endmacro %}
 
 {% macro label(name, label_text) %}
-<label for="{{ name }}" class="text-gray-700 text-sm font-bold w-max">{{ label_text }}</label>
+<label for="{{ name }}" class="text-gray-700 text-sm font-bold truncate">{{ label_text }}</label>
 {% endmacro %}
 
 {# The HTML below is a fix for TailwindCSS to render a CSS containing colors used in these macros #}
