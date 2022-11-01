@@ -919,12 +919,27 @@ p {
   overflow-y: scroll;
 }
 
+.truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.text-ellipsis {
+  text-overflow: ellipsis;
+}
+
 .whitespace-nowrap {
   white-space: nowrap;
 }
 
 .whitespace-pre {
   white-space: pre;
+}
+
+.break-normal {
+  overflow-wrap: normal;
+  word-break: normal;
 }
 
 .rounded-xl {
@@ -1307,6 +1322,24 @@ p {
 
 .ease-in-out {
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.hover\:w-full:hover {
+  width: 100%;
+}
+
+.hover\:w-max:hover {
+  width: -webkit-max-content;
+  width: -moz-max-content;
+  width: max-content;
+}
+
+.hover\:text-ellipsis:hover {
+  text-overflow: ellipsis;
+}
+
+.hover\:text-clip:hover {
+  text-overflow: clip;
 }
 
 .hover\:border-slate-400:hover {
