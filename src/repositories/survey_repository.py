@@ -631,6 +631,7 @@ class SurveyRepository:
             ON qa.id = ua."questionAnswerId"
         WHERE s.id=:survey_id
         GROUP BY q.id, q.text, qa.id, qa.text
+        ORDER BY q.id
         """
         result = self.db_connection.session.execute(
             sql, {"survey_id": survey_id}).fetchall()

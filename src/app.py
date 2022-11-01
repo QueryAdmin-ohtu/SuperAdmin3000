@@ -14,8 +14,8 @@ def create_app():
     app.config.from_object(configs)
 
     app.register_blueprint(home)
-    app.register_blueprint(surveys)
     app.register_blueprint(stats)
+    app.register_blueprint(surveys)
     app.register_blueprint(log)
 
     db.init_app(app)
