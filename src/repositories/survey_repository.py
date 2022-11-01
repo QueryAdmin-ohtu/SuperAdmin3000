@@ -218,7 +218,7 @@ class SurveyRepository:
             s.id,
             s.title_text,
             COUNT(DISTINCT q.id) AS questions,
-            COUNT(DISTINCT ua."userId") AS submissions
+            COUNT(DISTINCT ua."createdAt") AS submissions
         FROM "Surveys" AS s
         LEFT JOIN "Questions" AS q
             ON s.id = q."surveyId"
