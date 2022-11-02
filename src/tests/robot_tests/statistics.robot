@@ -16,5 +16,5 @@ Logged In User Can View Statistics Page
 
 User Can Access Edit Categories Page From Statistics
     Go To Statistics  1
-    Click Element  edit_button_1
-    Page Should Contain  Edit a category in Devops
+    Click Element  edit_button_2
+    Page Should Contain  Static descriptive text about the category 2.
