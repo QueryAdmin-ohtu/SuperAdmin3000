@@ -136,13 +136,11 @@ def new_question_view(survey_id):
     survey = survey_service.get_survey(survey_id)
     categories = survey_service.get_categories_of_survey(survey_id)
     weights = {}
-    survey_path = f"/surveys/{survey_id}"
     return render_template("questions/edit_question.html",
                            ENV=app.config["ENV"],
                            categories=categories,
                            survey=survey,
-                           weights=weights,
-                           survey_path=survey_path)
+                           weights=weights)
 
 
 @surveys.route("/surveys/<survey_id>/new-question", methods=["POST"])
@@ -168,7 +166,7 @@ def new_question_post(survey_id):
             answer_id = original_answers[i][0]
             answer = request.form[f"answer-{i+1}"]
             points = request.form[f"points-{i+1}"]
-            new_answers.append((answer_id,answer,points))
+            new_answers.append((answer_id, answer, points))
         survey_service.update_question(
             question_id, text, category_weights, original_answers, new_answers)
 
@@ -184,7 +182,8 @@ def new_question_post(survey_id):
             survey_service.create_answer(answer_text, point, question_id)
 
     else:
-        question_id = survey_service.create_question(text, survey_id, category_weights)
+        question_id = survey_service.create_question(
+            text, survey_id, category_weights)
     return redirect(f"/surveys/{survey_id}/questions/{question_id}")
 
 
@@ -193,9 +192,28 @@ def edit_question(survey_id, question_id):
     """ Returns the page for editing the question
     where the inputs are pre-filled"""
 
+    if not survey_id.isnumeric():
+        return redirect("/surveys")
+
+    if not question_id.isnumeric():
+        return redirect(f"/surveys/{survey_id}")
+
     question = survey_service.get_question(question_id)
-    if len(question) < 4:
-        return redirect("/")
+
+    show_previous_button = show_next_button = False
+    questions = survey_service.get_questions_of_survey(survey_id)
+    current_question = int(question_id)
+    for q in questions:
+        if q.id < current_question:
+            show_previous_button = True
+        if q.id > current_question:
+            show_next_button = True
+
+    if not question:
+        return redirect(f"/surveys/{survey_id}")
+
+    questions = survey_service.get_questions_of_survey(survey_id)
+
     text = question[0]
     created = question[2]
     weights = question[3]
@@ -205,7 +223,6 @@ def edit_question(survey_id, question_id):
 
     survey = survey_service.get_survey(survey_id)
     categories = survey_service.get_categories_of_survey(survey_id)
-    survey_path = f"/surveys/{survey_id}"
 
     return render_template("questions/edit_question.html",
                            ENV=app.config["ENV"],
@@ -217,7 +234,54 @@ def edit_question(survey_id, question_id):
                            edit=True,
                            question_id=question_id,
                            answers=answers,
-                           survey_path=survey_path)
+                           show_next_button=show_next_button,
+                           show_previous_button=show_previous_button)
+
+
+@surveys.route("/surveys/<survey_id>/questions/<question_id>/next", methods=["GET"])
+def edit_next_question(survey_id, question_id):
+    """ Searches for the next question with bigger id than the given question
+    id and opens it for editing
+    """
+    if not survey_id.isnumeric():
+        return redirect("/surveys")
+
+    if not question_id.isnumeric():
+        return redirect(f"/surveys/{survey_id}")
+
+    current_question = int(question_id)
+    next_question = 9999999  # Real question id should never be this large
+
+    questions = survey_service.get_questions_of_survey(int(survey_id))
+
+    for question in questions:
+        if question.id > current_question and next_question > question.id:
+            next_question = question.id
+
+    return redirect(f"/surveys/{survey_id}/questions/{next_question}")
+
+
+@surveys.route("/surveys/<survey_id>/questions/<question_id>/previous", methods=["GET"])
+def edit_previous_question(survey_id, question_id):
+    """ Searches for the next question with bigger id than the given question
+    id and opens it for editing
+    """
+    if not survey_id.isnumeric():
+        return redirect("/surveys")
+
+    if not question_id.isnumeric():
+        return redirect(f"/surveys/{survey_id}")
+
+    current_question = int(question_id)
+    previous_question = -1  # Real question id should never be this small
+
+    questions = survey_service.get_questions_of_survey(int(survey_id))
+
+    for question in questions:
+        if question.id < current_question and previous_question < question.id:
+            previous_question = question.id
+
+    return redirect(f"/surveys/{survey_id}/questions/{previous_question}")
 
 
 @surveys.route("/surveys/<survey_id>/question/<question_id>/answers/<answer_id>", methods=["POST"])

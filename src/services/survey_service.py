@@ -256,6 +256,19 @@ class SurveyService:
         the answer determined by the given answer_id """
         return self.survey_repository.get_user_answers(answer_id)
 
+    def get_users_who_answered_survey(self, survey_id: int):
+        """ Returns a list of users who have answered a given survey
+        Args:
+            survey_id: Id of the survey
+
+        Returns:
+            On succeed: A list of lists where each element contains
+                [id, email, group_name, answer_time]
+            On error / no users who answered found:
+                None
+        """
+        return self.survey_repository.get_users_who_answered_survey(survey_id)
+
     def create_category(self, survey_id: str, name: str, description: str, content_links: list):
         """
         Creates a new category.
@@ -335,6 +348,28 @@ class SurveyService:
         """
 
         return self.survey_repository.delete_category(category_id)
+
+    def get_number_of_submissions_for_survey(self, survey_id):
+        """
+        Fetches the number of submissions for the given
+        survey
+
+        Returns:
+        Number of submissions as integer
+        """
+
+        return self.survey_repository.get_number_of_submissions(survey_id)
+
+    def get_answer_distribution_for_survey_questions(self, survey_id):
+        """
+        Fetches the distribution of user answers over the
+        answer options of a survey
+
+        Returns a table with question id and text, answer
+        id and text, number of user answers
+        """
+
+        return self.survey_repository.get_answer_distribution(survey_id)
 
 
 survey_service = SurveyService(SurveyRepository())

@@ -10,8 +10,15 @@
   <h1 class="text-slate-700">Edit a question in {{ survey.name }}</h1>
   {% else %}
   <h1 class="text-slate-700">Add a question to {{ survey.name }}</h1>
+
   {% endif %}
-  {{ buttons.link_button("Back", survey_path) }}
+  {% if show_previous_button %}
+  {{ buttons.link_button("Previous question", "/surveys/%s/questions/%s/previous" % (survey[0],  question_id)) }}
+  {% endif %}
+  {% if show_next_button %}  
+  {{ buttons.link_button("Next question", "/surveys/%s/questions/%s/next" % (survey[0],  question_id)) }}
+  {% endif %}
+  {{ buttons.link_button("Back to survey", "/surveys/%s" % survey[0]) }}
 </div>
 <div class="flex flex-col gap-6 items-start w-full">
     <form class="w-full" action="/surveys/{{ survey.id }}/new-question" method="POST">

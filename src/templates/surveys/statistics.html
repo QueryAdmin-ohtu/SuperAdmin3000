@@ -1,18 +1,50 @@
 {% extends "layout.html" %}
+{% import "components/macros/buttons.html" as buttons %}
+{% import "components/macros/statistics_elements.html" as statistics_elements %}
 {% block content %}
 <div class="grid lg:grid-cols-2 grid-cols-1 gap-4 items-start">
     <div class="flex flex-col gap-4">
-        <h1 class="text-gray-900 leading-tight">Survey title</h1>
+        <div class="flex justify-between">
+            <h1 class="text-gray-900 leading-tight">Survey title</h1>
+            {{ buttons.link_button("Back to survey", "/surveys/%s" % survey_id) }}
+        </div>
         <div id="stats" class="flex-col max-w-full bg-white p-4 gap-2 rounded-lg border border-slate-300">
-            <h3 class="text-gray-900 leading-tight">Statistics</h3>
-            <br>
-            <p class="text-slate-600 font-mono text-sm font-medium">Total submissions: </p>
+            <div class="flex justify-between">
+                <h3 class="text-gray-900 leading-tight">Statistics</h3>
+                <p class="text-slate-600 font-mono text-sm font-medium">Total submissions: 
+                    {% if submissions %}
+                        {{ submissions }}
+                    {% else %}
+                        0
+                    {% endif %}
+                </p>
+            </div>
             <div class="grow h-7"></div>
-            {% for answer in answers %}
-            {% endfor %}
+            <h3 class="text-gray-900 leading-tight">Related categories</h3>
+                        <div class="grow h-7"></div>
+                        <div class="table-row-group">
+                            {% if categories %}
+                                {% for category in categories %}
+                                    {{ statistics_elements.category_row(survey_id, category, category[0])}}
+                                    <hr>
+                                {% endfor %}
+                            {% else %}
+                                No related categories found.
+                            {% endif %}
+                        </div>
+                        <div class="grow h-7"></div>
+                        <h3 class="text-gray-900 leading-tight">Answer distribution</h3>
+                        <p>
+                        {{ answer_distribution }}
+                        </p>
+                        {% for item in answer_distribution %}
+                            <p>{{item}}</p>
+            
+                        {% endfor %}
+                    
         </div>
         <div id="answered" class="flex-col max-w-full bg-white p-4 gap-2 rounded-lg border border-slate-300">
-            <h3 class="text-gray-900 leading-tight">List of users</h3>
+            <h3 class="text-gray-900 leading-tight">Users with submissions</h3>
             <div class="grow h-5"></div>
             <table class="min-w-full">
                 <thead class="border-b">
