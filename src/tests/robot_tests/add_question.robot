@@ -21,7 +21,7 @@ Logged In User Can Add a New Question
 Back Button Opens Correct Survey Page
     Go To Survey  1
     Click Link  Add question
-    Click Link  Back
+    Click Link  Back to survey
     Page Should Contain  Devops assessment
     Page Should Contain  Are you doing DevOps right?
     Page Should Contain  DevOps practices and capabilities.

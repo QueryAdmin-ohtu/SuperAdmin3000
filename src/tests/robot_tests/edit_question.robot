@@ -51,7 +51,7 @@ User Can Not Set Category Weights With A Precision Of 0.01
 Back Button Opens Correct Survey Page
     Go To Survey  1
     Click Button  EDIT
-    Click Link  Back
+    Click Link  Back to survey
     Page Should Contain  test_name
     Page Should Contain  test_title
     Page Should Contain  test_text

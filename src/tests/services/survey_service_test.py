@@ -270,6 +270,7 @@ class TestSurveyService(unittest.TestCase):
         self.repo_mock.delete_question_from_survey.assert_called_with(
             question_id)
         self.assertEqual(check, return_value)
+<<<<<<< HEAD
 
     def test_get_users_who_answered_survey(self):
         repo_return_value = [1, "jorma@uotinen.com", 4]
@@ -279,3 +280,21 @@ class TestSurveyService(unittest.TestCase):
         returned_value = self.survey_service.get_users_who_answered_survey(survey_id)
         self.repo_mock.get_users_who_answered_survey.assert_called_with(survey_id)
         self.assertEqual(returned_value, repo_return_value)
+=======
+    
+    def test_get_number_of_submissions_for_survey_calls_repo_correctly(self):
+        self.repo_mock.get_number_of_submissions.return_value = 2
+        survey_id = 1
+        self.survey_service.get_number_of_submissions_for_survey(survey_id)
+        self.repo_mock.get_number_of_submissions.assert_called_with(
+            survey_id
+        )
+    
+    def test_get_answer_distribution_for_survey_questions_calls_repo_correctly(self):
+        self.repo_mock.get_answer_distribution.return_value = "None"
+        survey_id = 1
+        self.survey_service.get_answer_distribution_for_survey_questions(survey_id)
+        self.repo_mock.get_answer_distribution.assert_called_with(
+            survey_id
+        )
+>>>>>>> main
