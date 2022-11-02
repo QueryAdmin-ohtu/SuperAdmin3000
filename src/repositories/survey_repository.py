@@ -706,7 +706,11 @@ class SurveyRepository:
         db.session.commit()
 
     def _add_survey_user_group(self, group_name, survey_id):
-        """Adds a survey user group for testing purposes"""
+        """
+            Adds a survey user group for testing purposes
+            Returns:
+                Survey_user_groups id (UUID)
+        """
 
         sql = """
         INSERT INTO "Survey_user_groups"
