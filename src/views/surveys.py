@@ -192,11 +192,28 @@ def edit_question(survey_id, question_id):
     """ Returns the page for editing the question
     where the inputs are pre-filled"""
 
+    if not survey_id.isnumeric():
+        return redirect("/surveys")
+    
+    if not question_id.isnumeric(): 
+        return redirect(f"/surveys/{survey_id}")
+
     question = survey_service.get_question(question_id)
+
+    show_previous_button = show_next_button = False
+    questions = survey_service.get_questions_of_survey(survey_id)
+    current_question = int(question_id)
+    for q in questions:
+        if q.id < current_question:
+            show_previous_button = True
+        if q.id > current_question:
+            show_next_button = True
 
     if not question:
         return redirect(f"/surveys/{survey_id}")
 
+    questions = survey_service.get_questions_of_survey(survey_id)
+    
     text = question[0]
     created = question[2]
     weights = question[3]
@@ -216,7 +233,9 @@ def edit_question(survey_id, question_id):
                            created=created,
                            edit=True,
                            question_id=question_id,
-                           answers=answers)
+                           answers=answers,
+                           show_next_button=show_next_button,
+                           show_previous_button=show_previous_button)
 
 
 @surveys.route("/surveys/<survey_id>/questions/<question_id>/next", methods=["GET"])
@@ -224,7 +243,10 @@ def edit_next_question(survey_id, question_id):
     """ Searches for the next question with bigger id than the given question
     id and opens it for editing
     """
-    if not question_id.isnumeric() or not survey_id.isnumeric():
+    if not survey_id.isnumeric():
+        return redirect("/surveys")
+    
+    if not question_id.isnumeric(): 
         return redirect(f"/surveys/{survey_id}")
 
     current_question = int(question_id)
@@ -244,7 +266,10 @@ def edit_previous_question(survey_id, question_id):
     """ Searches for the next question with bigger id than the given question
     id and opens it for editing
     """
-    if not question_id.isnumeric() or not survey_id.isnumeric():
+    if not survey_id.isnumeric():
+        return redirect("/surveys")
+    
+    if not question_id.isnumeric(): 
         return redirect(f"/surveys/{survey_id}")
 
     current_question = int(question_id)
