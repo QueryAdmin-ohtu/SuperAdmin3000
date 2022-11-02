@@ -492,7 +492,8 @@ class SurveyRepository:
         SELECT
             DISTINCT "u"."id",
             "u"."email",
-            "u"."groupId"
+            "sua"."group_name",
+            "ua"."updatedAt" as answer_time
         FROM
             "Users" as u
         LEFT JOIN "User_answers" as ua
@@ -503,7 +504,9 @@ class SurveyRepository:
             ON "q"."id" = "qa"."questionId"
         LEFT JOIN "Surveys" as s
             ON "s"."id" = "q"."surveyId"
-        WHERE s.id=:surveyId
+        LEFT JOIN "Survey_user_groups" as sua
+            ON "u"."groupId" = "sua"."id"
+        WHERE "s"."id"=:surveyId AND "sua"."surveyId"=:surveyId 
         """
         values = { "surveyId": survey_id}
 
@@ -679,14 +682,15 @@ class SurveyRepository:
 
         return result
 
-    def _add_user(self):
+    def _add_user(self, email = None, group_id = None):
         """Adds a user to database for testing purposes
 
         Returns user id"""
 
-        sql = """INSERT INTO "Users" ("createdAt", "updatedAt")
-            VALUES (NOW(), NOW()) RETURNING id"""
-        user_id = self.db_connection.session.execute(sql).fetchone()[0]
+        sql = """INSERT INTO "Users" ("email", "groupId", "createdAt", "updatedAt")
+            VALUES (:email, :group_id, NOW(), NOW()) RETURNING id"""
+        values = { "email": email, "group_id": group_id }
+        user_id = self.db_connection.session.execute(sql, values).fetchone()[0]
         db.session.commit()
         return user_id
 
@@ -700,3 +704,19 @@ class SurveyRepository:
 
         self.db_connection.session.execute(sql, values)
         db.session.commit()
+
+    def _add_survey_user_group(self, group_name, survey_id):
+        """Adds a survey user group for testing purposes"""
+
+        sql = """
+        INSERT INTO "Survey_user_groups"
+            ("id", "group_name", "surveyId", "createdAt", "updatedAt")
+        VALUES (gen_random_uuid(), :group_name, :survey_id, NOW(), NOW())
+        RETURNING id
+        """
+        values = {"group_name": group_name, "survey_id": survey_id}
+        survey_user_group_id = self.db_connection.session.execute(sql, values).fetchone()[0]
+        db.session.commit()
+        return survey_user_group_id
+
+
