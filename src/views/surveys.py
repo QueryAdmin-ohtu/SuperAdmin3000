@@ -192,8 +192,10 @@ def edit_question(survey_id, question_id):
     where the inputs are pre-filled"""
 
     question = survey_service.get_question(question_id)
-    if len(question) < 4:
-        return redirect("/")
+
+    if not question:
+        return redirect(f"/surveys/{survey_id}")
+
     text = question[0]
     created = question[2]
     weights = question[3]
