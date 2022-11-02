@@ -12,8 +12,7 @@
         {% for category in categories %}
         <!-- {{category[0]}} -->
         {{category[0]}} -- {{category[1]}}: {{category[2]}}
-        {{ buttons.link_button("Edit", "/edit_category/%s/%s" %(survey[0],category[0]), id="edit_button_%s" %
-        category[0]) }}
+        {{ buttons.link_button("Edit", "/edit_category/%s/%s" %(survey[0],category[0]), id="edit_button_%s" % category[0]) }}
         <form id="delete" class="m-1" onsubmit="return confirm('Are you sure you want to delete this category?')"
             action="/delete_category" method="POST">
             <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
