@@ -222,12 +222,17 @@ def edit_next_question(survey_id, question_id):
     """ Searches for the next question with bigger id than the given question
     id and opens it for editing
     """
-    if not question_id.isnumeric():
-        return redirect(f"/surveys/{survey_id}")        
+    if not question_id.isnumeric() or not survey_id.isnumeric():
+        return redirect(f"/surveys/{survey_id}")
 
-    # TODO: There can be holes in the question numbering (eg. the next question
-    # after question number 5 might be 7, and 6 doesn't exist at al)l    
-    next_question = int(question_id) + 1
+    current_question = int(question_id)
+    next_question = 9999999  # Real question id should never be this large
+    
+    questions = survey_service.get_questions_of_survey(int(survey_id))
+
+    for question in questions:
+        if question.id > current_question and next_question > question.id:
+            next_question = question.id
 
     return redirect(f"/surveys/{survey_id}/questions/{next_question}")
 
