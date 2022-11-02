@@ -217,6 +217,22 @@ def edit_question(survey_id, question_id):
                            question_id=question_id,
                            answers=answers)
 
+@surveys.route("/surveys/<survey_id>/questions/<question_id>/next", methods=["GET"])
+def edit_next_question(survey_id, question_id):
+    """ Searches for the next question with bigger id than the given question
+    id and opens it for editing
+    """
+    if not question_id.isnumeric():
+        return redirect(f"/surveys/{survey_id}")        
+
+    # TODO: There can be holes in the question numbering (eg. the next question
+    # after question number 5 might be 7, and 6 doesn't exist at al)l    
+    next_question = int(question_id) + 1
+
+    return redirect(f"/surveys/{survey_id}/questions/{next_question}")
+
+    
+
 
 @surveys.route("/surveys/<survey_id>/question/<question_id>/answers/<answer_id>", methods=["POST"])
 def delete_answer(survey_id, question_id, answer_id):
