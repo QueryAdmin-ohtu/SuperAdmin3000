@@ -33,6 +33,10 @@ Go To Survey
     [Arguments]  ${survey_id}
     Go To  ${URL}/surveys/${survey_id}
 
+Go To Statistics
+    [Arguments]  ${survey_id}
+    Go To  ${URL}/surveys/${survey_id}/statistics
+
 Delete Question
     [Arguments]  ${survey_id}  ${question_id}
     Go To  ${URL}/delete/${survey_id}/${question_id}
