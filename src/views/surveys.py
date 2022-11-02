@@ -194,8 +194,8 @@ def edit_question(survey_id, question_id):
 
     if not survey_id.isnumeric():
         return redirect("/surveys")
-    
-    if not question_id.isnumeric(): 
+
+    if not question_id.isnumeric():
         return redirect(f"/surveys/{survey_id}")
 
     question = survey_service.get_question(question_id)
@@ -213,7 +213,7 @@ def edit_question(survey_id, question_id):
         return redirect(f"/surveys/{survey_id}")
 
     questions = survey_service.get_questions_of_survey(survey_id)
-    
+
     text = question[0]
     created = question[2]
     weights = question[3]
@@ -245,8 +245,8 @@ def edit_next_question(survey_id, question_id):
     """
     if not survey_id.isnumeric():
         return redirect("/surveys")
-    
-    if not question_id.isnumeric(): 
+
+    if not question_id.isnumeric():
         return redirect(f"/surveys/{survey_id}")
 
     current_question = int(question_id)
@@ -268,8 +268,8 @@ def edit_previous_question(survey_id, question_id):
     """
     if not survey_id.isnumeric():
         return redirect("/surveys")
-    
-    if not question_id.isnumeric(): 
+
+    if not question_id.isnumeric():
         return redirect(f"/surveys/{survey_id}")
 
     current_question = int(question_id)
