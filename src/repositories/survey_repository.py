@@ -476,9 +476,18 @@ class SurveyRepository:
             return None
         return answers
 
-    def get_users_who_answered_survey(self, survey_id):
+    def get_users_who_answered_survey(self, survey_id: int):
         """ Returns a list of users who have answered a given survey
+        Args:
+            survey_id: Id of the survey
+
+        Returns:
+            On succeed: A list of lists where each element contains
+                [id, email, groupId]
+            On error / no users who answered found:
+                None
         """
+
         sql = """
         SELECT
             DISTINCT "u"."id",
@@ -497,6 +506,17 @@ class SurveyRepository:
         WHERE s.id=:surveyId
         """
         values = { "surveyId": survey_id}
+
+        try:
+            users = self.db_connection.session.execute(sql, values).fetchall()
+
+            if not users: 
+                return None
+
+            return users
+
+        except exc.SQLAlchemyError:
+                return None
 
     def add_admin(self, email: str):
         """ Inserts a new admin to the Admin table if it does not
