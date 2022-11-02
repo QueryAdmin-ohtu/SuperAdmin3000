@@ -640,7 +640,7 @@ class TestSurveyRepository(unittest.TestCase):
             user_id = self.repo._add_user(user_email, survey_user_group_id)
 
             users_who_answered_survey_before = self.repo.get_users_who_answered_survey(survey_id)
-            self.repo._add_user_answer(user_id, answer_id)
+            self.repo._add_user_answers(user_id, [answer_id])
 
             users_who_answered_survey_after = self.repo.get_users_who_answered_survey(survey_id)
             
@@ -650,6 +650,7 @@ class TestSurveyRepository(unittest.TestCase):
         self.assertEqual(users_who_answered_survey_after[0].id, user_id)
         self.assertEqual(users_who_answered_survey_after[0].email, user_email)
         self.assertEqual(users_who_answered_survey_after[0].group_name, survey_user_group_name)
+        self.assertIsNotNone(users_who_answered_survey_after[0].answer_time)
 
     def test_get_users_who_answered_survey_does_not_return_user_that_did_not_answer(self):
         with self.app.app_context():
@@ -674,7 +675,7 @@ class TestSurveyRepository(unittest.TestCase):
             user_email = "peña@nieto.com"
             user_id = self.repo._add_user(user_email, survey_user_group_id)
 
-            self.repo._add_user_answer(user_id, answer_id)
+            self.repo._add_user_answers(user_id, [answer_id])
 
             users_who_answered_survey = self.repo.get_users_who_answered_survey(survey_id_1)
 
