@@ -13,9 +13,11 @@ def statistics(survey_id):
     if not helper.logged_in():
         flash("Log in to use the application", "error")
         return redirect("/")
-    
-    submissions = survey_service.get_number_of_submissions_for_survey(survey_id)
-    answer_distribution = survey_service.get_answer_distribution_for_survey_questions(survey_id)
+
+    submissions = survey_service.get_number_of_submissions_for_survey(
+        survey_id)
+    answer_distribution = survey_service.get_answer_distribution_for_survey_questions(
+        survey_id)
 
     return render_template("surveys/statistics.html",
                            ENV=app.config["ENV"],

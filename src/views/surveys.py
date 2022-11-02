@@ -166,7 +166,7 @@ def new_question_post(survey_id):
             answer_id = original_answers[i][0]
             answer = request.form[f"answer-{i+1}"]
             points = request.form[f"points-{i+1}"]
-            new_answers.append((answer_id,answer,points))
+            new_answers.append((answer_id, answer, points))
         survey_service.update_question(
             question_id, text, category_weights, original_answers, new_answers)
 
@@ -182,7 +182,8 @@ def new_question_post(survey_id):
             survey_service.create_answer(answer_text, point, question_id)
 
     else:
-        question_id = survey_service.create_question(text, survey_id, category_weights)
+        question_id = survey_service.create_question(
+            text, survey_id, category_weights)
     return redirect(f"/surveys/{survey_id}/questions/{question_id}")
 
 
@@ -217,6 +218,7 @@ def edit_question(survey_id, question_id):
                            question_id=question_id,
                            answers=answers)
 
+
 @surveys.route("/surveys/<survey_id>/questions/<question_id>/next", methods=["GET"])
 def edit_next_question(survey_id, question_id):
     """ Searches for the next question with bigger id than the given question
@@ -227,7 +229,7 @@ def edit_next_question(survey_id, question_id):
 
     current_question = int(question_id)
     next_question = 9999999  # Real question id should never be this large
-    
+
     questions = survey_service.get_questions_of_survey(int(survey_id))
 
     for question in questions:
@@ -235,8 +237,6 @@ def edit_next_question(survey_id, question_id):
             next_question = question.id
 
     return redirect(f"/surveys/{survey_id}/questions/{next_question}")
-
-    
 
 
 @surveys.route("/surveys/<survey_id>/question/<question_id>/answers/<answer_id>", methods=["POST"])

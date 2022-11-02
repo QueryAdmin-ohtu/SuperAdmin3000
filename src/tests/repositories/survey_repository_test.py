@@ -384,7 +384,7 @@ class TestSurveyRepository(unittest.TestCase):
             new_text = "update question test"
 
             result_update = self.repo.update_question(
-                question_id, new_text, category_weights,[],[])
+                question_id, new_text, category_weights, [], [])
 
             result_get_new = self.repo.get_question(question_id)
 
@@ -397,14 +397,15 @@ class TestSurveyRepository(unittest.TestCase):
             question_id = 10
             question = self.repo.get_question(question_id)
             original_answers = self.repo.get_question_answers(question_id)
-            new_answers = [(original_answers[0][0],"changed",2),(original_answers[1][0],"muutettu",-2)]
+            new_answers = [(original_answers[0][0], "changed", 2),
+                           (original_answers[1][0], "muutettu", -2)]
             changed = self.repo.update_question(question_id, question[0], question[3],
-            original_answers,new_answers)
+                                                original_answers, new_answers)
             changed_answers = self.repo.get_question_answers(question_id)
             self.assertTrue(changed)
             self.assertEqual(new_answers, changed_answers)
             self.repo.update_question(question_id, question[0], question[3],
-            changed_answers,original_answers)
+                                      changed_answers, original_answers)
 
     def test_create_category_with_valid_data_returns_id(self):
         content_links = '[{"url":"https://www.eficode.com/cases/hansen","type":"Case Study"},{"url":"https://www.eficode.com/cases/basware","type":"Case Study"}]'

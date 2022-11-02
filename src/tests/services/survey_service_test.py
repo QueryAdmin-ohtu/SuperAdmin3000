@@ -157,10 +157,10 @@ class TestSurveyService(unittest.TestCase):
         question_id = 6
         category_weights = []
         check = self.survey_service.update_question(
-            question_id, text, category_weights,[],[])
+            question_id, text, category_weights, [], [])
         self.assertEqual(check, 1)
         self.repo_mock.update_question.assert_called_with(
-            question_id, text, category_weights,[],[])
+            question_id, text, category_weights, [], [])
 
     def test_create_category_calls_repo_correctly(self):
         self.repo_mock.create_category.return_value = 1
@@ -270,7 +270,7 @@ class TestSurveyService(unittest.TestCase):
         self.repo_mock.delete_question_from_survey.assert_called_with(
             question_id)
         self.assertEqual(check, return_value)
-    
+
     def test_get_number_of_submissions_for_survey_calls_repo_correctly(self):
         self.repo_mock.get_number_of_submissions.return_value = 2
         survey_id = 1
@@ -278,11 +278,12 @@ class TestSurveyService(unittest.TestCase):
         self.repo_mock.get_number_of_submissions.assert_called_with(
             survey_id
         )
-    
+
     def test_get_answer_distribution_for_survey_questions_calls_repo_correctly(self):
         self.repo_mock.get_answer_distribution.return_value = "None"
         survey_id = 1
-        self.survey_service.get_answer_distribution_for_survey_questions(survey_id)
+        self.survey_service.get_answer_distribution_for_survey_questions(
+            survey_id)
         self.repo_mock.get_answer_distribution.assert_called_with(
             survey_id
         )
