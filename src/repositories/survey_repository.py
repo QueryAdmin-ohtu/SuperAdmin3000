@@ -477,6 +477,51 @@ class SurveyRepository:
             return None
         return answers
 
+    def get_users_who_answered_survey(self, survey_id: int):
+        """ Returns a list of users who have answered a given survey
+        Args:
+            survey_id: Id of the survey
+
+        Returns:
+            On succeed: A list of lists where each element contains
+                [id, email, group_name, answer_time]
+            On error / no users who answered found:
+                None
+        """
+
+        sql = """
+        SELECT
+            DISTINCT "u"."id",
+            "u"."email",
+            "sua"."group_name",
+            "ua"."updatedAt" as answer_time
+        FROM
+            "Users" as u
+        LEFT JOIN "User_answers" as ua
+            ON "u"."id" = "ua"."userId"
+        LEFT JOIN "Question_answers" as qa
+            ON "ua"."questionAnswerId" = "qa"."id"
+        LEFT JOIN "Questions" as q
+            ON "q"."id" = "qa"."questionId"
+        LEFT JOIN "Surveys" as s
+            ON "s"."id" = "q"."surveyId"
+        LEFT JOIN "Survey_user_groups" as sua
+            ON "u"."groupId" = "sua"."id"
+        WHERE "s"."id"=:surveyId AND "sua"."surveyId"=:surveyId 
+        """
+        values = { "surveyId": survey_id}
+
+        try:
+            users = self.db_connection.session.execute(sql, values).fetchall()
+
+            if not users: 
+                return None
+
+            return users
+
+        except exc.SQLAlchemyError:
+                return None
+
     def add_admin(self, email: str):
         """ Inserts a new admin to the Admin table if it does not
         exist already
@@ -639,14 +684,15 @@ class SurveyRepository:
 
         return result
 
-    def _add_user(self):
+    def _add_user(self, email = None, group_id = None):
         """Adds a user to database for testing purposes
 
         Returns user id"""
 
-        sql = """INSERT INTO "Users" ("createdAt", "updatedAt")
-            VALUES (NOW(), NOW()) RETURNING id"""
-        user_id = self.db_connection.session.execute(sql).fetchone()[0]
+        sql = """INSERT INTO "Users" ("email", "groupId", "createdAt", "updatedAt")
+            VALUES (:email, :group_id, NOW(), NOW()) RETURNING id"""
+        values = { "email": email, "group_id": group_id }
+        user_id = self.db_connection.session.execute(sql, values).fetchone()[0]
         db.session.commit()
         return user_id
 
@@ -661,3 +707,23 @@ class SurveyRepository:
 
             self.db_connection.session.execute(sql, values)
         db.session.commit()
+
+    def _add_survey_user_group(self, group_name, survey_id):
+        """
+            Adds a survey user group for testing purposes
+            Returns:
+                Survey_user_groups id (UUID)
+        """
+
+        sql = """
+        INSERT INTO "Survey_user_groups"
+            ("id", "group_name", "surveyId", "createdAt", "updatedAt")
+        VALUES (gen_random_uuid(), :group_name, :survey_id, NOW(), NOW())
+        RETURNING id
+        """
+        values = {"group_name": group_name, "survey_id": survey_id}
+        survey_user_group_id = self.db_connection.session.execute(sql, values).fetchone()[0]
+        db.session.commit()
+        return survey_user_group_id
+
+

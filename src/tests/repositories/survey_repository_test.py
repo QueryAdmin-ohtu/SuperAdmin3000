@@ -620,3 +620,63 @@ class TestSurveyRepository(unittest.TestCase):
 
         self.assertEqual(result[0][4], 2)
         self.assertEqual(result[1][4], 1)
+
+    def test_get_users_who_answered_survey_returns_user_that_answered(self):
+        with self.app.app_context():
+            survey_id = self.repo.create_survey(
+                "Math",
+                "A matchematical survey",
+                "Test your math skills"
+            )
+            survey_user_group_name = "Management"
+            survey_user_group_id = self.repo._add_survey_user_group(survey_user_group_name, survey_id)
+            question_id = self.repo.create_question(
+                "What?", 
+                survey_id,
+                '[{"category": "Boo", "multiplier": 1.0}]' 
+            )
+            answer_id = self.repo.create_answer("No", 12, question_id)
+            user_email = "jukka@haapalainen.com"
+            user_id = self.repo._add_user(user_email, survey_user_group_id)
+
+            users_who_answered_survey_before = self.repo.get_users_who_answered_survey(survey_id)
+            self.repo._add_user_answers(user_id, [answer_id])
+
+            users_who_answered_survey_after = self.repo.get_users_who_answered_survey(survey_id)
+            
+        
+        self.assertIsNone(users_who_answered_survey_before)
+        self.assertEqual(len(users_who_answered_survey_after), 1)
+        self.assertEqual(users_who_answered_survey_after[0].id, user_id)
+        self.assertEqual(users_who_answered_survey_after[0].email, user_email)
+        self.assertEqual(users_who_answered_survey_after[0].group_name, survey_user_group_name)
+        self.assertIsNotNone(users_who_answered_survey_after[0].answer_time)
+
+    def test_get_users_who_answered_survey_does_not_return_user_that_did_not_answer(self):
+        with self.app.app_context():
+            survey_id_1 = self.repo.create_survey(
+                "French",
+                "A french survey",
+                "Test your oui skills"
+            )
+            survey_id_2 = self.repo.create_survey(
+                "Spanish",
+                "A spanish survey",
+                "Test your olé skills"
+            )
+            survey_user_group_name = "Presidentes"
+            survey_user_group_id = self.repo._add_survey_user_group(survey_user_group_name, survey_id_2)
+            question_id = self.repo.create_question(
+                "Que?", 
+                survey_id_2,
+                '[{"category": "Oraleee", "multiplier": 1.0}]' 
+            )
+            answer_id = self.repo.create_answer("No", 12, question_id)
+            user_email = "peña@nieto.com"
+            user_id = self.repo._add_user(user_email, survey_user_group_id)
+
+            self.repo._add_user_answers(user_id, [answer_id])
+
+            users_who_answered_survey = self.repo.get_users_who_answered_survey(survey_id_1)
+
+        self.assertIsNone(users_who_answered_survey)
