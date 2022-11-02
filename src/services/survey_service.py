@@ -256,6 +256,19 @@ class SurveyService:
         the answer determined by the given answer_id """
         return self.survey_repository.get_user_answers(answer_id)
 
+    def get_users_who_answered_survey(self, survey_id: int):
+        """ Returns a list of users who have answered a given survey
+        Args:
+            survey_id: Id of the survey
+
+        Returns:
+            On succeed: A list of lists where each element contains
+                [id, email, group_name, answer_time]
+            On error / no users who answered found:
+                None
+        """
+        return self.survey_repository.get_users_who_answered_survey(survey_id)
+
     def create_category(self, survey_id: str, name: str, description: str, content_links: list):
         """
         Creates a new category.

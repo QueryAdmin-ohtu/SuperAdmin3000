@@ -270,6 +270,15 @@ class TestSurveyService(unittest.TestCase):
         self.repo_mock.delete_question_from_survey.assert_called_with(
             question_id)
         self.assertEqual(check, return_value)
+
+    def test_get_users_who_answered_survey(self):
+        repo_return_value = [1, "jorma@uotinen.com", "This is a group"]
+        self.repo_mock.get_users_who_answered_survey.return_value = repo_return_value
+        survey_id = 1
+        
+        returned_value = self.survey_service.get_users_who_answered_survey(survey_id)
+        self.repo_mock.get_users_who_answered_survey.assert_called_with(survey_id)
+        self.assertEqual(returned_value, repo_return_value)
     
     def test_get_number_of_submissions_for_survey_calls_repo_correctly(self):
         self.repo_mock.get_number_of_submissions.return_value = 2
