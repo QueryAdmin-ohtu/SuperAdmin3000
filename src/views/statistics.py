@@ -9,7 +9,8 @@ stats = Blueprint("stats", __name__)
 @stats.route("/surveys/<survey_id>/statistics", methods=["GET"])
 def statistics(survey_id):
     """Shows the statistics for the specific survey"""
-
+    return redirect("/")
+    
     if not helper.logged_in():
         flash("Log in to use the application", "error")
         return redirect("/")
