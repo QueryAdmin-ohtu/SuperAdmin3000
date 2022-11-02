@@ -239,6 +239,26 @@ def edit_next_question(survey_id, question_id):
     return redirect(f"/surveys/{survey_id}/questions/{next_question}")
 
 
+@surveys.route("/surveys/<survey_id>/questions/<question_id>/previous", methods=["GET"])
+def edit_previous_question(survey_id, question_id):
+    """ Searches for the next question with bigger id than the given question
+    id and opens it for editing
+    """
+    if not question_id.isnumeric() or not survey_id.isnumeric():
+        return redirect(f"/surveys/{survey_id}")
+
+    current_question = int(question_id)
+    previous_question = -1  # Real question id should never be this small
+
+    questions = survey_service.get_questions_of_survey(int(survey_id))
+
+    for question in questions:
+        if question.id < current_question and previous_question < question.id:
+            previous_question = question.id
+
+    return redirect(f"/surveys/{survey_id}/questions/{previous_question}")
+
+
 @surveys.route("/surveys/<survey_id>/question/<question_id>/answers/<answer_id>", methods=["POST"])
 def delete_answer(survey_id, question_id, answer_id):
     """ Call database query for removal of a single answer
