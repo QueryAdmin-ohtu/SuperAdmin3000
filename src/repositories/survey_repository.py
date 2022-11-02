@@ -142,7 +142,8 @@ class SurveyRepository:
                 sql3, {"category_weights": category_weights, "question_id": question_id})
 
         if original_answers:
-            answers_updated = self.update_answers(original_answers, new_answers)
+            answers_updated = self.update_answers(
+                original_answers, new_answers)
 
         if sql2 or sql3 or answers_updated:
             self.db_connection.session.commit()
@@ -151,7 +152,7 @@ class SurveyRepository:
 
         return sql2 or sql3 or answers_updated
 
-    def update_answers(self,original_answers, new_answers):
+    def update_answers(self, original_answers, new_answers):
         """ Goes through the given list of answer ids and
         checks if the current information matches with the
         information from the lists given. If everything
@@ -169,10 +170,10 @@ class SurveyRepository:
                 WHERE id=:answer_id
                 """
                 values = {
-                "text": new_answers[i][1],
-                "points": new_answers[i][2],
-                "answer_id": new_answers[i][0]}
-                db.session.execute(sql,values)
+                    "text": new_answers[i][1],
+                    "points": new_answers[i][2],
+                    "answer_id": new_answers[i][0]}
+                db.session.execute(sql, values)
         if updated:
             db.session.commit()
         return updated
