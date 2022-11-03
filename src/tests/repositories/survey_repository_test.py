@@ -610,6 +610,13 @@ class TestSurveyRepository(unittest.TestCase):
 
         return survey_id, group_id
 
+    def test_number_of_submissions(self):
+        with self.app.app_context():
+            survey_id = self.repo.survey_exists("Elephants")[1]
+            result = self.repo.get_number_of_submissions(survey_id)
+
+        self.assertEqual(result, 3)
+
     def test_answer_distribution(self):
         with self.app.app_context():
             survey_id = self.repo.survey_exists("Elephants")[1]

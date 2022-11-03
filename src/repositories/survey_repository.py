@@ -626,6 +626,37 @@ class SurveyRepository:
         self.update_survey_updated_at(category[6])
         return True
 
+    def get_number_of_submissions(self, survey_id, user_group_id=None):
+        """ Finds and returns the number of distinct users who have
+        submitted answers to a survey."""
+
+        # TODO: filter by dates
+
+        sql = """
+        SELECT
+            s.id,
+            COUNT(DISTINCT ua."createdAt") AS submissions
+        FROM "Surveys" AS s
+        LEFT JOIN "Questions" AS q
+            ON s.id = q."surveyId"
+        LEFT JOIN "Question_answers" AS qa
+            ON q.id = qa."questionId"
+        LEFT JOIN "User_answers" AS ua
+            ON qa.id = ua."questionAnswerId"
+        LEFT JOIN "Users" AS u
+            ON u.id = ua."userId"
+        WHERE 
+            s.id=:survey_id
+            AND (u."groupId"=:group_id OR :group_id IS NULL)
+        GROUP BY s.id
+        """
+        submissions = self.db_connection.session.execute(
+            sql, {"survey_id": survey_id, "group_id": user_group_id}).fetchone()
+
+        if not submissions:
+            return None
+        return submissions.submissions
+
     def get_answer_distribution(self, survey_id, user_group_id=None):
         """ Finds and returns the distribution of user answers
         over the answer options of a survey.
