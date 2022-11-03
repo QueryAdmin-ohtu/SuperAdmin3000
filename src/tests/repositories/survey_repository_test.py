@@ -585,7 +585,7 @@ class TestSurveyRepository(unittest.TestCase):
         Returns survey id, user group id"""
         with self.app.app_context():
             survey_id = self.repo.create_survey(
-                "Elephants", "What kind of an elephant are you?", "The amazing elephant survey!")
+                "Elephants 2", "What kind of an elephant are you?", "The amazing elephant survey!")
             question_id_1 = self.repo.create_question(
                 "Describe the size of your ears?", survey_id,
                 '[{"category": "Size", "multiplier": 1.0}]')
@@ -617,25 +617,13 @@ class TestSurveyRepository(unittest.TestCase):
 
         self.assertEqual(result, 3)
 
-    
-    # def test_number_of_submissions_per_user_group(self):
-    #     survey_id, group_id = self.test_survey_id, self.test_user_group_id
-    #     group_id_1 = uuid.uuid4()
-    #     group_id_2 = group_id
-    #     with self.app.app_context():
-    #         result_1 = self.repo.get_number_of_submissions(survey_id, group_id_1)
-    #         result_2 = self.repo.get_number_of_submissions(survey_id, group_id_2)
-
-    #     self.assertEqual(result_1, None)
-    #     self.assertEqual(result_2, 1)
-
     def test_answer_distribution(self):
         with self.app.app_context():
             survey_id = self.repo.survey_exists("Elephants")[1]
             result = self.repo.get_answer_distribution(survey_id)
 
         self.assertEqual(result[0][4], 2)
-        self.assertEqual(result[1][4], 1)
+        self.assertEqual(result[1][4], 1)      
 
     def test_answer_distribution_per_user_group(self):
         with self.app.app_context():
