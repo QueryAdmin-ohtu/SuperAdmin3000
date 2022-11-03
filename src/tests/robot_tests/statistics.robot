@@ -18,3 +18,7 @@ User Can Access Edit Categories Page From Statistics
     Go To Statistics  1
     Click Element  edit_button_2
     Page Should Contain  Static descriptive text about the category 2.
+
+Statistics Page Shows the Number of Users WHo have Answered
+    Go To Statistics  1
+    Page Should Contain  Users with submissions (total 0)

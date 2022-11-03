@@ -44,14 +44,22 @@
                     
         </div>
         <div id="answered" class="flex-col max-w-full bg-white p-4 gap-2 rounded-lg border border-slate-300">
-            <h3 class="text-gray-900 leading-tight">Users with submissions</h3>
+            <h3 class="text-gray-900 leading-tight">Users with submissions (total {{ users | length }})</h3>
             <div class="grow h-5"></div>
             <table class="min-w-full">
                 <thead class="border-b">
                     <tr>
                         <th class="px-6 py-4 whitespace-nowrap font-mono font-medium text-gray-900 text-left">User</th>
                         <th class="px-6 py-4 whitespace-nowrap font-mono font-medium text-gray-900 text-left">Group</th>
+                        <th class="px-6 py-4 whitespace-nowrap font-mono font-medium text-gray-900 text-left">Date</th>                        
                     </tr>
+                    {% for user in users %}
+                    <tr>
+                      <td>{{ user.email }}</td>
+                      <td>{{ user.group_name }}</td>
+                      <td>{{ user.answer_time }}</td>                      
+                    </tr>
+                    {% endfor %}
                 </thead>
             </table>
         </div>
