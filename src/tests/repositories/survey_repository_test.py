@@ -66,7 +66,7 @@ class TestSurveyRepository(unittest.TestCase):
     def test_survey_with_the_same_name_doesnt_exist(self):
         with self.app.app_context():
             response = self.repo.survey_exists("totally nonexistent survey")
-            self.assertFalse(response)
+        self.assertFalse(response[0])
 
     def test_get_survey_with_valid_id_returns_survey(self):
 
@@ -581,6 +581,8 @@ class TestSurveyRepository(unittest.TestCase):
         self.assertEquals(updated_category, category_id)
 
     def _create_survey_and_add_user_answers(self):
+        """Creates a survey with user answers.
+        Returns survey id, user group id"""
         with self.app.app_context():
             survey_id = self.repo.create_survey(
                 "Elephants", "What kind of an elephant are you?", "The amazing elephant survey!")
@@ -609,30 +611,40 @@ class TestSurveyRepository(unittest.TestCase):
         return survey_id, group_id
 
     def test_number_of_submissions(self):
-        survey_id, group_id = self._create_survey_and_add_user_answers()
         with self.app.app_context():
+            survey_id = self.repo.survey_exists("Elephants")[1]
             result = self.repo.get_number_of_submissions(survey_id)
 
         self.assertEqual(result, 3)
 
-    def test_number_of_submissions_per_user_group(self):
-        survey_id, group_id = self._create_survey_and_add_user_answers()
-        group_id_1 = uuid.uuid4()
-        group_id_2 = group_id
-        with self.app.app_context():
-            result_1 = self.repo.get_number_of_submissions(survey_id, group_id_1)
-            result_2 = self.repo.get_number_of_submissions(survey_id, group_id_2)
+    
+    # def test_number_of_submissions_per_user_group(self):
+    #     survey_id, group_id = self.test_survey_id, self.test_user_group_id
+    #     group_id_1 = uuid.uuid4()
+    #     group_id_2 = group_id
+    #     with self.app.app_context():
+    #         result_1 = self.repo.get_number_of_submissions(survey_id, group_id_1)
+    #         result_2 = self.repo.get_number_of_submissions(survey_id, group_id_2)
 
-        self.assertEqual(result_1, None)
-        self.assertEqual(result_2, 1)
+    #     self.assertEqual(result_1, None)
+    #     self.assertEqual(result_2, 1)
 
     def test_answer_distribution(self):
-        survey_id, group_id = self._create_survey_and_add_user_answers()
         with self.app.app_context():
+            survey_id = self.repo.survey_exists("Elephants")[1]
             result = self.repo.get_answer_distribution(survey_id)
 
         self.assertEqual(result[0][4], 2)
         self.assertEqual(result[1][4], 1)
+
+    def test_answer_distribution_per_user_group(self):
+        with self.app.app_context():
+            survey_id = self.repo.survey_exists("Elephants")[1]
+            group_id = self.repo._find_user_group_by_name("Supertestaajat")
+            result = self.repo.get_answer_distribution(survey_id, group_id)
+
+        self.assertEqual(len(result), 2)
+        self.assertEqual(result[0][4], 1)
 
     def test_get_users_who_answered_survey_returns_user_that_answered(self):
         with self.app.app_context():
