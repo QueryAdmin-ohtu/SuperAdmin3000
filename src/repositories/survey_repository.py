@@ -1,5 +1,5 @@
-from sqlalchemy import exc
 import uuid
+from sqlalchemy import exc
 
 from db import db
 
@@ -515,13 +515,12 @@ class SurveyRepository:
         try:
             users = self.db_connection.session.execute(sql, values).fetchall()
 
-            if not users: 
+            if not users:
                 return None
-
             return users
 
         except exc.SQLAlchemyError:
-                return None
+            return None
 
     def add_admin(self, email: str):
         """ Inserts a new admin to the Admin table if it does not
@@ -753,5 +752,3 @@ class SurveyRepository:
         survey_user_group_id = self.db_connection.session.execute(sql, values).fetchone()[0]
         db.session.commit()
         return survey_user_group_id
-
-
