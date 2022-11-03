@@ -1,7 +1,9 @@
 import json
 from secrets import token_hex
 from flask import session
-
+from pandas import DataFrame as df
+from matplotlib import pyplot as plt
+import os
 
 def backdoor_validate_and_login(username, password):
     """ Check if the given username password pair is correct
@@ -104,3 +106,28 @@ def json_into_dictionary(json_file):
     for category in json_file:
         categories[category["category"]] = category["multiplier"]
     return categories
+
+def save_question_answer_charts(answer_distribution):
+    """Takes the answer distribution table for questions,
+    saves pie charts for each question to static/img folder
+
+    Returns:
+        q_names: list of question names
+        q_ids: list of question id's
+    """
+    current_dir = os.path.dirname(__file__)
+    target_dir = os.path.join(current_dir, "static/img/")
+
+    answer_df = df(answer_distribution)
+    q_ids = answer_df["question_id"].to_list()
+    q_names = answer_df["question"].to_list()
+    answers = answer_df["answer"].to_list()
+    answer_df = answer_df[["question", "answer", "count"]]
+
+    for name, q_id in zip(q_names, q_ids):
+        df_for_question = answer_df[answer_df["question"] == name]
+        df_for_question = df_for_question[["answer", "count"]]
+        df_for_question.plot(kind='pie', labels=answers, y='count')
+        plt.savefig(target_dir + f"{q_id}.png")
+
+    return q_names, q_ids
