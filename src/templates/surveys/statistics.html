@@ -19,9 +19,9 @@
                 </p>
             </div>
             <div class="grow h-7"></div>
-            <p>
-            {{ answer_distribution }}
-            </p>
+                {% for q_id in q_ids %}
+                <img src="{{url_for('static', filename='/img/' + q_id|string + '.png')}}">
+                {% endfor %}
         </div>
         <div id="answered" class="flex-col max-w-full bg-white p-4 gap-2 rounded-lg border border-slate-300">
             <h3 class="text-gray-900 leading-tight">Users with submissions</h3>
