@@ -1,4 +1,5 @@
 import re
+from datetime import datetime
 from repositories.survey_repository import SurveyRepository
 
 
@@ -268,6 +269,26 @@ class SurveyService:
                 None
         """
         return self.survey_repository.get_users_who_answered_survey(survey_id)
+
+    def get_users_who_answered_survey_in_timerange(self, survey_id: int, start_date: datetime, end_date: datetime):
+        """ Returns a list of users who have answered a given survey in a given timerange
+        Args:
+            survey_id: Id of the survey
+            start_time: Start of timerange to filter by
+            end_time: End of timerange to filter by
+
+        Returns:
+            On succeed: A list of lists where each element contains
+                [id, email, group_name, answer_time]
+            On error / no users who answered found:
+                None
+        """
+
+        if start_date > end_date or end_date < start_date:
+            # Invalid timerange
+            return None
+
+        return self.survey_repository.get_users_who_answered_survey(survey_id, start_date, end_date)
 
     def create_category(self, survey_id: str, name: str, description: str, content_links: list):
         """

@@ -1,4 +1,5 @@
 import uuid
+from datetime import datetime
 from sqlalchemy import exc
 
 from db import db
@@ -478,10 +479,12 @@ class SurveyRepository:
             return None
         return answers
 
-    def get_users_who_answered_survey(self, survey_id: int):
-        """ Returns a list of users who have answered a given survey
+    def get_users_who_answered_survey(self, survey_id: int, start_date: datetime = None, end_date: datetime = None):
+        """ Returns a list of users who have answered a given survey. Results can be filtered by a timerange.
         Args:
             survey_id: Id of the survey
+            start_time: Start of timerange to filter by (optional)
+            end_time: End of timerange to filter by (optional)
 
         Returns:
             On succeed: A list of lists where each element contains
@@ -508,9 +511,10 @@ class SurveyRepository:
             ON "s"."id" = "q"."surveyId"
         LEFT JOIN "Survey_user_groups" as sua
             ON "u"."groupId" = "sua"."id"
-        WHERE "s"."id"=:surveyId AND "sua"."surveyId"=:surveyId 
+        WHERE "s"."id"=:survey_id AND "sua"."surveyId"=:survey_id 
+            AND (:start_date IS NULL AND :end_date IS NULL) OR ("ua"."updatedAt" > :start_date AND "ua"."updatedAt" < :end_date)
         """
-        values = { "surveyId": survey_id}
+        values = { "survey_id": survey_id, "start_date": start_date, "end_date": end_date }
 
         try:
             users = self.db_connection.session.execute(sql, values).fetchall()
@@ -723,14 +727,18 @@ class SurveyRepository:
         db.session.commit()
         return group_id
 
-    def _add_user_answers(self, user_id, question_answer_ids: list):
+    def _add_user_answers(self, user_id, question_answer_ids: list, answer_time: datetime = None):
         """Adds user answers to database for testing purposes"""
 
         for id in question_answer_ids:
             sql = """INSERT INTO "User_answers"
                 ("userId", "questionAnswerId", "createdAt", "updatedAt")
-                VALUES (:user_id, :question_answer_id, NOW(), NOW())"""
-            values = {"user_id": user_id, "question_answer_id": id}
+                VALUES (:user_id, :question_answer_id, :answer_time, :answer_time)"""
+            values = {
+                "user_id": user_id, 
+                "question_answer_id": id, 
+                "answer_time": "NOW()" if answer_time is None else answer_time
+            }
 
             self.db_connection.session.execute(sql, values)
         db.session.commit()

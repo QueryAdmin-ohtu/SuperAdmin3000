@@ -1,6 +1,7 @@
 from ast import excepthandler
 import unittest
 import uuid
+from datetime import datetime
 
 from repositories.survey_repository import SurveyRepository
 
@@ -693,3 +694,43 @@ class TestSurveyRepository(unittest.TestCase):
             users_who_answered_survey = self.repo.get_users_who_answered_survey(survey_id_1)
 
         self.assertIsNone(users_who_answered_survey)
+
+    def test_get_users_who_answered_survey_when_given_datetime_returns_correct_users(self):
+        with self.app.app_context():
+            survey_id = self.repo.create_survey(
+                "Time survey",
+                "A survey about time",
+                "When and where? And when?"
+            )
+
+            survey_user_group_name = "Presidentes"
+            survey_user_group_id = self.repo._add_survey_user_group(survey_user_group_name, survey_id)
+
+            question_id = self.repo.create_question(
+                "Tomorrow?", 
+                survey_id,
+                '[{"category": "Infinity", "multiplier": 1.0}]' 
+            )
+
+            answer_id = self.repo.create_answer("Today", 10, question_id)
+            user_email_1 = "email@gmail.com"
+            user_email_2 = "korppi@norppa.fi"
+            answer_date_1 = datetime.fromisoformat("2011-11-04 00:05:23.283")
+            user_id_1 = self.repo._add_user(user_email_1, survey_user_group_id)
+            user_id_2 = self.repo._add_user(user_email_2, survey_user_group_id)
+
+
+            self.repo._add_user_answers(user_id_1, [answer_id],  answer_date_1)
+            self.repo._add_user_answers(user_id_2, [answer_id])
+
+            start_date = datetime.fromisoformat("2011-10-04 00:00:21.283")
+            end_date = datetime.fromisoformat("2012-10-04 00:00:21.283")
+
+            users_non_filtered = self.repo.get_users_who_answered_survey(survey_id)
+            users_filtered = self.repo.get_users_who_answered_survey(survey_id, start_date, end_date)
+
+        self.assertEqual(len(users_non_filtered), 2)
+        self.assertEqual(len(users_filtered), 1)
+
+
+
