@@ -1,5 +1,5 @@
 import uuid
-import datetime
+from datetime import datetime
 from sqlalchemy import exc
 
 from db import db
