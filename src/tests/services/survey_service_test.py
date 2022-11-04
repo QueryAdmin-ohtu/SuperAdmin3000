@@ -1,4 +1,5 @@
 import unittest
+from datetime import datetime
 from unittest.mock import Mock
 from services.survey_service import SurveyService, UserInputError
 
@@ -296,3 +297,28 @@ class TestSurveyService(unittest.TestCase):
         self.repo_mock.get_answer_distribution.assert_called_with(
             survey_id
         )
+
+    def test_get_users_who_answered_survey_in_timerange_returns_none_with_invalid_timerage(self):
+        start_date_1 = datetime.fromisoformat("2011-11-04 00:05:23.283")
+        end_date_1 = datetime.fromisoformat("2010-11-04 00:05:23.283")
+        start_date_2 = datetime.fromisoformat("2015-11-04 00:05:23.283")
+        end_date_2 = datetime.fromisoformat("2014-11-04 00:05:23.283")
+
+        service_response_1 = self.survey_service.get_users_who_answered_survey_in_timerange(1, start_date_1, end_date_1)
+        service_response_2 = self.survey_service.get_users_who_answered_survey_in_timerange(1, start_date_2, end_date_2)
+        self.assertIsNone(service_response_1)
+        self.assertIsNone(service_response_2)
+        self.repo_mock.get_users_who_answered_survey.assert_not_called()
+
+    def test_get_users_who_answered_survey_in_timerange_calls_repo_correctly_with_valid_timerange(self):
+        survey_id = 1
+        start_date = datetime.fromisoformat("2020-11-04 00:05:23.283")
+        end_date = datetime.fromisoformat("2021-11-04 00:05:23.283")
+        repo_value_to_return = [5, "timppa@gmail.com", "Boss Team", "2021-10-04 00:05:23.283"]
+
+        self.repo_mock.get_users_who_answered_survey.return_value = repo_value_to_return
+
+        survey_reponse = self.survey_service.get_users_who_answered_survey_in_timerange(survey_id, start_date, end_date)
+
+        self.repo_mock.get_users_who_answered_survey.assert_called_once_with(survey_id, start_date, end_date)
+        self.assertEqual(repo_value_to_return, survey_reponse)
