@@ -3,7 +3,7 @@ from secrets import token_hex
 from flask import session
 from pandas import DataFrame as df
 from matplotlib import pyplot as plt
-import os
+from os import path, remove
 from glob import glob
 
 def backdoor_validate_and_login(username, password):
@@ -109,41 +109,67 @@ def json_into_dictionary(json_file):
     return categories
 
 def save_question_answer_charts(answer_distribution):
-    """Takes the answer distribution table for questions,
+    """First clears the static/img/charts directory contents
+    and takes the answer distribution table for questions,
     saves pie charts for each question to static/img folder
 
     Returns:
-        q_names: list of question names
-        q_ids: list of question id's
+    
+    If input is none: None
+    If input is not none: zip object with q_names and q_ids
     """
     empty_dir()
     if not answer_distribution:
         return None
 
-    current_dir = os.path.dirname(__file__)
-    target_dir = os.path.join(current_dir, "static/img/charts/")
-
     answer_df = df(answer_distribution)
     q_ids = answer_df["question_id"].to_list()
+    q_ids = list(dict.fromkeys(q_ids))
     q_names = answer_df["question"].to_list()
+    q_names = list(dict.fromkeys(q_names))
     answer_df = answer_df[["question", "answer", "count"]]
-
-    for q_name, q_id in zip(q_names, q_ids):
-        question_to_plot = answer_df[answer_df["question"] == q_name]
-        answer_options = question_to_plot["answer"].to_list()
-        question_to_plot.plot(kind='pie', labels=answer_options, y='count')
-        plt.savefig(target_dir + f"{q_id}.png")
+    plot_answer_distribution_for_questions(answer_df, q_names, q_ids)
 
     return zip(q_names, q_ids)
+
+def plot_answer_distribution_for_questions(dataframe:df, q_names: list, q_ids: list):
+    """Plots the answer distribution for each question and saves
+    the pie chart as .png to static/img/charts directory
+    
+    Returns:
+    
+    If succeeds: True
+    If exception is raised: False
+    """
+    current_dir = path.dirname(__file__)
+    target_dir = path.join(current_dir, "static/img/charts/")
+    try:
+        plt.switch_backend("Agg")
+        for q_name, q_id in zip(q_names, q_ids):
+            question_to_plot = dataframe[dataframe["question"] == q_name]
+            answer_options = question_to_plot["answer"].to_list()
+            question_to_plot.plot(kind="pie",
+                                labels=answer_options,
+                                y="count",
+                                autopct="%1.1f%%")
+            plt.legend(title="Answer options",
+                        loc="upper left",
+                        bbox_to_anchor=(0.9, 0, 0, 1))
+            plt.savefig(target_dir + f"{q_id}.png")
+            plt.close()
+
+    except Exception:
+        return False
+    return True
 
 def empty_dir():
     """Clears the contents of the target directory"""
     try:
-        current_dir = os.path.dirname(__file__)
-        to_remove = os.path.join(current_dir, "static/img/charts/*.png")
+        current_dir = path.dirname(__file__)
+        to_remove = path.join(current_dir, "static/img/charts/*.png")
         files_to_remove = glob(to_remove)
         for f in files_to_remove:
-            os.remove(f)
+            remove(f)
     except OSError:
         return False
     return True
