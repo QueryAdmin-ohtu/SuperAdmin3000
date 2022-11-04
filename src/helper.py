@@ -4,6 +4,7 @@ from flask import session
 from pandas import DataFrame as df
 from matplotlib import pyplot as plt
 import os
+from glob import glob
 
 def backdoor_validate_and_login(username, password):
     """ Check if the given username password pair is correct
@@ -116,18 +117,29 @@ def save_question_answer_charts(answer_distribution):
         q_ids: list of question id's
     """
     current_dir = os.path.dirname(__file__)
-    target_dir = os.path.join(current_dir, "static/img/")
+    target_dir = os.path.join(current_dir, "static/img/charts/")
 
     answer_df = df(answer_distribution)
     q_ids = answer_df["question_id"].to_list()
     q_names = answer_df["question"].to_list()
-    answers = answer_df["answer"].to_list()
     answer_df = answer_df[["question", "answer", "count"]]
 
-    for name, q_id in zip(q_names, q_ids):
-        df_for_question = answer_df[answer_df["question"] == name]
-        df_for_question = df_for_question[["answer", "count"]]
-        df_for_question.plot(kind='pie', labels=answers, y='count')
+    for q_name, q_id in zip(q_names, q_ids):
+        question_to_plot = answer_df[answer_df["question"] == q_name]
+        answer_options = question_to_plot["answer"].to_list()
+        question_to_plot.plot(kind='pie', labels=answer_options, y='count')
         plt.savefig(target_dir + f"{q_id}.png")
 
     return q_names, q_ids
+
+def empty_dir():
+    """Clears the contents of the target directory"""
+    try:
+        current_dir = os.path.dirname(__file__)
+        to_remove = os.path.join(current_dir, "static/img/charts/*.png")
+        files_to_remove = glob(to_remove)
+        for f in files_to_remove:
+            os.remove(f)
+    except:
+        return False
+    return True

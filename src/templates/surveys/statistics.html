@@ -1,5 +1,6 @@
 {% extends "layout.html" %}
 {% import "components/macros/buttons.html" as buttons %}
+{% import "components/macros/statistics_elements.html" as statistics_elements %}
 {% block content %}
 <div class="grid lg:grid-cols-2 grid-cols-1 gap-4 items-start">
     <div class="flex flex-col gap-4">
@@ -19,19 +20,44 @@
                 </p>
             </div>
             <div class="grow h-7"></div>
-                {% for q_id in q_ids %}
-                <img src="{{url_for('static', filename='/img/' + q_id|string + '.png')}}">
-                {% endfor %}
+                
+            <h3 class="text-gray-900 leading-tight">Related categories</h3>
+                        <div class="grow h-7"></div>
+                        <div class="table-row-group">
+                            {% if categories %}
+                                {% for category in categories %}
+                                    {{ statistics_elements.category_row(survey_id, category, category[0])}}
+                                    <hr>
+                                {% endfor %}
+                            {% else %}
+                                No related categories found.
+                            {% endif %}
+                        </div>
+                        <div class="grow h-7"></div>
+                        <h3 class="text-gray-900 leading-tight">Answer distribution</h3>
+                        {% for q_name, q_id in q_names_ids %}
+                        <h4 class="text-slate-600 font-mono text-sm font-medium">Question: {{ q_name }}</h4>
+                            <img src="{{url_for('static', filename='/img/charts/' + q_id|string + '.png')}}">
+                        {% endfor %}
+                    
         </div>
         <div id="answered" class="flex-col max-w-full bg-white p-4 gap-2 rounded-lg border border-slate-300">
-            <h3 class="text-gray-900 leading-tight">Users with submissions</h3>
+            <h3 class="text-gray-900 leading-tight">Users with submissions (total {{ users | length }})</h3>
             <div class="grow h-5"></div>
             <table class="min-w-full">
                 <thead class="border-b">
                     <tr>
                         <th class="px-6 py-4 whitespace-nowrap font-mono font-medium text-gray-900 text-left">User</th>
                         <th class="px-6 py-4 whitespace-nowrap font-mono font-medium text-gray-900 text-left">Group</th>
+                        <th class="px-6 py-4 whitespace-nowrap font-mono font-medium text-gray-900 text-left">Date</th>                        
                     </tr>
+                    {% for user in users %}
+                    <tr>
+                      <td>{{ user.email }}</td>
+                      <td>{{ user.group_name }}</td>
+                      <td>{{ user.answer_time }}</td>                      
+                    </tr>
+                    {% endfor %}
                 </thead>
             </table>
         </div>

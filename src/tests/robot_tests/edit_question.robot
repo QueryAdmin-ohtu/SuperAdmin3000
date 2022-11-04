@@ -55,3 +55,27 @@ Back Button Opens Correct Survey Page
     Page Should Contain  test_name
     Page Should Contain  test_title
     Page Should Contain  test_text
+
+User Can Navigate To the Next Question
+    Go To Survey  1
+    Click Button  EDIT
+    Click Link  Next question
+    Page Should Contain  Question 2
+
+Previous Button Does Not Exist for the First Questions
+    Go To Survey  1
+    Click Button  EDIT
+    Page Should Not Contain  Previous question
+
+Previous Button Does Exist for the Second Questions
+    Go To Survey  1
+    Click Button  EDIT
+    Click Link  Next question
+    Page Should Contain Link  Previous question
+
+User Can Navigate To the Previous Questions
+    Go To Survey  1
+    Click Button  EDIT
+    Click Link  Next question
+    Click Link  Previous question
+    Page Should Contain  weight

@@ -1,3 +1,5 @@
+import uuid
+from datetime import datetime
 from sqlalchemy import exc
 
 from db import db
@@ -142,7 +144,8 @@ class SurveyRepository:
                 sql3, {"category_weights": category_weights, "question_id": question_id})
 
         if original_answers:
-            answers_updated = self.update_answers(original_answers, new_answers)
+            answers_updated = self.update_answers(
+                original_answers, new_answers)
 
         if sql2 or sql3 or answers_updated:
             self.db_connection.session.commit()
@@ -151,7 +154,7 @@ class SurveyRepository:
 
         return sql2 or sql3 or answers_updated
 
-    def update_answers(self,original_answers, new_answers):
+    def update_answers(self, original_answers, new_answers):
         """ Goes through the given list of answer ids and
         checks if the current information matches with the
         information from the lists given. If everything
@@ -169,10 +172,10 @@ class SurveyRepository:
                 WHERE id=:answer_id
                 """
                 values = {
-                "text": new_answers[i][1],
-                "points": new_answers[i][2],
-                "answer_id": new_answers[i][0]}
-                db.session.execute(sql,values)
+                    "text": new_answers[i][1],
+                    "points": new_answers[i][2],
+                    "answer_id": new_answers[i][0]}
+                db.session.execute(sql, values)
         if updated:
             db.session.commit()
         return updated
@@ -256,17 +259,17 @@ class SurveyRepository:
             survey_name: Name of the new survey
 
         Returns:
-            True if matching name found, False if not
+            True, id if matching name found, False, None if not
         """
-        sql = "SELECT name FROM \"Surveys\" WHERE lower(name)=:survey_name"
+        sql = "SELECT id, name FROM \"Surveys\" WHERE lower(name)=:survey_name"
         result = self.db_connection.session.execute(
             sql, {"survey_name": survey_name.lower()})
 
-        survey_found = result.fetchone()
+        survey = result.fetchone()
 
-        if survey_found:
-            return True
-        return False
+        if survey:
+            return True, survey.id
+        return False, None
 
     def get_all_categories(self):
         """ Fetches all categories from the database.
@@ -476,6 +479,53 @@ class SurveyRepository:
             return None
         return answers
 
+    def get_users_who_answered_survey(self, survey_id: int, start_date: datetime = None, end_date: datetime = None):
+        """ Returns a list of users who have answered a given survey. Results can be filtered by a timerange.
+        Args:
+            survey_id: Id of the survey
+            start_time: Start of timerange to filter by (optional)
+            end_time: End of timerange to filter by (optional)
+
+        Returns:
+            On succeed: A list of lists where each element contains
+                [id, email, group_name, answer_time]
+            On error / no users who answered found:
+                None
+        """
+
+        sql = """
+        SELECT
+            DISTINCT "u"."id",
+            "u"."email",
+            "sua"."group_name",
+            "ua"."updatedAt" as answer_time
+        FROM
+            "Users" as u
+        LEFT JOIN "User_answers" as ua
+            ON "u"."id" = "ua"."userId"
+        LEFT JOIN "Question_answers" as qa
+            ON "ua"."questionAnswerId" = "qa"."id"
+        LEFT JOIN "Questions" as q
+            ON "q"."id" = "qa"."questionId"
+        LEFT JOIN "Surveys" as s
+            ON "s"."id" = "q"."surveyId"
+        LEFT JOIN "Survey_user_groups" as sua
+            ON "u"."groupId" = "sua"."id"
+        WHERE "s"."id"=:survey_id AND "sua"."surveyId"=:survey_id 
+            AND (:start_date IS NULL AND :end_date IS NULL) OR ("ua"."updatedAt" > :start_date AND "ua"."updatedAt" < :end_date)
+        """
+        values = { "survey_id": survey_id, "start_date": start_date, "end_date": end_date }
+
+        try:
+            users = self.db_connection.session.execute(sql, values).fetchall()
+
+            if not users:
+                return None
+            return users
+
+        except exc.SQLAlchemyError:
+            return None
+
     def add_admin(self, email: str):
         """ Inserts a new admin to the Admin table if it does not
         exist already
@@ -579,11 +629,11 @@ class SurveyRepository:
         self.update_survey_updated_at(category[6])
         return True
 
-    def get_number_of_submissions(self, survey_id):
+    def get_number_of_submissions(self, survey_id, user_group_id=None):
         """ Finds and returns the number of distinct users who have
         submitted answers to a survey."""
 
-        # TODO: filter by dates/groups
+        # TODO: filter by dates
 
         sql = """
         SELECT
@@ -596,17 +646,21 @@ class SurveyRepository:
             ON q.id = qa."questionId"
         LEFT JOIN "User_answers" AS ua
             ON qa.id = ua."questionAnswerId"
-        WHERE s.id=:survey_id
+        LEFT JOIN "Users" AS u
+            ON u.id = ua."userId"
+        WHERE 
+            s.id=:survey_id
+            AND (u."groupId"=:group_id OR :group_id IS NULL)
         GROUP BY s.id
         """
         submissions = self.db_connection.session.execute(
-            sql, {"survey_id": survey_id}).fetchone()
+            sql, {"survey_id": survey_id, "group_id": user_group_id}).fetchone()
 
         if not submissions:
             return None
         return submissions.submissions
 
-    def get_answer_distribution(self, survey_id):
+    def get_answer_distribution(self, survey_id, user_group_id=None):
         """ Finds and returns the distribution of user answers
         over the answer options of a survey.
 
@@ -629,34 +683,80 @@ class SurveyRepository:
             ON q.id = qa."questionId"
         LEFT JOIN "User_answers" AS ua
             ON qa.id = ua."questionAnswerId"
+        LEFT JOIN "Users" AS u
+            ON u.id = ua."userId"
         WHERE s.id=:survey_id
+            AND (u."groupId"=:group_id OR :group_id IS NULL)
         GROUP BY q.id, q.text, qa.id, qa.text
         ORDER BY q.id
         """
         result = self.db_connection.session.execute(
-            sql, {"survey_id": survey_id}).fetchall()
+            sql, {"survey_id": survey_id, "group_id": user_group_id}).fetchall()
 
         return result
 
-    def _add_user(self):
+    def _find_user_group_by_name(self, group_name):
+        sql = """SELECT id, group_name FROM "Survey_user_groups" WHERE lower(group_name)=:group_name"""
+        result = self.db_connection.session.execute(
+            sql, {"group_name": group_name.lower()})
+
+        group_id = result.fetchone()[0]
+
+        return group_id
+
+    def _add_user(self, email = None, group_id = None):
         """Adds a user to database for testing purposes
 
         Returns user id"""
 
-        sql = """INSERT INTO "Users" ("createdAt", "updatedAt")
-            VALUES (NOW(), NOW()) RETURNING id"""
-        user_id = self.db_connection.session.execute(sql).fetchone()[0]
+        sql = """INSERT INTO "Users" ("email", "groupId", "createdAt", "updatedAt")
+            VALUES (:email, :group_id, NOW(), NOW()) RETURNING id"""
+        values = { "email": email, "group_id": group_id }
+        user_id = self.db_connection.session.execute(sql, values).fetchone()[0]
         db.session.commit()
         return user_id
 
-    def _add_user_answers(self, user_id, question_answer_ids: list):
+    def _add_user_group(self, survey_id):
+        """Adds a user group to database for testing purposes. 
+        
+        Returns database id"""
+        group_id = uuid.uuid4()
+        sql = """INSERT INTO "Survey_user_groups" (id, "surveyId", "createdAt", "updatedAt")
+            VALUES (:group_id, :survey_id, NOW(), NOW()) RETURNING id"""
+        group_id = self.db_connection.session.execute(sql, {"group_id": group_id, "survey_id": survey_id}).fetchone()[0]
+        db.session.commit()
+        return group_id
+
+    def _add_user_answers(self, user_id, question_answer_ids: list, answer_time: datetime = None):
         """Adds user answers to database for testing purposes"""
 
         for id in question_answer_ids:
             sql = """INSERT INTO "User_answers"
                 ("userId", "questionAnswerId", "createdAt", "updatedAt")
-                VALUES (:user_id, :question_answer_id, NOW(), NOW())"""
-            values = {"user_id": user_id, "question_answer_id": id}
+                VALUES (:user_id, :question_answer_id, :answer_time, :answer_time)"""
+            values = {
+                "user_id": user_id, 
+                "question_answer_id": id, 
+                "answer_time": "NOW()" if answer_time is None else answer_time
+            }
 
             self.db_connection.session.execute(sql, values)
         db.session.commit()
+
+    def _add_survey_user_group(self, group_name, survey_id):
+        """
+            Adds a survey user group for testing purposes
+            Returns:
+                Survey_user_groups id (UUID)
+        """
+
+        sql = """
+        INSERT INTO "Survey_user_groups"
+            ("id", "group_name", "surveyId", "createdAt", "updatedAt")
+        VALUES (gen_random_uuid(), :group_name, :survey_id, NOW(), NOW())
+        RETURNING id
+        """
+        values = {"group_name": group_name, "survey_id": survey_id}
+        survey_user_group_id = self.db_connection.session.execute(sql, values).fetchone()[0]
+        db.session.commit()
+        return survey_user_group_id
