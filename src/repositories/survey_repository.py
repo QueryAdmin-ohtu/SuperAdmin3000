@@ -480,9 +480,11 @@ class SurveyRepository:
         return answers
 
     def get_users_who_answered_survey(self, survey_id: int, start_date: datetime = None, end_date: datetime = None):
-        """ Returns a list of users who have answered a given survey
+        """ Returns a list of users who have answered a given survey. Results can be filtered by a timerange.
         Args:
             survey_id: Id of the survey
+            start_time: Start of timerange to filter by (optional)
+            end_time: End of timerange to filter by (optional)
 
         Returns:
             On succeed: A list of lists where each element contains
