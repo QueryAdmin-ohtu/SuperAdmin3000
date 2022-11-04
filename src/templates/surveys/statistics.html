@@ -35,10 +35,13 @@
                         </div>
                         <div class="grow h-7"></div>
                         <h3 class="text-gray-900 leading-tight">Answer distribution</h3>
-                        {% for q_name, q_id in q_names_ids %}
-                        <h4 class="text-slate-600 font-mono text-sm font-medium">Question: {{ q_name }}</h4>
-                            <img src="{{url_for('static', filename='/img/charts/' + q_id|string + '.png')}}">
-                        {% endfor %}
+                        {% if q_names_ids %}
+                            {% for q_name, q_id in q_names_ids %}
+                            <h4 class="text-slate-600 font-mono text-sm font-medium">Question: {{ q_name }}</h4>
+                                <img src="{{url_for('static', filename='/img/charts/' + q_id|string + '.png')}}"
+                                alt="Answer distribution chart for question {{q_name}}">
+                            {% endfor %}
+                        {% endif %}
                     
         </div>
         <div id="answered" class="flex-col max-w-full bg-white p-4 gap-2 rounded-lg border border-slate-300">
