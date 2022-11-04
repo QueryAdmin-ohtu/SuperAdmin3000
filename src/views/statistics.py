@@ -18,11 +18,9 @@ def statistics(survey_id):
         return redirect("/")
 
     submissions = survey_service.get_number_of_submissions_for_survey(survey_id)
-    q_names, q_ids = helper.save_question_answer_charts(
+    q_names_ids = helper.save_question_answer_charts(
         survey_service.get_answer_distribution_for_survey_questions(survey_id)
     )
-    q_names_ids = zip(q_names, q_ids)
-
     categories = survey_service.get_categories_of_survey(survey_id)
 
     users = survey_service.get_users_who_answered_survey(survey_id)
