@@ -680,3 +680,39 @@ class TestSurveyRepository(unittest.TestCase):
             users_who_answered_survey = self.repo.get_users_who_answered_survey(survey_id_1)
 
         self.assertIsNone(users_who_answered_survey)
+
+
+    def test_get_user_answer_sum_of_points_and_count_answers(self):
+        with self.app.app_context():
+            survey_id = self.repo.create_survey(
+                "Math survey","Data Science and Math", "Are your data science skills above average or do you hit the mean?")
+
+            question_one_id = self.repo.create_question("How is the average calculated", survey_id, '[{"category": "Math", "multiplier": 2.0}]' )
+            question_two_id = self.repo.create_question("What is the difference between the mean and the median?", survey_id, '[{"category": "Math", "multiplier": 1.0}, {"category": "Statistics", "multiplier": 2.0}]' )
+            question_with_no_answers_id = self.repo.create_question("Are there any graphs on n vertices whose representation requires more than floor(n/2) copies of each letter?", survey_id, '[{"category": "Math", "multiplier": 5.0}]' )
+
+            answer_one_good_id = self.repo.create_answer("Calculate sum of elements and divide by their number", 5, question_one_id)
+            answer_one_decent_id = self.repo.create_answer("Add stuff and divide", 2, question_one_id)
+
+            answer_two_decent_id = self.repo.create_answer("It has to do with the ways to calculate averages", 3, question_two_id)
+            answer_two_bad_id = self.repo.create_answer("The former is not nice.", -5, question_two_id)
+
+            advanced_user_id = self.repo._add_user(email="Advanced")
+            beginner_user_id = self.repo._add_user("Beginner")
+
+            self.repo._add_user_answers(advanced_user_id, [answer_one_good_id, answer_two_decent_id])
+            self.repo._add_user_answers(beginner_user_id, [answer_one_decent_id, answer_two_bad_id])
+
+            sum_for_question_one = self.repo.get_sum_of_user_answer_points_by_question_id(question_one_id)
+            sum_for_question_two = self.repo.get_sum_of_user_answer_points_by_question_id(question_two_id)
+
+            self.assertEquals(sum_for_question_one, 7)
+            self.assertEquals(sum_for_question_two, -2)
+
+            count_answers_for_question_one = self.repo.get_count_of_user_answers_to_a_question(question_one_id)
+            count_answers_for_question_two = self.repo.get_count_of_user_answers_to_a_question(question_two_id)
+            count_answers_for_question_three = self.repo.get_count_of_user_answers_to_a_question(question_with_no_answers_id)
+
+            self.assertEquals(count_answers_for_question_one, 2)
+            self.assertEquals(count_answers_for_question_two, 2)
+            self.assertEquals(count_answers_for_question_three, 0)
