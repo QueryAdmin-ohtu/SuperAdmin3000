@@ -116,6 +116,10 @@ def save_question_answer_charts(answer_distribution):
         q_names: list of question names
         q_ids: list of question id's
     """
+    empty_dir()
+    if not answer_distribution:
+        return None
+
     current_dir = os.path.dirname(__file__)
     target_dir = os.path.join(current_dir, "static/img/charts/")
 
@@ -130,7 +134,7 @@ def save_question_answer_charts(answer_distribution):
         question_to_plot.plot(kind='pie', labels=answer_options, y='count')
         plt.savefig(target_dir + f"{q_id}.png")
 
-    return q_names, q_ids
+    return zip(q_names, q_ids)
 
 def empty_dir():
     """Clears the contents of the target directory"""
@@ -140,6 +144,6 @@ def empty_dir():
         files_to_remove = glob(to_remove)
         for f in files_to_remove:
             os.remove(f)
-    except:
+    except OSError:
         return False
     return True
