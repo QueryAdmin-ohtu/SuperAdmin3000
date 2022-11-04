@@ -1,5 +1,6 @@
 import pytest
 
+import os
 from app import create_app
 import helper
 from pandas import DataFrame as df
@@ -128,6 +129,7 @@ def test_json_as_dictionary():
     result = [result["Category 1"], result["Category 2"]]
     assert result == [10.0, 20.0]
 
+
 def test_save_question_charts_returns_correct_object_when_given_answer_dist():
     test_distribution = {
         "question_id":
@@ -226,3 +228,21 @@ def test_plot_answer_dist_for_questions_creates_png_files():
 
     assert files[0] == "42.png"
     assert files[1] == "43.png"
+
+def test_empty_dir_deletes_files():
+    with open('src/static/img/charts/image.png', 'w') as f:
+        f.write('IMAGE HERE')
+
+    file_count_before = 0
+    for root_dir, cur_dir, files in os.walk("src/static/img/charts/"):
+        file_count_before += len(files)
+
+    helper.empty_dir()
+
+    file_count_after = 0
+    for root_dir, cur_dir, files in os.walk("src/static/img/charts/"):
+        file_count_after += len(files)
+
+    assert file_count_before > 0
+    assert file_count_after == 0
+
