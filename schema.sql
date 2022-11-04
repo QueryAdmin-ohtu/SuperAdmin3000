@@ -564,6 +564,10 @@ INSERT INTO public."Question_answers" VALUES (29, 'Agree', 3, 6, '2022-09-26 14:
 INSERT INTO public."Question_answers" VALUES (30, 'Strongly Agree', 4, 6, '2022-09-26 14:17:29.764+00', '2022-09-26 14:17:29.764+00');
 INSERT INTO public."Question_answers" VALUES (31, 'Recursion', -12, 10, '2022-10-11 20:15:27.803627+00', '2022-10-11 20:15:27.803627+00');
 INSERT INTO public."Question_answers" VALUES (32, 'Neither', 0, 10, '2022-10-11 20:16:32.546871+00', '2022-10-11 20:16:32.546871+00');
+INSERT INTO public."Question_answers" VALUES (33, 'Huge', 5, 23, '2022-11-03 10:38:32.546871+00', '2022-11-03 10:38:32.546871+00');
+INSERT INTO public."Question_answers" VALUES (34, 'Nonexistent', 0, 23, '2022-11-03 10:39:32.546871+00', '2022-11-03 10:39:32.546871+00');
+INSERT INTO public."Question_answers" VALUES (35, 'Forest', 5, 24, '2022-11-03 10:40:32.546871+00', '2022-11-03 10:40:32.546871+00');
+INSERT INTO public."Question_answers" VALUES (36, 'Savannah', 0, 24, '2022-11-03 10:40:52.546871+00', '2022-11-03 10:40:52.546871+00');
 
 
 --
@@ -588,6 +592,8 @@ INSERT INTO public."Questions" VALUES (19, 'Do you speak Swedish?', 7, '[{"categ
 INSERT INTO public."Questions" VALUES (8, 'Question 8', 1, NULL, '2022-09-26 19:33:13.8708+00', '2022-09-26 19:33:13.8708+00');
 INSERT INTO public."Questions" VALUES (22, 'This is a question', 1, '[{"category": "Category 1", "multiplier": 0.0}, {"category": "Category 2", "multiplier": 0.0}, {"category": "Category 3", "multiplier": 0.0}, {"category": "Category 4", "multiplier": 0.0}, {"category": "Category 5", "multiplier": 0.0}]', '2022-10-15 10:28:45.913521+00', '2022-10-15 10:28:45.913521+00');
 INSERT INTO public."Questions" VALUES (9, 'Which one is best: 1) Game of Thrones, 2) Breaking Bad, or 3) Narcos? ', 1, NULL, '2022-09-29 21:34:03.33838+00', '2022-09-29 21:34:03.33838+00');
+INSERT INTO public."Questions" VALUES (23, 'Describe the size of your ears', 8, '[{"category": "Size", "multiplier": 1.0}]', '2022-11-03 10:34:03.33838+00', '2022-11-03 10:34:03.33838+00');
+INSERT INTO public."Questions" VALUES (24, 'Where do you prefer to hang out', 8, '[{"category": "Habitat", "multiplier": 1.0}]', '2022-11-03 10:35:03.33838+00', '2022-11-03 10:35:03.33838+00');
 
 
 --
@@ -603,7 +609,7 @@ INSERT INTO public."Survey_results" VALUES (3, 1, 'Dynamically fetched result te
 -- Data for Name: Survey_user_groups; Type: TABLE DATA; Schema: public; Owner: -
 --
 
-
+INSERT INTO public."Survey_user_groups" VALUES ('737cdf09-cc6f-47de-adcd-e7aaab0adc39'::UUID, 'Supertestaajat', 8, NULL, '2022-11-03 10:45:07.535414+00', '2022-11-03 10:45:07.535414+00');
 
 --
 -- Data for Name: Surveys; Type: TABLE DATA; Schema: public; Owner: -
@@ -614,17 +620,29 @@ INSERT INTO public."Surveys" VALUES (2, 'Agile maturity assessment', '2022-10-11
 INSERT INTO public."Surveys" VALUES (3, 'test', '2022-09-30 06:55:00.222057+00', '2022-10-10 10:36:46.917718+00', 'Test1', 'Test 2', NULL);
 INSERT INTO public."Surveys" VALUES (6, 'Developer survey', '2022-10-10 10:29:40.528707+00', '2022-10-10 10:33:02.23283+00', 'What type of developer are you?', 'Are you more of a energy drink slurping back-end engineer or a coffee connoisseur front-end dev?', NULL);
 INSERT INTO public."Surveys" VALUES (7, 'City survey', '2022-10-10 10:34:07.535414+00', '2022-10-10 10:34:07.535414+00', 'What Finnish city would you be?', 'Are you more of a Hamina or Hanko type of person? Come and find out!', NULL);
+INSERT INTO public."Surveys" VALUES (8, 'Elephants', '2022-11-03 10:28:07.535414+00', '2022-11-03 10:28:07.535414+00', 'What kind of an elephant are you?', 'The amazing elephant survey!', NULL);
 
 
 --
 -- Data for Name: User_answers; Type: TABLE DATA; Schema: public; Owner: -
 --
 
+INSERT INTO public."User_answers" VALUES (1, 1, 33, '2022-11-03 10:56:07.535414+00', '2022-11-03 10:56:07.535414+00', NULL);
+INSERT INTO public."User_answers" VALUES (2, 1, 36, '2022-11-03 10:56:07.535414+00', '2022-11-03 10:56:07.535414+00', NULL);
+INSERT INTO public."User_answers" VALUES (3, 2, 33, '2022-11-03 10:57:07.535414+00', '2022-11-03 10:57:07.535414+00', NULL);
+INSERT INTO public."User_answers" VALUES (4, 2, 35, '2022-11-03 10:57:07.535414+00', '2022-11-03 10:57:07.535414+00', NULL);
+INSERT INTO public."User_answers" VALUES (5, 3, 34, '2022-11-03 10:58:07.535414+00', '2022-11-03 10:58:07.535414+00', NULL);
+INSERT INTO public."User_answers" VALUES (6, 3, 36, '2022-11-03 10:58:07.535414+00', '2022-11-03 10:58:07.535414+00', NULL);
 
 
 --
 -- Data for Name: Users; Type: TABLE DATA; Schema: public; Owner: -
 --
+
+INSERT INTO public."Users" VALUES (1, NULL, NULL, NULL, '2022-11-03 10:52:07.535414+00', '2022-11-03 10:52:07.535414+00');
+INSERT INTO public."Users" VALUES (2, NULL, NULL, NULL, '2022-11-03 10:52:07.535414+00', '2022-11-03 10:52:07.535414+00');
+INSERT INTO public."Users" VALUES (3, NULL, '737cdf09-cc6f-47de-adcd-e7aaab0adc39'::UUID, NULL, '2022-11-03 10:52:07.535414+00', '2022-11-03 10:52:07.535414+00');
+
 
 
 
