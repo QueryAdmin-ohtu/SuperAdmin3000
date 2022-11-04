@@ -1,5 +1,6 @@
 import pytest
 
+import os
 from app import create_app
 import helper
 
@@ -125,3 +126,20 @@ def test_json_as_dictionary():
     result = helper.json_into_dictionary(json)
     result = [result["Category 1"], result["Category 2"]]
     assert result == [10.0, 20.0]
+
+def test_empty_dir_deletes_files():
+    with open('src/static/img/charts/image.png', 'w') as f:
+        f.write('IMAGE HERE')
+
+    file_count_before = 0
+    for root_dir, cur_dir, files in os.walk("src/static/img/charts/"):
+        file_count_before += len(files)
+
+    helper.empty_dir()
+
+    file_count_after = 0
+    for root_dir, cur_dir, files in os.walk("src/static/img/charts/"):
+        file_count_after += len(files)
+
+    assert file_count_before > 0
+    assert file_count_after == 0
