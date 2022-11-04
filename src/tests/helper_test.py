@@ -244,5 +244,5 @@ def test_empty_dir_deletes_files():
         file_count_after += len(files)
 
     assert file_count_before > 0
-    assert file_count_after == 0
+    assert file_count_after == 1
 
