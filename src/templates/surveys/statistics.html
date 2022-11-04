@@ -39,7 +39,8 @@
                             {% for q_name, q_id in answer_distribution %}
                             <h4 class="text-slate-600 font-mono text-sm font-medium">Question: {{ q_name }}</h4>
                                 <img src="{{url_for('static', filename='/img/charts/' + q_id|string + '.png')}}"
-                                alt="Answer distribution chart for question {{q_name}}">
+                                alt="Answer distribution chart for question {{q_name}}"
+                                id="chart_{{q_id}}">
                             {% endfor %}
                         {% endif %}
         </div>
