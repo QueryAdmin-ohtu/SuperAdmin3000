@@ -733,4 +733,36 @@ class TestSurveyRepository(unittest.TestCase):
         self.assertEqual(len(users_filtered), 1)
 
 
+    def test_get_users_who_answered_survey_belonging_to_given_group_returns_correct_users(self):
+        with self.app.app_context():
+            survey_id = self.repo.create_survey(
+                "Time survey",
+                "A survey about time",
+                "When and where? And when?"
+            )
+
+            survey_user_group_name_1 = "Presidentes"
+            survey_user_group_name_2 = "Peasants"            
+            survey_user_group_id_1 = self.repo._add_survey_user_group(survey_user_group_name_1, survey_id)
+            survey_user_group_id_2 = self.repo._add_survey_user_group(survey_user_group_name_2, survey_id)            
+            question_id = self.repo.create_question(
+                "Tomorrow?", 
+                survey_id,
+                '[{"category": "Infinity", "multiplier": 1.0}]' 
+            )
+
+            answer_id = self.repo.create_answer("Today", 10, question_id)
+            user_email_1 = "email@gmail.com"
+            user_email_2 = "korppi@norppa.fi"
+            user_id_1 = self.repo._add_user(user_email_1, survey_user_group_id_1)
+            user_id_2 = self.repo._add_user(user_email_2, survey_user_group_id_2)
+
+            self.repo._add_user_answers(user_id_1, [answer_id])
+            self.repo._add_user_answers(user_id_2, [answer_id])
+
+            users_non_filtered = self.repo.get_users_who_answered_survey(survey_id)
+            users_filtered = self.repo.get_users_who_answered_survey(survey_id, group_name="Presidentes")
+
+        self.assertEqual(len(users_non_filtered), 2)
+        self.assertEqual(len(users_filtered), 1)
 

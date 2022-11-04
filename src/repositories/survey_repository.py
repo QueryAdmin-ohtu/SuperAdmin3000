@@ -479,12 +479,13 @@ class SurveyRepository:
             return None
         return answers
 
-    def get_users_who_answered_survey(self, survey_id: int, start_date: datetime = None, end_date: datetime = None):
+    def get_users_who_answered_survey(self, survey_id: int, start_date: datetime = None, end_date: datetime = None, group_name = None):
         """ Returns a list of users who have answered a given survey. Results can be filtered by a timerange.
         Args:
             survey_id: Id of the survey
             start_time: Start of timerange to filter by (optional)
             end_time: End of timerange to filter by (optional)
+            group_name: User group to filter by (optional)
 
         Returns:
             On succeed: A list of lists where each element contains
@@ -512,9 +513,11 @@ class SurveyRepository:
         LEFT JOIN "Survey_user_groups" as sua
             ON "u"."groupId" = "sua"."id"
         WHERE "s"."id"=:survey_id AND "sua"."surveyId"=:survey_id 
-            AND (:start_date IS NULL AND :end_date IS NULL) OR ("ua"."updatedAt" > :start_date AND "ua"."updatedAt" < :end_date)
+            AND ((:start_date IS NULL AND :end_date IS NULL) OR ("ua"."updatedAt" > :start_date AND "ua"."updatedAt" < :end_date))
+            AND ((:group_name IS NULL) OR ("group_name"=:group_name))
         """
-        values = { "survey_id": survey_id, "start_date": start_date, "end_date": end_date }
+        print(f"RYHMÄ: {group_name}", flush=True)
+        values = { "survey_id": survey_id, "start_date": start_date, "end_date": end_date, "group_name": group_name }
 
         try:
             users = self.db_connection.session.execute(sql, values).fetchall()
