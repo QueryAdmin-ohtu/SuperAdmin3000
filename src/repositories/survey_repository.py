@@ -1,4 +1,5 @@
 import uuid
+import datetime
 from sqlalchemy import exc
 
 from db import db
@@ -478,7 +479,7 @@ class SurveyRepository:
             return None
         return answers
 
-    def get_users_who_answered_survey(self, survey_id: int):
+    def get_users_who_answered_survey(self, survey_id: int, start_date: datetime = None, end_date: datetime = None):
         """ Returns a list of users who have answered a given survey
         Args:
             survey_id: Id of the survey
@@ -508,9 +509,10 @@ class SurveyRepository:
             ON "s"."id" = "q"."surveyId"
         LEFT JOIN "Survey_user_groups" as sua
             ON "u"."groupId" = "sua"."id"
-        WHERE "s"."id"=:surveyId AND "sua"."surveyId"=:surveyId 
+        WHERE "s"."id"=:survey_id AND "sua"."surveyId"=:survey_id 
+            AND (:start_date IS NULL AND :end_date IS NULL) OR ("ua"."updatedAt" > :start_date AND "ua"."updatedAt" < :end_date)
         """
-        values = { "surveyId": survey_id}
+        values = { "survey_id": survey_id, "start_date": start_date, "end_date": end_date }
 
         try:
             users = self.db_connection.session.execute(sql, values).fetchall()
