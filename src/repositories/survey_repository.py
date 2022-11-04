@@ -725,14 +725,18 @@ class SurveyRepository:
         db.session.commit()
         return group_id
 
-    def _add_user_answers(self, user_id, question_answer_ids: list):
+    def _add_user_answers(self, user_id, question_answer_ids: list, answer_time: datetime = None):
         """Adds user answers to database for testing purposes"""
 
         for id in question_answer_ids:
             sql = """INSERT INTO "User_answers"
                 ("userId", "questionAnswerId", "createdAt", "updatedAt")
-                VALUES (:user_id, :question_answer_id, NOW(), NOW())"""
-            values = {"user_id": user_id, "question_answer_id": id}
+                VALUES (:user_id, :question_answer_id, :answer_time, :answer_time)"""
+            values = {
+                "user_id": user_id, 
+                "question_answer_id": id, 
+                "answer_time": "NOW()" if answer_time is None else answer_time
+            }
 
             self.db_connection.session.execute(sql, values)
         db.session.commit()
