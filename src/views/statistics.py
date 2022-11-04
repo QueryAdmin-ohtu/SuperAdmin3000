@@ -18,7 +18,7 @@ def statistics(survey_id):
         return redirect("/")
 
     submissions = survey_service.get_number_of_submissions_for_survey(survey_id)
-    q_names_ids = helper.save_question_answer_charts(
+    answer_distribution = helper.save_question_answer_charts(
         survey_service.get_answer_distribution_for_survey_questions(survey_id)
     )
     categories = survey_service.get_categories_of_survey(survey_id)
@@ -37,6 +37,6 @@ def statistics(survey_id):
                            ENV=app.config["ENV"],
                            survey_id=survey_id,
                            submissions=submissions,
-                           q_names_ids=q_names_ids,
+                           answer_distribution=answer_distribution,
                            users=users,
                            categories=categories)
