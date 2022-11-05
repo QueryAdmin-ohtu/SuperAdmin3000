@@ -17,10 +17,10 @@ def statistics(survey_id):
         flash("Log in to use the application", "error")
         return redirect("/")
 
-    submissions = survey_service.get_number_of_submissions_for_survey(
-        survey_id)
-    answer_distribution = survey_service.get_answer_distribution_for_survey_questions(
-        survey_id)
+    submissions = survey_service.get_number_of_submissions_for_survey(survey_id)
+    answer_distribution = helper.save_question_answer_charts(
+        survey_service.get_answer_distribution_for_survey_questions(survey_id)
+    )
     categories = survey_service.get_categories_of_survey(survey_id)
 
     users = survey_service.get_users_who_answered_survey(survey_id)
@@ -37,6 +37,6 @@ def statistics(survey_id):
                            ENV=app.config["ENV"],
                            survey_id=survey_id,
                            submissions=submissions,
+                           answer_distribution=answer_distribution,
                            users=users,
-                           categories=categories,
-                           answer_distribution=answer_distribution)
+                           categories=categories)

@@ -1,8 +1,11 @@
 import pytest
 
+import os
 from app import create_app
 import helper
-
+from pandas import DataFrame as df
+from glob import glob
+from os import path
 
 @pytest.fixture()
 def app():
@@ -125,3 +128,121 @@ def test_json_as_dictionary():
     result = helper.json_into_dictionary(json)
     result = [result["Category 1"], result["Category 2"]]
     assert result == [10.0, 20.0]
+
+
+def test_save_question_charts_returns_correct_object_when_given_answer_dist():
+    test_distribution = {
+        "question_id":
+            [29, 29, 30, 30],
+        "question": 
+            ["Describe the size of your ears",
+            "Describe the size of your ears",
+            "Where do you prefer to hang out?",
+            "Where do you prefer to hang out?"],
+        "answer_id":
+            [42, 43, 44, 45],
+        "answer":
+            ["Huge",
+            "Nonexistent",
+            "Forest",
+            "Savannah"],
+        "count":
+            [2, 1, 1, 2]
+    }
+    return_type = helper.save_question_answer_charts(test_distribution)
+    result = list(return_type)
+    expected_result = list(
+        zip(
+        ["Describe the size of your ears", "Where do you prefer to hang out?"],
+        [29, 30]
+        )
+    )
+    assert result == expected_result
+    assert type(return_type) == zip
+
+def test_save_question_charts_returns_none_with_none_input():
+    result = helper.save_question_answer_charts(None)
+    assert result is None
+
+def test_plot_answer_dist_for_questions_returns_true_if_no_exception_raised():
+    test_data = {
+        "question": 
+            ["Describe the size of your ears",
+            "Describe the size of your ears",
+            "Where do you prefer to hang out?",
+            "Where do you prefer to hang out?"],
+        "answer":
+            ["Huge",
+            "Nonexistent",
+            "Forest",
+            "Savannah"],
+        "count":
+            [2, 1, 1, 2]
+    }
+    q_names = ["Describe the size of your ears",
+            "Describe the size of your ears",
+            "Where do you prefer to hang out?",
+            "Where do you prefer to hang out?"]
+    q_ids = [42, 42, 43, 43]
+    test_df = df(data=test_data)
+    result = helper.plot_answer_distribution_for_questions(test_df, q_names, q_ids)
+    assert result == True
+
+def test_plot_answer_dist_for_questions_returns_false_when_exception_raised():
+    q_names = ["Describe the size of your ears",
+            "Describe the size of your ears",
+            "Where do you prefer to hang out?",
+            "Where do you prefer to hang out?"]
+    q_ids = [42, 42, 43, 43]
+    result = helper.plot_answer_distribution_for_questions([1,2,3], q_names, q_ids)
+    assert result == False
+
+def test_plot_answer_dist_for_questions_creates_png_files():
+    test_data = {
+        "question": 
+            ["Describe the size of your ears",
+            "Describe the size of your ears",
+            "Where do you prefer to hang out?",
+            "Where do you prefer to hang out?"],
+        "answer":
+            ["Huge",
+            "Nonexistent",
+            "Forest",
+            "Savannah"],
+        "count":
+            [2, 1, 1, 2]
+    }
+    q_names = ["Describe the size of your ears",
+            "Describe the size of your ears",
+            "Where do you prefer to hang out?",
+            "Where do you prefer to hang out?"]
+    q_ids = [42, 42, 43, 43]
+    test_df = df(data=test_data)
+    helper.plot_answer_distribution_for_questions(test_df, q_names, q_ids)
+
+    current_dir = path.dirname(__file__)
+    root_dir = path.dirname(current_dir)
+    charts_path = path.join(root_dir, "static/img/charts/*.png")
+    list_of_file_paths = glob(charts_path)
+    files = list(map(path.basename, list_of_file_paths))
+
+    assert files[0] == "42.png"
+    assert files[1] == "43.png"
+
+def test_empty_dir_deletes_files():
+    with open('src/static/img/charts/image.png', 'w') as f:
+        f.write('IMAGE HERE')
+
+    file_count_before = 0
+    for root_dir, cur_dir, files in os.walk("src/static/img/charts/"):
+        file_count_before += len(files)
+
+    helper.empty_dir()
+
+    file_count_after = 0
+    for root_dir, cur_dir, files in os.walk("src/static/img/charts/"):
+        file_count_after += len(files)
+
+    assert file_count_before > 0
+    assert file_count_after == 1
+

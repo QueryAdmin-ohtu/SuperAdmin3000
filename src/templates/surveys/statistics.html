@@ -20,6 +20,7 @@
                 </p>
             </div>
             <div class="grow h-7"></div>
+                
             <h3 class="text-gray-900 leading-tight">Related categories</h3>
                         <div class="grow h-7"></div>
                         <div class="table-row-group">
@@ -34,14 +35,15 @@
                         </div>
                         <div class="grow h-7"></div>
                         <h3 class="text-gray-900 leading-tight">Answer distribution</h3>
-                        <p>
-                        {{ answer_distribution }}
-                        </p>
-                        {% for item in answer_distribution %}
-                            <p>{{item}}</p>
-            
-                        {% endfor %}
-                    
+                        <br>
+                        {% if answer_distribution %}
+                            {% for q_name, q_id in answer_distribution %}
+                            <h4 class="text-slate-600 font-mono text-sm font-medium">Question: {{ q_name }}</h4>
+                                <img src="{{url_for('static', filename='/img/charts/' + q_id|string + '.png')}}"
+                                alt="Answer distribution chart for question {{q_name}}"
+                                id="chart_{{q_id}}">
+                            {% endfor %}
+                        {% endif %}
         </div>
         <div id="answered" class="flex-col max-w-full bg-white p-4 gap-2 rounded-lg border border-slate-300">
             <h3 class="text-gray-900 leading-tight">Users with submissions (total {{ users | length }})</h3>
