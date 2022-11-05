@@ -479,7 +479,8 @@ class SurveyRepository:
             return None
         return answers
 
-    def get_users_who_answered_survey(self, survey_id: int, start_date: datetime = None, end_date: datetime = None, group_name = None):
+    def get_users_who_answered_survey(self, survey_id: int, start_date: datetime = None, 
+        end_date: datetime = None, group_name = None):
         """ Returns a list of users who have answered a given survey. Results can be filtered by a timerange.
         Args:
             survey_id: Id of the survey
@@ -661,13 +662,14 @@ class SurveyRepository:
             return None
         return submissions.submissions
 
-    def get_answer_distribution(self, survey_id, start_date: datetime = None, end_date: datetime = None, user_group_id: uuid = None):
+    def get_answer_distribution(self, survey_id, start_date: datetime = None, 
+        end_date: datetime = None, user_group_id: uuid = None):
         """ Finds and returns the distribution of user answers
         over the answer options of a survey.
 
         Filtering by date range and/or user group. Start and end dates are included in the query.
 
-        Returns a table where each row contains: 
+        Returns a table where each row contains:
         question id, question text, answer id, answer text, user answer counts"""
 
         if end_date:
@@ -697,7 +699,8 @@ class SurveyRepository:
         """
         try:
             result = self.db_connection.session.execute(
-                sql, {"survey_id": survey_id, "group_id": user_group_id, "start_date": start_date, "end_date": end_date}).fetchall()
+                sql, {"survey_id": survey_id, "group_id": user_group_id, "start_date": start_date, 
+                "end_date": end_date}).fetchall()
             if result:
                 return result
             return None
@@ -726,8 +729,8 @@ class SurveyRepository:
         return user_id
 
     def _add_user_group(self, survey_id):
-        """Adds a user group to database for testing purposes. 
-        
+        """Adds a user group to database for testing purposes.
+
         Returns database id"""
         group_id = uuid.uuid4()
         sql = """INSERT INTO "Survey_user_groups" (id, "surveyId", "createdAt", "updatedAt")
@@ -744,8 +747,8 @@ class SurveyRepository:
                 ("userId", "questionAnswerId", "createdAt", "updatedAt")
                 VALUES (:user_id, :question_answer_id, :answer_time, :answer_time)"""
             values = {
-                "user_id": user_id, 
-                "question_answer_id": id, 
+                "user_id": user_id,
+                "question_answer_id": id,
                 "answer_time": "NOW()" if answer_time is None else answer_time
             }
 
