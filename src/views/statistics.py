@@ -85,7 +85,6 @@ def filtered_statistics(survey_id):
                            users=users,
                            total_users=total_users,
                            categories=categories,
-                           answer_distribution=answer_distribution,
                            filter_start_date=filter_start_date,
                            filter_end_date=filter_end_date,
                            filter_group_name=filter_group_name)
