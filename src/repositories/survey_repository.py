@@ -636,8 +636,6 @@ class SurveyRepository:
         """ Finds and returns the number of distinct users who have
         submitted answers to a survey."""
 
-        # TODO: filter by dates
-
         sql = """
         SELECT
             s.id,
@@ -663,14 +661,17 @@ class SurveyRepository:
             return None
         return submissions.submissions
 
-    def get_answer_distribution(self, survey_id, user_group_id=None):
+    def get_answer_distribution(self, survey_id, start_date: datetime = None, end_date: datetime = None, user_group_id: uuid = None):
         """ Finds and returns the distribution of user answers
         over the answer options of a survey.
 
-        Returns a table with question id, question text, answer id, answer text,
-        user answer counts"""
+        Filtering by date range and/or user group. Start and end dates are included in the query.
 
-        # TODO: filter by dates/groups
+        Returns a table where each row contains: 
+        question id, question text, answer id, answer text, user answer counts"""
+
+        if end_date:
+            end_date = end_date.replace(hour=23, minute=59, second=59)
 
         sql = """
         SELECT
@@ -690,13 +691,18 @@ class SurveyRepository:
             ON u.id = ua."userId"
         WHERE s.id=:survey_id
             AND (u."groupId"=:group_id OR :group_id IS NULL)
+            AND ((:start_date IS NULL AND :end_date IS NULL) OR (ua."createdAt" BETWEEN :start_date AND :end_date))
         GROUP BY q.id, q.text, qa.id, qa.text
         ORDER BY q.id
         """
-        result = self.db_connection.session.execute(
-            sql, {"survey_id": survey_id, "group_id": user_group_id}).fetchall()
-
-        return result
+        try:
+            result = self.db_connection.session.execute(
+                sql, {"survey_id": survey_id, "group_id": user_group_id, "start_date": start_date, "end_date": end_date}).fetchall()
+            if result:
+                return result
+            return None
+        except exc.SQLAlchemyError as exception:
+            return exception
 
     def _find_user_group_by_name(self, group_name):
         sql = """SELECT id, group_name FROM "Survey_user_groups" WHERE lower(group_name)=:group_name"""
