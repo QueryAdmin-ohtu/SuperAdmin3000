@@ -21,4 +21,4 @@ User Can Access Edit Categories Page From Statistics
 
 Statistics Page Shows the Number of Users WHo have Answered
     Go To Statistics  1
-    Page Should Contain  Users with submissions (total 0)
+    Page Should Contain  Users with submissions (0 / 0)

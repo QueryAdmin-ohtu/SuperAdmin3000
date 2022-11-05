@@ -270,6 +270,34 @@ class SurveyService:
         """
         return self.survey_repository.get_users_who_answered_survey(survey_id)
 
+    def get_users_who_answered_survey_filtered(self,
+                                               survey_id: int,
+                                               start_date: datetime,
+                                               end_date: datetime,
+                                               group_name):   
+        """ Returns a list of users who have answered a given survey in a given timerange
+        Args:
+           survey_id: Id of the survey
+           start_time: Start of timerange to filter by
+           end_time: End of timerange to filter by
+           group_name: Name of the user group to filter by
+        
+        Returns:
+           On succeed: A list of lists where each element contains
+               [id, email, group_name, answer_time]
+           On error / no users who answered found:
+               None
+        """
+        
+        if start_date > end_date or end_date < start_date:
+            return None
+
+        if not group_name:
+            group_name = None
+            
+        return self.survey_repository.get_users_who_answered_survey(survey_id, start_date, end_date, group_name)
+    
+    
     def get_users_who_answered_survey_in_timerange(self, survey_id: int, start_date: datetime, end_date: datetime):
         """ Returns a list of users who have answered a given survey in a given timerange
         Args:
@@ -293,7 +321,7 @@ class SurveyService:
     def get_users_who_answered_survey_in_group(self, survey_id: int, group_name):
         """ Returns a list of users who have answered a given survey in a given timerange
         Args:
-            survey_id: Id of the surveyo
+            survey_id: Id of the survey
             group_name: Name of the user group to filter by
         Returns:
             On succeed: A list of lists where each element contains
@@ -304,6 +332,8 @@ class SurveyService:
 
         return self.survey_repository.get_users_who_answered_survey(survey_id, group_name=group_name)
 
+
+    
     def create_category(self, survey_id: str, name: str, description: str, content_links: list):
         """
         Creates a new category.

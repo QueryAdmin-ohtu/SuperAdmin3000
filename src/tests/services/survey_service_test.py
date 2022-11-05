@@ -342,3 +342,21 @@ class TestSurveyService(unittest.TestCase):
         self.repo_mock.get_users_who_answered_survey.assert_called_once_with(
             survey_id, group_name="Boss Team")
         self.assertEqual(repo_value_to_return, survey_reponse)
+
+    def test_get_users_who_answered_survey_filtered_calls_repo_correctly_with_valid_arguments(self):
+        survey_id = 1
+        start_date = datetime.fromisoformat("2020-11-04 00:05:23.283")
+        end_date = datetime.fromisoformat("2021-11-04 00:05:23.283")
+        
+        repo_value_to_return = [5, "timppa@gmail.com",
+                                "Boss Team", "2021-10-04 00:05:23.283"]
+        self.repo_mock.get_users_who_answered_survey.return_value = repo_value_to_return
+
+        survey_reponse = self.survey_service.get_users_who_answered_survey_filtered(
+            survey_id, start_date, end_date, "Boss Team")
+
+        self.repo_mock.get_users_who_answered_survey.assert_called_once_with(
+            survey_id, start_date, end_date, "Boss Team")
+        self.assertEqual(repo_value_to_return, survey_reponse)
+
+        
