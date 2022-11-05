@@ -359,4 +359,29 @@ class TestSurveyService(unittest.TestCase):
             survey_id, start_date, end_date, "Boss Team")
         self.assertEqual(repo_value_to_return, survey_reponse)
 
+    def test_get_users_who_answered_survey_filtered_returns_none_with_invalid_timerage(self):
+        start_date_1 = datetime.fromisoformat("2011-11-04 00:05:23.283")
+        end_date_1 = datetime.fromisoformat("2010-11-04 00:05:23.283")
+
+        service_response_1 = self.survey_service.get_users_who_answered_survey_filtered(
+            1, start_date_1, end_date_1, "group")
+        self.assertIsNone(service_response_1)
+
+        self.repo_mock.get_users_who_answered_survey.assert_not_called()
+   
+    def test_get_users_who_answered_survey_filtered_works_with_empty_string_as_group(self):
+        survey_id = 1
+        start_date = datetime.fromisoformat("2020-11-04 00:05:23.283")
+        end_date = datetime.fromisoformat("2021-11-04 00:05:23.283")
         
+        repo_value_to_return = [5, "timppa@gmail.com",
+                                "", "2021-10-04 00:05:23.283"]
+        self.repo_mock.get_users_who_answered_survey.return_value = repo_value_to_return
+
+        survey_reponse = self.survey_service.get_users_who_answered_survey_filtered(
+            survey_id, start_date, end_date, "")
+
+        self.repo_mock.get_users_who_answered_survey.assert_called_once_with(
+            survey_id, start_date, end_date, None)
+        self.assertEqual(repo_value_to_return, survey_reponse)
+
