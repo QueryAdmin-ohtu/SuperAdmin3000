@@ -276,11 +276,13 @@ class TestSurveyService(unittest.TestCase):
         repo_return_value = [1, "jorma@uotinen.com", "This is a group"]
         self.repo_mock.get_users_who_answered_survey.return_value = repo_return_value
         survey_id = 1
-        
-        returned_value = self.survey_service.get_users_who_answered_survey(survey_id)
-        self.repo_mock.get_users_who_answered_survey.assert_called_with(survey_id)
+
+        returned_value = self.survey_service.get_users_who_answered_survey(
+            survey_id)
+        self.repo_mock.get_users_who_answered_survey.assert_called_with(
+            survey_id)
         self.assertEqual(returned_value, repo_return_value)
-    
+
     def test_get_number_of_submissions_for_survey_calls_repo_correctly(self):
         self.repo_mock.get_number_of_submissions.return_value = 2
         survey_id = 1
@@ -304,8 +306,10 @@ class TestSurveyService(unittest.TestCase):
         start_date_2 = datetime.fromisoformat("2015-11-04 00:05:23.283")
         end_date_2 = datetime.fromisoformat("2014-11-04 00:05:23.283")
 
-        service_response_1 = self.survey_service.get_users_who_answered_survey_in_timerange(1, start_date_1, end_date_1)
-        service_response_2 = self.survey_service.get_users_who_answered_survey_in_timerange(1, start_date_2, end_date_2)
+        service_response_1 = self.survey_service.get_users_who_answered_survey_in_timerange(
+            1, start_date_1, end_date_1)
+        service_response_2 = self.survey_service.get_users_who_answered_survey_in_timerange(
+            1, start_date_2, end_date_2)
         self.assertIsNone(service_response_1)
         self.assertIsNone(service_response_2)
         self.repo_mock.get_users_who_answered_survey.assert_not_called()
@@ -314,22 +318,70 @@ class TestSurveyService(unittest.TestCase):
         survey_id = 1
         start_date = datetime.fromisoformat("2020-11-04 00:05:23.283")
         end_date = datetime.fromisoformat("2021-11-04 00:05:23.283")
-        repo_value_to_return = [5, "timppa@gmail.com", "Boss Team", "2021-10-04 00:05:23.283"]
+        repo_value_to_return = [5, "timppa@gmail.com",
+                                "Boss Team", "2021-10-04 00:05:23.283"]
 
         self.repo_mock.get_users_who_answered_survey.return_value = repo_value_to_return
 
-        survey_reponse = self.survey_service.get_users_who_answered_survey_in_timerange(survey_id, start_date, end_date)
+        survey_reponse = self.survey_service.get_users_who_answered_survey_in_timerange(
+            survey_id, start_date, end_date)
 
-        self.repo_mock.get_users_who_answered_survey.assert_called_once_with(survey_id, start_date, end_date)
+        self.repo_mock.get_users_who_answered_survey.assert_called_once_with(
+            survey_id, start_date, end_date)
         self.assertEqual(repo_value_to_return, survey_reponse)
 
     def test_get_users_who_answered_survey_in_group_calls_repo_correctly_with_valid_group(self):
         survey_id = 1
-        repo_value_to_return = [5, "timppa@gmail.com", "Boss Team", "2021-10-04 00:05:23.283"]
+        repo_value_to_return = [5, "timppa@gmail.com",
+                                "Boss Team", "2021-10-04 00:05:23.283"]
         self.repo_mock.get_users_who_answered_survey.return_value = repo_value_to_return
 
-        survey_reponse = self.survey_service.get_users_who_answered_survey_in_group(survey_id, group_name="Boss Team")
+        survey_reponse = self.survey_service.get_users_who_answered_survey_in_group(
+            survey_id, group_name="Boss Team")
 
-        self.repo_mock.get_users_who_answered_survey.assert_called_once_with(survey_id, group_name="Boss Team")
+        self.repo_mock.get_users_who_answered_survey.assert_called_once_with(
+            survey_id, group_name="Boss Team")
         self.assertEqual(repo_value_to_return, survey_reponse)
+
+    def test_get_users_who_answered_survey_filtered_calls_repo_correctly_with_valid_arguments(self):
+        survey_id = 1
+        start_date = datetime.fromisoformat("2020-11-04 00:05:23.283")
+        end_date = datetime.fromisoformat("2021-11-04 00:05:23.283")
         
+        repo_value_to_return = [5, "timppa@gmail.com",
+                                "Boss Team", "2021-10-04 00:05:23.283"]
+        self.repo_mock.get_users_who_answered_survey.return_value = repo_value_to_return
+
+        survey_reponse = self.survey_service.get_users_who_answered_survey_filtered(
+            survey_id, start_date, end_date, "Boss Team")
+
+        self.repo_mock.get_users_who_answered_survey.assert_called_once_with(
+            survey_id, start_date, end_date, "Boss Team")
+        self.assertEqual(repo_value_to_return, survey_reponse)
+
+    def test_get_users_who_answered_survey_filtered_returns_none_with_invalid_timerage(self):
+        start_date_1 = datetime.fromisoformat("2011-11-04 00:05:23.283")
+        end_date_1 = datetime.fromisoformat("2010-11-04 00:05:23.283")
+
+        service_response_1 = self.survey_service.get_users_who_answered_survey_filtered(
+            1, start_date_1, end_date_1, "group")
+        self.assertIsNone(service_response_1)
+
+        self.repo_mock.get_users_who_answered_survey.assert_not_called()
+   
+    def test_get_users_who_answered_survey_filtered_works_with_empty_string_as_group(self):
+        survey_id = 1
+        start_date = datetime.fromisoformat("2020-11-04 00:05:23.283")
+        end_date = datetime.fromisoformat("2021-11-04 00:05:23.283")
+        
+        repo_value_to_return = [5, "timppa@gmail.com",
+                                "", "2021-10-04 00:05:23.283"]
+        self.repo_mock.get_users_who_answered_survey.return_value = repo_value_to_return
+
+        survey_reponse = self.survey_service.get_users_who_answered_survey_filtered(
+            survey_id, start_date, end_date, "")
+
+        self.repo_mock.get_users_who_answered_survey.assert_called_once_with(
+            survey_id, start_date, end_date, None)
+        self.assertEqual(repo_value_to_return, survey_reponse)
+

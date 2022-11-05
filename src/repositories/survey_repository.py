@@ -480,7 +480,7 @@ class SurveyRepository:
         return answers
 
     def get_users_who_answered_survey(self, survey_id: int, start_date: datetime = None, 
-        end_date: datetime = None, group_name = None):
+        end_date: datetime = None, group_name=None):
         """ Returns a list of users who have answered a given survey. Results can be filtered by a timerange.
         Args:
             survey_id: Id of the survey
@@ -518,7 +518,8 @@ class SurveyRepository:
             AND ((:group_name IS NULL) OR ("group_name"=:group_name))
         """
         print(f"RYHMÄ: {group_name}", flush=True)
-        values = { "survey_id": survey_id, "start_date": start_date, "end_date": end_date, "group_name": group_name }
+        values = {"survey_id": survey_id, "start_date": start_date,
+                  "end_date": end_date, "group_name": group_name}
 
         try:
             users = self.db_connection.session.execute(sql, values).fetchall()
@@ -716,14 +717,14 @@ class SurveyRepository:
 
         return group_id
 
-    def _add_user(self, email = None, group_id = None):
+    def _add_user(self, email=None, group_id=None):
         """Adds a user to database for testing purposes
 
         Returns user id"""
 
         sql = """INSERT INTO "Users" ("email", "groupId", "createdAt", "updatedAt")
             VALUES (:email, :group_id, NOW(), NOW()) RETURNING id"""
-        values = { "email": email, "group_id": group_id }
+        values = {"email": email, "group_id": group_id}
         user_id = self.db_connection.session.execute(sql, values).fetchone()[0]
         db.session.commit()
         return user_id
@@ -735,7 +736,8 @@ class SurveyRepository:
         group_id = uuid.uuid4()
         sql = """INSERT INTO "Survey_user_groups" (id, "surveyId", "createdAt", "updatedAt")
             VALUES (:group_id, :survey_id, NOW(), NOW()) RETURNING id"""
-        group_id = self.db_connection.session.execute(sql, {"group_id": group_id, "survey_id": survey_id}).fetchone()[0]
+        group_id = self.db_connection.session.execute(
+            sql, {"group_id": group_id, "survey_id": survey_id}).fetchone()[0]
         db.session.commit()
         return group_id
 
@@ -769,6 +771,7 @@ class SurveyRepository:
         RETURNING id
         """
         values = {"group_name": group_name, "survey_id": survey_id}
-        survey_user_group_id = self.db_connection.session.execute(sql, values).fetchone()[0]
+        survey_user_group_id = self.db_connection.session.execute(
+            sql, values).fetchone()[0]
         db.session.commit()
         return survey_user_group_id
