@@ -46,7 +46,7 @@ class TestLogger(unittest.TestCase):
 
         open.assert_called_with(self.filename, "r")
 
-        self.assertIsNone(result)
+        self.assertEqual(result, [])
 
     @patch("builtins.open")
     def test_log_post_request_adds_log_entry(self, m):
