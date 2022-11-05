@@ -24,15 +24,9 @@ def statistics(survey_id):
     categories = survey_service.get_categories_of_survey(survey_id)
 
     users = survey_service.get_users_who_answered_survey(survey_id)
-    # TODO: Remove this test data
-    # users = [{"email": "userA@mail",
-    #           "group_name": "A group",
-    #           "answer_time": "15.9.2022 12:50:00"},
-    #          {"email": "userB@mail",
-    #           "group_name": "B group",
-    #           "answer_time": "20.10.2022 14:50:00"}]
+
     users = users if users else []
-    
+
     return render_template("surveys/statistics.html",
                            ENV=app.config["ENV"],
                            survey_id=survey_id,

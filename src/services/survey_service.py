@@ -304,7 +304,6 @@ class SurveyService:
 
         return self.survey_repository.get_users_who_answered_survey(survey_id, group_name=group_name)
 
-    
     def create_category(self, survey_id: str, name: str, description: str, content_links: list):
         """
         Creates a new category.
