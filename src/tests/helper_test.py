@@ -223,7 +223,7 @@ def test_plot_answer_dist_for_questions_creates_png_files():
     current_dir = path.dirname(__file__)
     root_dir = path.dirname(current_dir)
     charts_path = path.join(root_dir, "static/img/charts/*.png")
-    list_of_file_paths = glob(charts_path)
+    list_of_file_paths = sorted(glob(charts_path))
     files = list(map(path.basename, list_of_file_paths))
 
     assert files[0] == "42.png"
