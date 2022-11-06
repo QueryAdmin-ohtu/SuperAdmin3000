@@ -513,11 +513,10 @@ class SurveyRepository:
             ON "s"."id" = "q"."surveyId"
         LEFT JOIN "Survey_user_groups" as sua
             ON "u"."groupId" = "sua"."id"
-        WHERE "s"."id"=:survey_id AND "sua"."surveyId"=:survey_id 
+        WHERE "s"."id"=:survey_id AND "sua"."surveyId"=:survey_id
             AND ((:start_date IS NULL AND :end_date IS NULL) OR ("ua"."updatedAt" > :start_date AND "ua"."updatedAt" < :end_date))
-            AND ((:group_name IS NULL) OR ("group_name"=:group_name))
+            AND ((:group_name IS NULL) OR ("group_name"=:group_name))        
         """
-        print(f"RYHMÄ: {group_name}", flush=True)
         values = {"survey_id": survey_id, "start_date": start_date,
                   "end_date": end_date, "group_name": group_name}
 
@@ -663,8 +662,11 @@ class SurveyRepository:
             return None
         return submissions.submissions
 
-    def get_answer_distribution(self, survey_id, start_date: datetime = None, 
-        end_date: datetime = None, user_group_id: uuid = None):
+    def get_answer_distribution(self,
+                                survey_id,
+                                start_date: datetime = None, 
+                                end_date: datetime = None,
+                                user_group_id: uuid = None):
         """ Finds and returns the distribution of user answers
         over the answer options of a survey.
 
@@ -708,12 +710,30 @@ class SurveyRepository:
         except exc.SQLAlchemyError as exception:
             return exception
 
+    def get_answer_distribution_filtered(self, survey_id,
+                                         start_date: datetime = None, 
+                                         end_date: datetime = None,
+                                         group_name: str = ""):
+        """ Finds and returns the distribution of user answers
+        over the answer options of a survey.
+
+        Filtering by date range and/or user group. Start and end dates are included in the query.
+
+        Returns a table where each row contains:
+        question id, question text, answer id, answer text, user answer counts"""
+
+        print(f"Group '{group_name}' type: {type(group_name)}")
+        group_id = self._find_user_group_by_name(group_name)
+
+        return self.get_answer_distribution(survey_id, start_date, end_date, group_id)
+
     def _find_user_group_by_name(self, group_name):
         sql = """SELECT id, group_name FROM "Survey_user_groups" WHERE lower(group_name)=:group_name"""
         result = self.db_connection.session.execute(
             sql, {"group_name": group_name.lower()})
 
-        group_id = result.fetchone()[0]
+        row = result.fetchone()
+        group_id = row[0] if row else None
 
         return group_id
 

@@ -425,16 +425,28 @@ class SurveyService:
 
         return self.survey_repository.get_number_of_submissions(survey_id)
 
-    def get_answer_distribution_for_survey_questions(self, survey_id):
+    def get_answer_distribution_for_survey_questions(self,
+                                                     survey_id,
+                                                     start_date: datetime = None, 
+                                                     end_date: datetime = None,
+                                                     group_name: str = ""):
         """
         Fetches the distribution of user answers over the
         answer options of a survey
+
+        Args:
+            survey_id   The id of the survey
+            start_date  Filter out answers before this date (optional)
+            end_date    Filter out answers after this date (optional)
+            group_name  Filetr out answers from user, who doen't belong to this group (optional)
 
         Returns a table with question id and text, answer
         id and text, number of user answers
         """
 
-        return self.survey_repository.get_answer_distribution(survey_id)
-
+        return self.survey_repository.get_answer_distribution_filtered(survey_id,
+                                                                       start_date,
+                                                                       end_date,
+                                                                       group_name)
 
 survey_service = SurveyService(SurveyRepository())

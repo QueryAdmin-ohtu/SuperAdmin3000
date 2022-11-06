@@ -24,6 +24,9 @@ def statistics(survey_id):
     categories = survey_service.get_categories_of_survey(survey_id)
 
     users = survey_service.get_users_who_answered_survey(survey_id)
+    # TODO: remove
+    print(f"Users:\n{users}", flush=True)
+    
     users = users if users else []
     total_users = len(users)
 
@@ -67,7 +70,10 @@ def filtered_statistics(survey_id):
     
     submissions = survey_service.get_number_of_submissions_for_survey(survey_id)
     answer_distribution = helper.save_question_answer_charts(
-        survey_service.get_answer_distribution_for_survey_questions(survey_id)
+        survey_service.get_answer_distribution_for_survey_questions(survey_id,
+                                                                    filter_start_date,
+                                                                    filter_end_date,
+                                                                    filter_group_name)
     )
     categories = survey_service.get_categories_of_survey(survey_id)
 
