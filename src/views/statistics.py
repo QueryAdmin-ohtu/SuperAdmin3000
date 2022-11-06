@@ -27,6 +27,9 @@ def statistics(survey_id):
     users = users if users else []
     total_users = len(users)
 
+    group_names = {"All user groups": ""}
+    for user in users:
+        group_names[user.group_name] = user.group_name
 
     filter_start_date = (datetime.datetime.now() - datetime.timedelta(days=10*365)).strftime(timeformat)
     filter_end_date = datetime.datetime.now().strftime(timeformat)    
@@ -42,7 +45,8 @@ def statistics(survey_id):
                            answer_distribution=answer_distribution,
                            filter_start_date=filter_start_date,
                            filter_end_date=filter_end_date,
-                           filter_group_name=filter_group_name
+                           filter_group_name=filter_group_name,
+                           group_names=group_names
     )
 
 @stats.route("/surveys/<survey_id>/statistics/filter", methods=["POST"])
@@ -71,6 +75,10 @@ def filtered_statistics(survey_id):
     users = users if users else []
     total_users = len(users)
 
+    group_names = {"All user groups": ""}
+    for user in users:
+        group_names[user.group_name] = user.group_name
+    
     print(f"START (datetime object): {filter_start_date}")
     users = survey_service.get_users_who_answered_survey_filtered(survey_id,
                                                                   filter_start_date,
@@ -92,7 +100,9 @@ def filtered_statistics(survey_id):
                            categories=categories,
                            filter_start_date=filter_start_date,
                            filter_end_date=filter_end_date,
-                           filter_group_name=filter_group_name)
+                           filter_group_name=filter_group_name,
+                           group_names=group_names                           
+    )
 
 
     

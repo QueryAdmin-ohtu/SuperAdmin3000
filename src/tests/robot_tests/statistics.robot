@@ -46,9 +46,6 @@ Entering Invalid Date to User Filter Does Not Filter Anything
 
 Filtering By Group Name Filters Users
     Go To Statistics  8
-    Input Text  filter_group_name  Supertestaajat
+    Select Radio Button  filter_group_name  Supertestaajat
     Click Button  Filter
     Page Should Contain  Users with submissions (1 / 1)
-    Input Text  filter_group_name  Invalidgroup
-    Click Button  Filter
-    Page Should Contain  Users with submissions (0 / 1)    
