@@ -610,6 +610,7 @@ INSERT INTO public."Survey_results" VALUES (3, 1, 'Dynamically fetched result te
 --
 
 INSERT INTO public."Survey_user_groups" VALUES ('737cdf09-cc6f-47de-adcd-e7aaab0adc39'::UUID, 'Supertestaajat', 8, NULL, '2022-11-03 10:45:07.535414+00', '2022-11-03 10:45:07.535414+00');
+INSERT INTO public."Survey_user_groups" VALUES ('bb2ce58d-f27b-4ade-9e31-e8aca8c7ca20'::UUID, 'B-ryhmä', 8, NULL, '2022-11-06 10:45:07.535414+00', '2022-11-06 10:45:07.535414+00');
 
 --
 -- Data for Name: Surveys; Type: TABLE DATA; Schema: public; Owner: -
@@ -639,9 +640,9 @@ INSERT INTO public."User_answers" VALUES (6, 3, 36, '2022-11-03 10:58:07.535414+
 -- Data for Name: Users; Type: TABLE DATA; Schema: public; Owner: -
 --
 
-INSERT INTO public."Users" VALUES (1, NULL, NULL, NULL, '2022-11-03 10:52:07.535414+00', '2022-11-03 10:52:07.535414+00');
-INSERT INTO public."Users" VALUES (2, NULL, NULL, NULL, '2022-11-03 10:52:07.535414+00', '2022-11-03 10:52:07.535414+00');
-INSERT INTO public."Users" VALUES (3, NULL, '737cdf09-cc6f-47de-adcd-e7aaab0adc39'::UUID, NULL, '2022-11-03 10:52:07.535414+00', '2022-11-03 10:52:07.535414+00');
+INSERT INTO public."Users" VALUES (1, 'firstuser@company.invalid', 'bb2ce58d-f27b-4ade-9e31-e8aca8c7ca20'::UUID, NULL, '2022-11-03 10:52:07.535414+00', '2022-11-03 10:52:07.535414+00');
+INSERT INTO public."Users" VALUES (2, 'seconduser@firm.invalid', 'bb2ce58d-f27b-4ade-9e31-e8aca8c7ca20'::UUID, NULL, '2022-11-03 10:52:07.535414+00', '2022-11-03 10:52:07.535414+00');
+INSERT INTO public."Users" VALUES (3, 'thirduser@school.invalid', '737cdf09-cc6f-47de-adcd-e7aaab0adc39'::UUID, NULL, '2022-11-03 10:52:07.535414+00', '2022-11-03 10:52:07.535414+00');
 
 
 
