@@ -385,4 +385,9 @@ class SurveyService:
         """
         return self.survey_repository.get_sum_of_user_answer_points_by_question_id(question_id)
 
+    def calculate_average_of_user_points_before_weights(self, question_id):
+        answers = self.get_count_of_user_answers_to_a_question(question_id)
+        score = self.get_sum_of_user_answer_points_by_question_id(question_id)
+        if (answers != 0):
+            return score/answers
 survey_service = SurveyService(SurveyRepository())

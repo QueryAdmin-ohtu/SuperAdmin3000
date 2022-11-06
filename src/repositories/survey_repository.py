@@ -1,7 +1,7 @@
 from sqlalchemy import exc
 
 from db import db
-
+import helper
 
 class SurveyRepository:
     """
@@ -727,3 +727,85 @@ class SurveyRepository:
         return survey_user_group_id
 
 
+    def get_sum_of_user_answer_points_by_question_id(self, question_id):
+        """
+            Returns the sum of all user answers for a given question.
+        """
+
+        sql =  """
+        SELECT
+            (COUNT(ua.id) * points)
+        FROM "Questions" AS q
+        LEFT JOIN "Question_answers" AS qa
+            ON q.id = qa."questionId"
+        LEFT JOIN "User_answers" AS ua
+            ON qa.id = ua."questionAnswerId"
+        WHERE q.id=:question_id
+        GROUP BY q.id, qa.id
+        ORDER BY q.id
+        """
+        values = {"question_id": question_id}
+        sum_of_points = self.db_connection.session.execute(sql, values).fetchall()
+        db.session.commit()
+        res = 0
+        for i in range(0, len(sum_of_points)):
+            if sum_of_points[i][0] is not None:
+                res += (sum_of_points[i][0])
+
+        return res
+
+    def get_count_of_user_answers_to_a_question(self, question_id):
+        """
+            Retrieve number of submissions to a given question.
+
+            Returns:
+                Amount of user answers if successful. Else returns 0.
+        """
+        sql = """
+        SELECT COUNT(id)
+        FROM "User_answers"
+        WHERE "questionAnswerId" IN (
+            SELECT qa.id
+            FROM "Question_answers" as qa, "User_answers" AS ua
+            WHERE qa."questionId" = :question_id)
+        """
+        values = {"question_id": question_id}
+        count_of_answers = self.db_connection.session.execute(sql, values).fetchone()[0]
+        if count_of_answers:
+            return count_of_answers
+        else:
+            return 0
+
+    def calculate_average_scores_by_category(self, survey_id):
+        """
+        Calculates weighted average points for all user answers in a survey.
+
+        Returns a list of tuples which includes the category id, category name and average score (to the precision of two decimal places) of all user answers in a given survey.
+        """
+
+        result_list = []
+        related_questions = self.get_questions_of_survey(survey_id)
+        for question in related_questions:
+            points = self.get_sum_of_user_answer_points_by_question_id(question.id)
+            answers = self.get_count_of_user_answers_to_a_question(question.id)
+            if answers == 0:
+                continue
+            else:
+                avg = float(points / answers)
+
+            for category_weight in question.category_weights:
+                weighted_average = float("{:.2f}".format(avg * category_weight['multiplier']))
+                complete_item = (self.get_category_id_from_name(survey_id, category_weight['category']), category_weight['category'],weighted_average )
+                result_list.append(complete_item)
+
+        return result_list
+
+    def get_category_id_from_name(self, survey_id, category_name):
+        """
+        Returns the category Id based on the category name.
+        """
+        sql = """
+            SELECT c.id FROM "Categories" AS c, "Surveys" as s WHERE c.name = :category_name and s.id = :survey_id
+        """
+        values = {"category_name": category_name, "survey_id": survey_id}
+        return self.db_connection.session.execute(sql, values).fetchone()[0]
