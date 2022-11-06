@@ -105,7 +105,7 @@ class Logger:
     def read_all_events(self):
         """
         Reads event log from a file and returns an array
-        containing every line, or Null if error happens
+        containing every line, or [] if error or empty file
 
         Returns:
             An array of strings
@@ -115,7 +115,7 @@ class Logger:
             with open(self.filename, "r") as file:
                 lines = file.readlines()
         except IOError:
-            return None
+            return []
 
         log_list = []
         current_entry = ""

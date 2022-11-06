@@ -49,8 +49,7 @@
         <div id="answered" class="flex-col max-w-full bg-white p-4 gap-2 rounded-lg border border-slate-300">
           <h3 class="text-gray-900 leading-tight">Users with submissions ({{ users | length }} / {{ total_users }})</h3>
           <div>
-            <h3>Filter users:</h3>
-            <form action="/surveys/{{ survey_id }}/statistics/filter" method="POST">
+            <form class="space-y-5" action="/surveys/{{ survey_id }}/statistics/filter" method="POST">
               <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
               <div class="flex flex-col gap-2 w-full">
                 {{ form_elements.label("filter_start_date_label", "Start date") }}
@@ -60,10 +59,18 @@
                 {{ form_elements.label("filter_end_date_label", "End date") }}
                 {{ form_elements.text_input("filter_end_date", "", "", false, filter_end_date) }}
               </div>
-              <div class="flex flex-col gap-2 w-full">
-                {{ form_elements.label("filter_group_name_label", "User group") }}
-                {{ form_elements.text_input("filter_group_name", "", "", false, filter_group_name) }}
-              </div>              
+              <div>
+                {% for key, value in group_names.items() %}
+                <div class="p-3">
+                  {% if value == filter_group_name %}
+                  <input id="{{ key }}" class="w-12 h-12" type="radio" name="filter_group_name" value="{{ value }}" checked="checked" />
+                  {% else %}
+                  <input id="{{ key }}" class="w-12 h-12" type="radio" name="filter_group_name" value="{{ value }}" />
+                  {% endif %}
+                  <label for={{ key }} class="ml-5">{{ key }}</label>
+                </div>
+                {% endfor %}
+              </div>
               {{ form_elements.submit_button("Filter") }}
               {{ buttons.link_button("Reset filter", "/surveys/%s/statistics" % survey_id) }}
             </form>
