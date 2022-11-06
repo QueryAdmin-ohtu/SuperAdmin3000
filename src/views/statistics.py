@@ -53,6 +53,14 @@ def filtered_statistics(survey_id):
     if app.config["ENV"] == "prod":
         return redirect("/")
 
+    try:
+        filter_start_date = datetime.datetime.strptime(request.form["filter_start_date"], timeformat)
+        filter_end_date = datetime.datetime.strptime(request.form["filter_end_date"], timeformat)
+    except ValueError:
+        return redirect(f"/surveys/{survey_id}/statistics")
+    
+    filter_group_name = request.form["filter_group_name"]
+    
     submissions = survey_service.get_number_of_submissions_for_survey(survey_id)
     answer_distribution = helper.save_question_answer_charts(
         survey_service.get_answer_distribution_for_survey_questions(survey_id)
@@ -62,10 +70,6 @@ def filtered_statistics(survey_id):
     users = survey_service.get_users_who_answered_survey(survey_id)
     users = users if users else []
     total_users = len(users)
-
-    filter_start_date = datetime.datetime.strptime(request.form["filter_start_date"], timeformat)
-    filter_end_date = datetime.datetime.strptime(request.form["filter_end_date"], timeformat)
-    filter_group_name = request.form["filter_group_name"]
 
     print(f"START (datetime object): {filter_start_date}")
     users = survey_service.get_users_who_answered_survey_filtered(survey_id,
