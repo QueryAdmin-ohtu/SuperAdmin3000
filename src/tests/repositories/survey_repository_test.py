@@ -631,10 +631,29 @@ class TestSurveyRepository(unittest.TestCase):
         with self.app.app_context():
             survey_id = self.repo.survey_exists("Elephants")[1]
             group_id = self.repo._find_user_group_by_name("Supertestaajat")
-            result = self.repo.get_answer_distribution(survey_id, group_id)
+            result = self.repo.get_answer_distribution(survey_id, user_group_id=group_id)
 
         self.assertEqual(len(result), 2)
         self.assertEqual(result[0][4], 1)
+
+    def test_answer_distribution_filtered_by_date(self):
+        with self.app.app_context():
+            start_date = datetime.fromisoformat("2022-10-01")
+            end_date = datetime.fromisoformat("2022-11-02")
+            survey_id = self.repo.survey_exists("Elephants")[1]
+            result = self.repo.get_answer_distribution(survey_id, start_date=start_date, end_date=end_date)
+
+        self.assertEqual(len(result), 2)
+        self.assertEqual(result[0][2], 33)
+
+    def test_answer_distribution_filtered_by_date_no_answers_in_range(self):
+        with self.app.app_context():
+            start_date = datetime.fromisoformat("2021-01-01")
+            end_date = datetime.fromisoformat("2021-12-31")
+            survey_id = self.repo.survey_exists("Elephants")[1]
+            result = self.repo.get_answer_distribution(survey_id, start_date=start_date, end_date=end_date)
+
+        self.assertFalse(result)
 
     def test_get_users_who_answered_survey_returns_user_that_answered(self):
         with self.app.app_context():
