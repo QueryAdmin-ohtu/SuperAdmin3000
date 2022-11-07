@@ -627,6 +627,15 @@ class TestSurveyRepository(unittest.TestCase):
         self.assertEqual(result[0][4], 2)
         self.assertEqual(result[1][4], 1)
 
+    def test_answer_distribution_filtered(self):
+        with self.app.app_context():
+            survey_id = self.repo.survey_exists("Elephants")[1]
+            result = self.repo.get_answer_distribution_filtered(survey_id,
+                                                                None, None, '')
+
+        self.assertEqual(result[0][4], 2)
+        self.assertEqual(result[1][4], 1)
+    
     def test_answer_distribution_per_user_group(self):
         with self.app.app_context():
             survey_id = self.repo.survey_exists("Elephants")[1]

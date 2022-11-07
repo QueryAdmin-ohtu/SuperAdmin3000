@@ -11,7 +11,8 @@ Test Setup  Go To Home Page
 
 Logged In User Can View Statistics Page
     Login Through Backdoor
-    Go To Statistics  1
+    Go To Survey  1
+    Click Link  Detailed statistics
     Page Should Contain  Related categories
 
 User Can Access Edit Categories Page From Statistics
