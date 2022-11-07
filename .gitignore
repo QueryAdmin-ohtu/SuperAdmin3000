@@ -151,3 +151,6 @@ selenium-screenshot-*.png
 
 # DIA
 *.autosave
+
+# Statistics charts
+src/static/img/charts/
