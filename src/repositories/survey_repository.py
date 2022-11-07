@@ -722,7 +722,6 @@ class SurveyRepository:
         Returns a table where each row contains:
         question id, question text, answer id, answer text, user answer counts"""
 
-        print(f"Group '{group_name}' type: {type(group_name)}")
         group_id = self._find_user_group_by_name(group_name)
 
         return self.get_answer_distribution(survey_id, start_date, end_date, group_id)
