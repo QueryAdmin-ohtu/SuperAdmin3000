@@ -384,3 +384,10 @@ class TestSurveyService(unittest.TestCase):
             survey_id, start_date, end_date, None)
         self.assertEqual(repo_value_to_return, survey_reponse)
 
+    def test_calculate_average_scores_by_categorycalls_repo_correctly(self):
+        self.repo_mock.calculate_average_scores_by_category.return_value = "None"
+        survey_id = 1
+        self.survey_service.calculate_average_scores_by_category(survey_id)
+        self.repo_mock.calculate_average_scores_by_category.assert_called_with(
+            survey_id
+        )

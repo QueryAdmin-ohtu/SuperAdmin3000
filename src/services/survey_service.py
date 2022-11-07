@@ -449,4 +449,23 @@ class SurveyService:
                                                                        end_date,
                                                                        group_name)
 
+    def get_count_of_user_answers_to_a_question(self, question_id):
+        """
+        Fetches the number of user answers to a given question id
+        """
+
+        return self.survey_repository.get_count_of_user_answers_to_a_question(question_id)
+
+
+    def get_sum_of_user_answer_points_by_question_id(self, question_id):
+        """
+        Fetches the sum of user answer points to a given question id
+        """
+        return self.survey_repository.get_sum_of_user_answer_points_by_question_id(question_id)
+
+    
+    def calculate_average_scores_by_category(self, survey_id):
+
+        return self.survey_repository.calculate_average_scores_by_category(survey_id)
+
 survey_service = SurveyService(SurveyRepository())
