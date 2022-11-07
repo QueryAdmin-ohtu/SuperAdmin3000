@@ -287,20 +287,3 @@ class TestSurveyService(unittest.TestCase):
         self.repo_mock.get_number_of_submissions.assert_called_with(
             survey_id
         )
-
-    def test_get_answer_distribution_for_survey_questions_calls_repo_correctly(self):
-        self.repo_mock.get_answer_distribution.return_value = "None"
-        survey_id = 1
-        self.survey_service.get_answer_distribution_for_survey_questions(
-            survey_id)
-        self.repo_mock.get_answer_distribution.assert_called_with(
-            survey_id
-        )
-
-    def test_get_sum_of_user_answer_points_by_question_id(self):
-        return_value = 3
-        question_id = 10
-        self.repo_mock.get_sum_of_user_answer_points_by_question_id.return_value = return_value
-        check = self.survey_service.get_sum_of_user_answer_points_by_question_id(question_id)
-        self.assertEqual(return_value, check)
-        self.repo_mock.get_sum_of_user_answer_points_by_question_id.assert_called_with(question_id)
