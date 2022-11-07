@@ -1,5 +1,8 @@
 from ast import excepthandler
 import unittest
+import uuid
+from datetime import datetime
+
 from repositories.survey_repository import SurveyRepository
 
 from app import create_app
@@ -65,7 +68,7 @@ class TestSurveyRepository(unittest.TestCase):
     def test_survey_with_the_same_name_doesnt_exist(self):
         with self.app.app_context():
             response = self.repo.survey_exists("totally nonexistent survey")
-            self.assertFalse(response)
+        self.assertFalse(response[0])
 
     def test_get_survey_with_valid_id_returns_survey(self):
 
@@ -580,9 +583,11 @@ class TestSurveyRepository(unittest.TestCase):
         self.assertEquals(updated_category, category_id)
 
     def _create_survey_and_add_user_answers(self):
+        """Creates a survey with user answers.
+        Returns survey id, user group id"""
         with self.app.app_context():
             survey_id = self.repo.create_survey(
-                "Elephants", "What kind of an elephant are you?", "The amazing elephant survey!")
+                "Elephants 2", "What kind of an elephant are you?", "The amazing elephant survey!")
             question_id_1 = self.repo.create_question(
                 "Describe the size of your ears?", survey_id,
                 '[{"category": "Size", "multiplier": 1.0}]')
@@ -595,30 +600,60 @@ class TestSurveyRepository(unittest.TestCase):
             answer_id_3 = self.repo.create_answer("Forest", 5, question_id_2)
             answer_id_4 = self.repo.create_answer("Savannah", 0, question_id_2)
 
+            group_id = self.repo._add_user_group(survey_id)
+
             user_id_1 = self.repo._add_user()
             user_id_2 = self.repo._add_user()
-            user_id_3 = self.repo._add_user()
+            user_id_3 = self.repo._add_user(group_id)
 
             self.repo._add_user_answers(user_id_1, [answer_id_1, answer_id_4])
             self.repo._add_user_answers(user_id_2, [answer_id_1, answer_id_3])
             self.repo._add_user_answers(user_id_3, [answer_id_2, answer_id_4])
 
-        return survey_id
+        return survey_id, group_id
 
     def test_number_of_submissions(self):
-        survey_id = self._create_survey_and_add_user_answers()
         with self.app.app_context():
+            survey_id = self.repo.survey_exists("Elephants")[1]
             result = self.repo.get_number_of_submissions(survey_id)
 
         self.assertEqual(result, 3)
 
     def test_answer_distribution(self):
-        survey_id = self._create_survey_and_add_user_answers()
         with self.app.app_context():
+            survey_id = self.repo.survey_exists("Elephants")[1]
             result = self.repo.get_answer_distribution(survey_id)
 
         self.assertEqual(result[0][4], 2)
         self.assertEqual(result[1][4], 1)
+
+    def test_answer_distribution_per_user_group(self):
+        with self.app.app_context():
+            survey_id = self.repo.survey_exists("Elephants")[1]
+            group_id = self.repo._find_user_group_by_name("Supertestaajat")
+            result = self.repo.get_answer_distribution(survey_id, user_group_id=group_id)
+
+        self.assertEqual(len(result), 2)
+        self.assertEqual(result[0][4], 1)
+
+    def test_answer_distribution_filtered_by_date(self):
+        with self.app.app_context():
+            start_date = datetime.fromisoformat("2022-10-01")
+            end_date = datetime.fromisoformat("2022-11-02")
+            survey_id = self.repo.survey_exists("Elephants")[1]
+            result = self.repo.get_answer_distribution(survey_id, start_date=start_date, end_date=end_date)
+
+        self.assertEqual(len(result), 2)
+        self.assertEqual(result[0][2], 33)
+
+    def test_answer_distribution_filtered_by_date_no_answers_in_range(self):
+        with self.app.app_context():
+            start_date = datetime.fromisoformat("2021-01-01")
+            end_date = datetime.fromisoformat("2021-12-31")
+            survey_id = self.repo.survey_exists("Elephants")[1]
+            result = self.repo.get_answer_distribution(survey_id, start_date=start_date, end_date=end_date)
+
+        self.assertFalse(result)
 
     def test_get_users_who_answered_survey_returns_user_that_answered(self):
         with self.app.app_context():
@@ -628,27 +663,30 @@ class TestSurveyRepository(unittest.TestCase):
                 "Test your math skills"
             )
             survey_user_group_name = "Management"
-            survey_user_group_id = self.repo._add_survey_user_group(survey_user_group_name, survey_id)
+            survey_user_group_id = self.repo._add_survey_user_group(
+                survey_user_group_name, survey_id)
             question_id = self.repo.create_question(
-                "What?", 
+                "What?",
                 survey_id,
-                '[{"category": "Boo", "multiplier": 1.0}]' 
+                '[{"category": "Boo", "multiplier": 1.0}]'
             )
             answer_id = self.repo.create_answer("No", 12, question_id)
             user_email = "jukka@haapalainen.com"
             user_id = self.repo._add_user(user_email, survey_user_group_id)
 
-            users_who_answered_survey_before = self.repo.get_users_who_answered_survey(survey_id)
+            users_who_answered_survey_before = self.repo.get_users_who_answered_survey(
+                survey_id)
             self.repo._add_user_answers(user_id, [answer_id])
 
-            users_who_answered_survey_after = self.repo.get_users_who_answered_survey(survey_id)
-            
-        
+            users_who_answered_survey_after = self.repo.get_users_who_answered_survey(
+                survey_id)
+
         self.assertIsNone(users_who_answered_survey_before)
         self.assertEqual(len(users_who_answered_survey_after), 1)
         self.assertEqual(users_who_answered_survey_after[0].id, user_id)
         self.assertEqual(users_who_answered_survey_after[0].email, user_email)
-        self.assertEqual(users_who_answered_survey_after[0].group_name, survey_user_group_name)
+        self.assertEqual(
+            users_who_answered_survey_after[0].group_name, survey_user_group_name)
         self.assertIsNotNone(users_who_answered_survey_after[0].answer_time)
 
     def test_get_users_who_answered_survey_does_not_return_user_that_did_not_answer(self):
@@ -664,11 +702,12 @@ class TestSurveyRepository(unittest.TestCase):
                 "Test your olé skills"
             )
             survey_user_group_name = "Presidentes"
-            survey_user_group_id = self.repo._add_survey_user_group(survey_user_group_name, survey_id_2)
+            survey_user_group_id = self.repo._add_survey_user_group(
+                survey_user_group_name, survey_id_2)
             question_id = self.repo.create_question(
-                "Que?", 
+                "Que?",
                 survey_id_2,
-                '[{"category": "Oraleee", "multiplier": 1.0}]' 
+                '[{"category": "Oraleee", "multiplier": 1.0}]'
             )
             answer_id = self.repo.create_answer("No", 12, question_id)
             user_email = "peña@nieto.com"
@@ -676,6 +715,157 @@ class TestSurveyRepository(unittest.TestCase):
 
             self.repo._add_user_answers(user_id, [answer_id])
 
-            users_who_answered_survey = self.repo.get_users_who_answered_survey(survey_id_1)
+            users_who_answered_survey = self.repo.get_users_who_answered_survey(
+                survey_id_1)
 
         self.assertIsNone(users_who_answered_survey)
+
+    def test_get_users_who_answered_survey_when_given_datetime_returns_correct_users(self):
+        with self.app.app_context():
+            survey_id = self.repo.create_survey(
+                "Time survey",
+                "A survey about time",
+                "When and where? And when?"
+            )
+
+            survey_user_group_name = "Presidentes"
+            survey_user_group_id = self.repo._add_survey_user_group(
+                survey_user_group_name, survey_id)
+
+            question_id = self.repo.create_question(
+                "Tomorrow?",
+                survey_id,
+                '[{"category": "Infinity", "multiplier": 1.0}]'
+            )
+
+            answer_id = self.repo.create_answer("Today", 10, question_id)
+            user_email_1 = "email@gmail.com"
+            user_email_2 = "korppi@norppa.fi"
+            answer_date_1 = datetime.fromisoformat("2011-11-04 00:05:23.283")
+            user_id_1 = self.repo._add_user(user_email_1, survey_user_group_id)
+            user_id_2 = self.repo._add_user(user_email_2, survey_user_group_id)
+
+            self.repo._add_user_answers(user_id_1, [answer_id],  answer_date_1)
+            self.repo._add_user_answers(user_id_2, [answer_id])
+
+            start_date = datetime.fromisoformat("2011-10-04 00:00:21.283")
+            end_date = datetime.fromisoformat("2012-10-04 00:00:21.283")
+
+            users_non_filtered = self.repo.get_users_who_answered_survey(
+                survey_id)
+            users_filtered = self.repo.get_users_who_answered_survey(
+                survey_id, start_date, end_date)
+
+        self.assertEqual(len(users_non_filtered), 2)
+        self.assertEqual(len(users_filtered), 1)
+
+    def test_get_users_who_answered_survey_belonging_to_given_group_returns_correct_users(self):
+        with self.app.app_context():
+                survey_id = self.repo.create_survey(
+                    "Time survey",
+                    "A survey about time",
+                    "When and where? And when?"
+                )
+
+                survey_user_group_name_1 = "Presidentes"
+                survey_user_group_name_2 = "Peasants"
+                survey_user_group_id_1 = self.repo._add_survey_user_group(
+                    survey_user_group_name_1, survey_id)
+                survey_user_group_id_2 = self.repo._add_survey_user_group(
+                    survey_user_group_name_2, survey_id)
+                question_id = self.repo.create_question(
+                    "Tomorrow?",
+                    survey_id,
+                    '[{"category": "Infinity", "multiplier": 1.0}]'
+                )
+
+                answer_id = self.repo.create_answer("Today", 10, question_id)
+                user_email_1 = "email@gmail.com"
+                user_email_2 = "korppi@norppa.fi"
+                user_id_1 = self.repo._add_user(
+                    user_email_1, survey_user_group_id_1)
+                user_id_2 = self.repo._add_user(
+                    user_email_2, survey_user_group_id_2)
+
+                self.repo._add_user_answers(user_id_1, [answer_id])
+                self.repo._add_user_answers(user_id_2, [answer_id])
+
+                users_non_filtered = self.repo.get_users_who_answered_survey(
+                    survey_id)
+                users_filtered = self.repo.get_users_who_answered_survey(
+                    survey_id, group_name="Presidentes")
+
+        self.assertEqual(len(users_non_filtered), 2)
+        self.assertEqual(len(users_filtered), 1)
+
+    def test_get_user_answer_sum_of_points_and_count_answers(self):
+        with self.app.app_context():
+            survey_id = self.repo.create_survey(
+                "Math survey","Data Science and Math", "Are your data science skills above average or do you hit the mean?")
+
+            question_one_id = self.repo.create_question("How is the average calculated", survey_id, '[{"category": "Math", "multiplier": 2.0}]' )
+            question_two_id = self.repo.create_question("What is the difference between the mean and the median?", survey_id, '[{"category": "Math", "multiplier": 1.0}, {"category": "Statistics", "multiplier": 2.0}]' )
+            question_with_no_answers_id = self.repo.create_question("Are there any graphs on n vertices whose representation requires more than floor(n/2) copies of each letter?", survey_id, '[{"category": "Math", "multiplier": 5.0}]' )
+            category_math_id = self.repo.create_category(survey_id, "Math", "I'm the operator of my pocket calculator", '[]')
+            category_stats_id = self.repo.create_category(survey_id, "Statistics", "Don't end up as a statistic.", '[]')
+            answer_one_good_id = self.repo.create_answer("Calculate sum of elements and divide by their number", 5, question_one_id)
+            answer_one_decent_id = self.repo.create_answer("Add stuff and divide", 2, question_one_id)
+
+            answer_two_decent_id = self.repo.create_answer("It has to do with the ways to calculate averages", 3, question_two_id)
+            answer_two_bad_id = self.repo.create_answer("The former is not nice.", -5, question_two_id)
+
+            advanced_user_id = self.repo._add_user(email="Advanced")
+            beginner_user_id = self.repo._add_user("Beginner")
+
+            self.repo._add_user_answers(advanced_user_id, [answer_one_good_id, answer_two_decent_id])
+            self.repo._add_user_answers(beginner_user_id, [answer_one_decent_id, answer_two_bad_id])
+
+            sum_for_question_one = self.repo.get_sum_of_user_answer_points_by_question_id(question_one_id)
+            sum_for_question_two = self.repo.get_sum_of_user_answer_points_by_question_id(question_two_id)
+
+            self.assertEquals(sum_for_question_one, 7)
+            self.assertEquals(sum_for_question_two, -2)
+
+            count_answers_for_question_one = self.repo.get_count_of_user_answers_to_a_question(question_one_id)
+            count_answers_for_question_two = self.repo.get_count_of_user_answers_to_a_question(question_two_id)
+            count_answers_for_question_three = self.repo.get_count_of_user_answers_to_a_question(question_with_no_answers_id)
+
+            self.assertEquals(count_answers_for_question_one, 2)
+            self.assertEquals(count_answers_for_question_two, 2)
+            self.assertEquals(count_answers_for_question_three, 0)
+            res = self.repo.calculate_average_scores_by_category(survey_id)
+            self.assertTrue(res[0] == (category_math_id, 'Math', 7.0))
+            self.assertTrue(res[1] == (category_math_id, "Math", -1.0))
+            self.assertTrue(res[2] == (category_stats_id, "Statistics", -2.0))
+
+    def test_get_user_answer_sum_of_points_and_count_answers_two(self):
+        
+        with self.app.app_context():
+            survey_id = self.repo.create_survey(
+                "Three category survey","text", "More robust test coverage.?")
+            category_one_id = self.repo.create_category(survey_id, "One", "Description 1", '[]')
+            category_two_id = self.repo.create_category(survey_id, "Two", "Description 2", '[]')
+            category_three_id = self.repo.create_category(survey_id, "Three", "Description 3", '[]')
+
+            question_one_id = self.repo.create_question("Question one", survey_id, '[{"category": "One", "multiplier": 1.0}, {"category": "Two", "multiplier": 2.0}, {"category": "Three", "multiplier": 3.0}]')
+
+            answer_one_good_id = self.repo.create_answer("Returns 1 point", 1, question_one_id)
+            answer_one_great_id = self.repo.create_answer("Returns 3 points", 3, question_one_id)
+
+            user_one_id = self.repo._add_user("One")
+            user_two_id = self.repo._add_user("Two")
+            user_three_id = self.repo._add_user("Three")
+
+            self.repo._add_user_answers(user_one_id, [answer_one_good_id ])
+            self.repo._add_user_answers(user_two_id, [answer_one_great_id])
+            self.repo._add_user_answers(user_three_id, [answer_one_great_id])
+
+            self.assertTrue(self.repo.get_count_of_user_answers_to_a_question(question_one_id) == 3)
+            self.assertTrue(self.repo.get_sum_of_user_answer_points_by_question_id(question_one_id) == 7)
+
+            resulting_list = self.repo.calculate_average_scores_by_category(survey_id)
+
+            self.assertTrue(resulting_list[0] == (category_one_id, "One", 2.33))
+            self.assertTrue(resulting_list[1] == (category_two_id, "Two",  4.67))
+            self.assertTrue(resulting_list[2] == (category_three_id, "Three", 7.0))
+
