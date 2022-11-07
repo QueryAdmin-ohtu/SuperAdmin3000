@@ -869,3 +869,20 @@ class TestSurveyRepository(unittest.TestCase):
             self.assertTrue(resulting_list[1] == (category_two_id, "Two",  4.67))
             self.assertTrue(resulting_list[2] == (category_three_id, "Three", 7.0))
 
+    def test_create_placeholder_category_result(self):
+        with self.app.app_context():
+            category_id = self.repo.create_category(1,"cat", "cat is for category", [])
+            category_result_id = self.repo.create_placeholder_category_result(category_id)
+            related_category_results = self.repo.get_category_results_from_category_id(category_id)[0]
+            print(related_category_results, " - ", related_category_results[0])
+            self.assertEquals(related_category_results[0], category_result_id)
+            self.assertEquals(related_category_results[1], category_id)
+            self.assertEquals(related_category_results[2], "To be written")
+
+    def test_category_can_contain_multiple_category_results(self):
+        with self.app.app_context():
+            category_id = self.repo.create_category(1,"cat", "cat is for category", [])
+            self.repo.create_placeholder_category_result(category_id)
+            self.repo.create_placeholder_category_result(category_id)
+            related_category_results = self.repo.get_category_results_from_category_id(category_id)
+            self.assertTrue(len(related_category_results) == 2)
