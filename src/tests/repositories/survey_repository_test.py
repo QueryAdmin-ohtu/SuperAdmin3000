@@ -842,7 +842,7 @@ class TestSurveyRepository(unittest.TestCase):
         
         with self.app.app_context():
             survey_id = self.repo.create_survey(
-                "Three category survey","text", "More robust test coverage.?")
+                "Three category survey","text", "More robust test coverage.")
             category_one_id = self.repo.create_category(survey_id, "One", "Description 1", '[]')
             category_two_id = self.repo.create_category(survey_id, "Two", "Description 2", '[]')
             category_three_id = self.repo.create_category(survey_id, "Three", "Description 3", '[]')

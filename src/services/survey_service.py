@@ -451,8 +451,8 @@ class SurveyService:
         return self.survey_repository.get_sum_of_user_answer_points_by_question_id(question_id)
 
     
-    def get_averages_of_user_answer_scores(self, survey_id):
+    def calculate_average_scores_by_category(self, survey_id):
 
-        return self.survey_repository.calculate_average_scores_by_category(self, survey_id)
+        return self.survey_repository.calculate_average_scores_by_category(survey_id)
 
 survey_service = SurveyService(SurveyRepository())

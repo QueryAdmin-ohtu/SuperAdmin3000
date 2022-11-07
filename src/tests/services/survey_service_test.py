@@ -385,10 +385,10 @@ class TestSurveyService(unittest.TestCase):
             survey_id, start_date, end_date, None)
         self.assertEqual(repo_value_to_return, survey_reponse)
 
-    def test_get_averages_of_user_answer_scores_calls_repo_correctly(self):
-        self.repo_mock.test_get_averages_of_user_answer_scores.return_value = "None"
+    def test_calculate_average_scores_by_categorycalls_repo_correctly(self):
+        self.repo_mock.calculate_average_scores_by_category.return_value = "None"
         survey_id = 1
-        self.survey_service.get_averages_of_user_answer_scores(survey_id)
-        self.repo_mock.test_get_averages_of_user_answer_scores.assert_called_with(
+        self.survey_service.calculate_average_scores_by_category(survey_id)
+        self.repo_mock.calculate_average_scores_by_category.assert_called_with(
             survey_id
         )
