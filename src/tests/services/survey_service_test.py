@@ -300,13 +300,6 @@ class TestSurveyService(unittest.TestCase):
             survey_id
         )
 
-    def test_get_sum_of_user_answer_points_by_question_id(self):
-        return_value = 3
-        question_id = 10
-        self.repo_mock.get_sum_of_user_answer_points_by_question_id.return_value = return_value
-        check = self.survey_service.get_sum_of_user_answer_points_by_question_id(question_id)
-        self.assertEqual(return_value, check)
-        self.repo_mock.get_sum_of_user_answer_points_by_question_id.assert_called_with(question_id)
     def test_get_users_who_answered_survey_in_timerange_returns_none_with_invalid_timerage(self):
         start_date_1 = datetime.fromisoformat("2011-11-04 00:05:23.283")
         end_date_1 = datetime.fromisoformat("2010-11-04 00:05:23.283")
@@ -392,3 +385,10 @@ class TestSurveyService(unittest.TestCase):
             survey_id, start_date, end_date, None)
         self.assertEqual(repo_value_to_return, survey_reponse)
 
+    def test_get_averages_of_user_answer_scores_calls_repo_correctly(self):
+        self.repo_mock.test_get_averages_of_user_answer_scores.return_value = "None"
+        survey_id = 1
+        self.survey_service.get_averages_of_user_answer_scores(survey_id)
+        self.repo_mock.test_get_averages_of_user_answer_scores.assert_called_with(
+            survey_id
+        )
