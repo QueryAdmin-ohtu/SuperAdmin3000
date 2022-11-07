@@ -296,9 +296,8 @@ class TestSurveyService(unittest.TestCase):
         survey_id = 1
         self.survey_service.get_answer_distribution_for_survey_questions(
             survey_id)
-        self.repo_mock.get_answer_distribution.assert_called_with(
-            survey_id
-        )
+        self.repo_mock.get_answer_distribution_filtered.assert_called_with(
+            survey_id, None, None, '')
 
     def test_get_users_who_answered_survey_in_timerange_returns_none_with_invalid_timerage(self):
         start_date_1 = datetime.fromisoformat("2011-11-04 00:05:23.283")
