@@ -12,9 +12,6 @@ timeformat = "%d.%m.%Y %H:%M"
 @stats.route("/surveys/<survey_id>/statistics", methods=["GET"])
 def statistics(survey_id):
     """Shows the statistics for the specific survey"""
-    # TODO: This should be removed when statistics page is ready for production!
-    if app.config["ENV"] == "prod":
-        return redirect("/")
 
     submissions = survey_service.get_number_of_submissions_for_survey(
         survey_id)
