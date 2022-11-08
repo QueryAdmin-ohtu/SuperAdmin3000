@@ -79,6 +79,7 @@
               {{ buttons.link_button("Reset filter", "/surveys/%s/statistics" % survey_id) }}
             </form>
           </div>
+          {% if show_userlist %}
           <div class="grow h-5"></div>
             <table class="min-w-full">
                 <thead class="border-b">
@@ -87,16 +88,17 @@
                         <th class="px-6 py-4 whitespace-nowrap font-mono font-medium text-gray-900 text-left">Group</th>
                         <th class="px-6 py-4 whitespace-nowrap font-mono font-medium text-gray-900 text-left">Date</th>                        
                     </tr>
-                    {% for user in users %}
+                    {% for user in users %}                    
                     <tr>
                       <td>{{ user.email }}</td>
                       <td>{{ user.group_name }}</td>
-                      <td>{{ user.answer_time }}</td>                      
+                      <td>{{ user.answer_time }}</td>
                     </tr>
-                    {% endfor %}
+                    {% endfor %}                    
                 </thead>
             </table>
         </div>
+        {% endif %}
     </div>
 </div>
 {% endblock %}
