@@ -876,3 +876,26 @@ class SurveyRepository:
         """
         values = {"category_name": category_name, "survey_id": survey_id}
         return self.db_connection.session.execute(sql, values).fetchone()[0]
+
+    def get_survey_results(self, survey_id):
+        """Get the results of a survey"""
+        sql = """
+            SELECT id, text, cutoff_from_maxpoints, "createdAt", "updatedAt"
+            FROM "Survey_results"
+            WHERE "surveyId"=:survey_id
+            """
+        result = self.db_connection.session.execute(sql, {"survey_id": survey_id}).fetchall()
+        return result
+
+    def create_survey_result(self, survey_id, text, cutoff_from_maxpoints):
+        """Create a new survey result"""
+        sql = """
+            INSERT INTO "Survey_results"
+            ("surveyId", text, cutoff_from_maxpoints, "createdAt", "updatedAt")
+            VALUES (:survey_id, :text, :cutoff, NOW(), NOW())
+            RETURNING id
+        """
+        values = {"survey_id": survey_id, "text": text, "cutoff": cutoff_from_maxpoints}
+        survey_result_id = self.db_connection.session.execute(sql, values).fetchone()[0]
+        db.session.commit()
+        return survey_result_id
