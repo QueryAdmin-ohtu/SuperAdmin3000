@@ -59,6 +59,10 @@
                 {{ form_elements.label("filter_end_date_label", "End date") }}
                 {{ form_elements.text_input("filter_end_date", "", "", false, filter_end_date) }}
               </div>
+              <div class="flex flex-col gap-2 w-full">
+                {{ form_elements.label("filter_email_label", "E-mail") }}
+                {{ form_elements.text_input("filter_email", "", "", false, filter_email) }}
+              </div>              
               <div>
                 {% for key, value in group_names.items() %}
                 <div class="p-3">

@@ -34,6 +34,7 @@ def statistics(survey_id):
     filter_start_date = (datetime.datetime.now() - datetime.timedelta(days=10*365)).strftime(timeformat)
     filter_end_date = datetime.datetime.now().strftime(timeformat)    
     filter_group_name = ""
+    filter_email = ""
     
     return render_template("surveys/statistics.html",
                            ENV=app.config["ENV"],
@@ -46,6 +47,7 @@ def statistics(survey_id):
                            filter_start_date=filter_start_date,
                            filter_end_date=filter_end_date,
                            filter_group_name=filter_group_name,
+                           filter_email=filter_email,
                            group_names=group_names
     )
 
@@ -64,6 +66,7 @@ def filtered_statistics(survey_id):
         return redirect(f"/surveys/{survey_id}/statistics")
     
     filter_group_name = request.form["filter_group_name"]
+    filter_email = request.form["filter_email"]
     
     submissions = survey_service.get_number_of_submissions_for_survey(survey_id)
     answer_distribution = helper.save_question_answer_charts(
@@ -91,7 +94,8 @@ def filtered_statistics(survey_id):
     users = users if users else []    
 
     filter_start_date = filter_start_date.strftime(timeformat)
-    filter_end_date = filter_end_date.strftime(timeformat)    
+    filter_end_date = filter_end_date.strftime(timeformat)
+
     
     return render_template("surveys/statistics.html",
                            ENV=app.config["ENV"],
@@ -104,6 +108,7 @@ def filtered_statistics(survey_id):
                            filter_start_date=filter_start_date,
                            filter_end_date=filter_end_date,
                            filter_group_name=filter_group_name,
+                           filter_email=filter_email,
                            group_names=group_names                           
     )
 
