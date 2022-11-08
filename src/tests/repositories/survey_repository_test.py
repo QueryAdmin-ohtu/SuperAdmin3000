@@ -710,6 +710,7 @@ class TestSurveyRepository(unittest.TestCase):
                 "A spanish survey",
                 "Test your olé skills"
             )
+            self.repo.create_category(survey_id_2, "Oraleee", "Description", [])
             survey_user_group_name = "Presidentes"
             survey_user_group_id = self.repo._add_survey_user_group(
                 survey_user_group_name, survey_id_2)

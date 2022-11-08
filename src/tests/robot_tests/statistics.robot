@@ -50,3 +50,7 @@ Filtering By Group Name Filters Users
     Select Radio Button  filter_group_name  Supertestaajat
     Click Button  Filter
     Page Should Contain  Users with submissions (1 / 3)
+
+Statistics Page Displays Correct Average Value Message When No Answers Are Present
+    Go To Statistics  9
+    Page Should Contain  No questions

@@ -72,12 +72,6 @@ Logged In User Cannot Delete a Category With Results
     Notification Is Displayed
     Page Should Contain  Could not delete category because it has results linked to it
 
-Logged In User Can Delete a Category Without Results
-    Go To Survey  1
-    Page Should Contain  123
-    Click Button  delete_button_7
-    Handle Alert  Accept
-    Page Should Not Contain  123
 
 Logged In User Can Edit Category Name and Description
     Go To Survey  1

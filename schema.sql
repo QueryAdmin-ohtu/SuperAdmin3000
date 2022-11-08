@@ -482,6 +482,7 @@ INSERT INTO public."Categories" VALUES (2, 'Category 2', 'Static descriptive tex
 INSERT INTO public."Categories" VALUES (3, 'Category 3', 'Static descriptive text about the category 3.', '[{"url":"https://www.eficode.com/cases/hansen","type":"Case Study"},{"url":"https://www.eficode.com/cases/basware","type":"Case Study"}]', '2022-09-26 14:03:28.613+00', '2022-09-26 14:03:28.613+00', 1);
 INSERT INTO public."Categories" VALUES (4, 'Category 4', 'Static descriptive text about the category 4.', '[{"url":"https://www.eficode.com/cases/hansen","type":"Case Study"},{"url":"https://www.eficode.com/cases/basware","type":"Case Study"}]', '2022-09-26 14:03:28.613+00', '2022-09-26 14:03:28.613+00', 1);
 INSERT INTO public."Categories" VALUES (5, 'Category 5', 'Static descriptive text about the category 5.', '[{"url":"https://www.eficode.com/cases/hansen","type":"Case Study"},{"url":"https://www.eficode.com/cases/basware","type":"Case Study"}]', '2022-09-26 14:03:28.613+00', '2022-09-26 14:03:28.613+00', 1);
+INSERT INTO public."Categories" VALUES (6, 'Size', 'Static descriptive text about elephant ears.', '[{"url":"https://www.eficode.com/cases/hansen","type":"Case Study"},{"url":"https://www.eficode.com/cases/basware","type":"Case Study"}]', '2022-09-26 14:03:28.613+00', '2022-09-26 14:03:28.613+00', 8);
 
 
 --

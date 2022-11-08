@@ -9,10 +9,25 @@
         row_num: Row number of table
 #}
 
-
+{% if row_num == 'Null' %}
 <div class="table-row">
     <div class="table-cell pr-4">
-        {{ row_num }}
+        null
+    </div>
+    <div class="table-cell pr-4">
+        {{ category[1] }}
+    </div>
+    <div class="table-cell pr-4">
+        Average score: {{category[2]}}
+    </div> 
+</div>
+<div class="table-cell pr-4">
+    {{ buttons.link_button("Edit category", "/edit_category/%s/%s" %(survey_id,category[0]), id="edit_button_%s" % category[0]) }}
+</div>
+{% else %}
+<div class="table-row">
+    <div class="table-cell pr-4">
+        {{ row_num[0]}}
     </div>
     <div class="table-cell pr-4">
         <div class="flex items-center">
@@ -23,8 +38,18 @@
             </div>
         </div>
     </div>
+    <div class="table-cell pr-4">
+        <div class="flex items-center">
+            <div class="inline-flex" role="group">
+                <div class="flex items-center md:justify-end gap-2">
+                    Average score: {{category[2]}}
+            </div>
+            </div>
+        </div>
+    </div>
     <div class="table-cell pr-4"> 
         {{ buttons.link_button("Edit category", "/edit_category/%s/%s" %(survey_id,category[0]), id="edit_button_%s" % category[0]) }}
     </div>
 </div>
+{% endif %}
 {% endmacro %}
