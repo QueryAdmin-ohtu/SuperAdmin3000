@@ -348,7 +348,9 @@ class SurveyService:
             If succeeds: The DB id of the created category
             If not: None
         """
-        return self.survey_repository.create_category(survey_id, name, description, content_links)
+        category_id = self.survey_repository.create_category(survey_id, name, description, content_links)
+        self.create_placeholder_category_result(category_id)
+        return category_id
 
     def add_admin(self, email: str):
         """
@@ -468,4 +470,10 @@ class SurveyService:
 
         return self.survey_repository.calculate_average_scores_by_category(survey_id)
 
+
+    def create_placeholder_category_result(self, category_id):
+        return self.survey_repository.create_placeholder_category_result(category_id)
+
+    def get_category_results_from_category_id(self, category_id):
+        return self.survey_repository.get_category_results_from_category_id(category_id)
 survey_service = SurveyService(SurveyRepository())
