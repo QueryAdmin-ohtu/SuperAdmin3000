@@ -898,3 +898,43 @@ class SurveyRepository:
         """
         values = {"category_name": category_name, "survey_id": survey_id}
         return self.db_connection.session.execute(sql, values).fetchone()[0]
+
+    def create_placeholder_category_result(self, category_id):
+        """
+        Creates a placeholder categy result
+        """
+
+        sql = """
+            INSERT INTO "Category_results" 
+            ("categoryId", "text", cutoff_from_maxpoints, "createdAt", "updatedAt") 
+            VALUES (:category_id, 'To be written', 1.0, NOW(), NOW())
+            RETURNING id """
+        values = {
+            "category_id": category_id,
+        }
+
+        try:
+            category_result_id = self.db_connection.session.execute(
+                sql, values).fetchone()
+            self.db_connection.session.commit()
+        except exc.SQLAlchemyError:
+            return None
+
+        return category_result_id[0]
+
+    def get_category_results_from_category_id(self, category_id):
+        """
+        Selects all category_results linked to a given category_id
+
+        Returns: A list of category_result objects
+        """
+        sql = """
+        SELECT * FROM "Category_results"
+        WHERE "categoryId" = :category_id
+        """
+        category_results = self.db_connection.session.execute(
+            sql, {"category_id": category_id}).fetchall()
+
+        if not category_results:
+            return None
+        return category_results
