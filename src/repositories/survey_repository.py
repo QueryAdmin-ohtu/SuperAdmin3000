@@ -888,18 +888,22 @@ class SurveyRepository:
         return result
 
     def create_survey_result(self, survey_id, text, cutoff_from_maxpoints):
-        """Create a new survey result"""
+        """Create a new survey result.
+        
+        Results connected to the same survey with duplicate cutoff values will not be created"""
         sql = """
             INSERT INTO "Survey_results"
             ("surveyId", text, cutoff_from_maxpoints, "createdAt", "updatedAt")
-            VALUES (:survey_id, :text, :cutoff, NOW(), NOW())
+            SELECT * FROM (SELECT :survey_id, :text, :cutoff, NOW(), NOW()) AS tmp
+            WHERE NOT EXISTS (SELECT cutoff_from_maxpoints FROM "Survey_results"
+                WHERE cutoff_from_maxpoints=:cutoff AND "surveyId"=:survey_id)
             RETURNING id
         """
         values = {"survey_id": survey_id, "text": text, "cutoff": cutoff_from_maxpoints}
         survey_result_id = self.db_connection.session.execute(sql, values).fetchone()[0]
         db.session.commit()
         return survey_result_id
-        
+
     def create_placeholder_category_result(self, category_id):
         """
         Creates a placeholder categy result
