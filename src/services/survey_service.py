@@ -274,13 +274,16 @@ class SurveyService:
                                                survey_id: int,
                                                start_date: datetime,
                                                end_date: datetime,
-                                               group_name):   
-        """ Returns a list of users who have answered a given survey in a given timerange
+                                               group_name,
+                                               email):   
+        """ Returns a list of users who have answered a given survey in a given timerange,
+        belonging the given group and having a matching email address
         Args:
            survey_id: Id of the survey
            start_time: Start of timerange to filter by
            end_time: End of timerange to filter by
            group_name: Name of the user group to filter by
+           email: Email address to filter by
         
         Returns:
            On succeed: A list of lists where each element contains
@@ -292,10 +295,15 @@ class SurveyService:
         if start_date > end_date or end_date < start_date:
             return None
 
+        # Changes an empty string ("") value to None
         if not group_name:
             group_name = None
-            
-        return self.survey_repository.get_users_who_answered_survey(survey_id, start_date, end_date, group_name)
+                    
+        return self.survey_repository.get_users_who_answered_survey(survey_id,
+                                                                    start_date,
+                                                                    end_date,
+                                                                    group_name,
+                                                                    email)
     
     
     def get_users_who_answered_survey_in_timerange(self, survey_id: int, start_date: datetime, end_date: datetime):
@@ -429,7 +437,8 @@ class SurveyService:
                                                      survey_id,
                                                      start_date: datetime = None, 
                                                      end_date: datetime = None,
-                                                     group_name: str = ""):
+                                                     group_name: str = "",
+                                                     email: str = ""):
         """
         Fetches the distribution of user answers over the
         answer options of a survey
@@ -438,16 +447,20 @@ class SurveyService:
             survey_id   The id of the survey
             start_date  Filter out answers before this date (optional)
             end_date    Filter out answers after this date (optional)
-            group_name  Filetr out answers from user, who doen't belong to this group (optional)
+            group_name  Filter out answers from user, who doen't belong to this group (optional)
+            email       Filter in answers from user, who's email matches (optional)
 
         Returns a table with question id and text, answer
         id and text, number of user answers
         """
 
-        return self.survey_repository.get_answer_distribution_filtered(survey_id,
-                                                                       start_date,
-                                                                       end_date,
-                                                                       group_name)
+        result = self.survey_repository.get_answer_distribution_filtered(survey_id,
+                                                                         start_date,
+                                                                         end_date,
+                                                                         group_name,
+                                                                         email)
+
+        return result
 
     def get_count_of_user_answers_to_a_question(self, question_id):
         """
