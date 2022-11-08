@@ -476,4 +476,11 @@ class SurveyService:
 
     def get_category_results_from_category_id(self, category_id):
         return self.survey_repository.get_category_results_from_category_id(category_id)
+
+    def create_survey_result(self, survey_id, text, cutoff_from_maxpoints):
+        """Creates a new survey result
+        Returns id of survey result.
+        """
+        return self.survey_repository.create_survey_result(survey_id, text, cutoff_from_maxpoints)
+
 survey_service = SurveyService(SurveyRepository())
