@@ -854,22 +854,22 @@ class SurveyRepository:
       
         result_list = []
         related_questions = self.get_questions_of_survey(survey_id)
+        
         for question in related_questions:
             points = self.get_sum_of_user_answer_points_by_question_id(question.id)
             answers = self.get_count_of_user_answers_to_a_question(question.id)
-            weights = question.category_weights
-            
+
             for category_weight in question.category_weights:
-                    if (answers != 0):
-                        weighted_average = float("{:.2f}".format(points / answers * category_weight['multiplier']))
-                    else:
-                        weighted_average = "No user answers"
-                    category_id  = self.get_category_id_from_name(survey_id, category_weight['category'])
-                    if category_id is not None:
-                        complete_item = (category_id, category_weight['category'],weighted_average )
-                    else:
-                        complete_item = ("Null", "Entry '" + str(category_weight['category']) + "' missing from 'Categories'",weighted_average)
-                    result_list.append(complete_item)
+                if (answers != 0):
+                    weighted_average = float("{:.2f}".format(points / answers * category_weight['multiplier']))
+                else:
+                    weighted_average = "No user answers"
+                category_id  = self.get_category_id_from_name(survey_id, category_weight['category'])
+                if category_id is not None:
+                    complete_item = (category_id, category_weight['category'],weighted_average )
+                else:
+                    complete_item = ("Null", "Entry '" + str(category_weight['category']) + "' missing from 'Categories'",weighted_average)
+                result_list.append(complete_item)
         return result_list
 
     def get_category_id_from_name(self, survey_id, category_name):
