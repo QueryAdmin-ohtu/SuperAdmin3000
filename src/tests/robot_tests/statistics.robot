@@ -50,3 +50,9 @@ Filtering By Group Name Filters Users
     Select Radio Button  filter_group_name  Supertestaajat
     Click Button  Filter
     Page Should Contain  Users with submissions (1 / 3)
+
+Filtering By Email Filters Users
+    Go To Statistics  8
+    Input Text  filter_email  duser
+    Click Button  Filter
+    Page Should Contain  Users with submissions (2 / 3)
