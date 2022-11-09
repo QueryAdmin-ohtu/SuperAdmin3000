@@ -899,7 +899,6 @@ class SurveyRepository:
         sums = {}
         occurences = {}
         names = {}
-        # Count occurence of category...
         for item in result_list:
             sums[item[0]] = sums.setdefault(item[0], 0) + item[2]
             occurences[item[0]] = occurences.setdefault(item[0] ,0) + 1
