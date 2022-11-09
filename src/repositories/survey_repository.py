@@ -479,14 +479,20 @@ class SurveyRepository:
             return None
         return answers
 
-    def get_users_who_answered_survey(self, survey_id: int, start_date: datetime = None, 
-        end_date: datetime = None, group_name=None):
-        """ Returns a list of users who have answered a given survey. Results can be filtered by a timerange.
+    def get_users_who_answered_survey(self,
+                                      survey_id: int,
+                                      start_date: datetime = None, 
+                                      end_date: datetime = None,
+                                      group_name=None,
+                                      email=""):
+        """ Returns a list of users who have answered a given survey.
+        Results can be filtered by a timerange, group name and email address.
         Args:
             survey_id: Id of the survey
             start_time: Start of timerange to filter by (optional)
             end_time: End of timerange to filter by (optional)
             group_name: User group to filter by (optional)
+            email: Email to filter by (optional)
 
         Returns:
             On succeed: A list of lists where each element contains
@@ -494,6 +500,7 @@ class SurveyRepository:
             On error / no users who answered found:
                 None
         """
+        print(f"Email: '{email}'", flush=True)
 
         sql = """
         SELECT
@@ -515,10 +522,14 @@ class SurveyRepository:
             ON "u"."groupId" = "sua"."id"
         WHERE "s"."id"=:survey_id AND "sua"."surveyId"=:survey_id
             AND ((:start_date IS NULL AND :end_date IS NULL) OR ("ua"."updatedAt" > :start_date AND "ua"."updatedAt" < :end_date))
-            AND ((:group_name IS NULL) OR ("group_name"=:group_name))        
+            AND ((:group_name IS NULL) OR ("group_name"=:group_name))
+            AND (("email" LIKE :email))
         """
-        values = {"survey_id": survey_id, "start_date": start_date,
-                  "end_date": end_date, "group_name": group_name}
+        values = {"survey_id": survey_id,
+                  "start_date": start_date,
+                  "end_date": end_date,
+                  "group_name": group_name,
+                  "email": f"%{email}%"}
 
         try:
             users = self.db_connection.session.execute(sql, values).fetchall()
@@ -666,14 +677,17 @@ class SurveyRepository:
                                 survey_id,
                                 start_date: datetime = None, 
                                 end_date: datetime = None,
-                                user_group_id: uuid = None):
+                                user_group_id: uuid = None,
+                                email: str = ""):
         """ Finds and returns the distribution of user answers
         over the answer options of a survey.
 
-        Filtering by date range and/or user group. Start and end dates are included in the query.
+        Filtering by date range and/or user group and/or email. Start and end
+        dates are included in the query.
 
         Returns a table where each row contains:
-        question id, question text, answer id, answer text, user answer counts"""
+        question id, question text, answer id, answer text, user answer counts
+        """
 
         if end_date:
             end_date = end_date.replace(hour=23, minute=59, second=59)
@@ -695,15 +709,20 @@ class SurveyRepository:
         LEFT JOIN "Users" AS u
             ON u.id = ua."userId"
         WHERE s.id=:survey_id
-            AND (u."groupId"=:group_id OR :group_id IS NULL)
             AND ((:start_date IS NULL AND :end_date IS NULL) OR (ua."createdAt" BETWEEN :start_date AND :end_date))
+            AND ((:group_id IS NULL) OR (u."groupId"=:group_id))
+            AND (u."email" LIKE :email)
         GROUP BY q.id, q.text, qa.id, qa.text
         ORDER BY q.id
         """
+
+        values = {"survey_id": survey_id,
+                  "group_id": user_group_id,
+                  "start_date": start_date, 
+                  "end_date": end_date,
+                  "email": f"%{email}%"}
         try:
-            result = self.db_connection.session.execute(
-                sql, {"survey_id": survey_id, "group_id": user_group_id, "start_date": start_date, 
-                "end_date": end_date}).fetchall()
+            result = self.db_connection.session.execute(sql, values).fetchall()
             if result:
                 return result
             return None
@@ -713,18 +732,21 @@ class SurveyRepository:
     def get_answer_distribution_filtered(self, survey_id,
                                          start_date: datetime = None, 
                                          end_date: datetime = None,
-                                         group_name: str = ""):
+                                         group_name: str = "",
+                                         email: str = ""):                                         
         """ Finds and returns the distribution of user answers
         over the answer options of a survey.
 
-        Filtering by date range and/or user group. Start and end dates are included in the query.
+        Filtering by date range and/or user group and/or email. Start and end
+        dates are included in the query.
 
         Returns a table where each row contains:
-        question id, question text, answer id, answer text, user answer counts"""
+        question id, question text, answer id, answer text, user answer counts
+        """
 
         group_id = self._find_user_group_by_name(group_name)
 
-        return self.get_answer_distribution(survey_id, start_date, end_date, group_id)
+        return self.get_answer_distribution(survey_id, start_date, end_date, group_id, email)
 
     def _find_user_group_by_name(self, group_name):
         sql = """SELECT id, group_name FROM "Survey_user_groups" WHERE lower(group_name)=:group_name"""
