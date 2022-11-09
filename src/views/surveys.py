@@ -191,10 +191,10 @@ def edit_question(survey_id, question_id):
     show_previous_button = show_next_button = False
     questions = survey_service.get_questions_of_survey(survey_id)
     current_question = int(question_id)
-    for question in questions:
-        if question.id < current_question:
+    for q in questions:
+        if q.id < current_question:
             show_previous_button = True
-        if question.id > current_question:
+        if q.id > current_question:
             show_next_button = True
 
     if not question:
