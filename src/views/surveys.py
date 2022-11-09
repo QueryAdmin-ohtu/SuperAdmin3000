@@ -410,6 +410,15 @@ def new_survey_result_view(survey_id):
     survey = survey_service.get_survey(survey_id)
     return render_template("surveys/edit_survey_results.html", survey=survey)
 
+@surveys.route("/surveys/<survey_id>/new-survey-result", methods=["POST"])
+def new_survey_result_post(survey_id):
+    survey_id = request.form["survey_id"]
+    text = request.form["text"]
+    cutoff_value = request.form["cutoff"]
+
+    result_id = survey_service.create_survey_result(survey_id, text, cutoff_value)
+
+    return redirect(f"/surveys/{survey_id}/new-survey-result")
 
 @surveys.route("/surveys")
 def view_surveys():
