@@ -870,29 +870,45 @@ class SurveyRepository:
     def calculate_average_scores_by_category(self, survey_id):
         """
         Calculates weighted average points for all user answers in a survey.
-        Returns a list of tuples which includes the category id, category name and average score (to the precision of two decimal places) of all user answers in a given survey.
+        Returns a list of tuples which includes the category id, category name
+        and average score (to the precision of two decimal places) of all user answers in a given survey.
         """
 
-      
         result_list = []
         related_questions = self.get_questions_of_survey(survey_id)
-        
+
         for question in related_questions:
             points = self.get_sum_of_user_answer_points_by_question_id(question.id)
             answers = self.get_count_of_user_answers_to_a_question(question.id)
-
+            
             for category_weight in question.category_weights:
                 if (answers != 0):
                     weighted_average = float("{:.2f}".format(points / answers * category_weight['multiplier']))
                 else:
-                    weighted_average = "No user answers"
+                    weighted_average = 0
                 category_id  = self.get_category_id_from_name(survey_id, category_weight['category'])
                 if category_id is not None:
-                    complete_item = (category_id, category_weight['category'],weighted_average )
+                    question_average = (category_id, category_weight['category'], weighted_average)
                 else:
-                    complete_item = ("Null", str(category_weight['category']) + " - (missing from 'Categories')",weighted_average)
-                result_list.append(complete_item)
-        return result_list
+                    question_average = ("Null", str(category_weight['category']) + " - (missing from 'Categories')",weighted_average)
+                result_list.append(question_average)
+        return self.handle_result_list(result_list)
+
+
+    def handle_result_list(self, result_list):
+        sums = {}
+        occurences = {}
+        names = {}
+        # Count occurence of category...
+        for item in result_list:
+            sums[item[0]] = sums.setdefault(item[0], 0) + item[2]
+            occurences[item[0]] = occurences.setdefault(item[0] ,0) + 1
+            names[item[0]] = item[1]
+        results = []
+        for x in sums:
+            results.append((x, names[x], float("{:.2f}".format(sums[x]/occurences[x]))))
+        return results
+
 
     def get_category_id_from_name(self, survey_id, category_name):
         """
@@ -903,10 +919,13 @@ class SurveyRepository:
             SELECT c.id FROM "Categories" AS c, "Surveys" as s WHERE c.name = :category_name and s.id = :survey_id
         """
         values = {"category_name": category_name, "survey_id": survey_id}
-        found_survey_id = self.db_connection.session.execute(sql, values).fetchone()
-        if found_survey_id:
-            return found_survey_id[0]
-        return None
+        found_id = self.db_connection.session.execute(sql, values).fetchone()
+        if found_id:
+            return found_id[0]
+        else:
+            return None
+
+
 
     def create_placeholder_category_result(self, category_id):
         """
@@ -934,7 +953,6 @@ class SurveyRepository:
     def get_category_results_from_category_id(self, category_id):
         """
         Selects all category_results linked to a given category_id
-
         Returns: A list of category_result objects
         """
         sql = """
