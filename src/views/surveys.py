@@ -114,20 +114,6 @@ def view_survey(survey_id):
                            ENV=app.config["ENV"], categories=categories)
 
 
-@surveys.route("/surveys/<survey_id>/statistics")
-def survey_statistics(survey_id):
-    """ Open up statistics for the given survey
-    """
-
-    survey = survey_service.get_survey(survey_id)
-
-    #  TODO: get statistics
-    statistics = "JUGE STATS HERE!"
-
-    return render_template("surveys/statistics.html", survey=survey,
-                           statistics=statistics, survey_id=survey_id, ENV=app.config["ENV"])
-
-
 @surveys.route("/surveys/<survey_id>/new-question", methods=["GET"])
 def new_question_view(survey_id):
     """  Returns the page for creating a new question.
@@ -416,6 +402,13 @@ def delete_category():
 
     flash("Could not delete category because it has results linked to it", "error")
     return redirect(f"/surveys/{survey_id}")
+
+@surveys.route("/surveys/<survey_id>/new-survey-result", methods=["GET"])
+def new_survey_result_view(survey_id):
+    """Renders the view for creating survey results"""
+
+    survey = survey_service.get_survey(survey_id)
+    return render_template("surveys/edit_survey_results.html", survey=survey)
 
 
 @surveys.route("/surveys")

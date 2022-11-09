@@ -297,7 +297,7 @@ class TestSurveyService(unittest.TestCase):
         self.survey_service.get_answer_distribution_for_survey_questions(
             survey_id)
         self.repo_mock.get_answer_distribution_filtered.assert_called_with(
-            survey_id, None, None, '')
+            survey_id, None, None, '', '')
 
     def test_get_users_who_answered_survey_in_timerange_returns_none_with_invalid_timerage(self):
         start_date_1 = datetime.fromisoformat("2011-11-04 00:05:23.283")
@@ -352,10 +352,10 @@ class TestSurveyService(unittest.TestCase):
         self.repo_mock.get_users_who_answered_survey.return_value = repo_value_to_return
 
         survey_reponse = self.survey_service.get_users_who_answered_survey_filtered(
-            survey_id, start_date, end_date, "Boss Team")
+            survey_id, start_date, end_date, "Boss Team", "boss@mail")
 
         self.repo_mock.get_users_who_answered_survey.assert_called_once_with(
-            survey_id, start_date, end_date, "Boss Team")
+            survey_id, start_date, end_date, "Boss Team", "boss@mail")
         self.assertEqual(repo_value_to_return, survey_reponse)
 
     def test_get_users_who_answered_survey_filtered_returns_none_with_invalid_timerage(self):
@@ -363,7 +363,7 @@ class TestSurveyService(unittest.TestCase):
         end_date_1 = datetime.fromisoformat("2010-11-04 00:05:23.283")
 
         service_response_1 = self.survey_service.get_users_who_answered_survey_filtered(
-            1, start_date_1, end_date_1, "group")
+            1, start_date_1, end_date_1, "group", "mail")
         self.assertIsNone(service_response_1)
 
         self.repo_mock.get_users_who_answered_survey.assert_not_called()
@@ -378,16 +378,23 @@ class TestSurveyService(unittest.TestCase):
         self.repo_mock.get_users_who_answered_survey.return_value = repo_value_to_return
 
         survey_reponse = self.survey_service.get_users_who_answered_survey_filtered(
-            survey_id, start_date, end_date, "")
+            survey_id, start_date, end_date, "", "")
 
         self.repo_mock.get_users_who_answered_survey.assert_called_once_with(
-            survey_id, start_date, end_date, None)
+            survey_id, start_date, end_date, None, "")
         self.assertEqual(repo_value_to_return, survey_reponse)
 
-    def test_calculate_average_scores_by_categorycalls_repo_correctly(self):
+    def test_calculate_average_scores_by_category_calls_repo_correctly(self):
         self.repo_mock.calculate_average_scores_by_category.return_value = "None"
         survey_id = 1
         self.survey_service.calculate_average_scores_by_category(survey_id)
         self.repo_mock.calculate_average_scores_by_category.assert_called_with(
             survey_id
         )
+
+    def test_create_placeholder_category_result_calls_repo_correctly(self):
+        self.repo_mock.create_placeholder_category_result.return_value = 1
+        category_id = 1
+        response = self.survey_service.create_placeholder_category_result(category_id)
+        self.assertEqual(response, category_id)
+        self.repo_mock.create_placeholder_category_result.assert_called_with(category_id)

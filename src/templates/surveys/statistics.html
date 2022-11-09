@@ -60,6 +60,10 @@
                 {{ form_elements.label("filter_end_date_label", "End date") }}
                 {{ form_elements.text_input("filter_end_date", "", "", false, filter_end_date) }}
               </div>
+              <div class="flex flex-col gap-2 w-full">
+                {{ form_elements.label("filter_email_label", "E-mail") }}
+                {{ form_elements.text_input("filter_email", "", "", false, filter_email) }}
+              </div>              
               <div>
                 {% for key, value in group_names.items() %}
                 <div class="p-3">
@@ -76,6 +80,7 @@
               {{ buttons.link_button("Reset filter", "/surveys/%s/statistics" % survey_id) }}
             </form>
           </div>
+          {% if show_userlist %}
           <div class="grow h-5"></div>
             <table class="min-w-full">
                 <thead class="border-b">
@@ -84,16 +89,17 @@
                         <th class="px-6 py-4 whitespace-nowrap font-mono font-medium text-gray-900 text-left">Group</th>
                         <th class="px-6 py-4 whitespace-nowrap font-mono font-medium text-gray-900 text-left">Date</th>                        
                     </tr>
-                    {% for user in users %}
+                    {% for user in users %}                    
                     <tr>
                       <td>{{ user.email }}</td>
                       <td>{{ user.group_name }}</td>
-                      <td>{{ user.answer_time }}</td>                      
+                      <td>{{ user.answer_time }}</td>
                     </tr>
-                    {% endfor %}
+                    {% endfor %}                    
                 </thead>
             </table>
         </div>
+        {% endif %}
     </div>
 </div>
 {% endblock %}

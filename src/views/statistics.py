@@ -21,8 +21,6 @@ def statistics(survey_id):
     categories = survey_service.calculate_average_scores_by_category(survey_id)
 
     users = survey_service.get_users_who_answered_survey(survey_id)
-    # TODO: remove
-    print(f"Users:\n{users}", flush=True)
     
     users = users if users else []
     total_users = len(users)
@@ -34,6 +32,7 @@ def statistics(survey_id):
     filter_start_date = (datetime.datetime.now() - datetime.timedelta(days=10*365)).strftime(timeformat)
     filter_end_date = datetime.datetime.now().strftime(timeformat)    
     filter_group_name = ""
+    filter_email = ""
     
     return render_template("surveys/statistics.html",
                            ENV=app.config["ENV"],
@@ -46,7 +45,9 @@ def statistics(survey_id):
                            filter_start_date=filter_start_date,
                            filter_end_date=filter_end_date,
                            filter_group_name=filter_group_name,
-                           group_names=group_names
+                           filter_email=filter_email,
+                           group_names=group_names,
+                           show_userlist=False
     )
 
 @stats.route("/surveys/<survey_id>/statistics/filter", methods=["POST"])
@@ -64,13 +65,15 @@ def filtered_statistics(survey_id):
         return redirect(f"/surveys/{survey_id}/statistics")
     
     filter_group_name = request.form["filter_group_name"]
-    
+    filter_email = request.form["filter_email"]
+
     submissions = survey_service.get_number_of_submissions_for_survey(survey_id)
     answer_distribution = helper.save_question_answer_charts(
         survey_service.get_answer_distribution_for_survey_questions(survey_id,
                                                                     filter_start_date,
                                                                     filter_end_date,
-                                                                    filter_group_name)
+                                                                    filter_group_name,
+                                                                    filter_email)
     )
     categories = survey_service.get_categories_of_survey(survey_id)
 
@@ -82,16 +85,17 @@ def filtered_statistics(survey_id):
     for user in users:
         group_names[user.group_name] = user.group_name
     
-    print(f"START (datetime object): {filter_start_date}")
     users = survey_service.get_users_who_answered_survey_filtered(survey_id,
                                                                   filter_start_date,
                                                                   filter_end_date,
-                                                                  filter_group_name)
+                                                                  filter_group_name,
+                                                                  filter_email)
    
     users = users if users else []    
 
     filter_start_date = filter_start_date.strftime(timeformat)
-    filter_end_date = filter_end_date.strftime(timeformat)    
+    filter_end_date = filter_end_date.strftime(timeformat)
+
     
     return render_template("surveys/statistics.html",
                            ENV=app.config["ENV"],
@@ -104,7 +108,9 @@ def filtered_statistics(survey_id):
                            filter_start_date=filter_start_date,
                            filter_end_date=filter_end_date,
                            filter_group_name=filter_group_name,
-                           group_names=group_names                           
+                           filter_email=filter_email,
+                           group_names=group_names,
+                           show_userlist=True                           
     )
 
 
