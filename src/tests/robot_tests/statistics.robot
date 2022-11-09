@@ -52,5 +52,10 @@ Filtering By Group Name Filters Users
     Page Should Contain  Users with submissions (1 / 3)
 
 Statistics Page Displays Correct Average Value Message When No Answers Are Present
-    Go To Statistics  9
-    Page Should Contain  No questions
+    Go To Statistics  1
+    Page Should Contain  Average score: No user answers
+
+Statistics Page Displays Correct Average Values
+    Go To Statistics  8
+    Page Should Contain  Average score: 3.33
+    Page Should Contain  Average score: 1.67

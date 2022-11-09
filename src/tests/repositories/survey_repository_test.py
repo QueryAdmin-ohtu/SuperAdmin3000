@@ -874,7 +874,6 @@ class TestSurveyRepository(unittest.TestCase):
             self.assertTrue(self.repo.get_sum_of_user_answer_points_by_question_id(question_one_id) == 7)
 
             resulting_list = self.repo.calculate_average_scores_by_category(survey_id)
-
             self.assertTrue(resulting_list[0] == (category_one_id, "One", 2.33))
             self.assertTrue(resulting_list[1] == (category_two_id, "Two",  4.67))
             self.assertTrue(resulting_list[2] == (category_three_id, "Three", 7.0))

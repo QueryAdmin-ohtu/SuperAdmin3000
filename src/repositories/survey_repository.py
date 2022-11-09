@@ -868,16 +868,20 @@ class SurveyRepository:
                 if category_id is not None:
                     complete_item = (category_id, category_weight['category'],weighted_average )
                 else:
-                    complete_item = ("Null", "Entry '" + str(category_weight['category']) + "' missing from 'Categories'",weighted_average)
+                    complete_item = ("Null", str(category_weight['category']) + " - (missing from 'Categories')",weighted_average)
                 result_list.append(complete_item)
         return result_list
 
     def get_category_id_from_name(self, survey_id, category_name):
         """
-        Returns the category Id based on the category name.
+        Returns the category Id based on the category name if successful.
+        Else returns None.
         """
         sql = """
             SELECT c.id FROM "Categories" AS c, "Surveys" as s WHERE c.name = :category_name and s.id = :survey_id
         """
         values = {"category_name": category_name, "survey_id": survey_id}
-        return self.db_connection.session.execute(sql, values).fetchone()
+        found_survey_id = self.db_connection.session.execute(sql, values).fetchone()
+        if found_survey_id:
+            return found_survey_id[0]
+        return None
