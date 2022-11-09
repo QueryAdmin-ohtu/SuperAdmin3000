@@ -53,7 +53,7 @@ Filtering By Group Name Filters Users
 
 Statistics Page Displays Correct Average Value Message When No Answers Are Present
     Go To Statistics  1
-    Page Should Contain  Average score: No user answers
+    Page Should Contain  Average score: 0.0
 
 Statistics Page Displays Correct Average Values
     Go To Statistics  8
