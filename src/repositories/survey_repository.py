@@ -924,10 +924,12 @@ class SurveyRepository:
             RETURNING id
         """
         values = {"survey_id": int(survey_id), "text": text, "cutoff": float(cutoff_from_maxpoints)}
-        survey_result_id = self.db_connection.session.execute(sql, values).fetchone()[0]
+        survey_result = self.db_connection.session.execute(sql, values).fetchone()
         db.session.commit()
-        return survey_result_id
-        
+        if survey_result:
+            survey_result_id = survey_result[0]
+            return survey_result_id
+        return None
 
     def create_placeholder_category_result(self, category_id):
         """
