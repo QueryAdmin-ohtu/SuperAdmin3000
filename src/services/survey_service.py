@@ -500,6 +500,8 @@ class SurveyService:
 
     def get_survey_results(self, survey_id):
         """Fetch the results of the given survey
+
+        Returns a table with columns: id, text, cutoff_from_maxpoints, createdAt, updatedAt
         """
         return self.survey_repository.get_survey_results(survey_id)
 

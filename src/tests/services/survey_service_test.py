@@ -398,3 +398,15 @@ class TestSurveyService(unittest.TestCase):
         response = self.survey_service.create_placeholder_category_result(category_id)
         self.assertEqual(response, category_id)
         self.repo_mock.create_placeholder_category_result.assert_called_with(category_id)
+
+    def test_get_survey_results_calls_repo_correctly(self):
+        self.repo_mock.get_survey_results.return_value = [15, "You are very mature and agile", 1.0]
+        response = self.survey_service.get_survey_results(1)
+        self.assertEqual(response[0], 15)
+        self.repo_mock.get_survey_results.assert_called_with(1)
+
+    def test_create_survey_result_calls_repo_correctly(self):
+        self.repo_mock.create_survey_result.return_value = 15
+        response = self.survey_service.create_survey_result(1, "You are very mature and agile!", 0.9)
+        self.assertEqual(response, 15)
+        self.repo_mock.create_survey_result.assert_called_with(1, "You are very mature and agile!", 0.9)
