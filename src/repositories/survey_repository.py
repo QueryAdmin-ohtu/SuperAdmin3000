@@ -864,39 +864,80 @@ class SurveyRepository:
 
         return res
 
+   
     def calculate_average_scores_by_category(self, survey_id):
         """
         Calculates weighted average points for all user answers in a survey.
+<<<<<<< HEAD
         Returns a list of tuples which includes the category id, category name and average score
         (to the precision of two decimal places) of all user answers in a given survey.
+=======
+
+        Method creates a list of tuples which contain weighted averages for all answered questions.
+        Helper method calculates the category averages.
+
+        Returns a list of tuples which includes the category id, category name
+        and average score (to the precision of two decimal places) of all user answers in a given survey.
+>>>>>>> main
         """
 
-        result_list = []
+        question_averages = []
         related_questions = self.get_questions_of_survey(survey_id)
+
         for question in related_questions:
             points = self.get_sum_of_user_answer_points_by_question_id(question.id)
             answers = self.get_count_of_user_answers_to_a_question(question.id)
-            if answers == 0:
-                continue
-            avg = float(points / answers)
 
             for category_weight in question.category_weights:
-                weighted_average = float("{:.2f}".format(avg * category_weight['multiplier']))
-                complete_item = (self.get_category_id_from_name(
-                    survey_id, category_weight['category']), category_weight['category'], weighted_average)
-                result_list.append(complete_item)
+                if (answers != 0):
+                    weighted_average = points / answers * category_weight['multiplier']
+                else:
+                    weighted_average = 0
+                category_id  = self.get_category_id_from_name(survey_id, category_weight['category'])
+                if category_id is not None:
+                    question_average = (category_id, category_weight['category'], weighted_average)
+                else:
+                    question_average = ("Null", str(category_weight['category']) + " - (missing from 'Categories')",weighted_average)
+                question_averages.append(question_average)
+        return self.calculate_category_averages(question_averages)
 
-        return result_list
+
+    def calculate_category_averages(self, question_averages):
+        """
+        Helper method to calculate category averages.
+
+        Returns a list of tuples as follows:
+        (category_id, category_name, category average score)
+        """
+        sums = {}
+        occurences = {}
+        names = {}
+        for item in question_averages:
+            sums[item[0]] = sums.setdefault(item[0], 0) + item[2]
+            occurences[item[0]] = occurences.setdefault(item[0] ,0) + 1
+            names[item[0]] = item[1]
+        results = []
+        for key in sums:
+            results.append((key, names[key], float("{:.2f}".format(sums[key]/occurences[key]))))
+        return results
+
 
     def get_category_id_from_name(self, survey_id, category_name):
         """
-        Returns the category Id based on the category name.
+        Returns the category Id based on the category name if successful.
+        Else returns None.
         """
         sql = """
             SELECT c.id FROM "Categories" AS c, "Surveys" as s WHERE c.name = :category_name and s.id = :survey_id
         """
         values = {"category_name": category_name, "survey_id": survey_id}
-        return self.db_connection.session.execute(sql, values).fetchone()[0]
+        found_id = self.db_connection.session.execute(sql, values).fetchone()
+        if found_id:
+            return found_id[0]
+        else:
+            return None
+
+
 
     def get_survey_results(self, survey_id):
         """Get the results of a survey
@@ -957,7 +998,6 @@ class SurveyRepository:
     def get_category_results_from_category_id(self, category_id):
         """
         Selects all category_results linked to a given category_id
-
         Returns: A list of category_result objects
         """
         sql = """

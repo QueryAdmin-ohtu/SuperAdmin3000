@@ -27,6 +27,7 @@
                         <div class="table-row-group">
                             {% if categories %}
                                 {% for category in categories %}
+                                    <hr>
                                     {{ statistics_elements.category_row(survey_id, category, category[0])}}
                                     <hr>
                                 {% endfor %}

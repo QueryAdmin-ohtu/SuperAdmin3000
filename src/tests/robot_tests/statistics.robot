@@ -51,6 +51,14 @@ Filtering By Group Name Filters Users
     Click Button  Filter
     Page Should Contain  Users with submissions (1 / 3)
 
+Statistics Page Displays Correct Average Value Message When No Answers Are Present
+    Go To Statistics  1
+    Page Should Contain  Average score: 0.0
+
+Statistics Page Displays Correct Average Values
+    Go To Statistics  8
+    Page Should Contain  Average score: 3.33
+    Page Should Contain  Average score: 1.67
 Filtering By Email Filters Users
     Go To Statistics  8
     Input Text  filter_email  duser
