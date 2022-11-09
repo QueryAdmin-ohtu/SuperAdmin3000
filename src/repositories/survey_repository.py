@@ -921,10 +921,11 @@ class SurveyRepository:
                 WHERE cutoff_from_maxpoints=:cutoff AND "surveyId"=:survey_id)
             RETURNING id
         """
-        values = {"survey_id": survey_id, "text": text, "cutoff": cutoff_from_maxpoints}
+        values = {"survey_id": int(survey_id), "text": text, "cutoff": float(cutoff_from_maxpoints)}
         survey_result_id = self.db_connection.session.execute(sql, values).fetchone()[0]
         db.session.commit()
         return survey_result_id
+        
 
     def create_placeholder_category_result(self, category_id):
         """
