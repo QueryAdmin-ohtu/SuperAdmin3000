@@ -422,7 +422,7 @@ def new_survey_result_post(survey_id):
     text = request.form["text"]
     cutoff_value = request.form["cutoff"]
 
-    result_id = survey_service.create_survey_result(survey_id, text, cutoff_value)
+    survey_service.create_survey_result(survey_id, text, cutoff_value)
 
     return redirect(f"/surveys/{survey_id}")
 
