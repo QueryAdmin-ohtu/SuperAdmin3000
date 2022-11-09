@@ -112,7 +112,7 @@ def view_survey(survey_id):
     print(categories, flush=True)
     return render_template("surveys/view_survey.html", survey=survey,
                            questions=questions, survey_id=survey_id,
-                           ENV=app.config["ENV"], categories=categories, 
+                           ENV=app.config["ENV"], categories=categories,
                            results=results)
 
 
@@ -191,10 +191,10 @@ def edit_question(survey_id, question_id):
     show_previous_button = show_next_button = False
     questions = survey_service.get_questions_of_survey(survey_id)
     current_question = int(question_id)
-    for q in questions:
-        if q.id < current_question:
+    for question in questions:
+        if question.id < current_question:
             show_previous_button = True
-        if q.id > current_question:
+        if question.id > current_question:
             show_next_button = True
 
     if not question:
@@ -414,10 +414,11 @@ def new_survey_result_view(survey_id):
     if previous_results:
         return render_template("surveys/edit_survey_results.html", survey=survey)
     return render_template("surveys/edit_survey_results.html", survey=survey, first=True)
-    
 
 @surveys.route("/surveys/<survey_id>/new-survey-result", methods=["POST"])
 def new_survey_result_post(survey_id):
+    """Handles creating a new survey result"""
+
     survey_id = request.form["survey_id"]
     text = request.form["text"]
     cutoff_value = request.form["cutoff"]

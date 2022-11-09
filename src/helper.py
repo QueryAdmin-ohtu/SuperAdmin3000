@@ -1,10 +1,10 @@
 import json
 from secrets import token_hex
-from flask import session
-from pandas import DataFrame as df
-from matplotlib import pyplot as plt
 from os import path, remove
 from glob import glob
+from pandas import DataFrame as df
+from matplotlib import pyplot as plt
+from flask import session
 
 def backdoor_validate_and_login(username, password):
     """ Check if the given username password pair is correct
@@ -114,7 +114,7 @@ def save_question_answer_charts(answer_distribution):
     saves pie charts for each question to static/img folder
 
     Returns:
-    
+
     If input is none: None
     If input is not none: zip object with q_names and q_ids
     """
@@ -135,9 +135,9 @@ def save_question_answer_charts(answer_distribution):
 def plot_answer_distribution_for_questions(dataframe:df, q_names: list, q_ids: list):
     """Plots the answer distribution for each question and saves
     the pie chart as .png to static/img/charts directory
-    
+
     Returns:
-    
+
     If succeeds: True
     If exception is raised: False
     """

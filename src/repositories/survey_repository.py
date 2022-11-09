@@ -3,7 +3,6 @@ from datetime import datetime
 from sqlalchemy import exc
 
 from db import db
-import helper
 
 class SurveyRepository:
     """
@@ -481,7 +480,7 @@ class SurveyRepository:
 
     def get_users_who_answered_survey(self,
                                       survey_id: int,
-                                      start_date: datetime = None, 
+                                      start_date: datetime = None,
                                       end_date: datetime = None,
                                       group_name=None,
                                       email=""):
@@ -675,7 +674,7 @@ class SurveyRepository:
 
     def get_answer_distribution(self,
                                 survey_id,
-                                start_date: datetime = None, 
+                                start_date: datetime = None,
                                 end_date: datetime = None,
                                 user_group_id: uuid = None,
                                 email: str = ""):
@@ -718,7 +717,7 @@ class SurveyRepository:
 
         values = {"survey_id": survey_id,
                   "group_id": user_group_id,
-                  "start_date": start_date, 
+                  "start_date": start_date,
                   "end_date": end_date,
                   "email": f"%{email}%"}
         try:
@@ -730,10 +729,10 @@ class SurveyRepository:
             return exception
 
     def get_answer_distribution_filtered(self, survey_id,
-                                         start_date: datetime = None, 
+                                         start_date: datetime = None,
                                          end_date: datetime = None,
                                          group_name: str = "",
-                                         email: str = ""):                                         
+                                         email: str = ""):
         """ Finds and returns the distribution of user answers
         over the answer options of a survey.
 
@@ -836,9 +835,8 @@ class SurveyRepository:
         count_of_answers = self.db_connection.session.execute(sql, values).fetchone()[0]
         if count_of_answers:
             return count_of_answers
-        else:
-            return 0
-        
+        return 0
+
     def get_sum_of_user_answer_points_by_question_id(self, question_id):
         """
             Returns the sum of all user answers for a given question.
@@ -869,7 +867,8 @@ class SurveyRepository:
     def calculate_average_scores_by_category(self, survey_id):
         """
         Calculates weighted average points for all user answers in a survey.
-        Returns a list of tuples which includes the category id, category name and average score (to the precision of two decimal places) of all user answers in a given survey.
+        Returns a list of tuples which includes the category id, category name and average score
+        (to the precision of two decimal places) of all user answers in a given survey.
         """
 
         result_list = []
@@ -879,12 +878,12 @@ class SurveyRepository:
             answers = self.get_count_of_user_answers_to_a_question(question.id)
             if answers == 0:
                 continue
-            else:
-                avg = float(points / answers)
+            avg = float(points / answers)
 
             for category_weight in question.category_weights:
                 weighted_average = float("{:.2f}".format(avg * category_weight['multiplier']))
-                complete_item = (self.get_category_id_from_name(survey_id, category_weight['category']), category_weight['category'],weighted_average )
+                complete_item = (self.get_category_id_from_name(
+                    survey_id, category_weight['category']), category_weight['category'], weighted_average)
                 result_list.append(complete_item)
 
         return result_list
@@ -901,7 +900,7 @@ class SurveyRepository:
 
     def get_survey_results(self, survey_id):
         """Get the results of a survey
-        
+
         Return table with columns: id, text, cutoff_from_maxpoints, createdAt, updatedAt"""
         sql = """
             SELECT id, text, cutoff_from_maxpoints, "createdAt", "updatedAt"
@@ -913,7 +912,7 @@ class SurveyRepository:
 
     def create_survey_result(self, survey_id, text, cutoff_from_maxpoints):
         """Create a new survey result.
-        
+
         Results connected to the same survey with duplicate cutoff values will not be created"""
         sql = """
             INSERT INTO "Survey_results"
