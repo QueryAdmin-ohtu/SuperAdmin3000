@@ -896,7 +896,7 @@ class SurveyRepository:
                 else:
                     question_average = ("Null", str(category_weight['category']) + " - (missing from 'Categories')",weighted_average)
                 question_averages.append(question_average)
-        return self.handle_result_list(question_averages)
+        return self.calculate_category_averages(question_averages)
 
 
     def calculate_category_averages(self, question_averages):
