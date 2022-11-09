@@ -927,6 +927,7 @@ class SurveyRepository:
         survey_result = self.db_connection.session.execute(sql, values).fetchone()
         db.session.commit()
         if survey_result:
+            self.update_survey_updated_at(survey_id)
             survey_result_id = survey_result[0]
             return survey_result_id
         return None
