@@ -870,11 +870,15 @@ class SurveyRepository:
     def calculate_average_scores_by_category(self, survey_id):
         """
         Calculates weighted average points for all user answers in a survey.
+
+        Method creates a list of tuples which contain weighted averages for all answered questions.
+        Helper method calculates the category averages.
+
         Returns a list of tuples which includes the category id, category name
         and average score (to the precision of two decimal places) of all user answers in a given survey.
         """
 
-        result_list = []
+        question_averages = []
         related_questions = self.get_questions_of_survey(survey_id)
 
         for question in related_questions:
@@ -883,7 +887,7 @@ class SurveyRepository:
             
             for category_weight in question.category_weights:
                 if (answers != 0):
-                    weighted_average = float("{:.2f}".format(points / answers * category_weight['multiplier']))
+                    weighted_average = points / answers * category_weight['multiplier']
                 else:
                     weighted_average = 0
                 category_id  = self.get_category_id_from_name(survey_id, category_weight['category'])
@@ -891,21 +895,27 @@ class SurveyRepository:
                     question_average = (category_id, category_weight['category'], weighted_average)
                 else:
                     question_average = ("Null", str(category_weight['category']) + " - (missing from 'Categories')",weighted_average)
-                result_list.append(question_average)
-        return self.handle_result_list(result_list)
+                question_averages.append(question_average)
+        return self.handle_result_list(question_averages)
 
 
-    def handle_result_list(self, result_list):
+    def calculate_category_averages(self, question_averages):
+        """
+        Helper method to calculate category averages.
+
+        Returns a list of tuples as follows:
+        (category_id, category_name, category average score)
+        """
         sums = {}
         occurences = {}
         names = {}
-        for item in result_list:
+        for item in question_averages:
             sums[item[0]] = sums.setdefault(item[0], 0) + item[2]
             occurences[item[0]] = occurences.setdefault(item[0] ,0) + 1
             names[item[0]] = item[1]
         results = []
-        for x in sums:
-            results.append((x, names[x], float("{:.2f}".format(sums[x]/occurences[x]))))
+        for key in sums:
+            results.append((key, names[key], float("{:.2f}".format(sums[key]/occurences[key]))))
         return results
 
 
