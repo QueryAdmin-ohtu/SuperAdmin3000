@@ -18,7 +18,7 @@ def statistics(survey_id):
     answer_distribution = helper.save_question_answer_charts(
         survey_service.get_answer_distribution_for_survey_questions(survey_id)
     )    
-    categories = survey_service.get_categories_of_survey(survey_id)
+    categories = survey_service.calculate_average_scores_by_category(survey_id)
 
     users = survey_service.get_users_who_answered_survey(survey_id)
     
