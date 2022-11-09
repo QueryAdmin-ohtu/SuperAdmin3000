@@ -492,11 +492,15 @@ class SurveyService:
 
 
     def create_survey_result(self, survey_id, text, cutoff_from_maxpoints):
-        """Creates a new survey result
+        """Create a new survey result
 
         Returns id of survey result
         """
         return self.survey_repository.create_survey_result(survey_id, text, cutoff_from_maxpoints)
 
+    def get_survey_results(self, survey_id):
+        """Fetch the results of the given survey
+        """
+        return self.survey_repository.get_survey_results(survey_id)
 
 survey_service = SurveyService(SurveyRepository())

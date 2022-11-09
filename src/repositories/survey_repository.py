@@ -900,7 +900,9 @@ class SurveyRepository:
         return self.db_connection.session.execute(sql, values).fetchone()[0]
 
     def get_survey_results(self, survey_id):
-        """Get the results of a survey"""
+        """Get the results of a survey
+        
+        Return table with columns: id, text, cutoff_from_maxpoints, createdAt, updatedAt"""
         sql = """
             SELECT id, text, cutoff_from_maxpoints, "createdAt", "updatedAt"
             FROM "Survey_results"
