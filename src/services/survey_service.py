@@ -504,12 +504,9 @@ class SurveyService:
             If dates invalid returns None
         """
 
-        if start_date > end_date or end_date < start_date:
-            return None
-
-        # Changes an empty string ("") value to None
-        if not group_name:
-            group_name = None
+        if  start_date and end_date:
+            if start_date > end_date or end_date < start_date:
+                return None
 
         return self.survey_repository.calculate_average_scores_by_category(survey_id, user_group_id, start_date, end_date)
 
