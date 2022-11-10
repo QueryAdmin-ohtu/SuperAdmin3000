@@ -479,14 +479,20 @@ class SurveyRepository:
             return None
         return answers
 
-    def get_users_who_answered_survey(self, survey_id: int, start_date: datetime = None, 
-        end_date: datetime = None, group_name=None):
-        """ Returns a list of users who have answered a given survey. Results can be filtered by a timerange.
+    def get_users_who_answered_survey(self,
+                                      survey_id: int,
+                                      start_date: datetime = None, 
+                                      end_date: datetime = None,
+                                      group_name=None,
+                                      email=""):
+        """ Returns a list of users who have answered a given survey.
+        Results can be filtered by a timerange, group name and email address.
         Args:
             survey_id: Id of the survey
             start_time: Start of timerange to filter by (optional)
             end_time: End of timerange to filter by (optional)
             group_name: User group to filter by (optional)
+            email: Email to filter by (optional)
 
         Returns:
             On succeed: A list of lists where each element contains
@@ -494,6 +500,7 @@ class SurveyRepository:
             On error / no users who answered found:
                 None
         """
+        print(f"Email: '{email}'", flush=True)
 
         sql = """
         SELECT
@@ -515,10 +522,14 @@ class SurveyRepository:
             ON "u"."groupId" = "sua"."id"
         WHERE "s"."id"=:survey_id AND "sua"."surveyId"=:survey_id
             AND ((:start_date IS NULL AND :end_date IS NULL) OR ("ua"."updatedAt" > :start_date AND "ua"."updatedAt" < :end_date))
-            AND ((:group_name IS NULL) OR ("group_name"=:group_name))        
+            AND ((:group_name IS NULL) OR ("group_name"=:group_name))
+            AND (("email" LIKE :email))
         """
-        values = {"survey_id": survey_id, "start_date": start_date,
-                  "end_date": end_date, "group_name": group_name}
+        values = {"survey_id": survey_id,
+                  "start_date": start_date,
+                  "end_date": end_date,
+                  "group_name": group_name,
+                  "email": f"%{email}%"}
 
         try:
             users = self.db_connection.session.execute(sql, values).fetchall()
@@ -666,14 +677,17 @@ class SurveyRepository:
                                 survey_id,
                                 start_date: datetime = None, 
                                 end_date: datetime = None,
-                                user_group_id: uuid = None):
+                                user_group_id: uuid = None,
+                                email: str = ""):
         """ Finds and returns the distribution of user answers
         over the answer options of a survey.
 
-        Filtering by date range and/or user group. Start and end dates are included in the query.
+        Filtering by date range and/or user group and/or email. Start and end
+        dates are included in the query.
 
         Returns a table where each row contains:
-        question id, question text, answer id, answer text, user answer counts"""
+        question id, question text, answer id, answer text, user answer counts
+        """
 
         if end_date:
             end_date = end_date.replace(hour=23, minute=59, second=59)
@@ -695,15 +709,20 @@ class SurveyRepository:
         LEFT JOIN "Users" AS u
             ON u.id = ua."userId"
         WHERE s.id=:survey_id
-            AND (u."groupId"=:group_id OR :group_id IS NULL)
             AND ((:start_date IS NULL AND :end_date IS NULL) OR (ua."createdAt" BETWEEN :start_date AND :end_date))
+            AND ((:group_id IS NULL) OR (u."groupId"=:group_id))
+            AND (u."email" LIKE :email)
         GROUP BY q.id, q.text, qa.id, qa.text
         ORDER BY q.id
         """
+
+        values = {"survey_id": survey_id,
+                  "group_id": user_group_id,
+                  "start_date": start_date, 
+                  "end_date": end_date,
+                  "email": f"%{email}%"}
         try:
-            result = self.db_connection.session.execute(
-                sql, {"survey_id": survey_id, "group_id": user_group_id, "start_date": start_date, 
-                "end_date": end_date}).fetchall()
+            result = self.db_connection.session.execute(sql, values).fetchall()
             if result:
                 return result
             return None
@@ -713,18 +732,21 @@ class SurveyRepository:
     def get_answer_distribution_filtered(self, survey_id,
                                          start_date: datetime = None, 
                                          end_date: datetime = None,
-                                         group_name: str = ""):
+                                         group_name: str = "",
+                                         email: str = ""):                                         
         """ Finds and returns the distribution of user answers
         over the answer options of a survey.
 
-        Filtering by date range and/or user group. Start and end dates are included in the query.
+        Filtering by date range and/or user group and/or email. Start and end
+        dates are included in the query.
 
         Returns a table where each row contains:
-        question id, question text, answer id, answer text, user answer counts"""
+        question id, question text, answer id, answer text, user answer counts
+        """
 
         group_id = self._find_user_group_by_name(group_name)
 
-        return self.get_answer_distribution(survey_id, start_date, end_date, group_id)
+        return self.get_answer_distribution(survey_id, start_date, end_date, group_id, email)
 
     def _find_user_group_by_name(self, group_name):
         sql = """SELECT id, group_name FROM "Survey_user_groups" WHERE lower(group_name)=:group_name"""
@@ -844,38 +866,75 @@ class SurveyRepository:
 
         return res
 
+   
     def calculate_average_scores_by_category(self, survey_id):
         """
         Calculates weighted average points for all user answers in a survey.
-        Returns a list of tuples which includes the category id, category name and average score (to the precision of two decimal places) of all user answers in a given survey.
+
+        Method creates a list of tuples which contain weighted averages for all answered questions.
+        Helper method calculates the category averages.
+
+        Returns a list of tuples which includes the category id, category name
+        and average score (to the precision of two decimal places) of all user answers in a given survey.
         """
 
-        result_list = []
+        question_averages = []
         related_questions = self.get_questions_of_survey(survey_id)
+
         for question in related_questions:
             points = self.get_sum_of_user_answer_points_by_question_id(question.id)
             answers = self.get_count_of_user_answers_to_a_question(question.id)
-            if answers == 0:
-                continue
-            else:
-                avg = float(points / answers)
-
+            
             for category_weight in question.category_weights:
-                weighted_average = float("{:.2f}".format(avg * category_weight['multiplier']))
-                complete_item = (self.get_category_id_from_name(survey_id, category_weight['category']), category_weight['category'],weighted_average )
-                result_list.append(complete_item)
+                if (answers != 0):
+                    weighted_average = points / answers * category_weight['multiplier']
+                else:
+                    weighted_average = 0
+                category_id  = self.get_category_id_from_name(survey_id, category_weight['category'])
+                if category_id is not None:
+                    question_average = (category_id, category_weight['category'], weighted_average)
+                else:
+                    question_average = ("Null", str(category_weight['category']) + " - (missing from 'Categories')",weighted_average)
+                question_averages.append(question_average)
+        return self.calculate_category_averages(question_averages)
 
-        return result_list
+
+    def calculate_category_averages(self, question_averages):
+        """
+        Helper method to calculate category averages.
+
+        Returns a list of tuples as follows:
+        (category_id, category_name, category average score)
+        """
+        sums = {}
+        occurences = {}
+        names = {}
+        for item in question_averages:
+            sums[item[0]] = sums.setdefault(item[0], 0) + item[2]
+            occurences[item[0]] = occurences.setdefault(item[0] ,0) + 1
+            names[item[0]] = item[1]
+        results = []
+        for key in sums:
+            results.append((key, names[key], float("{:.2f}".format(sums[key]/occurences[key]))))
+        return results
+
 
     def get_category_id_from_name(self, survey_id, category_name):
         """
-        Returns the category Id based on the category name.
+        Returns the category Id based on the category name if successful.
+        Else returns None.
         """
         sql = """
             SELECT c.id FROM "Categories" AS c, "Surveys" as s WHERE c.name = :category_name and s.id = :survey_id
         """
         values = {"category_name": category_name, "survey_id": survey_id}
-        return self.db_connection.session.execute(sql, values).fetchone()[0]
+        found_id = self.db_connection.session.execute(sql, values).fetchone()
+        if found_id:
+            return found_id[0]
+        else:
+            return None
+
+
 
     def create_placeholder_category_result(self, category_id):
         """
@@ -903,7 +962,6 @@ class SurveyRepository:
     def get_category_results_from_category_id(self, category_id):
         """
         Selects all category_results linked to a given category_id
-
         Returns: A list of category_result objects
         """
         sql = """
