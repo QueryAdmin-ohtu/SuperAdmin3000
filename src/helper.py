@@ -157,7 +157,13 @@ def plot_answer_distribution_for_questions(dataframe:df, q_names: list, q_ids: l
             plt.legend(title="Answer options",
                         loc="upper left",
                         bbox_to_anchor=(0.9, 0, 0, 1))
+
+            if user_group == "":
+                plt.title("All users")
+            else:
+                plt.title(user_group)
             plt.ylabel("")
+
             if user_group == "":   
                 plt.savefig(target_dir + f"{q_id}.png")
             else:
