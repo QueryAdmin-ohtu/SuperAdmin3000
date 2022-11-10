@@ -309,11 +309,13 @@ def edit_category_page(survey_id, category_id):
     name = category[1]
     description = category[2]
     content_links = category[3]
+    category_results = survey_service.get_category_results_from_category_id(category_id)
     return render_template("surveys/edit_category.html",
                            ENV=app.config["ENV"],
                            survey_id=survey_id,
                            survey=survey,
                            category_id=category_id,
+                           category_results=category_results,
                            name=name,
                            description=description,
                            content_links=content_links,
