@@ -389,8 +389,41 @@ class TestSurveyService(unittest.TestCase):
         survey_id = 1
         self.survey_service.calculate_average_scores_by_category(survey_id)
         self.repo_mock.calculate_average_scores_by_category.assert_called_with(
-            survey_id
+            survey_id,
+            None,
+            None,
+            None
         )
+
+    def test_calculate_average_scores_by_category_does_not_call_repo_with_invalid(self):
+        survey_id = 1
+        start_date = datetime.fromisoformat("2020-11-04 00:05:23.283")
+        end_date = datetime.fromisoformat("2019-11-04 00:05:23.283")
+
+        return_value = self.survey_service.calculate_average_scores_by_category(survey_id, start_date=start_date, end_date=end_date)
+        self.repo_mock.calculate_average_scores_by_category.assert_not_called()
+        self.assertIsNone(return_value)
+
+    def test_calculate_average_scores_by_category_calls_repo_correctly_when_filtering(self):
+        start_date = datetime.fromisoformat("2020-11-04 00:05:23.283")
+        end_date = datetime.fromisoformat("2021-11-04 00:05:23.283")
+        user_group_id = 22
+        survey_id = 1
+        value_to_return = "Value"
+        self.repo_mock.calculate_average_scores_by_category.return_value = value_to_return
+        returned_value = self.survey_service.calculate_average_scores_by_category(
+            survey_id,
+            user_group_id,
+            start_date,
+            end_date
+        )
+        self.repo_mock.calculate_average_scores_by_category.assert_called_with(
+            survey_id,
+            user_group_id,
+            start_date,
+            end_date
+        )
+        self.assertEqual(value_to_return, returned_value)
 
     def test_create_placeholder_category_result_calls_repo_correctly(self):
         self.repo_mock.create_placeholder_category_result.return_value = 1
