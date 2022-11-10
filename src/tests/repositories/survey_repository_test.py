@@ -1,7 +1,7 @@
 from ast import excepthandler
 import unittest
 import uuid
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from repositories.survey_repository import SurveyRepository
 
@@ -830,8 +830,11 @@ class TestSurveyRepository(unittest.TestCase):
             answer_two_decent_id = self.repo.create_answer("It has to do with the ways to calculate averages", 2, question_two_id)
             answer_two_bad_id = self.repo.create_answer("The former is not nice.", -5, question_two_id)
 
-            advanced_user_id = self.repo._add_user(email="Advanced")
-            beginner_user_id = self.repo._add_user("Beginner")
+            user_group_1_id = self.repo._add_user_group(survey_id=survey_id)
+            user_group_2_id = self.repo._add_user_group(survey_id=survey_id)
+
+            advanced_user_id = self.repo._add_user(email="Advanced", group_id=user_group_1_id)
+            beginner_user_id = self.repo._add_user(email="Beginner", group_id=user_group_2_id)
 
             self.repo._add_user_answers(advanced_user_id, [answer_one_good_id,      answer_two_decent_id])
             self.repo._add_user_answers(beginner_user_id, [answer_one_decent_id,    answer_two_bad_id])
@@ -840,26 +843,67 @@ class TestSurveyRepository(unittest.TestCase):
             #   2       |   -3          | Math x 1          | -3 / 2 = -1.5
             #   2       |   -3          | Statistics x2     | -6 / 2 = -3
 
+            start_date_old = datetime.fromisoformat("2012-11-02")
+            end_date_old = datetime.fromisoformat("2013-11-02")
+            start_date_current = datetime.today() - timedelta(days=1)
+            end_date_current = datetime.today() + timedelta(days=1)
+
             sum_for_question_one = self.repo.get_sum_of_user_answer_points_by_question_id(question_one_id)
             sum_for_question_two = self.repo.get_sum_of_user_answer_points_by_question_id(question_two_id)
+            sum_for_question_one_filter_date_old = self.repo.get_sum_of_user_answer_points_by_question_id(question_one_id, start_date=start_date_old, end_date=end_date_old)
+            sum_for_question_one_filter_date_current = self.repo.get_sum_of_user_answer_points_by_question_id(question_one_id, start_date=start_date_current, end_date=end_date_current)
+            sum_for_question_one_filter_group_1 = self.repo.get_sum_of_user_answer_points_by_question_id(question_one_id, user_group_id=user_group_1_id)
+            sum_for_question_one_filter_group_2 = self.repo.get_sum_of_user_answer_points_by_question_id(question_one_id, user_group_id=user_group_2_id)
+            sum_for_question_two_filter_group_1 = self.repo.get_sum_of_user_answer_points_by_question_id(question_two_id, user_group_id=user_group_1_id)
+            sum_for_question_two_filter_group_2 = self.repo.get_sum_of_user_answer_points_by_question_id(question_two_id, user_group_id=user_group_2_id)
 
             self.assertEquals(sum_for_question_one, 7)
             self.assertEquals(sum_for_question_two, -3)
+            self.assertEquals(sum_for_question_one_filter_date_old, 0)
+            self.assertEquals(sum_for_question_one_filter_date_current, 7)
+            self.assertEquals(sum_for_question_one_filter_group_1, 5)
+            self.assertEquals(sum_for_question_one_filter_group_2, 2)
+            self.assertEquals(sum_for_question_two_filter_group_1, 2)
+            self.assertEquals(sum_for_question_two_filter_group_2, -5)
 
             count_answers_for_question_one = self.repo.get_count_of_user_answers_to_a_question(question_one_id)
             count_answers_for_question_two = self.repo.get_count_of_user_answers_to_a_question(question_two_id)
+            count_answers_for_question_one_filter_date_old = self.repo.get_count_of_user_answers_to_a_question(question_one_id, start_date=start_date_old, end_date=end_date_old)
+            count_answers_for_question_one_filter_date_current = self.repo.get_count_of_user_answers_to_a_question(question_one_id, start_date=start_date_current, end_date=end_date_current)
             count_answers_for_question_three = self.repo.get_count_of_user_answers_to_a_question(question_with_no_answers_id)
+            count_answers_for_question_one_filter_group_1 = self.repo.get_count_of_user_answers_to_a_question(question_one_id, user_group_1_id)
+            count_answers_for_question_one_filter_group_2 = self.repo.get_count_of_user_answers_to_a_question(question_one_id, user_group_1_id)
+            count_answers_for_question_two_filter_group_1 = self.repo.get_count_of_user_answers_to_a_question(question_one_id, user_group_1_id)
+            count_answers_for_question_two_filter_group_2 = self.repo.get_count_of_user_answers_to_a_question(question_one_id, user_group_1_id)
 
             self.assertEquals(count_answers_for_question_one, 2)
             self.assertEquals(count_answers_for_question_two, 2)
+            self.assertEquals(count_answers_for_question_one_filter_date_old, 0)
+            self.assertEquals(count_answers_for_question_one_filter_date_current, 2)
+            self.assertEquals(count_answers_for_question_one_filter_group_1, 1)
+            self.assertEquals(count_answers_for_question_one_filter_group_2, 1)
+            self.assertEquals(count_answers_for_question_two_filter_group_1, 1)
+            self.assertEquals(count_answers_for_question_two_filter_group_2, 1)
             self.assertEquals(count_answers_for_question_three, 0)
 
             averages = self.repo.calculate_average_scores_by_category(survey_id)
+            averages_filter_group_1 = self.repo.calculate_average_scores_by_category(survey_id, user_group_1_id)
+            averages_filter_date_old = self.repo.calculate_average_scores_by_category(survey_id, start_date=start_date_old, end_date=end_date_old)
+            averages_filter_date_current = self.repo.calculate_average_scores_by_category(survey_id, start_date=start_date_current, end_date=end_date_current)
 
             # (Math categories weighted average scores sum) / (count of math categories ):  5.5 / 3 = 1.83
             self.assertTrue(averages[0] == (category_math_id, 'Math', 1.83))
             # Stats categories weighted average scores sum -3, only one category = -3
             self.assertTrue(averages[1] == (category_stats_id, "Statistics", -3))
+
+            # (Math categories weighted average scores sum) / (count of math categories ):  12 / 3 = 4
+            self.assertTrue(averages_filter_group_1[0] == (category_math_id, 'Math', 4))
+            # Stats categories weighted average scores sum 4, only one category = 4
+            self.assertTrue(averages_filter_group_1[1] == (category_stats_id, "Statistics", 4))
+
+            self.assertTrue(averages == averages_filter_date_current)
+            self.assertTrue(averages_filter_date_old[0] == (category_math_id, 'Math', 0))
+            self.assertTrue(averages_filter_date_old[1] == (category_stats_id, 'Statistics', 0))
 
     def test_get_user_answer_sum_of_points_and_count_answers_two(self):
         
