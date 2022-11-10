@@ -115,7 +115,7 @@ def save_question_answer_charts(answer_distribution, user_group=""):
     for each question to static/img/charts directory
 
     Returns:
-    
+
     If input is none: None
     If input is not none: zip object with q_names and q_ids
     """
@@ -137,9 +137,9 @@ def save_question_answer_charts(answer_distribution, user_group=""):
 def plot_answer_distribution_for_questions(dataframe:df, q_names: list, q_ids: list, user_group):
     """Plots the answer distribution for each question and saves
     the pie chart as .png to static/img/charts directory
-    
+
     Returns:
-    
+
     If succeeds: True
     If exception is raised: False
     """
@@ -164,7 +164,7 @@ def plot_answer_distribution_for_questions(dataframe:df, q_names: list, q_ids: l
                 plt.title(user_group)
             plt.ylabel("")
 
-            if user_group == "":   
+            if user_group == "":
                 plt.savefig(target_dir + f"{q_id}.png")
             else:
                 plt.savefig(target_dir + f"{q_id}_{user_group}.png")
@@ -180,8 +180,8 @@ def empty_dir():
         current_dir = path.dirname(__file__)
         to_remove = path.join(current_dir, "static/img/charts/*.png")
         files_to_remove = glob(to_remove)
-        for f in files_to_remove:
-            remove(f)
+        for file in files_to_remove:
+            remove(file)
     except OSError:
         return False
     return True

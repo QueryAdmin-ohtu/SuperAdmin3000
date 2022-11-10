@@ -275,7 +275,7 @@ class SurveyService:
                                                start_date: datetime,
                                                end_date: datetime,
                                                group_name,
-                                               email):   
+                                               email):
         """ Returns a list of users who have answered a given survey in a given timerange,
         belonging the given group and having a matching email address
         Args:
@@ -284,28 +284,28 @@ class SurveyService:
            end_time: End of timerange to filter by
            group_name: Name of the user group to filter by
            email: Email address to filter by
-        
+
         Returns:
            On succeed: A list of lists where each element contains
                [id, email, group_name, answer_time]
            On error / no users who answered found:
                None
         """
-        
+
         if start_date > end_date or end_date < start_date:
             return None
 
         # Changes an empty string ("") value to None
         if not group_name:
             group_name = None
-                    
+
         return self.survey_repository.get_users_who_answered_survey(survey_id,
                                                                     start_date,
                                                                     end_date,
                                                                     group_name,
                                                                     email)
-    
-    
+
+
     def get_users_who_answered_survey_in_timerange(self, survey_id: int, start_date: datetime, end_date: datetime):
         """ Returns a list of users who have answered a given survey in a given timerange
         Args:
@@ -341,7 +341,7 @@ class SurveyService:
         return self.survey_repository.get_users_who_answered_survey(survey_id, group_name=group_name)
 
 
-    
+
     def create_category(self, survey_id: str, name: str, description: str, content_links: list):
         """
         Creates a new category.
@@ -437,7 +437,7 @@ class SurveyService:
 
     def get_answer_distribution_for_survey_questions(self,
                                                      survey_id,
-                                                     start_date: datetime = None, 
+                                                     start_date: datetime = None,
                                                      end_date: datetime = None,
                                                      group_name: str = "",
                                                      email: str = ""):
