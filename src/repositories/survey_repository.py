@@ -817,7 +817,7 @@ class SurveyRepository:
         db.session.commit()
         return survey_user_group_id
 
-    def get_count_of_user_answers_to_a_question(self, question_id):
+    def get_count_of_user_answers_to_a_question(self, question_id, user_group_id = None, start_date = None, end_date = None):
         """
             Retrieve number of submissions to a given question.
 
@@ -829,17 +829,24 @@ class SurveyRepository:
         FROM "User_answers"
         WHERE "questionAnswerId" IN (
             SELECT qa.id
-            FROM "Question_answers" as qa, "User_answers" AS ua
-            WHERE qa."questionId" = :question_id)
+            FROM "Question_answers" as qa
+            LEFT JOIN "User_answers" AS ua
+                ON ua."questionAnswerId" = qa."id"
+            LEFT JOIN "Users" as u
+                ON ua."userId" = u."id"
+            WHERE qa."questionId" = :question_id
+                AND ((:start_date IS NULL AND :end_date IS NULL) OR (ua."createdAt" BETWEEN :start_date AND :end_date))
+                AND ((:group_id IS NULL) OR (u."groupId"=:group_id))
+            )
         """
-        values = {"question_id": question_id}
+        values = { "question_id": question_id, "group_id": user_group_id, "start_date": start_date, "end_date": end_date }
         count_of_answers = self.db_connection.session.execute(sql, values).fetchone()[0]
         if count_of_answers:
             return count_of_answers
         else:
             return 0
         
-    def get_sum_of_user_answer_points_by_question_id(self, question_id):
+    def get_sum_of_user_answer_points_by_question_id(self, question_id, user_group_id = None, start_date = None, end_date = None):
         """
             Returns the sum of all user answers for a given question.
         """
@@ -852,11 +859,15 @@ class SurveyRepository:
             ON q.id = qa."questionId"
         LEFT JOIN "User_answers" AS ua
             ON qa.id = ua."questionAnswerId"
+        LEFT JOIN "Users" AS u
+            ON ua."userId" = u."id"
         WHERE q.id=:question_id
+            AND ((:start_date IS NULL AND :end_date IS NULL) OR (ua."createdAt" BETWEEN :start_date AND :end_date))
+            AND ((:group_id IS NULL) OR (u."groupId"=:group_id))
         GROUP BY q.id, qa.id
         ORDER BY q.id
         """
-        values = {"question_id": question_id}
+        values = { "question_id": question_id, "group_id": user_group_id, "start_date": start_date, "end_date": end_date }
         sum_of_points = self.db_connection.session.execute(sql, values).fetchall()
         db.session.commit()
         res = 0
@@ -867,7 +878,7 @@ class SurveyRepository:
         return res
 
    
-    def calculate_average_scores_by_category(self, survey_id):
+    def calculate_average_scores_by_category(self, survey_id, user_group_id = None, start_date = None, end_date = None):
         """
         Calculates weighted average points for all user answers in a survey.
 
