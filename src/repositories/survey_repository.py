@@ -819,10 +819,18 @@ class SurveyRepository:
 
     def get_count_of_user_answers_to_a_question(self, question_id, user_group_id = None, start_date = None, end_date = None):
         """
-            Retrieve number of submissions to a given question.
+        Retrieve number of submissions to a given question.
 
-            Returns:
-                Amount of user answers if successful. Else returns 0.
+        Args:
+            survey_id: Id of survey to calculate count from
+            user_group_id (optional): Filter answers by user_group. Ignored if None.
+            start_date (optional): A datetime for filtering the answers used to calculate the count. Ignored
+                if None. If value present only answers after this datetime are taken into account.
+            end_date (optional): A datetime for filtering the answers used to calculate the count. Ignored
+                if None. If value present only answers before this datetime are taken into account
+
+        Returns:
+            Amount of user answers if successful. Else returns 0.
         """
         sql = """
         SELECT COUNT(id)
@@ -848,7 +856,15 @@ class SurveyRepository:
         
     def get_sum_of_user_answer_points_by_question_id(self, question_id, user_group_id = None, start_date = None, end_date = None):
         """
-            Returns the sum of all user answers for a given question.
+        Returns the sum of all user answers for a given question.
+
+        Args:
+            survey_id: Id of survey to calculate sum from
+            user_group_id (optional): Filter answers by user_group. Ignored if None.
+            start_date (optional): A datetime for filtering the answers used to calculate the sum. Ignored
+                if None. If value present only answers after this datetime are taken into account.
+            end_date (optional): A datetime for filtering the answers used to calculate the sum. Ignored
+                if None. If value present only answers before this datetime are taken into account.
         """
 
         sql =  """
@@ -880,21 +896,33 @@ class SurveyRepository:
    
     def calculate_average_scores_by_category(self, survey_id, user_group_id = None, start_date = None, end_date = None):
         """
-        Calculates weighted average points for all user answers in a survey.
+        Calculates weighted average scores from the submitted answers of a given survey. An average
+        score is calculated for each category of the survey. This value represents how well all
+        reponders did on each category.
 
         Method creates a list of tuples which contain weighted averages for all answered questions.
-        Helper method calculates the category averages.
+        A helper method is used to calculate the final category averages.
+        
+        Args:
+            survey_id: Id of survey to calculate averages from
+            user_group_id (optional): User group id of answer. Ignored if None. If value present
+                filters answers used to calculate average.
+            start_date (optional): A datetime for filtering the answers used to calculate averages. Ignored
+                if None. If value present only answers after this datetime are taken into account.
+            end_date (optional): A datetime for filtering the answers used to calculate averages. Ignored
+                if None. If value present only answers before this datetime are taken into account.
 
-        Returns a list of tuples which includes the category id, category name
-        and average score (to the precision of two decimal places) of all user answers in a given survey.
+        Returns:
+            A list of tuples which includes the category id, category name and average score 
+            (to the precision of two decimal places) of all user answers in a given survey.
         """
 
         question_averages = []
         related_questions = self.get_questions_of_survey(survey_id)
 
         for question in related_questions:
-            points = self.get_sum_of_user_answer_points_by_question_id(question.id)
-            answers = self.get_count_of_user_answers_to_a_question(question.id)
+            points = self.get_sum_of_user_answer_points_by_question_id(question.id, user_group_id, start_date, end_date)
+            answers = self.get_count_of_user_answers_to_a_question(question.id, user_group_id, start_date, end_date)
             
             for category_weight in question.category_weights:
                 if (answers != 0):
