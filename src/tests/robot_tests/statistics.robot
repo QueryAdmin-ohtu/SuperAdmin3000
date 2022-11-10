@@ -34,6 +34,15 @@ Statistics Page Shows Answer Distribution Charts
     Page Should Contain Element  chart_23
     Page Should Contain Element  chart_24
 
+Statistics Page Shows Filtered And Unfiltered Charts
+    Go To Statistics  8
+    Select Radio Button  filter_group_name  B-ryhmä
+    Click Button  Filter
+    Page Should Contain Element  chart_23
+    Page Should Contain Element  chart_24
+    Page Should Contain Element  chart_23_B-ryhmä
+    Page Should Contain Element  chart_24_B-ryhmä
+
 Entering Valid Range To Filter Dates Filters Users
     Go To Statistics  8
     Input Text  filter_start_date  02.02.2002 12:00
