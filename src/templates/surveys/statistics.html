@@ -42,21 +42,24 @@
                             {% for q_name, q_id in answer_distribution %}
                                 <h4 class="text-slate-600 font-mono text-sm font-medium">Question: {{ q_name }}</h4>
                                 <img src="{{url_for('static', filename='/img/charts/' + q_id|string + '.png')}}"
-                                    alt="Answer distribution chart for question {{q_name}}"
+                                    alt="Answer distribution chart for question {{q_name}} without filters"
                                     id="chart_{{q_id}}">
                             {% endfor %}
                         {% elif filter_group_name != "" and answer_distribution %}
                             {% for q_name, q_id in answer_distribution %}
                                 <h4 class="text-slate-600 font-mono text-sm font-medium">Question: {{ q_name }}</h4>
-                                <img src="{{url_for('static', filename='/img/charts/' + q_id|string + '_' + filter_group_name|string + '.png')}}"
-                                    alt="Answer distribution chart for question {{q_name}} for user group {{filter_group_name}}"
-                                    id="chart_{{q_id}}_{{filter_group_name}}">
+                                <div class="flex justify-between">
+                                    <img src="{{url_for('static', filename='/img/charts/' + q_id|string + '_' + filter_group_name|string + '.png')}}"
+                                        alt="Answer distribution chart for question {{q_name}} for user group {{filter_group_name}}"
+                                        id="chart_{{q_id}}_{{filter_group_name}}">
+                                    <img src="{{url_for('static', filename='/img/charts/' + q_id|string + '.png')}}"
+                                        alt="Answer distribution chart for question {{q_name}} without filters"
+                                        id="chart_{{q_id}}">
+                                </div>
                             {% endfor %}
                         {% else %}
                             <h4 class="text-slate-600 font-mono text-sm font-medium">No answers yet</h4>
                         {% endif %}
-
-                        
         </div>
         <div id="answered" class="flex-col max-w-full bg-white p-4 gap-2 rounded-lg border border-slate-300">
           <h3 class="text-gray-900 leading-tight">Users with submissions ({{ users | length }} / {{ total_users }})</h3>
