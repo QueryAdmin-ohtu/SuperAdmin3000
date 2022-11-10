@@ -868,17 +868,12 @@ class SurveyRepository:
     def calculate_average_scores_by_category(self, survey_id):
         """
         Calculates weighted average points for all user answers in a survey.
-<<<<<<< HEAD
-        Returns a list of tuples which includes the category id, category name and average score
-        (to the precision of two decimal places) of all user answers in a given survey.
-=======
 
         Method creates a list of tuples which contain weighted averages for all answered questions.
         Helper method calculates the category averages.
 
         Returns a list of tuples which includes the category id, category name
         and average score (to the precision of two decimal places) of all user answers in a given survey.
->>>>>>> main
         """
 
         question_averages = []
