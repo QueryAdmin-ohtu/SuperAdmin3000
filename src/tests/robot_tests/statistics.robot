@@ -43,6 +43,16 @@ Statistics Page Shows Filtered Charts After Applying Filter
     Element Should Not Be Visible  chart_23_unfiltered
     Element Should Not Be Visible  chart_24_unfiltered
 
+Toggle Filter For Charts Works When Only Time Filter Applied
+    Go To Statistics  8
+    Click Button  Filter
+    Click Button  toggle_filter_chart_23
+    Click Button  toggle_filter_chart_24
+    Element Should Not Be Visible  chart_23_filtered
+    Element Should Not Be Visible  chart_24_filtered
+    Element Should Be Visible  chart_23_unfiltered
+    Element Should Be Visible  chart_24_unfiltered
+
 Statistics Page Shows Unfiltered Charts After Toggling Filter First Time
     Go To Statistics  8
     Select Radio Button  filter_group_name  B-ryhmä
