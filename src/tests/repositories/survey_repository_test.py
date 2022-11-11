@@ -617,14 +617,14 @@ class TestSurveyRepository(unittest.TestCase):
             survey_id = self.repo.survey_exists("Elephants")[1]
             result = self.repo.get_number_of_submissions(survey_id)
 
-        self.assertEqual(result, 3)
+        self.assertEqual(result, 4)
 
     def test_answer_distribution(self):
         with self.app.app_context():
             survey_id = self.repo.survey_exists("Elephants")[1]
             result = self.repo.get_answer_distribution(survey_id)
 
-        self.assertEqual(result[0][4], 2)
+        self.assertEqual(result[0][4], 3)
         self.assertEqual(result[1][4], 1)
 
     def test_answer_distribution_filtered(self):
@@ -633,7 +633,7 @@ class TestSurveyRepository(unittest.TestCase):
             result = self.repo.get_answer_distribution_filtered(survey_id,
                                                                 None, None, '')
 
-        self.assertEqual(result[0][4], 2)
+        self.assertEqual(result[0][4], 3)
         self.assertEqual(result[1][4], 1)
     
     def test_answer_distribution_per_user_group(self):
