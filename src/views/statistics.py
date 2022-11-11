@@ -15,9 +15,6 @@ def statistics(survey_id):
 
     submissions = survey_service.get_number_of_submissions_for_survey(
         survey_id)
-    answer_distribution = helper.save_question_answer_charts(
-        survey_service.get_answer_distribution_for_survey_questions(survey_id)
-    )    
     categories = survey_service.calculate_average_scores_by_category(survey_id)
 
     users = survey_service.get_users_who_answered_survey(survey_id)
@@ -28,6 +25,10 @@ def statistics(survey_id):
     group_names = {"All user groups": ""}
     for user in users:
         group_names[user.group_name] = user.group_name
+
+    answer_distribution = helper.save_question_answer_charts(
+        survey_service.get_answer_distribution_for_survey_questions(survey_id)
+    )
 
     filter_start_date = (datetime.datetime.now() - datetime.timedelta(days=10*365)).strftime(timeformat)
     filter_end_date = datetime.datetime.now().strftime(timeformat)
@@ -73,7 +74,8 @@ def filtered_statistics(survey_id):
                                                                     filter_start_date,
                                                                     filter_end_date,
                                                                     filter_group_name,
-                                                                    filter_email)
+                                                                    filter_email),
+        filter_group_name
     )
     categories = survey_service.get_categories_of_survey(survey_id)
 
