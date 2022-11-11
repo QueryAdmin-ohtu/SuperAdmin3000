@@ -48,8 +48,8 @@ def statistics(survey_id):
                            filter_group_name=filter_group_name,
                            filter_email=filter_email,
                            group_names=group_names,
-                           show_userlist=False
-    )
+                           show_userlist=False,
+                           filtered=False)
 
 @stats.route("/surveys/<survey_id>/statistics/filter", methods=["POST"])
 def filtered_statistics(survey_id):
@@ -75,7 +75,9 @@ def filtered_statistics(survey_id):
                                                                     filter_end_date,
                                                                     filter_group_name,
                                                                     filter_email),
-        filter_group_name
+        filter_group_name,
+        filter_start_date,
+        filter_end_date
     )
     categories = survey_service.get_categories_of_survey(survey_id)
 
@@ -112,7 +114,8 @@ def filtered_statistics(survey_id):
                            filter_group_name=filter_group_name,
                            filter_email=filter_email,
                            group_names=group_names,
-                           show_userlist=True)
+                           show_userlist=True,
+                           filtered=True)
 
 
 @stats.before_request
