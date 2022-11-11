@@ -34,6 +34,39 @@ Statistics Page Shows Answer Distribution Charts
     Page Should Contain Element  chart_23
     Page Should Contain Element  chart_24
 
+Statistics Page Shows Filtered Charts After Applying Filter
+    Go To Statistics  8
+    Select Radio Button  filter_group_name  B-ryhmä
+    Click Button  Filter
+    Element Should Be Visible  chart_23_filtered
+    Element Should Be Visible  chart_24_filtered
+    Element Should Not Be Visible  chart_23_unfiltered
+    Element Should Not Be Visible  chart_24_unfiltered
+
+Statistics Page Shows Unfiltered Charts After Toggling Filter First Time
+    Go To Statistics  8
+    Select Radio Button  filter_group_name  B-ryhmä
+    Click Button  Filter
+    Click Button  toggle_filter_chart_23
+    Click Button  toggle_filter_chart_24
+    Element Should Not Be Visible  chart_23_filtered
+    Element Should Not Be Visible  chart_24_filtered
+    Element Should Be Visible  chart_23_unfiltered
+    Element Should Be Visible  chart_24_unfiltered
+
+Statistics Page Shows Filtered Charts After Toggling Filter Second Time
+    Go To Statistics  8
+    Select Radio Button  filter_group_name  B-ryhmä
+    Click Button  Filter
+    Click Button  toggle_filter_chart_23
+    Click Button  toggle_filter_chart_23
+    Click Button  toggle_filter_chart_24
+    Click Button  toggle_filter_chart_24
+    Element Should Be Visible  chart_23_filtered
+    Element Should Be Visible  chart_24_filtered
+    Element Should Not Be Visible  chart_23_unfiltered
+    Element Should Not Be Visible  chart_24_unfiltered
+
 Entering Valid Range To Filter Dates Filters Users
     Go To Statistics  8
     Input Text  filter_start_date  02.02.2002 12:00
