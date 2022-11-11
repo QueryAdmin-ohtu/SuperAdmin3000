@@ -38,13 +38,30 @@
                         <div class="grow h-7"></div>
                         <h3 class="text-gray-900 leading-tight">Answer distribution</h3>
                         <br>
-                        {% if answer_distribution %}
+                        {% if not filtered and answer_distribution %}
                             {% for q_name, q_id in answer_distribution %}
-                            <h4 class="text-slate-600 font-mono text-sm font-medium">Question: {{ q_name }}</h4>
+                                <h4 class="text-slate-600 font-mono text-sm font-medium">Question: {{ q_name }}</h4>
                                 <img src="{{url_for('static', filename='/img/charts/' + q_id|string + '.png')}}"
-                                alt="Answer distribution chart for question {{q_name}}"
-                                id="chart_{{q_id}}">
+                                    alt="Answer distribution chart for question {{q_name}} without filters"
+                                    id="chart_{{q_id}}">
                             {% endfor %}
+                        {% elif filtered and answer_distribution %}
+                            {% for q_name, q_id in answer_distribution %}
+                                <h4 class="text-slate-600 font-mono text-sm font-medium">Question: {{ q_name }}</h4>
+                                <div class="flex justify-between">
+                                    <button class="p-2 block rounded w-fit h-fit bg-sky-500 text-sm text-white font-medium leading-tight hover:bg-sky-700 focus:bg-sky-700 focus:outline-none focus:ring-0 transition duration-150 ease-in-out"
+                                            id="toggle_filter_chart_{{q_id}}" 
+                                            onclick="switchChart('chart_{{q_id}}')">Toggle filter</button>
+                                    <img src="{{url_for('static', filename='/img/charts/' + q_id|string + '_' + filter_group_name|string + '.png')}}"
+                                        alt="Answer distribution chart for question {{q_name}} for user group {{filter_group_name}}"
+                                        id="chart_{{q_id}}_filtered">
+                                    <img src="{{url_for('static', filename='/img/charts/' + q_id|string + '.png')}}"
+                                        alt="Answer distribution chart for question {{q_name}} without filters"
+                                        id="chart_{{q_id}}_unfiltered" hidden>
+                                </div>
+                            {% endfor %}
+                        {% else %}
+                            <h4 class="text-slate-600 font-mono text-sm font-medium">No answers yet</h4>
                         {% endif %}
         </div>
         <div id="answered" class="flex-col max-w-full bg-white p-4 gap-2 rounded-lg border border-slate-300">

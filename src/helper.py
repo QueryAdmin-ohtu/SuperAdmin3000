@@ -5,6 +5,7 @@ from glob import glob
 from pandas import DataFrame as df
 from matplotlib import pyplot as plt
 from flask import session
+from datetime import datetime
 
 def backdoor_validate_and_login(username, password):
     """ Check if the given username password pair is correct
@@ -108,17 +109,19 @@ def json_into_dictionary(json_file):
         categories[category["category"]] = category["multiplier"]
     return categories
 
-def save_question_answer_charts(answer_distribution):
+def save_question_answer_charts(answer_distribution, user_group="", filter_start_date=None, filter_end_date=None):
     """First clears the static/img/charts directory contents
-    and takes the answer distribution table for questions,
-    saves pie charts for each question to static/img folder
+    if no user group is given and then takes the answer distribution
+    table for questions, saves filtered or unfiltered pie charts
+    for each question to static/img/charts directory
 
     Returns:
 
     If input is none: None
     If input is not none: zip object with q_names and q_ids
     """
-    empty_dir()
+    if user_group == "" and filter_start_date is None:
+        empty_dir()
     if not answer_distribution:
         return None
 
@@ -128,11 +131,18 @@ def save_question_answer_charts(answer_distribution):
     q_names = answer_df["question"].to_list()
     q_names = list(dict.fromkeys(q_names))
     answer_df = answer_df[["question", "answer", "count"]]
-    plot_answer_distribution_for_questions(answer_df, q_names, q_ids)
+
+    time_range = None
+    if filter_start_date is not None:
+        filter_start_date = filter_start_date.strftime("%d.%m.%Y, %H:%M")
+        filter_end_date = filter_end_date.strftime("%d.%m.%Y, %H:%M")
+        time_range = filter_start_date + " - " + filter_end_date
+
+    plot_answer_distribution_for_questions(answer_df, q_names, q_ids, user_group, time_range)
 
     return zip(q_names, q_ids)
 
-def plot_answer_distribution_for_questions(dataframe:df, q_names: list, q_ids: list):
+def plot_answer_distribution_for_questions(dataframe:df, q_names: list, q_ids: list, user_group: str, time_range=None):
     """Plots the answer distribution for each question and saves
     the pie chart as .png to static/img/charts directory
 
@@ -143,6 +153,7 @@ def plot_answer_distribution_for_questions(dataframe:df, q_names: list, q_ids: l
     """
     current_dir = path.dirname(__file__)
     target_dir = path.join(current_dir, "static/img/charts/")
+        
     try:
         plt.switch_backend("Agg")
         for q_name, q_id in zip(q_names, q_ids):
@@ -155,7 +166,17 @@ def plot_answer_distribution_for_questions(dataframe:df, q_names: list, q_ids: l
             plt.legend(title="Answer options",
                         loc="upper left",
                         bbox_to_anchor=(0.9, 0, 0, 1))
-            plt.savefig(target_dir + f"{q_id}.png")
+
+            if user_group == "" and time_range is None:
+                plt.title("All users")
+            else:
+                plt.title(time_range)
+            plt.ylabel("")
+
+            if user_group == "" and time_range is None:
+                plt.savefig(target_dir + f"{q_id}.png")
+            else:
+                plt.savefig(target_dir + f"{q_id}_{user_group}.png")
             plt.close()
 
     except Exception:
@@ -168,8 +189,8 @@ def empty_dir():
         current_dir = path.dirname(__file__)
         to_remove = path.join(current_dir, "static/img/charts/*.png")
         files_to_remove = glob(to_remove)
-        for f in files_to_remove:
-            remove(f)
+        for file in files_to_remove:
+            remove(file)
     except OSError:
         return False
     return True

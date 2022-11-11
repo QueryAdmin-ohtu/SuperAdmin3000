@@ -3,14 +3,14 @@
 {% call survey_elements.card() %}
 <h2 class="py-6">Results</h2>
 <div class="pb-6">
-    {{ buttons.link_button("Add result", "/surveys/%s/new-survey-result" % survey.id) }}
+    {{ buttons.link_button("Manage results", "/surveys/%s/new-survey-result" % survey.id) }}
     <br>
 </div>
 {% if results %}
     {% for result in results %}
-    <p>{{ result.text }}, cutoff value {{ result.cutoff_from_maxpoints}}</p>
+    <p>{{ result.cutoff_from_maxpoints * 100}}% of max points returns user:
+    <br>{{ result.text }}</p>
     <br>
-    <!-- you can use the buttons from survey_categories.html here -->
     {% endfor %}
 {% else %}
     <p>Survey has no results 🥺</p>
