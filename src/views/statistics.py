@@ -55,9 +55,6 @@ def filtered_statistics(survey_id):
     """Shows the statistics for the specific survey and filtered
     set of users
     """
-    if app.config["ENV"] == "prod":
-        return redirect("/")
-
     try:
         filter_start_date = datetime.datetime.strptime(request.form["filter_start_date"], timeformat)
         filter_end_date = datetime.datetime.strptime(request.form["filter_end_date"], timeformat)
