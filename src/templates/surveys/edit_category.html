@@ -3,82 +3,105 @@
 {% import "components/macros/survey_elements.html" as survey_elements %}
 {% import "components/macros/buttons.html" as buttons %}
 {% import "components/macros/tooltip.html" as tooltip %}
+{% import "components/macros/category_results.html" as results %}
 {% block content %}
 
 <div class="flex justify-between">
-{% if edit %}
-    <h2 class="text-slate-700">Edit a category in {{ survey.name }}</h2>
-    {{ buttons.link_button("Back to survey", "/surveys/%s" % survey_id) }} 
-{% else %}
-    <h2 class="text-slate-700">New category for {{ survey.name }}</h2>
-    {{ buttons.link_button("Back to survey", "/surveys/%s" % survey_id) }}
-{% endif %}
+    {% if edit %}
+        <h2 class="text-slate-700">Edit a category in {{ survey.name }}</h2>
+        {{ buttons.link_button("Back to survey", "/surveys/%s" % survey_id) }} 
+    {% else %}
+        <h2 class="text-slate-700">New category for {{ survey.name }}</h2>
+        {{ buttons.link_button("Back to survey", "/surveys/%s" % survey_id) }}
+    {% endif %}
 </div>
+<div class="grid lg:grid-cols-2 grid-cols-1 gap-4 items-start">
 {% call survey_elements.card() %}
-<form action="/edit_category" method="POST">
-    <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
-    <input type="hidden" name="survey_id" id="survey_id" value={{survey_id}}>
-    <input type="hidden" name="category_id" id="category_id" value={{category_id}}>
-    <input type="hidden" name="edit" id="edit" value="{{ edit }}">
-    <input type="hidden" name="stay" id="stay"></input>
-    <div class="flex flex-col gap-6">
-        <div class="flex flex-col gap-4">
-            <div class="flex flex-col gap-2 w-full">
-                {{ form_elements.label("name", "Name") }}
-                {{ form_elements.text_area("name", "Name", "", true, name) }}
-            </div>
-            <div class="flex flex-col gap-2 w-full">
-                {{ form_elements.label("description", "Description") }}
-                {{ form_elements.text_area("description", "Description", "", true, description) }}
-            </div>
-            {% if content_links %}
-            <div class="flex flex-col gap-2 w-full">
-                {% for content in content_links %}
-                <div class="relative flex py-5 items-center gap-2">
-                    <span class="flex-shrink text-slate-600 ">Content link {{ loop.index }}</span>
-                    {{ tooltip.tooltip("A content link is displayed to the user after filling the survey") }}
-                    <div class="flex-grow border-t border-slate-200"></div>
+    <form action="/edit_category" method="POST">
+        <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
+        <input type="hidden" name="survey_id" id="survey_id" value={{survey_id}}>
+        <input type="hidden" name="category_id" id="category_id" value={{category_id}}>
+        <input type="hidden" name="edit" id="edit" value="{{ edit }}">
+        <input type="hidden" name="stay" id="stay"></input>
+        <div class="flex flex-col gap-6">
+            <div class="flex flex-col gap-4">
+                <div class="flex flex-col gap-2 w-full">
+                    {{ form_elements.label("name", "Name") }}
+                    {{ form_elements.text_area("name", "Name", "", true, name) }}
                 </div>
                 <div class="flex flex-col gap-2 w-full">
-                    {{ form_elements.label('type_'+loop.index0 | string, "Content link type") }}
-                    {{ form_elements.text_area('type_'+loop.index0 | string, "Content link type", "", false,
-                    value=content['type'])}}
+                    {{ form_elements.label("description", "Description") }}
+                    {{ form_elements.text_area("description", "Description", "", true, description) }}
                 </div>
+                {% if content_links %}
                 <div class="flex flex-col gap-2 w-full">
-                    {{ form_elements.label('url_'+loop.index0 | string, "Content link URL") }}
-                    {{ form_elements.text_area('url_'+loop.index0 | string, "Content link URL", "", false,
-                    value=content['url'])}}
+                    {% for content in content_links %}
+                        <div class="relative flex py-5 items-center gap-2">
+                            <span class="flex-shrink text-slate-600 ">Content link {{ loop.index }}</span>
+                                {{ tooltip.tooltip("A content link is displayed to the user after filling the survey") }}
+                            <div class="flex-grow border-t border-slate-200"></div>
+                        </div>
+                        <div class="flex flex-col gap-2 w-full">
+                            {{ form_elements.label('type_'+loop.index0 | string, "Content link type") }}
+                            {{ form_elements.text_area('type_'+loop.index0 | string, "Content link type", "", false,
+                            value=content['type'])}}
+                        </div>
+                        <div class="flex flex-col gap-2 w-full">
+                            {{ form_elements.label('url_'+loop.index0 | string, "Content link URL") }}
+                            {{ form_elements.text_area('url_'+loop.index0 | string, "Content link URL", "", false,
+                            value=content['url'])}}
+                    </div>
+                    <!-- Delete button clears the url and submits the form.
+                         The form handler wont add a content link with an empty url field -->
+                    {% set clear_url = "document.getElementsByName('url_" ~ loop.index0 ~ "')[0].value=''" %}
+                    {% set button_id = "delete_url_" ~ loop.index0 %}
+                    {{ form_elements.submit_button("Delete", type="destructive", onclick=clear_url, id=button_id) }}
+                    {% endfor %}
                 </div>
-                <!-- Delete button clears the url and submits the form.
-                     The form handler wont add a content link with an empty url field -->
-                {% set clear_url = "document.getElementsByName('url_" ~ loop.index0 ~ "')[0].value=''" %}
-                {% set button_id = "delete_url_" ~ loop.index0 %}
-                {{ form_elements.submit_button("Delete", type="destructive", onclick=clear_url, id=button_id) }}
-                {% endfor %}
-            </div>
             {% endif %}
             {{ form_elements.submit_button("Save", "default") }}
         </div>
     </div>
     {% endcall %}
-    {% if edit %}
-    <h2 class="text-slate-700">Add content link</h2>
+
     {% call survey_elements.card() %}
-    <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
-    <input type="hidden" name="survey_id" id="survey_id" value={{survey_id}}>
-    <input type="hidden" name="category_id" id="category_id" value={{category_id}}>
     <div class="flex flex-col gap-4">
+        <h2 class="text-slate-700">Category results</h2>
         <div class="flex flex-col gap-2 w-full">
-            {{ form_elements.label("new_type", "Type") }}
-            {{ form_elements.text_area("new_type", "Type", "", false)}}
+            {% if category_results %}
+                {% for result in category_results %}
+                    {{results.category_result_field(result)}}
+                    <div class="flex-grow border-t border-slate-200"></div>
+                {% endfor %}
+            {% else %}
+                <p class="text-slate-700">No category results found.</p>
+            {% endif %}
         </div>
-        <div class="flex flex-col gap-2 w-full">
-            {{ form_elements.label("new_url", "URL") }}
-            {{ form_elements.text_area("new_url", "URL", "", false)}}
-        </div>
-        {{ form_elements.submit_button("Add", "creation", "/add_content_link") }}
+    {% endcall %}
     </div>
+    {% if edit %}
+        <div class="flex flex-col gap-6">
+        <h2 class="text-slate-700">Add content link</h2>
+            {% call survey_elements.card() %}
+            <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
+            <input type="hidden" name="survey_id" id="survey_id" value={{survey_id}}>
+            <input type="hidden" name="category_id" id="category_id" value={{category_id}}>
+            <div class="flex flex-col gap-4">
+                <div class="flex flex-col gap-2 w-full">
+                    {{ form_elements.label("new_type", "Type") }}
+                    {{ form_elements.text_area("new_type", "Type", "", false)}}
+                </div>
+                <div class="flex flex-col gap-2 w-full">
+                    {{ form_elements.label("new_url", "URL") }}
+                    {{ form_elements.text_area("new_url", "URL", "", false)}}
+                </div>
+                {{ form_elements.submit_button("Add", "creation", "/add_content_link") }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endcall %}
+    {% endif %}
 </form>
-{% endcall %}
-{% endif %}
+</div>
 {% endblock %}

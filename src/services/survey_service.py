@@ -479,14 +479,55 @@ class SurveyService:
         return self.survey_repository.get_sum_of_user_answer_points_by_question_id(question_id)
 
     
-    def calculate_average_scores_by_category(self, survey_id):
+    def calculate_average_scores_by_category(self, survey_id, user_group_id = None, start_date = None, end_date = None):
+        """
+        Calculates weighted average scores from the submitted answers of a given survey. An average
+        score is calculated for each category of the survey. This value represents how well all
+        reponders did on each category.
 
-        return self.survey_repository.calculate_average_scores_by_category(survey_id)
+        Method creates a list of tuples which contain weighted averages for all answered questions.
+        A helper method is used to calculate the final category averages.
+        
+        Args:
+            survey_id: Id of survey to calculate averages from
+            user_group_id (optional): User group id of answer. Ignored if None. If value present
+                filters answers used to calculate average.
+            start_date (optional): A datetime for filtering the answers used to calculate averages. Ignored
+                if None. If value present only answers after this datetime are taken into account.
+            end_date (optional): A datetime for filtering the answers used to calculate averages. Ignored
+                if None. If value present only answers before this datetime are taken into account.
 
+        Returns:
+            A list of tuples which includes the category id, category name and average score 
+            (to the precision of two decimal places) of all user answers in a given survey.
+
+            If dates invalid returns None
+        """
+
+        if  start_date and end_date:
+            if start_date > end_date or end_date < start_date:
+                return None
+
+        return self.survey_repository.calculate_average_scores_by_category(survey_id, user_group_id, start_date, end_date)
 
     def create_placeholder_category_result(self, category_id):
         return self.survey_repository.create_placeholder_category_result(category_id)
 
     def get_category_results_from_category_id(self, category_id):
         return self.survey_repository.get_category_results_from_category_id(category_id)
+
+    def create_survey_result(self, survey_id, text, cutoff_from_maxpoints):
+        """Create a new survey result
+
+        Returns id of survey result
+        """
+        return self.survey_repository.create_survey_result(survey_id, text, cutoff_from_maxpoints)
+
+    def get_survey_results(self, survey_id):
+        """Fetch the results of the given survey
+
+        Returns a table with columns: id, text, cutoff_from_maxpoints, createdAt, updatedAt
+        """
+        return self.survey_repository.get_survey_results(survey_id)
+
 survey_service = SurveyService(SurveyRepository())

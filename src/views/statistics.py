@@ -112,11 +112,17 @@ def filtered_statistics(survey_id):
                            filter_group_name=filter_group_name,
                            filter_email=filter_email,
                            group_names=group_names,
+<<<<<<< HEAD
                            show_userlist=True
     )
 
 
 
+=======
+                           show_userlist=True)
+
+
+>>>>>>> main
 @stats.before_request
 def before_request():
     """Check session status"""

@@ -108,10 +108,12 @@ def view_survey(survey_id):
     survey = survey_service.get_survey(survey_id)
     questions = survey_service.get_questions_of_survey(survey_id)
     categories = survey_service.get_categories_of_survey(survey_id)
+    results = survey_service.get_survey_results(survey_id)
     print(categories, flush=True)
     return render_template("surveys/view_survey.html", survey=survey,
                            questions=questions, survey_id=survey_id,
-                           ENV=app.config["ENV"], categories=categories)
+                           ENV=app.config["ENV"], categories=categories,
+                           results=results)
 
 
 @surveys.route("/surveys/<survey_id>/new-question", methods=["GET"])
@@ -309,11 +311,13 @@ def edit_category_page(survey_id, category_id):
     name = category[1]
     description = category[2]
     content_links = category[3]
+    category_results = survey_service.get_category_results_from_category_id(category_id)
     return render_template("surveys/edit_category.html",
                            ENV=app.config["ENV"],
                            survey_id=survey_id,
                            survey=survey,
                            category_id=category_id,
+                           category_results=category_results,
                            name=name,
                            description=description,
                            content_links=content_links,
@@ -408,8 +412,22 @@ def new_survey_result_view(survey_id):
     """Renders the view for creating survey results"""
 
     survey = survey_service.get_survey(survey_id)
-    return render_template("surveys/edit_survey_results.html", survey=survey)
+    previous_results = survey_service.get_survey_results(survey_id)
+    if previous_results:
+        return render_template("surveys/edit_survey_results.html", survey=survey)
+    return render_template("surveys/edit_survey_results.html", survey=survey, first=True)
 
+@surveys.route("/surveys/<survey_id>/new-survey-result", methods=["POST"])
+def new_survey_result_post(survey_id):
+    """Handles creating a new survey result"""
+
+    survey_id = request.form["survey_id"]
+    text = request.form["text"]
+    cutoff_value = request.form["cutoff"]
+
+    survey_service.create_survey_result(survey_id, text, cutoff_value)
+
+    return redirect(f"/surveys/{survey_id}")
 
 @surveys.route("/surveys")
 def view_surveys():

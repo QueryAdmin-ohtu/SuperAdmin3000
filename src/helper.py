@@ -1,10 +1,10 @@
 import json
 from secrets import token_hex
-from flask import session
-from pandas import DataFrame as df
-from matplotlib import pyplot as plt
 from os import path, remove
 from glob import glob
+from pandas import DataFrame as df
+from matplotlib import pyplot as plt
+from flask import session
 
 def backdoor_validate_and_login(username, password):
     """ Check if the given username password pair is correct
