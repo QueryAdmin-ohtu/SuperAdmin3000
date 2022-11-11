@@ -38,14 +38,14 @@
                         <div class="grow h-7"></div>
                         <h3 class="text-gray-900 leading-tight">Answer distribution</h3>
                         <br>
-                        {% if filter_group_name == "" and answer_distribution %}
+                        {% if not filtered and answer_distribution %}
                             {% for q_name, q_id in answer_distribution %}
                                 <h4 class="text-slate-600 font-mono text-sm font-medium">Question: {{ q_name }}</h4>
                                 <img src="{{url_for('static', filename='/img/charts/' + q_id|string + '.png')}}"
                                     alt="Answer distribution chart for question {{q_name}} without filters"
                                     id="chart_{{q_id}}">
                             {% endfor %}
-                        {% elif filter_group_name != "" and answer_distribution %}
+                        {% elif filtered and answer_distribution %}
                             {% for q_name, q_id in answer_distribution %}
                                 <h4 class="text-slate-600 font-mono text-sm font-medium">Question: {{ q_name }}</h4>
                                 <div class="flex justify-between">
