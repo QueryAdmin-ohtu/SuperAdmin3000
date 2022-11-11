@@ -3,7 +3,6 @@ from datetime import datetime
 from sqlalchemy import exc
 
 from db import db
-import helper
 
 class SurveyRepository:
     """
@@ -481,7 +480,7 @@ class SurveyRepository:
 
     def get_users_who_answered_survey(self,
                                       survey_id: int,
-                                      start_date: datetime = None, 
+                                      start_date: datetime = None,
                                       end_date: datetime = None,
                                       group_name=None,
                                       email=""):
@@ -675,7 +674,7 @@ class SurveyRepository:
 
     def get_answer_distribution(self,
                                 survey_id,
-                                start_date: datetime = None, 
+                                start_date: datetime = None,
                                 end_date: datetime = None,
                                 user_group_id: uuid = None,
                                 email: str = ""):
@@ -718,7 +717,7 @@ class SurveyRepository:
 
         values = {"survey_id": survey_id,
                   "group_id": user_group_id,
-                  "start_date": start_date, 
+                  "start_date": start_date,
                   "end_date": end_date,
                   "email": f"%{email}%"}
         try:
@@ -730,10 +729,10 @@ class SurveyRepository:
             return exception
 
     def get_answer_distribution_filtered(self, survey_id,
-                                         start_date: datetime = None, 
+                                         start_date: datetime = None,
                                          end_date: datetime = None,
                                          group_name: str = "",
-                                         email: str = ""):                                         
+                                         email: str = ""):
         """ Finds and returns the distribution of user answers
         over the answer options of a survey.
 
@@ -851,8 +850,7 @@ class SurveyRepository:
         count_of_answers = self.db_connection.session.execute(sql, values).fetchone()[0]
         if count_of_answers:
             return count_of_answers
-        else:
-            return 0
+        return 0
         
     def get_sum_of_user_answer_points_by_question_id(self, question_id, user_group_id = None, start_date = None, end_date = None):
         """
@@ -974,6 +972,39 @@ class SurveyRepository:
             return None
 
 
+
+    def get_survey_results(self, survey_id):
+        """Get the results of a survey
+
+        Return table with columns: id, text, cutoff_from_maxpoints, createdAt, updatedAt"""
+        sql = """
+            SELECT id, text, cutoff_from_maxpoints, "createdAt", "updatedAt"
+            FROM "Survey_results"
+            WHERE "surveyId"=:survey_id
+            """
+        result = self.db_connection.session.execute(sql, {"survey_id": survey_id}).fetchall()
+        return result
+
+    def create_survey_result(self, survey_id, text, cutoff_from_maxpoints):
+        """Create a new survey result.
+
+        Results connected to the same survey with duplicate cutoff values will not be created"""
+        sql = """
+            INSERT INTO "Survey_results"
+            ("surveyId", text, cutoff_from_maxpoints, "createdAt", "updatedAt")
+            SELECT * FROM (SELECT :survey_id, :text, :cutoff, NOW(), NOW()) AS tmp
+            WHERE NOT EXISTS (SELECT cutoff_from_maxpoints FROM "Survey_results"
+                WHERE cutoff_from_maxpoints=:cutoff AND "surveyId"=:survey_id)
+            RETURNING id
+        """
+        values = {"survey_id": int(survey_id), "text": text, "cutoff": float(cutoff_from_maxpoints)}
+        survey_result = self.db_connection.session.execute(sql, values).fetchone()
+        db.session.commit()
+        if survey_result:
+            self.update_survey_updated_at(survey_id)
+            survey_result_id = survey_result[0]
+            return survey_result_id
+        return None
 
     def create_placeholder_category_result(self, category_id):
         """

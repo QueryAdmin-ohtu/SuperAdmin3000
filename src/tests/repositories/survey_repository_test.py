@@ -951,3 +951,20 @@ class TestSurveyRepository(unittest.TestCase):
             self.repo.create_placeholder_category_result(category_id)
             related_category_results = self.repo.get_category_results_from_category_id(category_id)
             self.assertTrue(len(related_category_results) == 2)
+
+    def test_create_a_survey_result_with_unique_cutoff_value(self):
+        with self.app.app_context():
+            result_id = self.repo.create_survey_result(8, "You seem to be an African elephant", 1.0)
+        self.assertTrue(result_id)
+
+    def test_survey_result_needs_to_have_unique_cutoff_value(self):
+        with self.app.app_context():
+            result_id = self.repo.create_survey_result(8, "You look like an Indian elephant", 1.0)
+        self.assertFalse(result_id)
+
+    def test_get_survey_results_returns_correct_amount_of_results(self):
+        with self.app.app_context():
+            self.repo.create_survey_result(8, "You look like an Indian elephant", 0.5)
+            results = self.repo.get_survey_results(8)
+        self.assertEqual(len(results), 2)
+        self.assertEqual(results[0][1], "You seem to be an African elephant")
