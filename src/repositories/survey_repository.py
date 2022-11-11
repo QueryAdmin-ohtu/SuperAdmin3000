@@ -491,6 +491,9 @@ class SurveyRepository:
             start_time: Start of timerange to filter by (optional)
             end_time: End of timerange to filter by (optional)
             group_name: User group to filter by (optional)
+                        If the group is None, all users all listed. If the
+                        group is string "None", only users without any group
+                        are listed.
             email: Email to filter by (optional)
 
         Returns:
@@ -499,7 +502,8 @@ class SurveyRepository:
             On error / no users who answered found:
                 None
         """
-        print(f"Email: '{email}'", flush=True)
+        # TODO: remove
+        print(f"Group: '{group_name}' type: {type(group_name)}", flush=True)
 
         sql = """
         SELECT
@@ -517,11 +521,13 @@ class SurveyRepository:
             ON "q"."id" = "qa"."questionId"
         LEFT JOIN "Surveys" as s
             ON "s"."id" = "q"."surveyId"
-        LEFT JOIN "Survey_user_groups" as sua
+        LEFT OUTER JOIN "Survey_user_groups" as sua
             ON "u"."groupId" = "sua"."id"
-        WHERE "s"."id"=:survey_id AND "sua"."surveyId"=:survey_id
+        WHERE "s"."id"=:survey_id
             AND ((:start_date IS NULL AND :end_date IS NULL) OR ("ua"."updatedAt" > :start_date AND "ua"."updatedAt" < :end_date))
-            AND ((:group_name IS NULL) OR ("group_name"=:group_name))
+            AND ((:group_name IS NULL) OR
+                 ((:group_name = 'None') AND ("sua"."group_name" IS NULL)) OR
+                 ("group_name"=:group_name))
             AND (("email" LIKE :email))
         """
         values = {"survey_id": survey_id,
@@ -530,9 +536,15 @@ class SurveyRepository:
                   "group_name": group_name,
                   "email": f"%{email}%"}
 
+        # TODO: remove
+        print(f"SQL: {sql}", flush=True)
+        print(f"Values: {values}", flush=True)
+        
         try:
             users = self.db_connection.session.execute(sql, values).fetchall()
 
+            # TODO: remove
+            print(f"Users: {users}", flush=True)
             if not users:
                 return None
             return users
@@ -647,6 +659,9 @@ class SurveyRepository:
         """ Finds and returns the number of distinct users who have
         submitted answers to a survey."""
 
+        # TODO:
+        # Handle situation, where we want to filter in only users without any groups
+        # currently group id None lists all users            
         sql = """
         SELECT
             s.id,
@@ -691,6 +706,9 @@ class SurveyRepository:
         if end_date:
             end_date = end_date.replace(hour=23, minute=59, second=59)
 
+        # TODO:
+        # Handle situation, where we want to filter in only users without any groups
+        # currently group id None lists all users            
         sql = """
         SELECT
             q.id AS question_id,
@@ -831,6 +849,9 @@ class SurveyRepository:
         Returns:
             Amount of user answers if successful. Else returns 0.
         """
+        # TODO:
+        # Handle situation, where we want to filter in only users without any groups
+        # currently group id None lists all users
         sql = """
         SELECT COUNT(id)
         FROM "User_answers"
@@ -864,7 +885,9 @@ class SurveyRepository:
             end_date (optional): A datetime for filtering the answers used to calculate the sum. Ignored
                 if None. If value present only answers before this datetime are taken into account.
         """
-
+        # TODO:
+        # Handle situation, where we want to filter in only users without any groups
+        # currently group id None lists all users
         sql =  """
         SELECT
             (COUNT(ua.id) * points)
@@ -914,7 +937,9 @@ class SurveyRepository:
             A list of tuples which includes the category id, category name and average score 
             (to the precision of two decimal places) of all user answers in a given survey.
         """
-
+        # TODO:
+        # Handle situation, where we want to filter in only users without any groups
+        # currently group id None lists all users
         question_averages = []
         related_questions = self.get_questions_of_survey(survey_id)
 
