@@ -412,10 +412,10 @@ def new_survey_result_view(survey_id):
     """Renders the view for creating survey results"""
 
     survey = survey_service.get_survey(survey_id)
-    previous_results = survey_service.get_survey_results(survey_id)
-    if previous_results:
-        return render_template("surveys/edit_survey_results.html", survey=survey)
-    return render_template("surveys/edit_survey_results.html", survey=survey, first=True)
+    results = survey_service.get_survey_results(survey_id)
+    if results:
+        return render_template("surveys/edit_survey_results.html", survey=survey, results=results)
+    return render_template("surveys/edit_survey_results.html", survey=survey, first=True, results=[])
 
 @surveys.route("/surveys/<survey_id>/new-survey-result", methods=["POST"])
 def new_survey_result_post(survey_id):
@@ -427,7 +427,7 @@ def new_survey_result_post(survey_id):
 
     survey_service.create_survey_result(survey_id, text, cutoff_value)
 
-    return redirect(f"/surveys/{survey_id}")
+    return redirect(f"/surveys/{survey_id}/new-survey-result")
 
 @surveys.route("/surveys")
 def view_surveys():
