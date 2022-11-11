@@ -981,6 +981,7 @@ class SurveyRepository:
             SELECT id, text, cutoff_from_maxpoints, "createdAt", "updatedAt"
             FROM "Survey_results"
             WHERE "surveyId"=:survey_id
+            ORDER BY cutoff_from_maxpoints
             """
         result = self.db_connection.session.execute(sql, {"survey_id": survey_id}).fetchall()
         return result

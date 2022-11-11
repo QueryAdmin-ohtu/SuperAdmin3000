@@ -967,4 +967,5 @@ class TestSurveyRepository(unittest.TestCase):
             self.repo.create_survey_result(8, "You look like an Indian elephant", 0.5)
             results = self.repo.get_survey_results(8)
         self.assertEqual(len(results), 2)
-        self.assertEqual(results[0][1], "You seem to be an African elephant")
+        self.assertEqual(results[1][1], "You seem to be an African elephant")
+        self.assertEqual(results[0][1], "You look like an Indian elephant")
