@@ -635,6 +635,8 @@ INSERT INTO public."User_answers" VALUES (3, 2, 33, '2022-11-03 10:57:07.535414+
 INSERT INTO public."User_answers" VALUES (4, 2, 35, '2022-11-03 10:57:07.535414+00', '2022-11-03 10:57:07.535414+00', NULL);
 INSERT INTO public."User_answers" VALUES (5, 3, 34, '2022-11-03 10:58:07.535414+00', '2022-11-03 10:58:07.535414+00', NULL);
 INSERT INTO public."User_answers" VALUES (6, 3, 36, '2022-11-03 10:58:07.535414+00', '2022-11-03 10:58:07.535414+00', NULL);
+INSERT INTO public."User_answers" VALUES (5, 4, 33, '2020-11-03 10:58:07.535414+00', '2020-11-03 10:58:07.535414+00', NULL);
+INSERT INTO public."User_answers" VALUES (6, 4, 36, '2020-11-03 10:58:07.535414+00', '2020-11-03 10:58:07.535414+00', NULL);
 
 
 --
@@ -644,6 +646,7 @@ INSERT INTO public."User_answers" VALUES (6, 3, 36, '2022-11-03 10:58:07.535414+
 INSERT INTO public."Users" VALUES (1, 'firstuser@company.invalid', 'bb2ce58d-f27b-4ade-9e31-e8aca8c7ca20'::UUID, NULL, '2022-11-03 10:52:07.535414+00', '2022-11-03 10:52:07.535414+00');
 INSERT INTO public."Users" VALUES (2, 'seconduser@firm.invalid', 'bb2ce58d-f27b-4ade-9e31-e8aca8c7ca20'::UUID, NULL, '2022-11-03 10:52:07.535414+00', '2022-11-03 10:52:07.535414+00');
 INSERT INTO public."Users" VALUES (3, 'thirduser@school.invalid', '737cdf09-cc6f-47de-adcd-e7aaab0adc39'::UUID, NULL, '2022-11-03 10:52:07.535414+00', '2022-11-03 10:52:07.535414+00');
+INSERT INTO public."Users" VALUES (4, 'groupless@school.invalid', NULL, NULL, '2020-11-03 10:52:07.535414+00', '2020-11-03 10:52:07.535414+00');
 
 
 
