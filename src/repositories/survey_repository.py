@@ -4,6 +4,7 @@ from sqlalchemy import exc
 
 from db import db
 
+
 class SurveyRepository:
     """
     A class for interacting with the survey database
@@ -502,9 +503,6 @@ class SurveyRepository:
             On error / no users who answered found:
                 None
         """
-        # TODO: remove
-        print(f"Group: '{group_name}' type: {type(group_name)}", flush=True)
-
         sql = """
         SELECT
             DISTINCT "u"."id",
@@ -536,15 +534,9 @@ class SurveyRepository:
                   "group_name": group_name,
                   "email": f"%{email}%"}
 
-        # TODO: remove
-        print(f"SQL: {sql}", flush=True)
-        print(f"Values: {values}", flush=True)
-        
         try:
             users = self.db_connection.session.execute(sql, values).fetchall()
 
-            # TODO: remove
-            print(f"Users: {users}", flush=True)
             if not users:
                 return None
             return users
@@ -661,7 +653,7 @@ class SurveyRepository:
 
         # TODO:
         # Handle situation, where we want to filter in only users without any groups
-        # currently group id None lists all users            
+        # currently group id None lists all users
         sql = """
         SELECT
             s.id,
@@ -708,7 +700,7 @@ class SurveyRepository:
 
         # TODO:
         # Handle situation, where we want to filter in only users without any groups
-        # currently group id None lists all users            
+        # currently group id None lists all users
         sql = """
         SELECT
             q.id AS question_id,
@@ -834,7 +826,7 @@ class SurveyRepository:
         db.session.commit()
         return survey_user_group_id
 
-    def get_count_of_user_answers_to_a_question(self, question_id, user_group_id = None, start_date = None, end_date = None):
+    def get_count_of_user_answers_to_a_question(self, question_id, user_group_id=None, start_date=None, end_date=None):
         """
         Retrieve number of submissions to a given question.
 
@@ -867,13 +859,15 @@ class SurveyRepository:
                 AND ((:group_id IS NULL) OR (u."groupId"=:group_id))
             )
         """
-        values = { "question_id": question_id, "group_id": user_group_id, "start_date": start_date, "end_date": end_date }
-        count_of_answers = self.db_connection.session.execute(sql, values).fetchone()[0]
+        values = {"question_id": question_id, "group_id": user_group_id,
+                  "start_date": start_date, "end_date": end_date}
+        count_of_answers = self.db_connection.session.execute(sql, values).fetchone()[
+            0]
         if count_of_answers:
             return count_of_answers
         return 0
-        
-    def get_sum_of_user_answer_points_by_question_id(self, question_id, user_group_id = None, start_date = None, end_date = None):
+
+    def get_sum_of_user_answer_points_by_question_id(self, question_id, user_group_id=None, start_date=None, end_date=None):
         """
         Returns the sum of all user answers for a given question.
 
@@ -888,7 +882,7 @@ class SurveyRepository:
         # TODO:
         # Handle situation, where we want to filter in only users without any groups
         # currently group id None lists all users
-        sql =  """
+        sql = """
         SELECT
             (COUNT(ua.id) * points)
         FROM "Questions" AS q
@@ -904,8 +898,10 @@ class SurveyRepository:
         GROUP BY q.id, qa.id
         ORDER BY q.id
         """
-        values = { "question_id": question_id, "group_id": user_group_id, "start_date": start_date, "end_date": end_date }
-        sum_of_points = self.db_connection.session.execute(sql, values).fetchall()
+        values = {"question_id": question_id, "group_id": user_group_id,
+                  "start_date": start_date, "end_date": end_date}
+        sum_of_points = self.db_connection.session.execute(
+            sql, values).fetchall()
         db.session.commit()
         res = 0
         for i in range(0, len(sum_of_points)):
@@ -914,8 +910,7 @@ class SurveyRepository:
 
         return res
 
-   
-    def calculate_average_scores_by_category(self, survey_id, user_group_id = None, start_date = None, end_date = None):
+    def calculate_average_scores_by_category(self, survey_id, user_group_id=None, start_date=None, end_date=None):
         """
         Calculates weighted average scores from the submitted answers of a given survey. An average
         score is calculated for each category of the survey. This value represents how well all
@@ -923,7 +918,7 @@ class SurveyRepository:
 
         Method creates a list of tuples which contain weighted averages for all answered questions.
         A helper method is used to calculate the final category averages.
-        
+
         Args:
             survey_id: Id of survey to calculate averages from
             user_group_id (optional): User group id of answer. Ignored if None. If value present
@@ -944,22 +939,27 @@ class SurveyRepository:
         related_questions = self.get_questions_of_survey(survey_id)
 
         for question in related_questions:
-            points = self.get_sum_of_user_answer_points_by_question_id(question.id, user_group_id, start_date, end_date)
-            answers = self.get_count_of_user_answers_to_a_question(question.id, user_group_id, start_date, end_date)
-            
+            points = self.get_sum_of_user_answer_points_by_question_id(
+                question.id, user_group_id, start_date, end_date)
+            answers = self.get_count_of_user_answers_to_a_question(
+                question.id, user_group_id, start_date, end_date)
+
             for category_weight in question.category_weights:
                 if (answers != 0):
-                    weighted_average = points / answers * category_weight['multiplier']
+                    weighted_average = points / answers * \
+                        category_weight['multiplier']
                 else:
                     weighted_average = 0
-                category_id  = self.get_category_id_from_name(survey_id, category_weight['category'])
+                category_id = self.get_category_id_from_name(
+                    survey_id, category_weight['category'])
                 if category_id is not None:
-                    question_average = (category_id, category_weight['category'], weighted_average)
+                    question_average = (
+                        category_id, category_weight['category'], weighted_average)
                 else:
-                    question_average = ("Null", str(category_weight['category']) + " - (missing from 'Categories')",weighted_average)
+                    question_average = ("Null", str(
+                        category_weight['category']) + " - (missing from 'Categories')", weighted_average)
                 question_averages.append(question_average)
         return self.calculate_category_averages(question_averages)
-
 
     def calculate_category_averages(self, question_averages):
         """
@@ -973,13 +973,13 @@ class SurveyRepository:
         names = {}
         for item in question_averages:
             sums[item[0]] = sums.setdefault(item[0], 0) + item[2]
-            occurences[item[0]] = occurences.setdefault(item[0] ,0) + 1
+            occurences[item[0]] = occurences.setdefault(item[0], 0) + 1
             names[item[0]] = item[1]
         results = []
         for key in sums:
-            results.append((key, names[key], float("{:.2f}".format(sums[key]/occurences[key]))))
+            results.append((key, names[key], float(
+                "{:.2f}".format(sums[key]/occurences[key]))))
         return results
-
 
     def get_category_id_from_name(self, survey_id, category_name):
         """
@@ -996,8 +996,6 @@ class SurveyRepository:
         else:
             return None
 
-
-
     def get_survey_results(self, survey_id):
         """Get the results of a survey
 
@@ -1008,7 +1006,8 @@ class SurveyRepository:
             WHERE "surveyId"=:survey_id
             ORDER BY cutoff_from_maxpoints
             """
-        result = self.db_connection.session.execute(sql, {"survey_id": survey_id}).fetchall()
+        result = self.db_connection.session.execute(
+            sql, {"survey_id": survey_id}).fetchall()
         return result
 
     def create_survey_result(self, survey_id, text, cutoff_from_maxpoints):
@@ -1023,8 +1022,10 @@ class SurveyRepository:
                 WHERE cutoff_from_maxpoints=:cutoff AND "surveyId"=:survey_id)
             RETURNING id
         """
-        values = {"survey_id": int(survey_id), "text": text, "cutoff": float(cutoff_from_maxpoints)}
-        survey_result = self.db_connection.session.execute(sql, values).fetchone()
+        values = {"survey_id": int(
+            survey_id), "text": text, "cutoff": float(cutoff_from_maxpoints)}
+        survey_result = self.db_connection.session.execute(
+            sql, values).fetchone()
         db.session.commit()
         if survey_result:
             self.update_survey_updated_at(survey_id)

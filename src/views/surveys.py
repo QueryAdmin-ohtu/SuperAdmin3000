@@ -311,7 +311,8 @@ def edit_category_page(survey_id, category_id):
     name = category[1]
     description = category[2]
     content_links = category[3]
-    category_results = survey_service.get_category_results_from_category_id(category_id)
+    category_results = survey_service.get_category_results_from_category_id(
+        category_id)
     return render_template("surveys/edit_category.html",
                            ENV=app.config["ENV"],
                            survey_id=survey_id,
@@ -407,6 +408,7 @@ def delete_category():
     flash("Could not delete category because it has results linked to it", "error")
     return redirect(f"/surveys/{survey_id}")
 
+
 @surveys.route("/surveys/<survey_id>/new-survey-result", methods=["GET"])
 def new_survey_result_view(survey_id):
     """Renders the view for creating survey results"""
@@ -416,6 +418,7 @@ def new_survey_result_view(survey_id):
     if results:
         return render_template("surveys/edit_survey_results.html", survey=survey, results=results)
     return render_template("surveys/edit_survey_results.html", survey=survey, first=True, results=[])
+
 
 @surveys.route("/surveys/<survey_id>/new-survey-result", methods=["POST"])
 def new_survey_result_post(survey_id):
@@ -428,6 +431,7 @@ def new_survey_result_post(survey_id):
     survey_service.create_survey_result(survey_id, text, cutoff_value)
 
     return redirect(f"/surveys/{survey_id}/new-survey-result")
+
 
 @surveys.route("/surveys")
 def view_surveys():

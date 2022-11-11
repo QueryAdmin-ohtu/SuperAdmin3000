@@ -7,6 +7,7 @@ from matplotlib import pyplot as plt
 from flask import session
 from datetime import datetime
 
+
 def backdoor_validate_and_login(username, password):
     """ Check if the given username password pair is correct
     If username and password match, a new session will be created
@@ -109,6 +110,7 @@ def json_into_dictionary(json_file):
         categories[category["category"]] = category["multiplier"]
     return categories
 
+
 def save_question_answer_charts(answer_distribution, user_group="", filter_start_date=None, filter_end_date=None):
     """First clears the static/img/charts directory contents
     if no user group is given and then takes the answer distribution
@@ -138,11 +140,13 @@ def save_question_answer_charts(answer_distribution, user_group="", filter_start
         filter_end_date = filter_end_date.strftime("%d.%m.%Y, %H:%M")
         time_range = filter_start_date + " - " + filter_end_date
 
-    plot_answer_distribution_for_questions(answer_df, q_names, q_ids, user_group, time_range)
+    plot_answer_distribution_for_questions(
+        answer_df, q_names, q_ids, user_group, time_range)
 
     return zip(q_names, q_ids)
 
-def plot_answer_distribution_for_questions(dataframe:df, q_names: list, q_ids: list, user_group: str, time_range=None):
+
+def plot_answer_distribution_for_questions(dataframe: df, q_names: list, q_ids: list, user_group: str, time_range=None):
     """Plots the answer distribution for each question and saves
     the pie chart as .png to static/img/charts directory
 
@@ -153,19 +157,19 @@ def plot_answer_distribution_for_questions(dataframe:df, q_names: list, q_ids: l
     """
     current_dir = path.dirname(__file__)
     target_dir = path.join(current_dir, "static/img/charts/")
-        
+
     try:
         plt.switch_backend("Agg")
         for q_name, q_id in zip(q_names, q_ids):
             question_to_plot = dataframe[dataframe["question"] == q_name]
             answer_options = question_to_plot["answer"].to_list()
             question_to_plot.plot(kind="pie",
-                                labels=answer_options,
-                                y="count",
-                                autopct="%1.1f%%")
+                                  labels=answer_options,
+                                  y="count",
+                                  autopct="%1.1f%%")
             plt.legend(title="Answer options",
-                        loc="upper left",
-                        bbox_to_anchor=(0.9, 0, 0, 1))
+                       loc="upper left",
+                       bbox_to_anchor=(0.9, 0, 0, 1))
 
             if user_group == "" and time_range is None:
                 plt.title("All users")
@@ -182,6 +186,7 @@ def plot_answer_distribution_for_questions(dataframe:df, q_names: list, q_ids: l
     except Exception:
         return False
     return True
+
 
 def empty_dir():
     """Clears the contents of the target directory"""
