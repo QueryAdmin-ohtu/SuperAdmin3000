@@ -7,10 +7,14 @@
     <br>
 </div>
 {% if results %}
-<div class="table-row-group">
-    {% else %}
+    {% for result in results %}
+    <p>{{ result.text }}, cutoff value {{ result.cutoff_from_maxpoints}}</p>
+    <br>
+    <!-- you can use the buttons from survey_categories.html here -->
+    {% endfor %}
+{% else %}
     <p>Survey has no results 🥺</p>
-    {% endif %}
+{% endif %}
 </div>
 
 {% endcall %}
