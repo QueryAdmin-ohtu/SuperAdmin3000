@@ -121,8 +121,12 @@
         result[2]) }}
         </div>      
         <div class="flex flex-grow"></div>
+        {% set button_id = "update%s" % result_id %}        
+        {{ form_elements.submit_button("Update result", id=button_id) }}
+        
         {% if not hide_delete_button %}
-        {{ form_elements.submit_button("Delete result", "destructive") }}
+        {% set button_id = "delete%s" % result_id %}
+        {{ form_elements.submit_button("Delete result", "destructive", id=button_id) }}
         {% endif %}
     </div>
 </details>
