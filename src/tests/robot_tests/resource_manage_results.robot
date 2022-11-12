@@ -9,7 +9,7 @@ Set Result Cutoff
     Input Text  cutoff  ${value}
 
 Save Result
-    Click Button  Save changes
+    Click Button  Create new result
 
 Expand Result Card
     [Arguments]  ${result_index}
