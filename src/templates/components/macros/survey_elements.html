@@ -95,7 +95,7 @@
 {% endcall %}
 {% endmacro %}
 
-{% macro survey_result_card(result, index) %}
+{% macro survey_result_card(result, index, hide_delete_button=False) %}
 {# An expandable card element for displaying survey results.
     Args:
         result: The survey result object
@@ -116,7 +116,9 @@
         result[2]) }}
         </div>      
         <div class="flex flex-grow"></div>
-        {{ form_elements.submit_button("Delete result", "destructive", "/results/%s" % (result[0])) }}
+        {% if not hide_delete_button %}
+        {{ form_elements.submit_button("Delete result", "destructive", "/delete_survey_result/%s" % (result[0])) }}
+        {% endif %}
     </div>
 </details>
 {% endcall %}

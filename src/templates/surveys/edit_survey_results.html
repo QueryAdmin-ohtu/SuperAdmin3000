@@ -32,9 +32,13 @@
                     {{ form_elements.submit_button("Save changes") }}
                 </div>
                 {% endcall %}
+                {% if results|length == 1 %}
+                {{ survey_elements.survey_result_card(results[0], 0, hide_delete_button=True) }}
+                {% else %}
                 {% for result in results %}
                 {{ survey_elements.survey_result_card(result, loop.index) }}
                 {% endfor %}
+                {% endif %}
             </div>
         </div>
     </form>
