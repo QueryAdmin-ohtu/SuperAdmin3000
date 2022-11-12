@@ -6,10 +6,11 @@
 
 {% block content %}
 <div class="flex justify-between">
-    <h1 class="text-slate-700">Add a result to {{ survey.name }}</h1>
+    <h1 class="text-slate-700">Survey results for {{ survey.name }}</h1>
 </div>
 {{ buttons.link_button("Back to survey", "/surveys/%s" % survey[0]) }}
 <div class="flex flex-col gap-6 items-start w-full">
+    <h1 class="text-slate-700">Add a result</h1>  
     <form class="w-full" action="/surveys/{{ survey.id }}/new-survey-result" method="POST">
         <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
         <input type="hidden" name="survey_id" id="survey_id" value="{{ survey.id }}">
@@ -30,17 +31,19 @@
                             {{ form_elements.number_input("cutoff", "new-cutoff", "Cutoff from max points", 1.0, true, lower_bound, upper_bound, 0.01, 1.0) }}
                     </div>
                     {{ form_elements.submit_button("Save changes") }}
-                </div>
-                {% endcall %}
-                {% if results|length == 1 %}
-                {{ survey_elements.survey_result_card(results[0], 0, hide_delete_button=True) }}
-                {% else %}
-                {% for result in results %}
-                {{ survey_elements.survey_result_card(result, loop.index) }}
-                {% endfor %}
-                {% endif %}
+                </div>                    
             </div>
-        </div>
-    </form>
+    </form>                    
+    </div>
+    <div class="w-full">
+      {% endcall %}
+      {% if results|length == 1 %}
+      {{ survey_elements.survey_result_card(results[0], 0, hide_delete_button=True) }}
+      {% else %}
+      {% for result in results %}
+      {{ survey_elements.survey_result_card(result, loop.index) }}
+      {% endfor %}
+      {% endif %}
+    </div>
 </div>
 {% endblock %}

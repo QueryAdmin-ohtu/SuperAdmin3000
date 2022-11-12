@@ -432,21 +432,22 @@ def new_survey_result_post(survey_id):
 
     return redirect(f"/surveys/{survey_id}/new-survey-result")
 
-@surveys.route("/delete_survey_result/<result_id>", methods=["POST"])
-def delete_survey_result(result_id):
-    """Delete the given survey result
+@surveys.route("/update_survey_result", methods=["POST"])
+def delete_survey_result():
+    """Update or delete the given survey result
     """
-    # TODO: implement
-    # survey_id = survey_service.get_survey_result(result_id)
+    result_id = request.form["result_id"]
+    survey_id = request.form["survey_id"]
 
     # TODO: implement
     # survey_service.delete_survey_result(result_id)
 
-    # TODO: remove and use proper id
+    # TODO: remove
     print(f"Delete: {result_id}", flush=True)
-    survey_id = 1
+    print(f"Redirect to survey: {survey_id}", flush=True)
 
-    return redirect(f"/surveys/{survey_id}/new-survey-result")
+    return redirect("/")
+    # return redirect(f"/surveys/{survey_id}/new-survey-result")
         
 @surveys.route("/surveys")
 def view_surveys():

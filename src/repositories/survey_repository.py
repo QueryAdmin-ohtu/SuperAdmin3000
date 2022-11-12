@@ -999,9 +999,9 @@ class SurveyRepository:
     def get_survey_results(self, survey_id):
         """Get the results of a survey
 
-        Return table with columns: id, text, cutoff_from_maxpoints, createdAt, updatedAt"""
+        Return table with columns: id, text, cutoff_from_maxpoints, createdAt, updatedAt, surveyId"""
         sql = """
-            SELECT id, text, cutoff_from_maxpoints, "createdAt", "updatedAt"
+            SELECT id, text, cutoff_from_maxpoints, "createdAt", "updatedAt", "surveyId"
             FROM "Survey_results"
             WHERE "surveyId"=:survey_id
             ORDER BY cutoff_from_maxpoints
