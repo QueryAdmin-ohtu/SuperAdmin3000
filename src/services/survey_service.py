@@ -527,4 +527,10 @@ class SurveyService:
         return self.survey_repository.get_survey_results(survey_id)
 
 
+    def delete_survey_result(self, result_id):
+        """ Deletes the given survey result
+        """
+
+        return self.survey_repository.delete_survey_result(result_id)
+
 survey_service = SurveyService(SurveyRepository())

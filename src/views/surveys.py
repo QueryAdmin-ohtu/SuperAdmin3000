@@ -439,15 +439,13 @@ def delete_survey_result():
     result_id = request.form["result_id"]
     survey_id = request.form["survey_id"]
 
-    # TODO: implement
-    # survey_service.delete_survey_result(result_id)
+    survey_service.delete_survey_result(result_id)
 
     # TODO: remove
     print(f"Delete: {result_id}", flush=True)
     print(f"Redirect to survey: {survey_id}", flush=True)
 
-    return redirect("/")
-    # return redirect(f"/surveys/{survey_id}/new-survey-result")
+    return redirect(f"/surveys/{survey_id}/new-survey-result")
         
 @surveys.route("/surveys")
 def view_surveys():

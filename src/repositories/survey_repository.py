@@ -1033,6 +1033,26 @@ class SurveyRepository:
             return survey_result_id
         return None
 
+    def delete_survey_result(self, result_id):
+        """ Delete the given result
+
+            Returns True if success, False if error
+        """
+        sql = """ DELETE FROM "Survey_results" WHERE id=:result_id """        
+        values = {"result_id": int(result_id)}
+        
+        # TODO: remove
+        print(f"SQL: {sql}", flush=True)
+        print(f"Values: {values}", flush=True)
+
+        try:
+            self.db_connection.session.execute(sql, values)
+            self.db_connection.session.commit()
+        except exc.SQLAlchemyError as exception:
+            return False      
+
+        return True
+
     def create_placeholder_category_result(self, category_id):
         """
         Creates a placeholder categy result
