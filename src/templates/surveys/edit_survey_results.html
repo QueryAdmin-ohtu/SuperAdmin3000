@@ -33,19 +33,17 @@
                     {{ form_elements.submit_button("Create new result") }}
                 </div>                    
             </div>
-            INSIDE
     </form>
-    OUTSIDE
     </div>
     <div class="w-full">
       {% endcall %}
-      {% if results|length == 1 %}
-      {{ survey_elements.survey_result_card(results[0], 0, hide_delete_button=True) }}
-      {% else %}
       {% for result in results %}
+      {% if result[2] == 1.0 %}     
+      {{ survey_elements.survey_result_card(result, loop.index, hide_delete_button=True) }}
+      {% else %}
       {{ survey_elements.survey_result_card(result, loop.index) }}
-      {% endfor %}
       {% endif %}
+      {% endfor %}
     </div>
 </div>
 {% endblock %}
