@@ -1031,3 +1031,15 @@ class TestSurveyRepository(unittest.TestCase):
         self.assertEqual(len(results), 2)
         self.assertEqual(results[1][1], "You seem to be an African elephant")
         self.assertEqual(results[0][1], "You look like an Indian elephant")
+
+    def test_delete_survey_result_deletes_survey_result(self):
+        with self.app.app_context():
+            self.repo.create_survey_result(
+                8, "You look like an Indian elephant", 0.5)
+            results = self.repo.get_survey_results(8)
+            self.assertEqual(len(results), 2)
+            
+            response = self.repo.delete_survey_result(results[0][0])
+            self.assertTrue(response)
+            results = self.repo.get_survey_results(8)            
+            self.assertEqual(len(results), 1)

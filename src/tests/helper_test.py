@@ -36,7 +36,7 @@ def test_backdoor_validate_and_login_with_valid_credentials(app):
         assert context.session["csrf_token"]
 
 
-def test_backdoor_validate_and_login_with_invalid_credentials(app):
+def test_backdoor_validate_and_login_with_invalid_password(app):
     with app.test_request_context() as context:
         response = helper.backdoor_validate_and_login("rudolf", "wrong")
 
@@ -44,7 +44,16 @@ def test_backdoor_validate_and_login_with_invalid_credentials(app):
         assert "username" not in context.session
         assert "csrf_token" not in context.session
 
+        
+def test_backdoor_validate_and_login_with_invalid_username(app):
+    with app.test_request_context() as context:
+        response = helper.backdoor_validate_and_login("wrong", "secret")
 
+        assert response == False
+        assert "username" not in context.session
+        assert "csrf_token" not in context.session
+
+        
 def test_update_session(app):
     with app.test_request_context() as context:
         helper.update_session("user@mail", "user", "token")
