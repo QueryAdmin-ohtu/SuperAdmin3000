@@ -449,3 +449,10 @@ class TestSurveyService(unittest.TestCase):
         self.assertEqual(response, 15)
         self.repo_mock.create_survey_result.assert_called_with(
             1, "You are very mature and agile!", 0.9)
+
+    def test_delete_survey_result_calls_repo_correctly(self):
+        self.repo_mock.delete_survey_result.return_value = True
+
+        response = self.survey_service.delete_survey_result(1)
+        self.assertTrue(response)
+        self.repo_mock.delete_survey_result.assert_called_with(1)
