@@ -69,7 +69,8 @@ Survey Result With Cutoff Value One Can not Be Deleted
     Set Result Text  You look like an Indian elephant
     Set Result Cutoff  0.5
     Save Result
-    Expand Result Card  1    
-    Expand Result Card  2
-    Page Should Contain Element  id:delete7
-    Page Should Not Contain Element  id:delete6
+    Expand Result Card  1
+    Click Button  Delete result
+    Expand Result Card  1
+    Page Should Not Contain  Delete
+
