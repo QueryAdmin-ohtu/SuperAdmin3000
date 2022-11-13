@@ -422,13 +422,30 @@ def new_survey_result_view(survey_id):
 
 @surveys.route("/surveys/<survey_id>/new-survey-result", methods=["POST"])
 def new_survey_result_post(survey_id):
-    """Handles creating a new survey result"""
+    """Handles creating a new survey result and updates
+    any edited survey results"""
 
     survey_id = request.form["survey_id"]
     text = request.form["text"]
     cutoff_value = request.form["cutoff"]
-
-    survey_service.create_survey_result(survey_id, text, cutoff_value)
+    cutoff_values = []
+    if text and cutoff_value:
+        cutoff_values.append(cutoff_value)
+    original_results = eval(request.form["results"])
+    if original_results:
+        new_results = []
+        for i in range(len(original_results)):
+            result_id = original_results[i][0]
+            result = request.form[f"result-{i+1}"]
+            cutoff = request.form[f"cutoff-{i+1}"]
+            cutoff_values.append(cutoff)
+            new_results.append((result_id,result,cutoff))
+        cutoffs_correct = helper.check_cutoff_points(cutoff_values)
+        if cutoffs_correct != "Correct":
+            return cutoffs_correct
+        survey_service.update_survey_results(original_results,new_results)
+    elif text and cutoff_value:
+        survey_service.create_survey_result(survey_id, text, cutoff_value)
 
     return redirect(f"/surveys/{survey_id}/new-survey-result")
 
