@@ -355,7 +355,15 @@ class SurveyService:
         """
         category_id = self.survey_repository.create_category(
             survey_id, name, description, content_links)
-        self.create_placeholder_category_result(category_id)
+
+        category_result_text = "Your skills in this topic are excellent!"
+        cutoff_from_maxpts = 1.0
+        self.create_category_result(
+            category_id,
+            category_result_text,
+            cutoff_from_maxpts
+        )
+        
         return category_id
 
     def add_admin(self, email: str):
@@ -506,8 +514,11 @@ class SurveyService:
 
         return self.survey_repository.calculate_average_scores_by_category(survey_id, user_group_id, start_date, end_date)
 
-    def create_placeholder_category_result(self, category_id):
-        return self.survey_repository.create_placeholder_category_result(category_id)
+    def create_category_result(self, category_id: int, text: str, cutoff_from_maxpts: float):
+        """Create a new category result
+        
+        Returns id of category result"""
+        return self.survey_repository.create_category_result(category_id, text, cutoff_from_maxpts)
 
     def get_category_results_from_category_id(self, category_id):
         return self.survey_repository.get_category_results_from_category_id(category_id)
