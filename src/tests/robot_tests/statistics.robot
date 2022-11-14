@@ -22,7 +22,7 @@ User Can Access Edit Categories Page From Statistics
 
 Statistics Page Shows the Number Of Users Who Have Answered
     Go To Statistics  8
-    Page Should Contain  Users with submissions (3 / 3)
+    Page Should Contain  Users with submissions (4 / 4)
 
 Statistics Page Shows Question Names For Charts
     Go To Statistics  8
@@ -82,17 +82,17 @@ Entering Valid Range To Filter Dates Filters Users
     Input Text  filter_start_date  02.02.2002 12:00
     Input Text  filter_end_date  02.02.2002 12:01
     Click Button  Filter
-    Page Should Contain  Users with submissions (0 / 3)    
+    Page Should Contain  Users with submissions (0 / 4)    
     
 Entering Invalid Date to User Filter Does Not Filter Anything
     Go To Statistics  8
-    Page Should Contain  Users with submissions (3 / 3)
+    Page Should Contain  Users with submissions (4 / 4)
 
 Filtering By Group Name Filters Users
     Go To Statistics  8
     Select Radio Button  filter_group_name  Supertestaajat
     Click Button  Filter
-    Page Should Contain  Users with submissions (1 / 3)
+    Page Should Contain  Users with submissions (1 / 4)
 
 Statistics Page Displays Correct Average Value Message When No Answers Are Present
     Go To Statistics  1
@@ -100,10 +100,11 @@ Statistics Page Displays Correct Average Value Message When No Answers Are Prese
 
 Statistics Page Displays Correct Average Values
     Go To Statistics  8
-    Page Should Contain  Average score: 3.33
-    Page Should Contain  Average score: 1.67
+    Page Should Contain  Average score: 3.75
+    Page Should Contain  Average score: 1.25
+
 Filtering By Email Filters Users
     Go To Statistics  8
     Input Text  filter_email  duser
     Click Button  Filter
-    Page Should Contain  Users with submissions (2 / 3)
+    Page Should Contain  Users with submissions (2 / 4)

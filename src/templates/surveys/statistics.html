@@ -86,10 +86,16 @@
                 <div class="p-3">
                   {% if value == filter_group_name %}
                   <input id="{{ key }}" class="w-12 h-12" type="radio" name="filter_group_name" value="{{ value }}" checked="checked" />
+                  <label for={{ key }} class="ml-5">{{ key }}</label>                                    
                   {% else %}
+                  <!-- value == None could be used to filter-in only users, which doesn't
+                       have any group. This is not yet implemented in all repositories, however
+                    -->
+                  {% if value  != None %}
                   <input id="{{ key }}" class="w-12 h-12" type="radio" name="filter_group_name" value="{{ value }}" />
+                  <label for={{ key }} class="ml-5">{{ key }}</label>                  
                   {% endif %}
-                  <label for={{ key }} class="ml-5">{{ key }}</label>
+                  {% endif %}
                 </div>
                 {% endfor %}
               </div>
@@ -109,7 +115,11 @@
                     {% for user in users %}                    
                     <tr>
                       <td>{{ user.email }}</td>
-                      <td>{{ user.group_name }}</td>
+                      <td>
+                      {% if user.group_name %}
+                      {{ user.group_name }}
+                      {% endif %}
+                      </td>
                       <td>{{ user.answer_time }}</td>
                     </tr>
                     {% endfor %}                    

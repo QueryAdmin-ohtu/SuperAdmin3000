@@ -9,15 +9,16 @@ Test Setup  Go To Home Page
 
 *** Test Cases ***
 User Can Create New Survey Result
-    Go To Backdoor Login Page
-    Login With Correct Credentials
-    Go To Survey  8
-    Click Link  Manage results
-    Set Result Text  You most resemble an African elephant
-    Save Result
-    Page Should Contain  Result at cutoff point 1.0:
-    Expand Result Card  1
-    Page Should Contain  You most resemble an African elephant
+     Go To Backdoor Login Page
+     Login With Correct Credentials
+     Go To Survey  8
+     Click Link  Manage results
+     Set Result Text  You most resemble an African elephant
+     Save Result
+     Page Should Contain  Result at cutoff point 1.0:
+     Expand Result Card  1
+     Page Should Contain  You most resemble an African elephant
+
 
 First Survey Result Must Have Cutoff Value Of One
     Go To Survey  7
@@ -54,3 +55,22 @@ Subsequent Survey Results Must Have Cutoff Value Between 0 And 1
     Set Result Cutoff  15
     Save Result
     Page Should Not Contain  Result at cutoff point 15
+
+Survey Result Can Be Deleted
+    Go To Survey  8
+    Click Link  Manage results
+    Expand Result Card  1
+    Click Button  Delete result
+    Page Should Not Contain  Result at cutoff point 0.5:
+
+Survey Result With Cutoff Value One Can not Be Deleted
+    Go To Survey  8
+    Click Link  Manage results
+    Set Result Text  You look like an Indian elephant
+    Set Result Cutoff  0.5
+    Save Result
+    Expand Result Card  1
+    Click Button  Delete result
+    Expand Result Card  1
+    Page Should Not Contain  Delete
+

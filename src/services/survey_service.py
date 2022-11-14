@@ -305,7 +305,6 @@ class SurveyService:
                                                                     group_name,
                                                                     email)
 
-
     def get_users_who_answered_survey_in_timerange(self, survey_id: int, start_date: datetime, end_date: datetime):
         """ Returns a list of users who have answered a given survey in a given timerange
         Args:
@@ -340,8 +339,6 @@ class SurveyService:
 
         return self.survey_repository.get_users_who_answered_survey(survey_id, group_name=group_name)
 
-
-
     def create_category(self, survey_id: str, name: str, description: str, content_links: list):
         """
         Creates a new category.
@@ -356,7 +353,8 @@ class SurveyService:
             If succeeds: The DB id of the created category
             If not: None
         """
-        category_id = self.survey_repository.create_category(survey_id, name, description, content_links)
+        category_id = self.survey_repository.create_category(
+            survey_id, name, description, content_links)
         self.create_placeholder_category_result(category_id)
         return category_id
 
@@ -471,15 +469,13 @@ class SurveyService:
 
         return self.survey_repository.get_count_of_user_answers_to_a_question(question_id)
 
-
     def get_sum_of_user_answer_points_by_question_id(self, question_id):
         """
         Fetches the sum of user answer points to a given question id
         """
         return self.survey_repository.get_sum_of_user_answer_points_by_question_id(question_id)
 
-    
-    def calculate_average_scores_by_category(self, survey_id, user_group_id = None, start_date = None, end_date = None):
+    def calculate_average_scores_by_category(self, survey_id, user_group_id=None, start_date=None, end_date=None):
         """
         Calculates weighted average scores from the submitted answers of a given survey. An average
         score is calculated for each category of the survey. This value represents how well all
@@ -487,7 +483,7 @@ class SurveyService:
 
         Method creates a list of tuples which contain weighted averages for all answered questions.
         A helper method is used to calculate the final category averages.
-        
+
         Args:
             survey_id: Id of survey to calculate averages from
             user_group_id (optional): User group id of answer. Ignored if None. If value present
@@ -504,7 +500,7 @@ class SurveyService:
             If dates invalid returns None
         """
 
-        if  start_date and end_date:
+        if start_date and end_date:
             if start_date > end_date or end_date < start_date:
                 return None
 
@@ -526,8 +522,15 @@ class SurveyService:
     def get_survey_results(self, survey_id):
         """Fetch the results of the given survey
 
-        Returns a table with columns: id, text, cutoff_from_maxpoints, createdAt, updatedAt
+        Returns a table with columns: id, text, cutoff_from_maxpoints, createdAt, updatedAt, "surveyId"
         """
         return self.survey_repository.get_survey_results(survey_id)
+
+
+    def delete_survey_result(self, result_id):
+        """ Deletes the given survey result
+        """
+
+        return self.survey_repository.delete_survey_result(result_id)
 
 survey_service = SurveyService(SurveyRepository())

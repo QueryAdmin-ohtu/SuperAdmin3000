@@ -7,6 +7,8 @@ from pandas import DataFrame as df
 from glob import glob
 from os import path
 from datetime import datetime
+
+
 @pytest.fixture()
 def app():
     app = create_app()
@@ -34,7 +36,7 @@ def test_backdoor_validate_and_login_with_valid_credentials(app):
         assert context.session["csrf_token"]
 
 
-def test_backdoor_validate_and_login_with_invalid_credentials(app):
+def test_backdoor_validate_and_login_with_invalid_password(app):
     with app.test_request_context() as context:
         response = helper.backdoor_validate_and_login("rudolf", "wrong")
 
@@ -42,7 +44,16 @@ def test_backdoor_validate_and_login_with_invalid_credentials(app):
         assert "username" not in context.session
         assert "csrf_token" not in context.session
 
+        
+def test_backdoor_validate_and_login_with_invalid_username(app):
+    with app.test_request_context() as context:
+        response = helper.backdoor_validate_and_login("wrong", "secret")
 
+        assert response == False
+        assert "username" not in context.session
+        assert "csrf_token" not in context.session
+
+        
 def test_update_session(app):
     with app.test_request_context() as context:
         helper.update_session("user@mail", "user", "token")
@@ -134,18 +145,18 @@ def test_save_question_charts_returns_correct_object_when_given_answer_dist_with
     test_distribution = {
         "question_id":
             [29, 29, 30, 30],
-        "question": 
+        "question":
             ["Describe the size of your ears",
-            "Describe the size of your ears",
-            "Where do you prefer to hang out?",
-            "Where do you prefer to hang out?"],
+             "Describe the size of your ears",
+             "Where do you prefer to hang out?",
+             "Where do you prefer to hang out?"],
         "answer_id":
             [42, 43, 44, 45],
         "answer":
             ["Huge",
-            "Nonexistent",
-            "Forest",
-            "Savannah"],
+             "Nonexistent",
+             "Forest",
+             "Savannah"],
         "count":
             [2, 1, 1, 2]
     }
@@ -153,73 +164,80 @@ def test_save_question_charts_returns_correct_object_when_given_answer_dist_with
     result = list(return_type)
     expected_result = list(
         zip(
-        ["Describe the size of your ears", "Where do you prefer to hang out?"],
-        [29, 30]
+            ["Describe the size of your ears", "Where do you prefer to hang out?"],
+            [29, 30]
         )
     )
     assert result == expected_result
     assert type(return_type) == zip
 
+
 def test_save_question_charts_empties_dir_with_no_user_group():
     result = helper.save_question_answer_charts(None)
     empty_dir_test()
+
 
 def test_save_question_charts_returns_none_with_none_input():
     result = helper.save_question_answer_charts(None)
     assert result is None
 
+
 def test_plot_answer_dist_for_questions_returns_true_if_no_exception_raised():
     test_data = {
-        "question": 
+        "question":
             ["Describe the size of your ears",
-            "Describe the size of your ears",
-            "Where do you prefer to hang out?",
-            "Where do you prefer to hang out?"],
+             "Describe the size of your ears",
+             "Where do you prefer to hang out?",
+             "Where do you prefer to hang out?"],
         "answer":
             ["Huge",
-            "Nonexistent",
-            "Forest",
-            "Savannah"],
+             "Nonexistent",
+             "Forest",
+             "Savannah"],
         "count":
             [2, 1, 1, 2]
     }
     q_names = ["Describe the size of your ears",
-            "Describe the size of your ears",
-            "Where do you prefer to hang out?",
-            "Where do you prefer to hang out?"]
+               "Describe the size of your ears",
+               "Where do you prefer to hang out?",
+               "Where do you prefer to hang out?"]
     q_ids = [42, 42, 43, 43]
     test_df = df(data=test_data)
-    result = helper.plot_answer_distribution_for_questions(test_df, q_names, q_ids, "")
+    result = helper.plot_answer_distribution_for_questions(
+        test_df, q_names, q_ids, "")
     assert result == True
+
 
 def test_plot_answer_dist_for_questions_returns_false_when_exception_raised():
     q_names = ["Describe the size of your ears",
-            "Describe the size of your ears",
-            "Where do you prefer to hang out?",
-            "Where do you prefer to hang out?"]
+               "Describe the size of your ears",
+               "Where do you prefer to hang out?",
+               "Where do you prefer to hang out?"]
     q_ids = [42, 42, 43, 43]
-    result = helper.plot_answer_distribution_for_questions([1,2,3], q_names, q_ids, "")
+    result = helper.plot_answer_distribution_for_questions(
+        [1, 2, 3], q_names, q_ids, "")
     assert result == False
+
 
 def test_plot_answer_dist_for_questions_creates_png_files_without_filters():
     test_data = {
-        "question": 
+        "question":
             ["Describe the size of your ears",
-            "Describe the size of your ears",
-            "Where do you prefer to hang out?",
-            "Where do you prefer to hang out?"],
+             "Describe the size of your ears",
+             "Where do you prefer to hang out?",
+             "Where do you prefer to hang out?"],
         "answer":
             ["Huge",
-            "Nonexistent",
-            "Forest",
-            "Savannah"],
+             "Nonexistent",
+             "Forest",
+             "Savannah"],
         "count":
             [2, 1, 1, 2]
     }
     q_names = ["Describe the size of your ears",
-            "Describe the size of your ears",
-            "Where do you prefer to hang out?",
-            "Where do you prefer to hang out?"]
+               "Describe the size of your ears",
+               "Where do you prefer to hang out?",
+               "Where do you prefer to hang out?"]
     q_ids = [42, 42, 43, 43]
     test_df = df(data=test_data)
     helper.plot_answer_distribution_for_questions(test_df, q_names, q_ids, "")
@@ -233,33 +251,35 @@ def test_plot_answer_dist_for_questions_creates_png_files_without_filters():
     assert files[0] == "42.png"
     assert files[1] == "43.png"
 
+
 def test_plot_answer_dist_for_questions_creates_png_files_with_all_filters():
     helper.empty_dir()
     test_data = {
-        "question": 
+        "question":
             ["Describe the size of your ears",
-            "Describe the size of your ears",
-            "Where do you prefer to hang out?",
-            "Where do you prefer to hang out?"],
+             "Describe the size of your ears",
+             "Where do you prefer to hang out?",
+             "Where do you prefer to hang out?"],
         "answer":
             ["Huge",
-            "Nonexistent",
-            "Forest",
-            "Savannah"],
+             "Nonexistent",
+             "Forest",
+             "Savannah"],
         "count":
             [2, 1, 1, 2]
     }
     q_names = ["Describe the size of your ears",
-            "Describe the size of your ears",
-            "Where do you prefer to hang out?",
-            "Where do you prefer to hang out?"]
+               "Describe the size of your ears",
+               "Where do you prefer to hang out?",
+               "Where do you prefer to hang out?"]
     q_ids = [42, 42, 43, 43]
     test_df = df(data=test_data)
     filter_start_date = datetime.now().strftime("%d.%m.%Y, %H:%M")
     filter_end_date = datetime.now().strftime("%d.%m.%Y, %H:%M")
     time_range = filter_start_date + " - " + filter_end_date
 
-    helper.plot_answer_distribution_for_questions(test_df, q_names, q_ids, "test", time_range)
+    helper.plot_answer_distribution_for_questions(
+        test_df, q_names, q_ids, "test", time_range)
 
     current_dir = path.dirname(__file__)
     root_dir = path.dirname(current_dir)
@@ -270,33 +290,35 @@ def test_plot_answer_dist_for_questions_creates_png_files_with_all_filters():
     assert files[0] == "42_test.png"
     assert files[1] == "43_test.png"
 
+
 def test_plot_answer_dist_for_questions_creates_png_files_with_only_time_filter():
     helper.empty_dir()
     test_data = {
-        "question": 
+        "question":
             ["Describe the size of your ears",
-            "Describe the size of your ears",
-            "Where do you prefer to hang out?",
-            "Where do you prefer to hang out?"],
+             "Describe the size of your ears",
+             "Where do you prefer to hang out?",
+             "Where do you prefer to hang out?"],
         "answer":
             ["Huge",
-            "Nonexistent",
-            "Forest",
-            "Savannah"],
+             "Nonexistent",
+             "Forest",
+             "Savannah"],
         "count":
             [2, 1, 1, 2]
     }
     q_names = ["Describe the size of your ears",
-            "Describe the size of your ears",
-            "Where do you prefer to hang out?",
-            "Where do you prefer to hang out?"]
+               "Describe the size of your ears",
+               "Where do you prefer to hang out?",
+               "Where do you prefer to hang out?"]
     q_ids = [42, 42, 43, 43]
     test_df = df(data=test_data)
     filter_start_date = datetime.now().strftime("%d.%m.%Y, %H:%M")
     filter_end_date = datetime.now().strftime("%d.%m.%Y, %H:%M")
     time_range = filter_start_date + " - " + filter_end_date
 
-    helper.plot_answer_distribution_for_questions(test_df, q_names, q_ids, "", time_range)
+    helper.plot_answer_distribution_for_questions(
+        test_df, q_names, q_ids, "", time_range)
 
     current_dir = path.dirname(__file__)
     root_dir = path.dirname(current_dir)
@@ -307,8 +329,10 @@ def test_plot_answer_dist_for_questions_creates_png_files_with_only_time_filter(
     assert files[0] == "42_.png"
     assert files[1] == "43_.png"
 
+
 def test_empty_dir_deletes_files():
     empty_dir_test()
+
 
 def empty_dir_test():
     with open('src/static/img/charts/image.png', 'w') as f:
@@ -326,4 +350,3 @@ def empty_dir_test():
 
     assert file_count_before > 1
     assert file_count_after == 1
-

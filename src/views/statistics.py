@@ -9,6 +9,7 @@ stats = Blueprint("stats", __name__)
 
 timeformat = "%d.%m.%Y %H:%M"
 
+
 @stats.route("/surveys/<survey_id>/statistics", methods=["GET"])
 def statistics(survey_id):
     """Shows the statistics for the specific survey"""
@@ -30,7 +31,8 @@ def statistics(survey_id):
         survey_service.get_answer_distribution_for_survey_questions(survey_id)
     )
 
-    filter_start_date = (datetime.datetime.now() - datetime.timedelta(days=10*365)).strftime(timeformat)
+    filter_start_date = (datetime.datetime.now() -
+                         datetime.timedelta(days=10*365)).strftime(timeformat)
     filter_end_date = datetime.datetime.now().strftime(timeformat)
     filter_group_name = ""
     filter_email = ""
@@ -51,24 +53,25 @@ def statistics(survey_id):
                            show_userlist=False,
                            filtered=False)
 
+
 @stats.route("/surveys/<survey_id>/statistics/filter", methods=["POST"])
 def filtered_statistics(survey_id):
     """Shows the statistics for the specific survey and filtered
     set of users
     """
-    if app.config["ENV"] == "prod":
-        return redirect("/")
-
     try:
-        filter_start_date = datetime.datetime.strptime(request.form["filter_start_date"], timeformat)
-        filter_end_date = datetime.datetime.strptime(request.form["filter_end_date"], timeformat)
+        filter_start_date = datetime.datetime.strptime(
+            request.form["filter_start_date"], timeformat)
+        filter_end_date = datetime.datetime.strptime(
+            request.form["filter_end_date"], timeformat)
     except ValueError:
         return redirect(f"/surveys/{survey_id}/statistics")
 
     filter_group_name = request.form["filter_group_name"]
     filter_email = request.form["filter_email"]
 
-    submissions = survey_service.get_number_of_submissions_for_survey(survey_id)
+    submissions = survey_service.get_number_of_submissions_for_survey(
+        survey_id)
     answer_distribution = helper.save_question_answer_charts(
         survey_service.get_answer_distribution_for_survey_questions(survey_id,
                                                                     filter_start_date,
@@ -99,7 +102,6 @@ def filtered_statistics(survey_id):
 
     filter_start_date = filter_start_date.strftime(timeformat)
     filter_end_date = filter_end_date.strftime(timeformat)
-
 
     return render_template("surveys/statistics.html",
                            ENV=app.config["ENV"],

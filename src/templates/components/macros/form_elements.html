@@ -37,7 +37,7 @@
 
 {% endmacro %}
 
-{% macro number_input(name, id, label_text, placeholder, is_required, min, max, step, value = "") %}
+{% macro number_input(name, id, label_text, placeholder, is_required, min, max, step, value = "", readonly = False) %}
 {# A number input with label
     Args:
         name: Name of input
@@ -49,13 +49,15 @@
         max: Maximum value allowed
         step: Increment step of input
         value: Current value
+        readonly: The field is read only (default: False)
 #}
 {% if is_required %}
 {% set required_text = 'required' %}
 {% endif %}
 
 <input type="number" value="{{ value }}" name="{{ name }}" min="{{ min }}" max="{{ max }}" step="{{ step }}" placeholder="{{ placeholder }}" id="{{id}}"
-    class="font-mono bg-white border border-slate-300 text-gray-900 text-sm rounded-lg focus:invalid:border-rose-500 focus:ring-sky-500 focus:border-sky-500 block w-full p-2"
+       class="font-mono bg-white border border-slate-300 text-gray-900 text-sm rounded-lg focus:invalid:border-rose-500 focus:ring-sky-500 focus:border-sky-500 block w-full p-2"
+    {% if readonly %}readonly=""{% endif %}
     {{ required_text }}>
 
 {% endmacro %}

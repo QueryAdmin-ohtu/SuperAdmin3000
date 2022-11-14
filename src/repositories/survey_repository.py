@@ -4,6 +4,7 @@ from sqlalchemy import exc
 
 from db import db
 
+
 class SurveyRepository:
     """
     A class for interacting with the survey database
@@ -491,6 +492,9 @@ class SurveyRepository:
             start_time: Start of timerange to filter by (optional)
             end_time: End of timerange to filter by (optional)
             group_name: User group to filter by (optional)
+                        If the group is None, all users all listed. If the
+                        group is string "None", only users without any group
+                        are listed.
             email: Email to filter by (optional)
 
         Returns:
@@ -499,8 +503,6 @@ class SurveyRepository:
             On error / no users who answered found:
                 None
         """
-        print(f"Email: '{email}'", flush=True)
-
         sql = """
         SELECT
             DISTINCT "u"."id",
@@ -517,11 +519,13 @@ class SurveyRepository:
             ON "q"."id" = "qa"."questionId"
         LEFT JOIN "Surveys" as s
             ON "s"."id" = "q"."surveyId"
-        LEFT JOIN "Survey_user_groups" as sua
+        LEFT OUTER JOIN "Survey_user_groups" as sua
             ON "u"."groupId" = "sua"."id"
-        WHERE "s"."id"=:survey_id AND "sua"."surveyId"=:survey_id
+        WHERE "s"."id"=:survey_id
             AND ((:start_date IS NULL AND :end_date IS NULL) OR ("ua"."updatedAt" > :start_date AND "ua"."updatedAt" < :end_date))
-            AND ((:group_name IS NULL) OR ("group_name"=:group_name))
+            AND ((:group_name IS NULL) OR
+                 ((:group_name = 'None') AND ("sua"."group_name" IS NULL)) OR
+                 ("group_name"=:group_name))
             AND (("email" LIKE :email))
         """
         values = {"survey_id": survey_id,
@@ -647,6 +651,9 @@ class SurveyRepository:
         """ Finds and returns the number of distinct users who have
         submitted answers to a survey."""
 
+        # TODO:
+        # Handle situation, where we want to filter in only users without any groups
+        # currently group id None lists all users
         sql = """
         SELECT
             s.id,
@@ -691,6 +698,9 @@ class SurveyRepository:
         if end_date:
             end_date = end_date.replace(hour=23, minute=59, second=59)
 
+        # TODO:
+        # Handle situation, where we want to filter in only users without any groups
+        # currently group id None lists all users
         sql = """
         SELECT
             q.id AS question_id,
@@ -816,7 +826,7 @@ class SurveyRepository:
         db.session.commit()
         return survey_user_group_id
 
-    def get_count_of_user_answers_to_a_question(self, question_id, user_group_id = None, start_date = None, end_date = None):
+    def get_count_of_user_answers_to_a_question(self, question_id, user_group_id=None, start_date=None, end_date=None):
         """
         Retrieve number of submissions to a given question.
 
@@ -831,6 +841,9 @@ class SurveyRepository:
         Returns:
             Amount of user answers if successful. Else returns 0.
         """
+        # TODO:
+        # Handle situation, where we want to filter in only users without any groups
+        # currently group id None lists all users
         sql = """
         SELECT COUNT(id)
         FROM "User_answers"
@@ -846,13 +859,15 @@ class SurveyRepository:
                 AND ((:group_id IS NULL) OR (u."groupId"=:group_id))
             )
         """
-        values = { "question_id": question_id, "group_id": user_group_id, "start_date": start_date, "end_date": end_date }
-        count_of_answers = self.db_connection.session.execute(sql, values).fetchone()[0]
+        values = {"question_id": question_id, "group_id": user_group_id,
+                  "start_date": start_date, "end_date": end_date}
+        count_of_answers = self.db_connection.session.execute(sql, values).fetchone()[
+            0]
         if count_of_answers:
             return count_of_answers
         return 0
-        
-    def get_sum_of_user_answer_points_by_question_id(self, question_id, user_group_id = None, start_date = None, end_date = None):
+
+    def get_sum_of_user_answer_points_by_question_id(self, question_id, user_group_id=None, start_date=None, end_date=None):
         """
         Returns the sum of all user answers for a given question.
 
@@ -864,8 +879,10 @@ class SurveyRepository:
             end_date (optional): A datetime for filtering the answers used to calculate the sum. Ignored
                 if None. If value present only answers before this datetime are taken into account.
         """
-
-        sql =  """
+        # TODO:
+        # Handle situation, where we want to filter in only users without any groups
+        # currently group id None lists all users
+        sql = """
         SELECT
             (COUNT(ua.id) * points)
         FROM "Questions" AS q
@@ -881,8 +898,10 @@ class SurveyRepository:
         GROUP BY q.id, qa.id
         ORDER BY q.id
         """
-        values = { "question_id": question_id, "group_id": user_group_id, "start_date": start_date, "end_date": end_date }
-        sum_of_points = self.db_connection.session.execute(sql, values).fetchall()
+        values = {"question_id": question_id, "group_id": user_group_id,
+                  "start_date": start_date, "end_date": end_date}
+        sum_of_points = self.db_connection.session.execute(
+            sql, values).fetchall()
         db.session.commit()
         res = 0
         for i in range(0, len(sum_of_points)):
@@ -891,8 +910,7 @@ class SurveyRepository:
 
         return res
 
-   
-    def calculate_average_scores_by_category(self, survey_id, user_group_id = None, start_date = None, end_date = None):
+    def calculate_average_scores_by_category(self, survey_id, user_group_id=None, start_date=None, end_date=None):
         """
         Calculates weighted average scores from the submitted answers of a given survey. An average
         score is calculated for each category of the survey. This value represents how well all
@@ -900,7 +918,7 @@ class SurveyRepository:
 
         Method creates a list of tuples which contain weighted averages for all answered questions.
         A helper method is used to calculate the final category averages.
-        
+
         Args:
             survey_id: Id of survey to calculate averages from
             user_group_id (optional): User group id of answer. Ignored if None. If value present
@@ -914,27 +932,34 @@ class SurveyRepository:
             A list of tuples which includes the category id, category name and average score 
             (to the precision of two decimal places) of all user answers in a given survey.
         """
-
+        # TODO:
+        # Handle situation, where we want to filter in only users without any groups
+        # currently group id None lists all users
         question_averages = []
         related_questions = self.get_questions_of_survey(survey_id)
 
         for question in related_questions:
-            points = self.get_sum_of_user_answer_points_by_question_id(question.id, user_group_id, start_date, end_date)
-            answers = self.get_count_of_user_answers_to_a_question(question.id, user_group_id, start_date, end_date)
-            
+            points = self.get_sum_of_user_answer_points_by_question_id(
+                question.id, user_group_id, start_date, end_date)
+            answers = self.get_count_of_user_answers_to_a_question(
+                question.id, user_group_id, start_date, end_date)
+
             for category_weight in question.category_weights:
                 if (answers != 0):
-                    weighted_average = points / answers * category_weight['multiplier']
+                    weighted_average = points / answers * \
+                        category_weight['multiplier']
                 else:
                     weighted_average = 0
-                category_id  = self.get_category_id_from_name(survey_id, category_weight['category'])
+                category_id = self.get_category_id_from_name(
+                    survey_id, category_weight['category'])
                 if category_id is not None:
-                    question_average = (category_id, category_weight['category'], weighted_average)
+                    question_average = (
+                        category_id, category_weight['category'], weighted_average)
                 else:
-                    question_average = ("Null", str(category_weight['category']) + " - (missing from 'Categories')",weighted_average)
+                    question_average = ("Null", str(
+                        category_weight['category']) + " - (missing from 'Categories')", weighted_average)
                 question_averages.append(question_average)
         return self.calculate_category_averages(question_averages)
-
 
     def calculate_category_averages(self, question_averages):
         """
@@ -948,13 +973,13 @@ class SurveyRepository:
         names = {}
         for item in question_averages:
             sums[item[0]] = sums.setdefault(item[0], 0) + item[2]
-            occurences[item[0]] = occurences.setdefault(item[0] ,0) + 1
+            occurences[item[0]] = occurences.setdefault(item[0], 0) + 1
             names[item[0]] = item[1]
         results = []
         for key in sums:
-            results.append((key, names[key], float("{:.2f}".format(sums[key]/occurences[key]))))
+            results.append((key, names[key], float(
+                "{:.2f}".format(sums[key]/occurences[key]))))
         return results
-
 
     def get_category_id_from_name(self, survey_id, category_name):
         """
@@ -971,19 +996,18 @@ class SurveyRepository:
         else:
             return None
 
-
-
     def get_survey_results(self, survey_id):
         """Get the results of a survey
 
-        Return table with columns: id, text, cutoff_from_maxpoints, createdAt, updatedAt"""
+        Return table with columns: id, text, cutoff_from_maxpoints, createdAt, updatedAt, surveyId"""
         sql = """
-            SELECT id, text, cutoff_from_maxpoints, "createdAt", "updatedAt"
+            SELECT id, text, cutoff_from_maxpoints, "createdAt", "updatedAt", "surveyId"
             FROM "Survey_results"
             WHERE "surveyId"=:survey_id
             ORDER BY cutoff_from_maxpoints
             """
-        result = self.db_connection.session.execute(sql, {"survey_id": survey_id}).fetchall()
+        result = self.db_connection.session.execute(
+            sql, {"survey_id": survey_id}).fetchall()
         return result
 
     def create_survey_result(self, survey_id, text, cutoff_from_maxpoints):
@@ -998,14 +1022,36 @@ class SurveyRepository:
                 WHERE cutoff_from_maxpoints=:cutoff AND "surveyId"=:survey_id)
             RETURNING id
         """
-        values = {"survey_id": int(survey_id), "text": text, "cutoff": float(cutoff_from_maxpoints)}
-        survey_result = self.db_connection.session.execute(sql, values).fetchone()
+        values = {"survey_id": int(
+            survey_id), "text": text, "cutoff": float(cutoff_from_maxpoints)}
+        survey_result = self.db_connection.session.execute(
+            sql, values).fetchone()
         db.session.commit()
         if survey_result:
             self.update_survey_updated_at(survey_id)
             survey_result_id = survey_result[0]
             return survey_result_id
         return None
+
+    def delete_survey_result(self, result_id):
+        """ Delete the given result
+
+            Returns True if success, False if error
+        """
+        sql = """ DELETE FROM "Survey_results" WHERE id=:result_id """        
+        values = {"result_id": int(result_id)}
+        
+        # TODO: remove
+        print(f"SQL: {sql}", flush=True)
+        print(f"Values: {values}", flush=True)
+
+        try:
+            self.db_connection.session.execute(sql, values)
+            self.db_connection.session.commit()
+        except exc.SQLAlchemyError as exception:
+            return False      
+
+        return True
 
     def create_placeholder_category_result(self, category_id):
         """
