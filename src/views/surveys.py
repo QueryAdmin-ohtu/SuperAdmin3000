@@ -374,6 +374,8 @@ def add_category_result():
         new_cat_result_text,
         new_cat_cutoff
     )
+    if category_result_id is None:
+        flash(f"Category result for cutoff value {new_cat_cutoff} already exists.")
 
     return redirect(f"/edit_category/{survey_id}/{category_id}")
 
