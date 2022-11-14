@@ -360,6 +360,24 @@ def edit_category():
     return redirect(f"/edit_category/{survey_id}/{category_id}")
 
 
+@surveys.route("/add_category_result", methods=["POST"])
+def add_category_result():
+    """ Receives the inputs from the edit_category.html template.
+    Stores the new category result to the database.
+    """
+    survey_id = request.form["survey_id"]
+    category_id = request.form["category_id"]
+    new_cat_result_text = request.form["new_cat_result_text"]
+    new_cat_cutoff = request.form["new_cat_cutoff"]
+    category_result_id = survey_service.create_category_result(
+        category_id,
+        new_cat_result_text,
+        new_cat_cutoff
+    )
+
+    return redirect(f"/edit_category/{survey_id}/{category_id}")
+
+
 @surveys.route("/add_content_link", methods=["POST"])
 def add_content_link():
     """ Receives the inputs from the edit_category.html template.
