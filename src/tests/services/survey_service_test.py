@@ -426,14 +426,20 @@ class TestSurveyService(unittest.TestCase):
         )
         self.assertEqual(value_to_return, returned_value)
 
-    def test_create_placeholder_category_result_calls_repo_correctly(self):
-        self.repo_mock.create_placeholder_category_result.return_value = 1
+    def test_create_category_result_calls_repo_correctly(self):
+        self.repo_mock.create_category_result.return_value = 1
         category_id = 1
-        response = self.survey_service.create_placeholder_category_result(
-            category_id)
+        text = "Dynamically fetched category result text"
+        cutoff_from_maxpts = 1.0
+        response = self.survey_service.create_category_result(
+            category_id,
+            text,
+            cutoff_from_maxpts)
         self.assertEqual(response, category_id)
-        self.repo_mock.create_placeholder_category_result.assert_called_with(
-            category_id)
+        self.repo_mock.create_category_result.assert_called_with(
+            category_id,
+            text,
+            cutoff_from_maxpts)
 
     def test_get_survey_results_calls_repo_correctly(self):
         self.repo_mock.get_survey_results.return_value = [
