@@ -202,14 +202,14 @@ def empty_dir():
 
 
 def check_cutoff_points(cutoffs):
-    if 1 not in cutoffs:
-        return "There must be a cutoff from maximum with a value of 1"
+    if "1.0" not in cutoffs:
+        return "There must be a cutoff from maximum with a value of 1.0"
     set_list = set(cutoffs)
     unique_list = list(set_list)
     if len(unique_list) != len(cutoffs):
         return "There must not be any identical cutoff values"
     for cutoff in cutoffs:
-        if 0 <= cutoff <= 1:
+        if 0 <= float(cutoff) <= 1:
             continue
         else:
             return "Cutoff values must be between 0 and 1"

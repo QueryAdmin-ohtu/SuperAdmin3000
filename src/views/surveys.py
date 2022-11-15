@@ -443,8 +443,9 @@ def new_survey_result_post(survey_id):
         cutoffs_correct = helper.check_cutoff_points(cutoff_values)
         if cutoffs_correct != "Correct":
             return cutoffs_correct
-        survey_service.update_survey_results(original_results,new_results)
-    elif text and cutoff_value:
+        if original_results != new_results:
+            survey_service.update_survey_results(original_results,new_results,survey_id)
+    if text and cutoff_value:
         survey_service.create_survey_result(survey_id, text, cutoff_value)
 
     return redirect(f"/surveys/{survey_id}/new-survey-result")

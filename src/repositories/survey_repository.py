@@ -1091,3 +1091,28 @@ class SurveyRepository:
         if not category_results:
             return None
         return category_results
+
+    def update_survey_results(self, original_results, new_results, survey_id):
+        """ Goes through the lists of results and updates each
+        result where the original and new result don't match.
+        This function is not called if there are no differences
+        so the updatedAt of the survey in question will also be
+        updated and True is returned. """
+
+        for i in range(len(original_results)):
+            if original_results[i] != new_results[i]:
+                sql = """
+                UPDATE "Survey_results"
+                SET
+                    text=:text,
+                    cutoff_from_maxpoints=:cutoff,
+                    "updatedAt"=NOW()
+                WHERE id=:result_id
+                """
+                values = {
+                    "text": new_results[i][1],
+                    "cutoff": new_results[i][2],
+                    "result_id": new_results[i][0]}
+                db.session.execute(sql, values)
+        #update updatedAt
+        db.session.commit()
