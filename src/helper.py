@@ -202,6 +202,8 @@ def empty_dir():
 
 
 def check_cutoff_points(cutoffs):
+    if "" in cutoffs:
+        return "There is a result without a cutoff value"
     if "1.0" not in cutoffs:
         return "There must be a cutoff from maximum with a value of 1.0"
     set_list = set(cutoffs)

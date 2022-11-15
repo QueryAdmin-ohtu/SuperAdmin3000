@@ -154,6 +154,8 @@ def new_question_post(survey_id):
             answer_id = original_answers[i][0]
             answer = request.form[f"answer-{i+1}"]
             points = request.form[f"points-{i+1}"]
+            if points == "":
+                points = 0
             new_answers.append((answer_id, answer, points))
         survey_service.update_question(
             question_id, text, category_weights, original_answers, new_answers)
@@ -462,7 +464,8 @@ def new_survey_result_post(survey_id):
             new_results.append((result_id,result,cutoff))
         cutoffs_correct = helper.check_cutoff_points(cutoff_values)
         if cutoffs_correct != "Correct":
-            return cutoffs_correct
+            flash(cutoffs_correct, "error")
+            return redirect(f"/surveys/{survey_id}/new-survey-result")
         if original_results != new_results:
             survey_service.update_survey_results(original_results,new_results,survey_id)
     if text and cutoff_value:
@@ -470,25 +473,16 @@ def new_survey_result_post(survey_id):
 
     return redirect(f"/surveys/{survey_id}/new-survey-result")
 
-@surveys.route("/update_survey_result", methods=["POST"])
-def delete_survey_result():
+@surveys.route("/delete_survey_result/<result_id>", methods=["POST"])
+def delete_survey_result(result_id):
     """Update or delete the given survey result
     """
-    result_id = request.form["result_id"]
     survey_id = request.form["survey_id"]
-    action = request.form['submit']
-
-    if action == "Delete result":
-        survey_service.delete_survey_result(result_id)
-
-    if action == "Update result":
-        # TODO: Implement result update
-        # survey_service.update_survey_result(result_id)
-        print(f"Update result: {result_id}", flush=True)
+    survey_service.delete_survey_result(result_id)
 
     return redirect(f"/surveys/{survey_id}/new-survey-result")
-    
-        
+
+
 @surveys.route("/surveys")
 def view_surveys():
     """Redirecting method"""

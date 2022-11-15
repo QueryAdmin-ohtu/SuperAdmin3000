@@ -122,7 +122,9 @@
             ) }}
         </div>      
         <div class="flex flex-grow"></div>
-
+        {% if not hide_delete_button %}
+        {{ form_elements.submit_button("Delete result", "destructive", "/delete_survey_result/%s" % (result[0])) }}
+        {% endif %}
     </div>
 </details>
 </form>
