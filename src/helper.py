@@ -213,17 +213,11 @@ def check_cutoff_points(cutoffs):
         float_cutoffs.append(float(cutoff))
         if 0 <= float(cutoff) <= 1:
             continue
-        else:
-            return "Cutoff values must be between 0 and 1"
+        return "Cutoff values must be between 0 and 1"
     if 1.0 not in float_cutoffs:
         return "There must be a cutoff from maximum with a value of 1.0"
     set_list = set(float_cutoffs)
     unique_list = list(set_list)
     if len(unique_list) != len(float_cutoffs):
         return "There must not be any identical cutoff values"
-    for cutoff in float_cutoffs:
-        if 0 <= cutoff <= 1:
-            continue
-        else:
-            return "Cutoff values must be between 0 and 1"
     return "Correct"
