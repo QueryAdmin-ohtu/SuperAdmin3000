@@ -1121,5 +1121,5 @@ class SurveyRepository:
                     "cutoff": new_results[i][2],
                     "result_id": new_results[i][0]}
                 db.session.execute(sql, values)
-        #update updatedAt
         db.session.commit()
+        return self.update_survey_updated_at(survey_id)

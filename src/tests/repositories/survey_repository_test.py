@@ -1083,3 +1083,22 @@ class TestSurveyRepository(unittest.TestCase):
             self.assertTrue(response)
             results = self.repo.get_survey_results(8)            
             self.assertEqual(len(results), 1)
+
+    def test_update_survey_results_updates_results_correctly(self):
+        with self.app.app_context():
+            survey_id = self.repo.create_survey("Goodness","How good are you",
+            "Are you good? Or perhaps just decent?")
+            original_results = [["Bad",0.3],["Good",0.6],["Great",1.0]]
+            new_results = [["Decent",0.4],["Great",0.7],["Fantastic",1.0]]
+            result_ids = []
+            for result in original_results:
+                result_ids.append(self.repo.create_survey_result(
+                    survey_id, result[0], result[1]))
+            or2 = []
+            nr2 = []
+            for i in range(3):
+                or2.append(result_ids[i],original_results[i][0],original_results[i][1])
+                nr2.append(result_ids[i],new_results[i][0],new_results[i][1])
+            self.repo.update_survey_results(or2,nr2,survey_id)
+            results = self.repo.get_survey_results(survey_id)
+            self.assertEqual(results, new_results)
