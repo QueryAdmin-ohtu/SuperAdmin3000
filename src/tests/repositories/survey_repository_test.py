@@ -988,28 +988,68 @@ class TestSurveyRepository(unittest.TestCase):
             self.assertTrue(resulting_list[2] == (
                 category_three_id, "Three", 7.0))
 
-    def test_create_placeholder_category_result(self):
+    def test_create_category_result(self):
         with self.app.app_context():
             category_id = self.repo.create_category(
                 1, "cat", "cat is for category", [])
-            category_result_id = self.repo.create_placeholder_category_result(
-                category_id)
+            text = "Category result text"
+            cutoff_from_maxpts = 1.0
+            category_result_id = self.repo.create_category_result(
+                category_id,
+                text,
+                cutoff_from_maxpts)
             related_category_results = self.repo.get_category_results_from_category_id(category_id)[
                 0]
             print(related_category_results, " - ", related_category_results[0])
             self.assertEquals(related_category_results[0], category_result_id)
             self.assertEquals(related_category_results[1], category_id)
-            self.assertEquals(related_category_results[2], "To be written")
+            self.assertEquals(related_category_results[2], "Category result text")
+            self.assertEquals(related_category_results[3], 1.0)
 
     def test_category_can_contain_multiple_category_results(self):
         with self.app.app_context():
             category_id = self.repo.create_category(
                 1, "cat", "cat is for category", [])
-            self.repo.create_placeholder_category_result(category_id)
-            self.repo.create_placeholder_category_result(category_id)
+            text = "Category result text 1"
+            cutoff_from_maxpts = 1.0
+            self.repo.create_category_result(
+                category_id,
+                text,
+                cutoff_from_maxpts
+            )
+
+            text = "Category result text 2"
+            cutoff_from_maxpts = 0.7
+            self.repo.create_category_result(
+                category_id,
+                text,
+                cutoff_from_maxpts
+            )
+
             related_category_results = self.repo.get_category_results_from_category_id(
                 category_id)
             self.assertTrue(len(related_category_results) == 2)
+        
+    def test_category_result_is_not_created_if_cutoff_exists(self):
+        with self.app.app_context():
+            category_id = self.repo.create_category(
+                1, "cat", "cat is for category", [])
+            text = "Category result text 1"
+            cutoff_from_maxpts = 1.0
+            self.repo.create_category_result(
+                category_id,
+                text,
+                cutoff_from_maxpts
+            )
+
+            text = "Category result text 2"
+            duplicate_cutoff = 1.0
+            result = self.repo.create_category_result(
+                category_id,
+                text,
+                duplicate_cutoff
+            )
+            self.assertIsNone(result)
 
     def test_create_a_survey_result_with_unique_cutoff_value(self):
         with self.app.app_context():

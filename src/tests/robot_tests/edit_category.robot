@@ -103,3 +103,20 @@ Logged In User Can Delete a Content Link
     Click Button  delete_url_0
     Click Link  edit_button_1
     Page Should Not Contain  kissa
+
+Logged In User Cannot Create A Category Result With Duplicate Cutoff
+    Go To Survey  1
+    Click Link  edit_button_1
+    Set Category Result Text  Test text for category results
+    Set Category Result Cutoff Points  1.0
+    Click Button  Add result
+    Page Should Not Contain  Test text for category results
+
+Logged In User Can Create A Category Result With Unique Cutoff
+    Go To Survey  1
+    Click Link  edit_button_1
+    Set Category Result Text  Test text for category results
+    Set Category Result Cutoff Points  0.92
+    Click Button  Add result
+    Page Should Contain  Test text for category results
+    Element Attribute Value Should Be  cutoff-18  value  0.92

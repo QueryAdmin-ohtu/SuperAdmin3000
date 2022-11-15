@@ -1053,18 +1053,24 @@ class SurveyRepository:
 
         return True
 
-    def create_placeholder_category_result(self, category_id):
+    def create_category_result(self, category_id: int, text: str, cutoff: float):
         """
-        Creates a placeholder categy result
+        Creates a category result
         """
 
         sql = """
-            INSERT INTO "Category_results" 
-            ("categoryId", "text", cutoff_from_maxpoints, "createdAt", "updatedAt") 
-            VALUES (:category_id, 'To be written', 1.0, NOW(), NOW())
-            RETURNING id """
+            INSERT INTO "Category_results"
+            ("categoryId", text, cutoff_from_maxpoints, "createdAt", "updatedAt")
+            SELECT :category_id, :text, :cutoff, NOW(), NOW()
+            WHERE NOT EXISTS (SELECT cutoff_from_maxpoints FROM "Category_results"
+                WHERE cutoff_from_maxpoints=:cutoff AND "categoryId"=:category_id)
+            RETURNING id
+            """
+
         values = {
             "category_id": category_id,
+            "text": text,
+            "cutoff": cutoff
         }
 
         try:
@@ -1073,8 +1079,9 @@ class SurveyRepository:
             self.db_connection.session.commit()
         except exc.SQLAlchemyError:
             return None
-
-        return category_result_id[0]
+        if category_result_id:
+            return category_result_id[0]
+        return None
 
     def get_category_results_from_category_id(self, category_id):
         """
