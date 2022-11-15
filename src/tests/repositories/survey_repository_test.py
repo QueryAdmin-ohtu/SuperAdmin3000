@@ -1097,8 +1097,8 @@ class TestSurveyRepository(unittest.TestCase):
             or2 = []
             nr2 = []
             for i in range(3):
-                or2.append([result_ids[i],original_results[i][0],original_results[i][1]])
-                nr2.append([result_ids[i],new_results[i][0],new_results[i][1]])
+                or2.append((result_ids[i],original_results[i][0],original_results[i][1]))
+                nr2.append((result_ids[i],new_results[i][0],new_results[i][1]))
             self.repo.update_survey_results(or2,nr2,survey_id)
             results = self.repo.get_survey_results(survey_id)
             self.assertEqual(results, nr2)
