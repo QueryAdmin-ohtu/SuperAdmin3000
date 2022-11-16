@@ -36,7 +36,7 @@ Statistics Page Shows Answer Distribution Charts
 
 Statistics Page Shows Filtered Charts After Applying Filter
     Go To Statistics  8
-    Select Radio Button  filter_group_name  B-ryhmä
+    Select From List By Value  name:filter_group_name  B-ryhmä
     Click Button  Filter
     Element Should Be Visible  chart_23_filtered
     Element Should Be Visible  chart_24_filtered
@@ -55,7 +55,7 @@ Toggle Filter For Charts Works When Only Time Filter Applied
 
 Statistics Page Shows Unfiltered Charts After Toggling Filter First Time
     Go To Statistics  8
-    Select Radio Button  filter_group_name  B-ryhmä
+    Select From List By Value  name:filter_group_name  B-ryhmä
     Click Button  Filter
     Click Button  toggle_filter_chart_23
     Click Button  toggle_filter_chart_24
@@ -66,7 +66,7 @@ Statistics Page Shows Unfiltered Charts After Toggling Filter First Time
 
 Statistics Page Shows Filtered Charts After Toggling Filter Second Time
     Go To Statistics  8
-    Select Radio Button  filter_group_name  B-ryhmä
+    Select From List By Value  name:filter_group_name  B-ryhmä
     Click Button  Filter
     Click Button  toggle_filter_chart_23
     Click Button  toggle_filter_chart_23
@@ -90,7 +90,7 @@ Entering Invalid Date to User Filter Does Not Filter Anything
 
 Filtering By Group Name Filters Users
     Go To Statistics  8
-    Select Radio Button  filter_group_name  Supertestaajat
+    Select From List By Value  name:filter_group_name  Supertestaajat
     Click Button  Filter
     Page Should Contain  Users with submissions (1 / 4)
 
