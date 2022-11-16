@@ -109,11 +109,22 @@ def view_survey(survey_id):
     questions = survey_service.get_questions_of_survey(survey_id)
     categories = survey_service.get_categories_of_survey(survey_id)
     results = survey_service.get_survey_results(survey_id)
+    show_results = []
+    for i in range(len(results)):
+        if i == 0:
+            if float(results[0][2]) == 0.0:
+                text = "0% of max points returns user"
+            else:
+                text = f"0%-{results[0][2]*100}% of max points returns user"
+            show_results.append([text, results[0][1]])
+        else:
+            text = f"{results[i-1][2]*100}%-{results[i][2]*100}% of max points returns user"
+            show_results.append([text,results[i][1]])
     print(categories, flush=True)
     return render_template("surveys/view_survey.html", survey=survey,
                            questions=questions, survey_id=survey_id,
                            ENV=app.config["ENV"], categories=categories,
-                           results=results)
+                           results=results, show_results=show_results)
 
 
 @surveys.route("/surveys/<survey_id>/new-question", methods=["GET"])
