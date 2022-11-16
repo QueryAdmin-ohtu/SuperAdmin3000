@@ -50,12 +50,11 @@
             <button
                 class="p-2 block rounded w-fit h-fit bg-sky-500 text-sm text-white font-medium leading-tight hover:bg-sky-700 focus:bg-sky-700 focus:outline-none focus:ring-0 transition duration-150 ease-in-out"
                 id="toggle_filter_chart_{{q_id}}" onclick="switchChart('chart_{{q_id}}')">Toggle filter</button>
-            <img src="{{url_for('static', filename='/img/charts/' + q_id|string + '_' + filter_group_name|string + '.png')}}"
+            <img class="block" src="{{url_for('static', filename='/img/charts/' + q_id|string + '_' + filter_group_name|string + '.png')}}"
                 alt="Answer distribution chart for question {{q_name}} for user group {{filter_group_name}}"
                 id="chart_{{q_id}}_filtered">
-            <img src="{{url_for('static', filename='/img/charts/' + q_id|string + '.png')}}"
-                alt="Answer distribution chart for question {{q_name}} without filters" id="chart_{{q_id}}_unfiltered"
-                hidden>
+            <img class="hidden" src="{{url_for('static', filename='/img/charts/' + q_id|string + '.png')}}"
+                alt="Answer distribution chart for question {{q_name}} without filters" id="chart_{{q_id}}_unfiltered">
         </div>
         {% endfor %}
         {% else %}
