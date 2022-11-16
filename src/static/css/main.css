@@ -719,10 +719,6 @@ p {
   margin-bottom: 0.5rem;
 }
 
-.ml-5 {
-  margin-left: 1.25rem;
-}
-
 .mb-4 {
   margin-bottom: 1rem;
 }
@@ -767,18 +763,14 @@ p {
   height: 3.5rem;
 }
 
-.h-7 {
-  height: 1.75rem;
-}
-
 .h-fit {
   height: -webkit-fit-content;
   height: -moz-fit-content;
   height: fit-content;
 }
 
-.h-12 {
-  height: 3rem;
+.h-7 {
+  height: 1.75rem;
 }
 
 .h-5 {
@@ -813,10 +805,6 @@ p {
   width: -webkit-fit-content;
   width: -moz-fit-content;
   width: fit-content;
-}
-
-.w-12 {
-  width: 3rem;
 }
 
 .w-6 {
@@ -1120,10 +1108,6 @@ p {
 
 .p-4 {
   padding: 1rem;
-}
-
-.p-3 {
-  padding: 0.75rem;
 }
 
 .py-8 {

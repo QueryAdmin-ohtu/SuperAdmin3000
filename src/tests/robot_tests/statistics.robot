@@ -13,7 +13,7 @@ Logged In User Can View Statistics Page
     Login Through Backdoor
     Go To Survey  1
     Click Link  Detailed statistics
-    Page Should Contain  Related categories
+    Page Should Contain  Category scores
 
 User Can Access Edit Categories Page From Statistics
     Go To Statistics  1

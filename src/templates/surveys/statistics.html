@@ -57,7 +57,17 @@
         <div class="flex-grow border-t border-slate-200"></div>
     </div>
     {% call survey_elements.card() %}
-
+    <div class="table w-full">
+        {% if categories %}
+        {% for category in categories %}
+        <hr>
+        {{ statistics_elements.category_row(survey_id, category, category[0])}}
+        <hr>
+        {% endfor %}
+        {% else %}
+        No related categories found.
+        {% endif %}
+    </div>
     {% endcall %}
 
     <!-- SURVEY RESULTS -->
@@ -65,48 +75,22 @@
         <h2>Survey results</h2>
         <div class="flex-grow border-t border-slate-200"></div>
     </div>
-    {% call survey_elements.card() %}
-
-    {% endcall %}
-    <div id="stats" class="flex-col max-w-full bg-white p-4 gap-2 rounded-lg border border-slate-300">
-        <div class="flex justify-between">
-            <h3 class="text-gray-900 leading-tight">Statistics</h3>
-            <p class="text-slate-600 font-mono text-sm font-medium">Total submissions:
-                {% if submissions %}
-                {{ submissions }}
-                {% else %}
-                0
-                {% endif %}
-            </p>
-        </div>
-        <div class="grow h-7"></div>
-
-        <h3 class="text-gray-900 leading-tight">Related categories</h3>
-        <div class="grow h-7"></div>
-        <div class="table-row-group">
-            {% if categories %}
-            {% for category in categories %}
-            <hr>
-            {{ statistics_elements.category_row(survey_id, category, category[0])}}
-            <hr>
-            {% endfor %}
-            {% else %}
-            No related categories found.
-            {% endif %}
-        </div>
-        <div class="grow h-7"></div>
-        <h3 class="text-gray-900 leading-tight">Answer distribution</h3>
-        <br>
+    <div class="grid grid-cols-2 gap-4">
         {% if not filtered and answer_distribution %}
         {% for q_name, q_id in answer_distribution %}
-        <h4 class="text-slate-600 font-mono text-sm font-medium">Question: {{ q_name }}</h4>
-        <img src="{{url_for('static', filename='/img/charts/' + q_id|string + '.png')}}"
-            alt="Answer distribution chart for question {{q_name}} without filters" id="chart_{{q_id}}">
+        {% call survey_elements.card() %}
+        <div class="overflow-hidden">
+            <h4 class="text-slate-600 font-mono text-sm font-medium">Question: {{ q_name }}</h4>
+            <img src="{{url_for('static', filename='/img/charts/' + q_id|string + '.png')}}"
+                alt="Answer distribution chart for question {{q_name}} without filters" id="chart_{{q_id}}">
+        </div>
+        {% endcall %}
         {% endfor %}
         {% elif filtered and answer_distribution %}
         {% for q_name, q_id in answer_distribution %}
-        <h4 class="text-slate-600 font-mono text-sm font-medium">Question: {{ q_name }}</h4>
-        <div class="flex justify-between">
+        <div class="base-1/2">
+            {% call survey_elements.card() %}
+            <h4 class="text-slate-600 font-mono text-sm font-medium">Question: {{ q_name }}</h4>
             <button
                 class="p-2 block rounded w-fit h-fit bg-sky-500 text-sm text-white font-medium leading-tight hover:bg-sky-700 focus:bg-sky-700 focus:outline-none focus:ring-0 transition duration-150 ease-in-out"
                 id="toggle_filter_chart_{{q_id}}" onclick="switchChart('chart_{{q_id}}')">Toggle filter</button>
@@ -116,40 +100,85 @@
                 id="chart_{{q_id}}_filtered">
             <img class="hidden" src="{{url_for('static', filename='/img/charts/' + q_id|string + '.png')}}"
                 alt="Answer distribution chart for question {{q_name}} without filters" id="chart_{{q_id}}_unfiltered">
+            {% endcall %}
         </div>
         {% endfor %}
+
         {% else %}
         <h4 class="text-slate-600 font-mono text-sm font-medium">No answers yet</h4>
         {% endif %}
     </div>
-    <div id="answered" class="flex-col max-w-full bg-white p-4 gap-2 rounded-lg border border-slate-300">
-        <h3 class="text-gray-900 leading-tight">Users with submissions ({{ users | length }} / {{ total_users }})</h3>
-        <div>
-            
-        </div>
-        {% if show_userlist %}
-        <div class="grow h-5"></div>
-        <table class="min-w-full">
-            <thead class="border-b">
-                <tr>
-                    <th class="px-6 py-4 whitespace-nowrap font-mono font-medium text-gray-900 text-left">User</th>
-                    <th class="px-6 py-4 whitespace-nowrap font-mono font-medium text-gray-900 text-left">Group</th>
-                    <th class="px-6 py-4 whitespace-nowrap font-mono font-medium text-gray-900 text-left">Date</th>
-                </tr>
-                {% for user in users %}
-                <tr>
-                    <td>{{ user.email }}</td>
-                    <td>
-                        {% if user.group_name %}
-                        {{ user.group_name }}
-                        {% endif %}
-                    </td>
-                    <td>{{ user.answer_time }}</td>
-                </tr>
-                {% endfor %}
-            </thead>
-        </table>
+</div>
+<div id="stats" class="flex-col max-w-full bg-white p-4 gap-2 rounded-lg border border-slate-300">
+    <div class="flex justify-between">
+        <h3 class="text-gray-900 leading-tight">Statistics</h3>
+        <p class="text-slate-600 font-mono text-sm font-medium">Total submissions:
+            {% if submissions %}
+            {{ submissions }}
+            {% else %}
+            0
+            {% endif %}
+        </p>
     </div>
+    <div class="grow h-7"></div>
+
+
+    <div class="grow h-7"></div>
+    <h3 class="text-gray-900 leading-tight">Answer distribution</h3>
+    <br>
+    {% if not filtered and answer_distribution %}
+    {% for q_name, q_id in answer_distribution %}
+    <h4 class="text-slate-600 font-mono text-sm font-medium">Question: {{ q_name }}</h4>
+    <img src="{{url_for('static', filename='/img/charts/' + q_id|string + '.png')}}"
+        alt="Answer distribution chart for question {{q_name}} without filters" id="chart_{{q_id}}">
+    {% endfor %}
+    {% elif filtered and answer_distribution %}
+    {% for q_name, q_id in answer_distribution %}
+    <h4 class="text-slate-600 font-mono text-sm font-medium">Question: {{ q_name }}</h4>
+    <div class="flex justify-between">
+        <button
+            class="p-2 block rounded w-fit h-fit bg-sky-500 text-sm text-white font-medium leading-tight hover:bg-sky-700 focus:bg-sky-700 focus:outline-none focus:ring-0 transition duration-150 ease-in-out"
+            id="toggle_filter_chart_{{q_id}}" onclick="switchChart('chart_{{q_id}}')">Toggle filter</button>
+        <img class="block"
+            src="{{url_for('static', filename='/img/charts/' + q_id|string + '_' + filter_group_name|string + '.png')}}"
+            alt="Answer distribution chart for question {{q_name}} for user group {{filter_group_name}}"
+            id="chart_{{q_id}}_filtered">
+        <img class="hidden" src="{{url_for('static', filename='/img/charts/' + q_id|string + '.png')}}"
+            alt="Answer distribution chart for question {{q_name}} without filters" id="chart_{{q_id}}_unfiltered">
+    </div>
+    {% endfor %}
+    {% else %}
+    <h4 class="text-slate-600 font-mono text-sm font-medium">No answers yet</h4>
     {% endif %}
+</div>
+<div id="answered" class="flex-col max-w-full bg-white p-4 gap-2 rounded-lg border border-slate-300">
+    <h3 class="text-gray-900 leading-tight">Users with submissions ({{ users | length }} / {{ total_users }})</h3>
+    <div>
+
+    </div>
+    {% if show_userlist %}
+    <div class="grow h-5"></div>
+    <table class="min-w-full">
+        <thead class="border-b">
+            <tr>
+                <th class="px-6 py-4 whitespace-nowrap font-mono font-medium text-gray-900 text-left">User</th>
+                <th class="px-6 py-4 whitespace-nowrap font-mono font-medium text-gray-900 text-left">Group</th>
+                <th class="px-6 py-4 whitespace-nowrap font-mono font-medium text-gray-900 text-left">Date</th>
+            </tr>
+            {% for user in users %}
+            <tr>
+                <td>{{ user.email }}</td>
+                <td>
+                    {% if user.group_name %}
+                    {{ user.group_name }}
+                    {% endif %}
+                </td>
+                <td>{{ user.answer_time }}</td>
+            </tr>
+            {% endfor %}
+        </thead>
+    </table>
+</div>
+{% endif %}
 </div>
 {% endblock %}
