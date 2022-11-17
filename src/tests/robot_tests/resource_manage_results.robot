@@ -9,8 +9,13 @@ Set Result Cutoff
     Input Text  cutoff  ${value}
 
 Save Result
-    Click Button  Create new result
+    Click Button  Save changes
 
 Expand Result Card
     [Arguments]  ${result_index}
     Click Element  id:expandable-result-${result_index}
+
+Edit Result
+    [Arguments]  ${result}  ${cutoff}  ${id}
+    Input Text  result-${id}  ${result}
+    Input Text  cutoff-${id}  ${cutoff}

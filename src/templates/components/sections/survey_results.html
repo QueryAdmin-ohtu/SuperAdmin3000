@@ -6,10 +6,10 @@
     {{ buttons.link_button("Manage results", "/surveys/%s/new-survey-result" % survey.id) }}
     <br>
 </div>
-{% if results %}
-    {% for result in results %}
-    <p>{{ result.cutoff_from_maxpoints * 100}}% of max points returns user:
-    <br>{{ result.text }}</p>
+{% if show_results %}
+    {% for result in show_results %}
+    <p>{{ result[0]}}
+    <br>{{ result[1] }}</p>
     <br>
     {% endfor %}
 {% else %}
