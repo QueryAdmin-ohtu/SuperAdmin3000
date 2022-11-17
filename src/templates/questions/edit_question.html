@@ -22,19 +22,17 @@
                 <a href="/surveys/{{survey[0]}}/questions/{{question_id}}/previous"
                     id={{question_id}}
                     class="p-2 block rounded w-fit h-fit bg-sky-500 text-sm text-white font-medium leading-tight hover:bg-sky-700 focus:bg-sky-700 focus:outline-none focus:ring-0 transition duration-150 ease-in-out"
-                    style="position: fixed; right: 16%;"
+                    style="margin-right:15px"
                 >
                     Previous question
                 </a>
             {% endif %}
             {% if show_next_button %}  
-                <a href="/surveys/{{survey[0]}}/questions/{{question_id}}/next"
-                    id={{question_id}}
-                    class="p-2 block rounded w-fit h-fit bg-sky-500 text-sm text-white font-medium leading-tight hover:bg-sky-700 focus:bg-sky-700 focus:outline-none focus:ring-0 transition duration-150 ease-in-out"
-                    style="margin-left: 20px;"
-                >
-                    Next question
-                </a>
+                {{ buttons.link_button("Next question", "/surveys/%s/questions/%s/next" % (survey[0],  question_id)) }}
+            {% else %}
+            <span  class="p-2 block rounded  text-sm text-white font-medium" style="cursor:default; user-select: none">
+                Next question
+            </span>
             {% endif %}
         </div>
     </div>
