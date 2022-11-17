@@ -26,8 +26,8 @@ Statistics Page Shows the Number Of Users Who Have Answered
 
 Statistics Page Shows Question Names For Charts
     Go To Statistics  8
-    Page Should Contain  Question: Describe the size of your ears
-    Page Should Contain  Question: Where do you prefer to hang out
+    Page Should Contain  Describe the size of your ears
+    Page Should Contain  Where do you prefer to hang out
 
 Statistics Page Shows Answer Distribution Charts
     Go To Statistics  8
@@ -79,8 +79,8 @@ Statistics Page Shows Filtered Charts After Toggling Filter Second Time
 
 Entering Valid Range To Filter Dates Filters Users
     Go To Statistics  8
-    Input Text  filter_start_date  02.02.2002 12:00
-    Input Text  filter_end_date  02.02.2002 12:01
+    Press Keys  filter_start_date  2+TAB+2+TAB+2002+TAB+12+TAB+00
+    Press Keys  filter_end_date  2+TAB+2+TAB+2002+TAB+12+TAB+01
     Click Button  Filter
     Page Should Contain  Users with submissions (0 / 4)    
     

@@ -6,7 +6,7 @@
 {% block content %}
 <div class="flex flex-col gap-4">
     <div class="flex justify-between">
-        <h1 class="text-gray-900 leading-tight">Survey title</h1>
+        <h1 class="text-gray-900 leading-tight">{{ survey.title_text }}</h1>
         {{ buttons.link_button("Back to survey", "/surveys/%s" % survey_id) }}
     </div>
     <p class="text-slate-600 font-mono text-sm font-medium">
@@ -27,11 +27,11 @@
         <div class="flex flex-row gap-4 items-end">
             <div class="flex flex-col gap-2 w-full">
                 {{ form_elements.label("filter_start_date_label", "Start date") }}
-                {{ form_elements.text_input("filter_start_date", "", "", false, filter_start_date) }}
+                {{ form_elements.date_input("filter_start_date", false, filter_start_date) }}
             </div>
             <div class="flex flex-col gap-2 w-full">
                 {{ form_elements.label("filter_end_date_label", "End date") }}
-                {{ form_elements.text_input("filter_end_date", "", "", false, filter_end_date) }}
+                {{ form_elements.date_input("filter_end_date", false, filter_end_date) }}
             </div>
             <div class="flex flex-col gap-2 w-full">
                 {{ form_elements.label("filter_email_label", "E-mail") }}
@@ -111,7 +111,7 @@
         {% for q_name, q_id in answer_distribution %}
         {% call survey_elements.card() %}
         <div class="overflow-hidden">
-            <h4 class="text-slate-600 font-mono text-sm font-medium">Question: {{ q_name }}</h4>
+            <p class="font-medium">{{ loop.index }}) {{ q_name }}</p>
             <img src="{{url_for('static', filename='/img/charts/' + q_id|string + '.png')}}"
                 alt="Answer distribution chart for question {{q_name}} without filters" id="chart_{{q_id}}">
         </div>
@@ -121,10 +121,12 @@
         {% for q_name, q_id in answer_distribution %}
         <div class="base-1/2">
             {% call survey_elements.card() %}
-            <h4 class="text-slate-600 font-mono text-sm font-medium">Question: {{ q_name }}</h4>
-            <button
-                class="p-2 block rounded w-fit h-fit bg-sky-500 text-sm text-white font-medium leading-tight hover:bg-sky-700 focus:bg-sky-700 focus:outline-none focus:ring-0 transition duration-150 ease-in-out"
-                id="toggle_filter_chart_{{q_id}}" onclick="switchChart('chart_{{q_id}}')">Toggle filter</button>
+            <div class="flex flex-row w-full justify-between">
+                <p class="font-medium">{{ loop.index }}) {{ q_name }}</p>
+                <button
+                    class="p-2 block rounded w-fit h-fit bg-sky-500 text-sm text-white font-medium leading-tight hover:bg-sky-700 focus:bg-sky-700 focus:outline-none focus:ring-0 transition duration-150 ease-in-out"
+                    id="toggle_filter_chart_{{q_id}}" onclick="switchChart('chart_{{q_id}}')">Toggle filter</button>
+            </div>
             <img class="block"
                 src="{{url_for('static', filename='/img/charts/' + q_id|string + '_' + filter_group_name|string + '.png')}}"
                 alt="Answer distribution chart for question {{q_name}} for user group {{filter_group_name}}"

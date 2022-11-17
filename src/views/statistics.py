@@ -8,12 +8,14 @@ from services.survey_service import survey_service
 stats = Blueprint("stats", __name__)
 
 timeformat = "%d.%m.%Y %H:%M"
+html_date_input_timeformat = "%Y-%m-%dT%H:%M"
 
 
 @stats.route("/surveys/<survey_id>/statistics", methods=["GET"])
 def statistics(survey_id):
     """Shows the statistics for the specific survey"""
 
+    survey = survey_service.get_survey(survey_id)
     submissions = survey_service.get_number_of_submissions_for_survey(
         survey_id)
     categories = survey_service.calculate_average_scores_by_category(survey_id)
@@ -32,13 +34,14 @@ def statistics(survey_id):
     )
 
     filter_start_date = (datetime.datetime.now() -
-                         datetime.timedelta(days=10*365)).strftime(timeformat)
-    filter_end_date = datetime.datetime.now().strftime(timeformat)
+                         datetime.timedelta(days=10*365)).strftime(html_date_input_timeformat)
+    filter_end_date = datetime.datetime.now().strftime(html_date_input_timeformat)
     filter_group_name = ""
     filter_email = ""
 
     return render_template("surveys/statistics.html",
                            ENV=app.config["ENV"],
+                           survey=survey,
                            survey_id=survey_id,
                            submissions=submissions,
                            users=users,
@@ -61,11 +64,14 @@ def filtered_statistics(survey_id):
     """
     try:
         filter_start_date = datetime.datetime.strptime(
-            request.form["filter_start_date"], timeformat)
+            request.form["filter_start_date"], html_date_input_timeformat)
         filter_end_date = datetime.datetime.strptime(
-            request.form["filter_end_date"], timeformat)
+            request.form["filter_end_date"], html_date_input_timeformat)
     except ValueError:
+        print("Value error!")
         return redirect(f"/surveys/{survey_id}/statistics")
+
+    survey = survey_service.get_survey(survey_id)
 
     filter_group_name = request.form["filter_group_name"]
     filter_email = request.form["filter_email"]
@@ -100,11 +106,12 @@ def filtered_statistics(survey_id):
 
     users = users if users else []
 
-    filter_start_date = filter_start_date.strftime(timeformat)
-    filter_end_date = filter_end_date.strftime(timeformat)
+    filter_start_date = filter_start_date.strftime(html_date_input_timeformat)
+    filter_end_date = filter_end_date.strftime(html_date_input_timeformat)
 
     return render_template("surveys/statistics.html",
                            ENV=app.config["ENV"],
+                           survey=survey,
                            survey_id=survey_id,
                            submissions=submissions,
                            answer_distribution=answer_distribution,
