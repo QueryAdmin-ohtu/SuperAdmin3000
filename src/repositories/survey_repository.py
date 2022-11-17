@@ -911,7 +911,7 @@ class SurveyRepository:
 
         return res
 
-    def calculate_average_scores_by_category(self, survey_id, user_group_id=None, start_date=None, end_date=None):
+    def calculate_average_scores_by_category(self, survey_id, user_group_name=None, start_date=None, end_date=None):
         """
         Calculates weighted average scores from the submitted answers of a given survey. An average
         score is calculated for each category of the survey. This value represents how well all
@@ -922,7 +922,7 @@ class SurveyRepository:
 
         Args:
             survey_id: Id of survey to calculate averages from
-            user_group_id (optional): User group id of answer. Ignored if None. If value present
+            user_group_name (optional): User group name of answer. Ignored if None. If value present
                 filters answers used to calculate average.
             start_date (optional): A datetime for filtering the answers used to calculate averages. Ignored
                 if None. If value present only answers after this datetime are taken into account.
@@ -937,6 +937,12 @@ class SurveyRepository:
         # currently group id None lists all users
         question_averages = []
         related_questions = self.get_questions_of_survey(survey_id)
+
+
+        if user_group_name:
+            user_group_id = self._find_user_group_by_name(user_group_name)
+        else:
+            user_group_id = None
 
         for question in related_questions:
             points = self.get_sum_of_user_answer_points_by_question_id(
