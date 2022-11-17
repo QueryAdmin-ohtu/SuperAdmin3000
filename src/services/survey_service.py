@@ -509,8 +509,10 @@ class SurveyService:
                 if None. If value present only answers before this datetime are taken into account.
 
         Returns:
-            A list of tuples which includes the category id, category name and average score
+            A list of tuples which includes the category id, category name, average score and
+            average score for unfiltered results
             (to the precision of two decimal places) of all user answers in a given survey.
+            (id, name, average, average_of_all)
 
             If dates invalid returns None
         """
@@ -519,8 +521,22 @@ class SurveyService:
             if start_date > end_date or end_date < start_date:
                 return None
 
-        return self.survey_repository.calculate_average_scores_by_category(
+        filtered_averages = self.survey_repository.calculate_average_scores_by_category(
             survey_id, user_group_id, start_date, end_date)
+        all_averages = self.survey_repository.calculate_average_scores_by_category(
+            survey_id, user_group_id, start_date, end_date)        
+
+        result = []
+        for average in filtered_averages:
+            for a in all_averages:
+                if a[0] == average[0]:  # Matching id
+                    average_of_all = a[2]
+                    break
+            else:
+                average_of_all = None   
+            result.append(average + (average_of_all,))
+            
+        return result
 
     def create_category_result(self, category_id: int, text: str, cutoff_from_maxpts: float):
         """Create a new category result
