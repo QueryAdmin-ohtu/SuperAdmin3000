@@ -15,6 +15,14 @@ Set Content Link Type
     [Arguments]  ${type}
     Input Text  new_type  ${type}
 
+Set Category Result Text
+    [Arguments]  ${text}
+    Input Text  new_cat_result_text  ${text}
+
+Set Category Result Cutoff Points
+    [Arguments]  ${points}
+    Input Text  new_cat_cutoff  ${points}
+
 
 Create New Category
     Set Category Name  nimi
