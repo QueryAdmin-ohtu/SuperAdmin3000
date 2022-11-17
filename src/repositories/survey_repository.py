@@ -794,13 +794,13 @@ class SurveyRepository:
     def _add_user_answers(self, user_id, question_answer_ids: list, answer_time: datetime = None):
         """Adds user answers to database for testing purposes"""
 
-        for id in question_answer_ids:
+        for question_answer_id in question_answer_ids:
             sql = """INSERT INTO "User_answers"
                 ("userId", "questionAnswerId", "createdAt", "updatedAt")
                 VALUES (:user_id, :question_answer_id, :answer_time, :answer_time)"""
             values = {
                 "user_id": user_id,
-                "question_answer_id": id,
+                "question_answer_id": question_answer_id,
                 "answer_time": "NOW()" if answer_time is None else answer_time
             }
 
@@ -867,7 +867,9 @@ class SurveyRepository:
             return count_of_answers
         return 0
 
-    def get_sum_of_user_answer_points_by_question_id(self, question_id, user_group_id=None, start_date=None, end_date=None):
+    def get_sum_of_user_answer_points_by_question_id(
+        self, question_id, user_group_id=None, start_date=None, end_date=None
+        ):
         """
         Returns the sum of all user answers for a given question.
 
@@ -927,9 +929,8 @@ class SurveyRepository:
                 if None. If value present only answers after this datetime are taken into account.
             end_date (optional): A datetime for filtering the answers used to calculate averages. Ignored
                 if None. If value present only answers before this datetime are taken into account.
-
         Returns:
-            A list of tuples which includes the category id, category name and average score 
+            A list of tuples which includes the category id, category name and average score
             (to the precision of two decimal places) of all user answers in a given survey.
         """
         # TODO:
@@ -945,7 +946,7 @@ class SurveyRepository:
                 question.id, user_group_id, start_date, end_date)
 
             for category_weight in question.category_weights:
-                if (answers != 0):
+                if answers != 0:
                     weighted_average = points / answers * \
                         category_weight['multiplier']
                 else:
@@ -993,8 +994,7 @@ class SurveyRepository:
         found_id = self.db_connection.session.execute(sql, values).fetchone()
         if found_id:
             return found_id[0]
-        else:
-            return None
+        return None
 
     def get_survey_results(self, survey_id):
         """Get the results of a survey
@@ -1038,9 +1038,9 @@ class SurveyRepository:
 
             Returns True if success, False if error
         """
-        sql = """ DELETE FROM "Survey_results" WHERE id=:result_id """        
+        sql = """ DELETE FROM "Survey_results" WHERE id=:result_id """
         values = {"result_id": int(result_id)}
-        
+
         # TODO: remove
         print(f"SQL: {sql}", flush=True)
         print(f"Values: {values}", flush=True)
@@ -1048,9 +1048,8 @@ class SurveyRepository:
         try:
             self.db_connection.session.execute(sql, values)
             self.db_connection.session.commit()
-        except exc.SQLAlchemyError as exception:
-            return False      
-
+        except exc.SQLAlchemyError:
+            return False
         return True
 
     def create_category_result(self, category_id: int, text: str, cutoff: float):

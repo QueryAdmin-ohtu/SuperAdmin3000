@@ -363,7 +363,7 @@ class SurveyService:
             category_result_text,
             cutoff_from_maxpts
         )
-        
+
         return category_id
 
     def add_admin(self, email: str):
@@ -502,7 +502,7 @@ class SurveyService:
                 if None. If value present only answers before this datetime are taken into account.
 
         Returns:
-            A list of tuples which includes the category id, category name and average score 
+            A list of tuples which includes the category id, category name and average score
             (to the precision of two decimal places) of all user answers in a given survey.
 
             If dates invalid returns None
@@ -512,11 +512,13 @@ class SurveyService:
             if start_date > end_date or end_date < start_date:
                 return None
 
-        return self.survey_repository.calculate_average_scores_by_category(survey_id, user_group_id, start_date, end_date)
+        return self.survey_repository.calculate_average_scores_by_category(
+            survey_id, user_group_id, start_date, end_date
+        )
 
     def create_category_result(self, category_id: int, text: str, cutoff_from_maxpts: float):
         """Create a new category result
-        
+
         Returns id of category result"""
         return self.survey_repository.create_category_result(category_id, text, cutoff_from_maxpts)
 
@@ -537,11 +539,11 @@ class SurveyService:
         """
         return self.survey_repository.get_survey_results(survey_id)
 
-
     def delete_survey_result(self, result_id):
         """ Deletes the given survey result
         """
 
         return self.survey_repository.delete_survey_result(result_id)
+
 
 survey_service = SurveyService(SurveyRepository())

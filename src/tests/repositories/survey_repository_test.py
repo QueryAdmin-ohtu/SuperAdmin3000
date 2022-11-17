@@ -1003,7 +1003,8 @@ class TestSurveyRepository(unittest.TestCase):
             print(related_category_results, " - ", related_category_results[0])
             self.assertEquals(related_category_results[0], category_result_id)
             self.assertEquals(related_category_results[1], category_id)
-            self.assertEquals(related_category_results[2], "Category result text")
+            self.assertEquals(
+                related_category_results[2], "Category result text")
             self.assertEquals(related_category_results[3], 1.0)
 
     def test_category_can_contain_multiple_category_results(self):
@@ -1029,7 +1030,7 @@ class TestSurveyRepository(unittest.TestCase):
             related_category_results = self.repo.get_category_results_from_category_id(
                 category_id)
             self.assertTrue(len(related_category_results) == 2)
-        
+
     def test_category_result_is_not_created_if_cutoff_exists(self):
         with self.app.app_context():
             category_id = self.repo.create_category(
@@ -1078,8 +1079,8 @@ class TestSurveyRepository(unittest.TestCase):
                 8, "You look like an Indian elephant", 0.5)
             results = self.repo.get_survey_results(8)
             self.assertEqual(len(results), 2)
-            
+
             response = self.repo.delete_survey_result(results[0][0])
             self.assertTrue(response)
-            results = self.repo.get_survey_results(8)            
+            results = self.repo.get_survey_results(8)
             self.assertEqual(len(results), 1)
