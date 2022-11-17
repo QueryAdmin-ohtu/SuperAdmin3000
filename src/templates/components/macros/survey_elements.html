@@ -105,10 +105,7 @@
 #}
 {% call card() %}
 
-<form action="/update_survey_result" method="POST">
-  <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
-  <input type="hidden" name="result_id" id="result_id" value="{{ result[0] }}">
-  <input type="hidden" name="survey_id" id="survey_id" value="{{ result[5] }}">  
+
 <details id="expandable-result-{{ index }}">
     <summary class="text-slate-600 font-medium text-lg" style="cursor: pointer">Result at cutoff point {{ result[2] }}:</summary>
     <div class="flex flex-col gap-2">
@@ -125,12 +122,8 @@
             ) }}
         </div>      
         <div class="flex flex-grow"></div>
-        {% set button_id = "update%s" % result[0] %}        
-        {{ form_elements.submit_button("Update result", id=button_id) }}
-        
         {% if not hide_delete_button %}
-        {% set button_id = "delete%s" % result[0] %}
-        {{ form_elements.submit_button("Delete result", "destructive", id=button_id) }}
+        {{ form_elements.submit_button("Delete result", "destructive", "/delete_survey_result/%s" % (result[0])) }}
         {% endif %}
     </div>
 </details>

@@ -17,6 +17,25 @@
 
 {% endmacro %}
 
+{% macro date_input(name, is_required, value = "") %}
+{# A text input with label
+    Args:
+        name: Name of input
+        label_text: Text to display in label
+        placeholder: A palceholder value
+        is_required: Is this value required in the form? Provide a bool.
+#}
+
+{% if is_required %}
+{% set required_text = 'required' %}
+{% endif %}
+
+<input type="datetime-local" name="{{ name }}" value="{{ value }}"
+    class="bg-white border border-slate-300 text-gray-900 text-sm rounded-lg focus:invalid:border-rose-500 focus:ring-sky-500 focus:border-sky-500  block w-full p-2">
+
+{% endmacro %}
+
+
 {% macro text_area(name, label_text, placeholder, is_required, value = "") %}
 {# A text area input with label
     Args:

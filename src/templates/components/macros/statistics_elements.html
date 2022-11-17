@@ -9,47 +9,20 @@
         row_num: Row number of table
 #}
 
-{% if row_num == 'Null' %}
-<div class="table-row">
-    <div class="table-cell pr-4">
-        null
-    </div>
-    <div class="table-cell pr-4">
-        {{ category[1] }}
-    </div>
-    <div class="table-cell pr-4">
-        Average score: {{category[2]}}
-    </div> 
-</div>
-<div class="table-cell pr-4">
-    {{ buttons.link_button("Edit category", "/edit_category/%s/%s" %(survey_id,category[0]), id="edit_button_%s" % category[0]) }}
-</div>
-{% else %}
-<div class="table-row">
-    <div class="table-cell pr-4">
+<tr class="font-mono">
+    <td class="p-4 border-r-2 border-slate-300">
         {{ row_num }}
-    </div>
-    <div class="table-cell pr-4">
-        <div class="flex items-center">
-            <div class="inline-flex" role="group">
-                <div class="flex items-center md:justify-end gap-2">
-                    {{category[1]}}
-            </div>
-            </div>
-        </div>
-    </div>
-    <div class="table-cell pr-4">
-        <div class="flex items-center">
-            <div class="inline-flex" role="group">
-                <div class="flex items-center md:justify-end gap-2">
-                    Average score: {{category[2]}}
-            </div>
-            </div>
-        </div>
-    </div>
-    <div class="table-cell pr-4"> 
-        {{ buttons.link_button("Edit category", "/edit_category/%s/%s" %(survey_id,category[0]), id="edit_button_%s" % category[0]) }}
-    </div>
-</div>
-{% endif %}
+    </td>
+    <td class="p-4 border-r-2 border-slate-300"">
+        {{category[1]}}
+    </td>
+    <td class="p-4 border-r-2 border-slate-300">
+        {{category[2]}}
+    </td>
+    <td class="p-4">
+        {% if row_num != "Null" %}
+        <a href="{{ '/edit_category/%s/%s' %(survey_id,category[0]) }}" class="underline text-sky-500"  id="{{ 'edit_button_%s' % category[0] }}">Edit</a>
+        {% endif %}
+    </td>
+</tr>
 {% endmacro %}

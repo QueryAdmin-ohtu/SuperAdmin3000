@@ -44,7 +44,7 @@ def test_backdoor_validate_and_login_with_invalid_password(app):
         assert "username" not in context.session
         assert "csrf_token" not in context.session
 
-        
+
 def test_backdoor_validate_and_login_with_invalid_username(app):
     with app.test_request_context() as context:
         response = helper.backdoor_validate_and_login("wrong", "secret")
@@ -53,7 +53,7 @@ def test_backdoor_validate_and_login_with_invalid_username(app):
         assert "username" not in context.session
         assert "csrf_token" not in context.session
 
-        
+
 def test_update_session(app):
     with app.test_request_context() as context:
         helper.update_session("user@mail", "user", "token")
@@ -350,3 +350,15 @@ def empty_dir_test():
 
     assert file_count_before > 1
     assert file_count_after == 1
+
+def test_check_cutoff_points():
+    no_one = ["0.5","0.7","0.1"]
+    duplicates = ["0.5","0.5","0.1","1"]
+    not_in_range = ["0.5","2","-0.3","1.0"]
+    empty_cutoff = ["0.5","0.2","","1"]
+    all_good_man = ["0.9","0.5","0.1","1"]
+    assert helper.check_cutoff_points(no_one) == "There must be a cutoff from maximum with a value of 1.0"
+    assert helper.check_cutoff_points(duplicates) == "There must not be any identical cutoff values"
+    assert helper.check_cutoff_points(not_in_range) == "Cutoff values must be between 0 and 1"
+    assert helper.check_cutoff_points(empty_cutoff) == "There is a result without a cutoff value"
+    assert helper.check_cutoff_points(all_good_man) == "Correct"
