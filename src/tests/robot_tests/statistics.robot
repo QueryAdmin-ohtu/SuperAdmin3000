@@ -13,7 +13,7 @@ Logged In User Can View Statistics Page
     Login Through Backdoor
     Go To Survey  1
     Click Link  Detailed statistics
-    Page Should Contain  Related categories
+    Page Should Contain  Category scores
 
 User Can Access Edit Categories Page From Statistics
     Go To Statistics  1
@@ -22,12 +22,12 @@ User Can Access Edit Categories Page From Statistics
 
 Statistics Page Shows the Number Of Users Who Have Answered
     Go To Statistics  8
-    Page Should Contain  Users with submissions (4 / 4)
+    Page Should Contain  Total submissions: 4
 
 Statistics Page Shows Question Names For Charts
     Go To Statistics  8
-    Page Should Contain  Question: Describe the size of your ears
-    Page Should Contain  Question: Where do you prefer to hang out
+    Page Should Contain  Describe the size of your ears
+    Page Should Contain  Where do you prefer to hang out
 
 Statistics Page Shows Answer Distribution Charts
     Go To Statistics  8
@@ -36,7 +36,7 @@ Statistics Page Shows Answer Distribution Charts
 
 Statistics Page Shows Filtered Charts After Applying Filter
     Go To Statistics  8
-    Select Radio Button  filter_group_name  B-ryhmä
+    Select From List By Value  name:filter_group_name  B-ryhmä
     Click Button  Filter
     Element Should Be Visible  chart_23_filtered
     Element Should Be Visible  chart_24_filtered
@@ -55,7 +55,7 @@ Toggle Filter For Charts Works When Only Time Filter Applied
 
 Statistics Page Shows Unfiltered Charts After Toggling Filter First Time
     Go To Statistics  8
-    Select Radio Button  filter_group_name  B-ryhmä
+    Select From List By Value  name:filter_group_name  B-ryhmä
     Click Button  Filter
     Click Button  toggle_filter_chart_23
     Click Button  toggle_filter_chart_24
@@ -66,7 +66,7 @@ Statistics Page Shows Unfiltered Charts After Toggling Filter First Time
 
 Statistics Page Shows Filtered Charts After Toggling Filter Second Time
     Go To Statistics  8
-    Select Radio Button  filter_group_name  B-ryhmä
+    Select From List By Value  name:filter_group_name  B-ryhmä
     Click Button  Filter
     Click Button  toggle_filter_chart_23
     Click Button  toggle_filter_chart_23
@@ -79,29 +79,29 @@ Statistics Page Shows Filtered Charts After Toggling Filter Second Time
 
 Entering Valid Range To Filter Dates Filters Users
     Go To Statistics  8
-    Input Text  filter_start_date  02.02.2002 12:00
-    Input Text  filter_end_date  02.02.2002 12:01
+    Press Keys  filter_start_date  2+TAB+2+TAB+2002+TAB+12+TAB+00
+    Press Keys  filter_end_date  2+TAB+2+TAB+2002+TAB+12+TAB+01
     Click Button  Filter
     Page Should Contain  Users with submissions (0 / 4)    
     
 Entering Invalid Date to User Filter Does Not Filter Anything
     Go To Statistics  8
-    Page Should Contain  Users with submissions (4 / 4)
+    Page Should Contain  Total submissions: 4
 
 Filtering By Group Name Filters Users
     Go To Statistics  8
-    Select Radio Button  filter_group_name  Supertestaajat
+    Select From List By Value  name:filter_group_name  Supertestaajat
     Click Button  Filter
     Page Should Contain  Users with submissions (1 / 4)
 
 Statistics Page Displays Correct Average Value Message When No Answers Are Present
     Go To Statistics  1
-    Page Should Contain  Average score: 0.0
+    Page Should Contain  0.0
 
 Statistics Page Displays Correct Average Values
     Go To Statistics  8
-    Page Should Contain  Average score: 3.75
-    Page Should Contain  Average score: 1.25
+    Page Should Contain  3.75
+    Page Should Contain  1.25
 
 Filtering By Email Filters Users
     Go To Statistics  8
