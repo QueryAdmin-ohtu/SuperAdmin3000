@@ -928,7 +928,6 @@ class SurveyRepository:
                 if None. If value present only answers after this datetime are taken into account.
             end_date (optional): A datetime for filtering the answers used to calculate averages. Ignored
                 if None. If value present only answers before this datetime are taken into account.
-
         Returns:
             A list of tuples which includes the category id, category name and average score
             (to the precision of two decimal places) of all user answers in a given survey.
@@ -1050,7 +1049,6 @@ class SurveyRepository:
             self.db_connection.session.commit()
         except exc.SQLAlchemyError:
             return False
-
         return True
 
     def create_category_result(self, category_id: int, text: str, cutoff: float):

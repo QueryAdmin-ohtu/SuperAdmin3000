@@ -5,7 +5,6 @@ from glob import glob
 from pandas import DataFrame as df
 from matplotlib import pyplot as plt
 from flask import session
-from datetime import datetime
 
 
 def backdoor_validate_and_login(username, password):

@@ -204,10 +204,10 @@ def edit_question(survey_id, question_id):
     show_previous_button = show_next_button = False
     questions = survey_service.get_questions_of_survey(survey_id)
     current_question = int(question_id)
-    for q in questions:
-        if q.id < current_question:
+    for item in questions:
+        if item.id < current_question:
             show_previous_button = True
-        if q.id > current_question:
+        if item.id > current_question:
             show_next_button = True
 
     if not question:
@@ -388,7 +388,8 @@ def add_category_result():
         new_cat_cutoff
     )
     if category_result_id is None:
-        flash(f"Category result for cutoff value {new_cat_cutoff} already exists.")
+        flash(
+            f"Category result for cutoff value {new_cat_cutoff} already exists.")
 
     return redirect(f"/edit_category/{survey_id}/{category_id}")
 
