@@ -99,5 +99,8 @@
 
         </div>
     </form>
+    {% if edit %}
+        {{ buttons.link_button("Back to survey", "/surveys/%s" % survey[0]) }}
+    {% endif %}
 </div>
 {% endblock %}

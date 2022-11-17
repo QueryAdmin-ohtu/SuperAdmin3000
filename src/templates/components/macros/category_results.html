@@ -3,14 +3,15 @@
 {% import "components/macros/survey_elements.html" as survey %}
 
 
-{% macro category_result_field(category_result) %}
+{% macro category_result_field(category_result, survey_id) %}
 {# A card displaying category_result information
     Args:
         category_result: The category_result item
 #}
+    
     <div class="flex flex-col gap-2">
         <div class="flex flex-grow"></div>
-            <!-- {{category_result}}-->
+            {{category_result[0]}}
             <div class="flex flex-col gap-2 w-full">
                 {{ form_elements.label("name", "Name") }}
                 {{ form_elements.text_area("category_result-" ~ category_result[0], "Category Result", "", false, category_result[2]) }}
@@ -22,13 +23,18 @@
             <div class="flex flex-grow">
                 <div class="flex items-center">
                     <div class="inline-flex" role="group">
-                        {{ form_elements.submit_button("Save", "", "null")}}
-                        {{ form_elements.submit_button("Delete", "destructive", "null") }}
+                        <form method="POST">
+                            <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
+                            <input type="hidden" name="survey_id" value="{{survey_id}}">
+                            <input type="hidden" name="category_id" value="{{category_result[1]}}">
+                            {{ form_elements.submit_button("Save", "", "null")}}
+                            {{ form_elements.submit_button("Delete!!", "destructive", "/delete_category_result/%s" % (category_result[0])) }}
+                        </form>
                     </div>
                 </div>
             </div>
     </div>
-
+    
 
 {% endmacro %}
 

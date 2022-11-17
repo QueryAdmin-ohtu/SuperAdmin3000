@@ -120,7 +120,6 @@ def view_survey(survey_id):
         else:
             text = f"{results[i-1][2]*100}%-{results[i][2]*100}% of max points returns user"
             show_results.append([text,results[i][1]])
-    print(categories, flush=True)
     return render_template("surveys/view_survey.html", survey=survey,
                            questions=questions, survey_id=survey_id,
                            ENV=app.config["ENV"], categories=categories,
@@ -442,6 +441,34 @@ def delete_category():
     flash("Could not delete category because it has results linked to it", "error")
     return redirect(f"/surveys/{survey_id}")
 
+
+# @surveys.route("/delete_survey_result/<result_id>", methods=["POST"])
+# def delete_survey_result(result_id):
+#     """Update or delete the given survey result
+#     """
+#     survey_id = request.form["survey_id"]
+#     survey_service.delete_survey_result(result_id)
+
+#     return redirect(f"/surveys/{survey_id}/new-survey-result")
+
+
+# @surveys.route("/delete_category_result/<category_result_id>", methods=["POST"])
+# def delete_category_result(category_result_id):
+
+@surveys.route("/delete_category_result/<category_result_id>", methods=["POST"])
+def delete_category_result(category_result_id):
+    """Deletes a category result
+    """
+    survey_id = request.form["survey_id"] # pitäisi olla ok
+    category_id = request.form["category_id"] # pitäisi olla ok
+    # survey_service.delete_survey_result(result_id) # to-do: luo ja päivitä uusi palvelu!
+    print("==============================", flush=True)
+    print("category_result_id:", category_result_id)
+    print("category_id:", category_id)
+    print("survey_id:", survey_id)
+    print("==============================", flush=True)
+
+    return redirect(f"/edit_category/{survey_id}/{category_id}")
 
 @surveys.route("/surveys/<survey_id>/new-survey-result", methods=["GET"])
 def new_survey_result_view(survey_id):
