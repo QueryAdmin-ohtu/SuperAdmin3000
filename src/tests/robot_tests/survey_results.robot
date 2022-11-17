@@ -2,6 +2,7 @@
 Resource  resource.robot
 Resource  resource_login.robot
 Resource  resource_manage_results.robot
+Resource  resource_create_survey.robot
 Suite Setup  Open And Configure Browser
 Suite Teardown  Close Browser
 Test Setup  Go To Home Page
@@ -74,3 +75,8 @@ Survey Result With Cutoff Value One Can not Be Deleted
     Expand Result Card  1
     Page Should Not Contain  Delete
 
+New Survey Has Survey Result For Cutoff Value 1.0
+    Click Link  New survey
+    Make A Survey
+    Page Should Contain  100.0% of max points returns user:
+    Page Should Contain  Your skills in this topic are excellent!
