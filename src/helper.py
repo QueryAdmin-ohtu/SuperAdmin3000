@@ -198,3 +198,25 @@ def empty_dir():
     except OSError:
         return False
     return True
+
+
+def check_cutoff_points(cutoffs):
+    """ Takes a list of cutoff points and checks there
+    are no empty entries, no duplicate entries, no
+    entries not between 0-1, and that there is a cutoff
+    with a value of 1 """
+    if "" in cutoffs:
+        return "There is a result without a cutoff value"
+    float_cutoffs = []
+    for cutoff in cutoffs:
+        float_cutoffs.append(float(cutoff))
+        if 0 <= float(cutoff) <= 1:
+            continue
+        return "Cutoff values must be between 0 and 1"
+    if 1.0 not in float_cutoffs:
+        return "There must be a cutoff from maximum with a value of 1.0"
+    set_list = set(float_cutoffs)
+    unique_list = list(set_list)
+    if len(unique_list) != len(float_cutoffs):
+        return "There must not be any identical cutoff values"
+    return "Correct"

@@ -794,13 +794,13 @@ class SurveyRepository:
     def _add_user_answers(self, user_id, question_answer_ids: list, answer_time: datetime = None):
         """Adds user answers to database for testing purposes"""
 
-        for question_answer_id in question_answer_ids:
+        for qa_id in question_answer_ids:
             sql = """INSERT INTO "User_answers"
                 ("userId", "questionAnswerId", "createdAt", "updatedAt")
                 VALUES (:user_id, :question_answer_id, :answer_time, :answer_time)"""
             values = {
                 "user_id": user_id,
-                "question_answer_id": question_answer_id,
+                "question_answer_id": qa_id,
                 "answer_time": "NOW()" if answer_time is None else answer_time
             }
 
@@ -867,9 +867,8 @@ class SurveyRepository:
             return count_of_answers
         return 0
 
-    def get_sum_of_user_answer_points_by_question_id(
-        self, question_id, user_group_id=None, start_date=None, end_date=None
-        ):
+    def get_sum_of_user_answer_points_by_question_id(self, question_id,
+            user_group_id=None, start_date=None, end_date=None):
         """
         Returns the sum of all user answers for a given question.
 
@@ -999,9 +998,9 @@ class SurveyRepository:
     def get_survey_results(self, survey_id):
         """Get the results of a survey
 
-        Return table with columns: id, text, cutoff_from_maxpoints, createdAt, updatedAt, surveyId"""
+        Return table with columns: id, text, cutoff_from_maxpoints"""
         sql = """
-            SELECT id, text, cutoff_from_maxpoints, "createdAt", "updatedAt", "surveyId"
+            SELECT id, text, cutoff_from_maxpoints
             FROM "Survey_results"
             WHERE "surveyId"=:survey_id
             ORDER BY cutoff_from_maxpoints
@@ -1097,3 +1096,28 @@ class SurveyRepository:
         if not category_results:
             return None
         return category_results
+
+    def update_survey_results(self, original_results, new_results, survey_id):
+        """ Goes through the lists of results and updates each
+        result where the original and new result don't match.
+        This function is not called if there are no differences
+        so the updatedAt of the survey in question will also be
+        updated and True is returned. """
+
+        for i in range(len(original_results)):
+            if original_results[i] != new_results[i]:
+                sql = """
+                UPDATE "Survey_results"
+                SET
+                    text=:text,
+                    cutoff_from_maxpoints=:cutoff,
+                    "updatedAt"=NOW()
+                WHERE id=:result_id
+                """
+                values = {
+                    "text": new_results[i][1],
+                    "cutoff": new_results[i][2],
+                    "result_id": new_results[i][0]}
+                db.session.execute(sql, values)
+        db.session.commit()
+        return self.update_survey_updated_at(survey_id)

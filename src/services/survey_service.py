@@ -513,8 +513,7 @@ class SurveyService:
                 return None
 
         return self.survey_repository.calculate_average_scores_by_category(
-            survey_id, user_group_id, start_date, end_date
-        )
+            survey_id, user_group_id, start_date, end_date)
 
     def create_category_result(self, category_id: int, text: str, cutoff_from_maxpts: float):
         """Create a new category result
@@ -535,7 +534,7 @@ class SurveyService:
     def get_survey_results(self, survey_id):
         """Fetch the results of the given survey
 
-        Returns a table with columns: id, text, cutoff_from_maxpoints, createdAt, updatedAt, "surveyId"
+        Returns a table with columns: id, text, cutoff_from_maxpoints
         """
         return self.survey_repository.get_survey_results(survey_id)
 
@@ -545,5 +544,8 @@ class SurveyService:
 
         return self.survey_repository.delete_survey_result(result_id)
 
+    def update_survey_results(self, original_results, new_results, survey_id):
+        """Updates the original results of a survey to new ones"""
+        return self.survey_repository.update_survey_results(original_results,new_results,survey_id)
 
 survey_service = SurveyService(SurveyRepository())
