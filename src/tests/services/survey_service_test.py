@@ -34,6 +34,12 @@ class TestSurveyService(unittest.TestCase):
         self.assertEqual(check, 1)
         self.repo_mock.create_survey.assert_called_with(
             name, title, description)
+        self.repo_mock.create_survey_result.assert_called_with(
+            1,
+            "Your skills in this topic are excellent!",
+            1.0
+        )
+        
 
     def test_create_survey_with_no_name_does_not_work(self):
         name = ""
@@ -175,6 +181,11 @@ class TestSurveyService(unittest.TestCase):
         self.assertEqual(check, 1)
         self.repo_mock.create_category.assert_called_with(
             survey_id, name, description, content_links)
+        self.repo_mock.create_category_result.called_with(
+            1,
+            "Your skills in this topic are excellent!",
+            1.0
+        )
 
     def test_add_admin_calls_repo_correctly(self):
         self.repo_mock.add_admin.return_value = 1
