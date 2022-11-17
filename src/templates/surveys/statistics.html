@@ -9,6 +9,13 @@
         <h1 class="text-gray-900 leading-tight">Survey title</h1>
         {{ buttons.link_button("Back to survey", "/surveys/%s" % survey_id) }}
     </div>
+    <p class="text-slate-600 font-mono text-sm font-medium">
+        {% if submissions %}
+        Total submissions: {{ submissions }}
+        {% else %}
+        Total submissions: 0
+        {% endif %}
+    </p>
     <!-- FILTER -->
     <div id="answered" class="flex flex-row items-center justify-start gap-4">
         <h2>Filter</h2>
@@ -46,7 +53,13 @@
                     {% endfor %}
                 </select>
             </div>
-            {{ form_elements.submit_button("Filter") }}
+            <div class="flex flex-row gap-4">
+                <button type="submit" class="bg-sky-500 text-white rounded text-sm font-medium p-2">Filter</button>
+                {% if filtered %}
+                <a href="{{ '/surveys/%s/statistics' % survey_id }}"
+                    class="bg-white border-slate-300 border-2 rounded text-sm font-medium p-2">Clear</a>
+                {% endif %}
+            </div>
         </div>
     </form>
     {% endcall %}
@@ -57,16 +70,34 @@
         <div class="flex-grow border-t border-slate-200"></div>
     </div>
     {% call survey_elements.card() %}
-    <div class="table w-full">
-        {% if categories %}
-        {% for category in categories %}
-        <hr>
-        {{ statistics_elements.category_row(survey_id, category, category[0])}}
-        <hr>
-        {% endfor %}
-        {% else %}
-        No related categories found.
-        {% endif %}
+    <div class="bg-slate-100 rounded-lg overflow-hidden">
+        <table class="table-fixed border-collapse w-full">
+            {% if categories %}
+            <thead class="text-left bg-slate-200">
+                <tr class="">
+                    <th class="p-4 border-r-2 border-slate-300 w-20">
+                        Id
+                    </th>
+                    <th class="p-4 border-r-2 border-slate-300">
+                        Category name
+                    </th>
+                    <th class="p-4 border-r-2 border-slate-300">
+                        Average score
+                    </th>
+                    <th class="p-4 w-20">
+                        Edit
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for category in categories %}
+                {{ statistics_elements.category_row(survey_id, category, category[0])}}
+                {% endfor %}
+                {% else %}
+                No related categories found.
+                {% endif %}
+            </tbody>
+        </table>
     </div>
     {% endcall %}
 
@@ -109,54 +140,13 @@
         {% endif %}
     </div>
 </div>
-<div id="stats" class="flex-col max-w-full bg-white p-4 gap-2 rounded-lg border border-slate-300">
-    <div class="flex justify-between">
-        <h3 class="text-gray-900 leading-tight">Statistics</h3>
-        <p class="text-slate-600 font-mono text-sm font-medium">Total submissions:
-            {% if submissions %}
-            {{ submissions }}
-            {% else %}
-            0
-            {% endif %}
-        </p>
-    </div>
-    <div class="grow h-7"></div>
-
-
-    <div class="grow h-7"></div>
-    <h3 class="text-gray-900 leading-tight">Answer distribution</h3>
-    <br>
-    {% if not filtered and answer_distribution %}
-    {% for q_name, q_id in answer_distribution %}
-    <h4 class="text-slate-600 font-mono text-sm font-medium">Question: {{ q_name }}</h4>
-    <img src="{{url_for('static', filename='/img/charts/' + q_id|string + '.png')}}"
-        alt="Answer distribution chart for question {{q_name}} without filters" id="chart_{{q_id}}">
-    {% endfor %}
-    {% elif filtered and answer_distribution %}
-    {% for q_name, q_id in answer_distribution %}
-    <h4 class="text-slate-600 font-mono text-sm font-medium">Question: {{ q_name }}</h4>
-    <div class="flex justify-between">
-        <button
-            class="p-2 block rounded w-fit h-fit bg-sky-500 text-sm text-white font-medium leading-tight hover:bg-sky-700 focus:bg-sky-700 focus:outline-none focus:ring-0 transition duration-150 ease-in-out"
-            id="toggle_filter_chart_{{q_id}}" onclick="switchChart('chart_{{q_id}}')">Toggle filter</button>
-        <img class="block"
-            src="{{url_for('static', filename='/img/charts/' + q_id|string + '_' + filter_group_name|string + '.png')}}"
-            alt="Answer distribution chart for question {{q_name}} for user group {{filter_group_name}}"
-            id="chart_{{q_id}}_filtered">
-        <img class="hidden" src="{{url_for('static', filename='/img/charts/' + q_id|string + '.png')}}"
-            alt="Answer distribution chart for question {{q_name}} without filters" id="chart_{{q_id}}_unfiltered">
-    </div>
-    {% endfor %}
-    {% else %}
-    <h4 class="text-slate-600 font-mono text-sm font-medium">No answers yet</h4>
-    {% endif %}
+{% if show_userlist %}
+<div class="flex flex-row items-center justify-start gap-4">
+    <h2>Users with submissions ({{ users | length }} / {{ total_users }})</h2>
+    <div class="flex-grow border-t border-slate-200"></div>
 </div>
-<div id="answered" class="flex-col max-w-full bg-white p-4 gap-2 rounded-lg border border-slate-300">
-    <h3 class="text-gray-900 leading-tight">Users with submissions ({{ users | length }} / {{ total_users }})</h3>
-    <div>
-
-    </div>
-    {% if show_userlist %}
+{% call survey_elements.card() %}
+<div id="answered" class="flex-col gap-2">
     <div class="grow h-5"></div>
     <table class="min-w-full">
         <thead class="border-b">
@@ -179,6 +169,6 @@
         </thead>
     </table>
 </div>
+{% endcall %}
 {% endif %}
-</div>
 {% endblock %}

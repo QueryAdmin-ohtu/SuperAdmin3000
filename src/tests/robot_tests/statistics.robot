@@ -22,7 +22,7 @@ User Can Access Edit Categories Page From Statistics
 
 Statistics Page Shows the Number Of Users Who Have Answered
     Go To Statistics  8
-    Page Should Contain  Users with submissions (4 / 4)
+    Page Should Contain  Total submissions: 4
 
 Statistics Page Shows Question Names For Charts
     Go To Statistics  8
@@ -86,7 +86,7 @@ Entering Valid Range To Filter Dates Filters Users
     
 Entering Invalid Date to User Filter Does Not Filter Anything
     Go To Statistics  8
-    Page Should Contain  Users with submissions (4 / 4)
+    Page Should Contain  Total submissions: 4
 
 Filtering By Group Name Filters Users
     Go To Statistics  8
@@ -96,12 +96,12 @@ Filtering By Group Name Filters Users
 
 Statistics Page Displays Correct Average Value Message When No Answers Are Present
     Go To Statistics  1
-    Page Should Contain  Average score: 0.0
+    Page Should Contain  0.0
 
 Statistics Page Displays Correct Average Values
     Go To Statistics  8
-    Page Should Contain  Average score: 3.75
-    Page Should Contain  Average score: 1.25
+    Page Should Contain  3.75
+    Page Should Contain  1.25
 
 Filtering By Email Filters Users
     Go To Statistics  8
