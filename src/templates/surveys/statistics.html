@@ -146,27 +146,28 @@
     <div class="flex-grow border-t border-slate-200"></div>
 </div>
 {% call survey_elements.card() %}
-<div id="answered" class="flex-col gap-2">
-    <div class="grow h-5"></div>
-    <table class="min-w-full">
-        <thead class="border-b">
+<div class="bg-slate-100 rounded-lg overflow-hidden">
+    <table class="table-fixed border-collapse w-full">
+        <thead class="text-left bg-slate-200">
             <tr>
-                <th class="px-6 py-4 whitespace-nowrap font-mono font-medium text-gray-900 text-left">User</th>
-                <th class="px-6 py-4 whitespace-nowrap font-mono font-medium text-gray-900 text-left">Group</th>
-                <th class="px-6 py-4 whitespace-nowrap font-mono font-medium text-gray-900 text-left">Date</th>
+                <th class="p-4 border-r-2 border-slate-300">User</th>
+                <th class="p-4 border-r-2 border-slate-300">Group</th>
+                <th class="p-4">Date</th>
             </tr>
+        </thead>
+        <tbody class="font-mono">
             {% for user in users %}
             <tr>
-                <td>{{ user.email }}</td>
-                <td>
+                <td class="p-4 border-r-2 border-slate-300">{{ user.email }}</td>
+                <td class="p-4 border-r-2 border-slate-300">
                     {% if user.group_name %}
                     {{ user.group_name }}
                     {% endif %}
                 </td>
-                <td>{{ user.answer_time }}</td>
+                <td class="p-4">{{ user.answer_time }}</td>
             </tr>
             {% endfor %}
-        </thead>
+        </tbody>
     </table>
 </div>
 {% endcall %}
