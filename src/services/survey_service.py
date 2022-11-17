@@ -46,8 +46,15 @@ class SurveyService:
         """
 
         self._validate_survey_details(name, title, description)
+        survey_id = self.survey_repository.create_survey(name, title, description)
+        if survey_id:
+            survey_result_text = "Your skills in this topic are excellent!"
+            cutoff_from_maxpts = 1.0
+            self.create_survey_result(survey_id,
+                                      survey_result_text,
+                                      cutoff_from_maxpts)
 
-        return self.survey_repository.create_survey(name, title, description)
+        return survey_id
 
     def get_survey(self, survey_id: str):
         """
@@ -355,15 +362,15 @@ class SurveyService:
         """
         category_id = self.survey_repository.create_category(
             survey_id, name, description, content_links)
-
-        category_result_text = "Your skills in this topic are excellent!"
-        cutoff_from_maxpts = 1.0
-        self.create_category_result(
-            category_id,
-            category_result_text,
-            cutoff_from_maxpts
-        )
-
+        if category_id:
+            category_result_text = "Your skills in this topic are excellent!"
+            cutoff_from_maxpts = 1.0
+            self.create_category_result(
+                category_id,
+                category_result_text,
+                cutoff_from_maxpts
+            )
+        
         return category_id
 
     def add_admin(self, email: str):

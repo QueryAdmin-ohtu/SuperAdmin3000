@@ -56,6 +56,8 @@ Logged In User Can Create Categories Without Content Links
     Create New Category Without Content Links
     Page Should Contain  abc
     Page Should Contain  123
+    Page Should Contain  Your skills in this topic are excellent!
+    Element Attribute Value Should Be  cutoff-17  value  1.0
 
 Logged Out User Cannot Create Categories
     Logout
