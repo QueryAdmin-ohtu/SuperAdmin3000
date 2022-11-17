@@ -938,7 +938,6 @@ class SurveyRepository:
         question_averages = []
         related_questions = self.get_questions_of_survey(survey_id)
 
-
         if user_group_name:
             user_group_id = self._find_user_group_by_name(user_group_name)
         else:
