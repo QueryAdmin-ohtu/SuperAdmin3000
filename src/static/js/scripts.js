@@ -16,13 +16,25 @@ window.closeModal = function (modalId) {
 
 // switch the hidden attribute values of unfiltered and filtered charts
 function switchChart(chartId) {
-        var unfiltered = document.getElementById(chartId+"_unfiltered").hidden,
-            filtered = document.getElementById(chartId+"_filtered").hidden,
-            tmp;
-        tmp = unfiltered;
-        unfiltered = filtered;
-        filtered = tmp;
 
-        document.getElementById(chartId+"_unfiltered").hidden = unfiltered;
-        document.getElementById(chartId+"_filtered").hidden = filtered;
+    const unfiltered = document.getElementById(chartId + "_unfiltered"),
+        filtered = document.getElementById(chartId + "_filtered")
+
+    if (filtered.classList.contains('block') && unfiltered.classList.contains('hidden'))  {
+        // Currently displaying filtered version
+        filtered.classList.remove('block')
+        filtered.classList.add('hidden')
+        unfiltered.classList.remove('hidden')
+        unfiltered.classList.add('block')
+        return
+    }
+
+    if (filtered.classList.contains('hidden') && unfiltered.classList.contains('block')) {
+        // Currently displaying nonfiltered
+        filtered.classList.remove('hidden')
+        filtered.classList.add('block')
+        unfiltered.classList.remove('block')
+        unfiltered.classList.add('hidden')
+        return
+    }
 }
