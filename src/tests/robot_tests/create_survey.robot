@@ -11,7 +11,6 @@ Test Setup  Go To Home Page
 Logged In User Can Create Surveys
     Go To Backdoor Login Page
     Login With Correct Credentials
-    Go To Home Page
     Click Link  New survey
     Make A Survey
     Element Should Be Visible  id:notification
