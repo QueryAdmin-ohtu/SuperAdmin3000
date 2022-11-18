@@ -872,7 +872,7 @@ class SurveyRepository:
                   "start_date": start_date,
                   "end_date": end_date,
                   "email": f"%{email}%"
-        }
+                  }
         count_of_answers = self.db_connection.session.execute(sql, values).fetchone()[
             0]
         if count_of_answers:
@@ -922,7 +922,7 @@ class SurveyRepository:
                   "start_date": start_date,
                   "end_date": end_date,
                   "email": f"%{email}%"}
-        
+
         sum_of_points = self.db_connection.session.execute(
             sql, values).fetchall()
         db.session.commit()
@@ -974,10 +974,10 @@ class SurveyRepository:
             user_group_id = None
 
         for question in related_questions:
-            
+
             points = self.get_sum_of_user_answer_points_by_question_id(
                 question.id, user_group_id, start_date, end_date, email)
-            
+
             answers = self.get_count_of_user_answers_to_a_question(
                 question.id, user_group_id, start_date, end_date, email)
 
@@ -996,7 +996,7 @@ class SurveyRepository:
                     question_average = ("Null", str(
                         category_weight['category']) + " - (missing from 'Categories')", weighted_average)
                 question_averages.append(question_average)
-                
+
         return self.calculate_category_averages(question_averages)
 
     def calculate_category_averages(self, question_averages):

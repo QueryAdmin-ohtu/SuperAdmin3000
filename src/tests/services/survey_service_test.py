@@ -423,7 +423,7 @@ class TestSurveyService(unittest.TestCase):
         user_group_id = 22
         user_group_name = "Group 1"
         email = "mail.com"
-        
+
         survey_id = 1
         repo_value_to_return = [(1, "Category 1", 1.0)]
         service_value_to_return = [(1, "Category 1", 1.0, 1.0)]
