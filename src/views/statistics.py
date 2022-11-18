@@ -93,7 +93,7 @@ def filtered_statistics(survey_id):
                                                                      filter_group_name,
                                                                      filter_start_date,
                                                                      filter_end_date)
-    
+
     users = survey_service.get_users_who_answered_survey(survey_id)
     users = users if users else []
     total_users = len(users)
