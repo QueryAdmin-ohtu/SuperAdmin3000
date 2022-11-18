@@ -27,7 +27,7 @@
                     <div class="inline-flex" role="group">
                         <span style="margin-right: 10px;">{{ form_elements.submit_button("Save", "", "null")}}</span>
                         {% if category_result[3]!=1 %}
-                            <span>{{ form_elements.submit_button("Delete", "destructive", "/delete_category_result/%s" % (category_result[0])) }}</span>
+                            <span>{{ form_elements.submit_button("Delete", "destructive", "/delete_category_result/%s" % (category_result[0]), id="delete_%s" % (category_result[0])) }}</span>
                         {% endif %}
                     </div>
                 </form>
