@@ -521,9 +521,9 @@ class SurveyService:
             if start_date > end_date or end_date < start_date:
                 return None
 
+        all_averages = self.survey_repository.calculate_average_scores_by_category(survey_id)            
         filtered_averages = self.survey_repository.calculate_average_scores_by_category(
             survey_id, user_group_name, start_date, end_date)
-        all_averages = self.survey_repository.calculate_average_scores_by_category(survey_id)
 
         result = []
         for average in filtered_averages:

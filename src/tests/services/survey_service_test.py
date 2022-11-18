@@ -396,7 +396,8 @@ class TestSurveyService(unittest.TestCase):
         self.assertEqual(repo_value_to_return, survey_reponse)
 
     def test_calculate_average_scores_by_category_calls_repo_correctly(self):
-        self.repo_mock.calculate_average_scores_by_category.return_value = "None"
+        value_to_return = [(1, "Category 1", 1.0)]
+        self.repo_mock.calculate_average_scores_by_category.return_value = value_to_return
         survey_id = 1
         self.survey_service.calculate_average_scores_by_category(survey_id)
         self.repo_mock.calculate_average_scores_by_category.assert_called_with(
@@ -420,22 +421,24 @@ class TestSurveyService(unittest.TestCase):
         start_date = datetime.fromisoformat("2020-11-04 00:05:23.283")
         end_date = datetime.fromisoformat("2021-11-04 00:05:23.283")
         user_group_id = 22
+        user_group_name = "Group 1"
         survey_id = 1
-        value_to_return = "Value"
-        self.repo_mock.calculate_average_scores_by_category.return_value = value_to_return
+        repo_value_to_return = [(1, "Category 1", 1.0)]
+        service_value_to_return = [(1, "Category 1", 1.0, 1.0)]
+        self.repo_mock.calculate_average_scores_by_category.return_value = repo_value_to_return
         returned_value = self.survey_service.calculate_average_scores_by_category(
             survey_id,
-            user_group_id,
+            user_group_name,
             start_date,
             end_date
         )
         self.repo_mock.calculate_average_scores_by_category.assert_called_with(
             survey_id,
-            user_group_id,
+            user_group_name,
             start_date,
             end_date
         )
-        self.assertEqual(value_to_return, returned_value)
+        self.assertEqual(service_value_to_return, returned_value)
 
     def test_create_category_result_calls_repo_correctly(self):
         self.repo_mock.create_category_result.return_value = 1
