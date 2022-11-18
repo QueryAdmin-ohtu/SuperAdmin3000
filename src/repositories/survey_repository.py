@@ -1084,12 +1084,14 @@ class SurveyRepository:
 
     def get_category_results_from_category_id(self, category_id):
         """
-        Selects all category_results linked to a given category_id
+        Selects id, text and cutoff from all category_results linked to a given category_id
         Returns: A list of category_result objects
         """
         sql = """
-        SELECT * FROM "Category_results"
-        WHERE "categoryId" = :category_id
+        SELECT id, text, cutoff_from_maxpoints
+            FROM "Category_results"
+            WHERE "categoryId"=:category_id
+            ORDER BY cutoff_from_maxpoints
         """
         category_results = self.db_connection.session.execute(
             sql, {"category_id": category_id}).fetchall()
@@ -1109,6 +1111,25 @@ class SurveyRepository:
             if original_results[i] != new_results[i]:
                 sql = """
                 UPDATE "Survey_results"
+                SET
+                    text=:text,
+                    cutoff_from_maxpoints=:cutoff,
+                    "updatedAt"=NOW()
+                WHERE id=:result_id
+                """
+                values = {
+                    "text": new_results[i][1],
+                    "cutoff": new_results[i][2],
+                    "result_id": new_results[i][0]}
+                db.session.execute(sql, values)
+        db.session.commit()
+        return self.update_survey_updated_at(survey_id)
+
+    def update_category_results(self, original_results, new_results, survey_id, category_id):
+        for i in range(len(original_results)):
+            if original_results[i] != new_results[i]:
+                sql = """
+                UPDATE "Category_results"
                 SET
                     text=:text,
                     cutoff_from_maxpoints=:cutoff,

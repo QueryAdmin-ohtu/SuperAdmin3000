@@ -1002,14 +1002,12 @@ class TestSurveyRepository(unittest.TestCase):
                 category_id,
                 text,
                 cutoff_from_maxpts)
-            related_category_results = self.repo.get_category_results_from_category_id(category_id)[
-                0]
+            related_category_results = self.repo.get_category_results_from_category_id(category_id)[0]
             print(related_category_results, " - ", related_category_results[0])
             self.assertEquals(related_category_results[0], category_result_id)
-            self.assertEquals(related_category_results[1], category_id)
             self.assertEquals(
-                related_category_results[2], "Category result text")
-            self.assertEquals(related_category_results[3], 1.0)
+                related_category_results[1], "Category result text")
+            self.assertEquals(related_category_results[2], 1.0)
 
     def test_category_can_contain_multiple_category_results(self):
         with self.app.app_context():

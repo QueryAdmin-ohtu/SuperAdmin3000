@@ -1,0 +1,53 @@
+{% extends "layout.html" %}
+{% import "components/macros/form_elements.html" as form_elements %}
+{% import "components/macros/survey_elements.html" as survey_elements %}
+{% import "components/macros/tooltip.html" as tooltip %}
+{% import "components/macros/buttons.html" as buttons %}
+
+{% block content %}
+<div class="flex justify-between">
+    <h1 class="text-slate-700">Category results for {{ category.name }}</h1>
+</div>
+{{ buttons.link_button("Back to survey", "/surveys/%s" % survey[0]) }}
+<div class="flex flex-col gap-6 items-start w-full">
+    <h1 class="text-slate-700">Add a result</h1>  
+    <form class="w-full" action="/edit_category/{{survey.id}}/{{category.id}}/new-category-result" method="POST">
+        <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
+        <input type="hidden" name="survey_id" id="survey_id" value="{{ survey.id }}">
+        <input type="hidden" name="category_id" id="category_id" value="{{category.id}}">
+        <input type="hidden" name="results" id="results" value="{{ results }}">
+        <div class="grid grid-cols-2 gap-4">
+            <div class="flex flex-col gap-6">
+                {% call survey_elements.card() %}
+                
+                
+                <div class="flex flex-col gap-4">
+                    <div class="flex flex-col gap-2 w-full">
+                        {% set upper_bound = 1.0 %}
+                        {% if first %}
+                            {% set lower_bound = 1.0 %}
+                        {% else %}    
+                            {% set lower_bound = 0.0 %}
+                        {% endif %}
+                            {{ form_elements.label("text", "Result text") }}
+                            {{ form_elements.text_area("text", "Result", "Your skills in this topic are excellent!", false, text) }}
+                            {{ form_elements.label("cutoff", "Cutoff from maximum points") }}
+                            {{ form_elements.number_input("cutoff", "new-cutoff", "Cutoff from max points", 1.0, false, lower_bound, upper_bound, 0.01, 1.0) }}
+                    </div>
+                    {{ form_elements.submit_button("Save changes") }}
+                </div>                    
+            </div>
+    </form>
+    </div>
+    <div class="w-full">
+      {% endcall %}
+      {% for result in results %}
+      {% if result[2] == 1.0 %}     
+      {{ survey_elements.category_result_card(result, loop.index, hide_delete_button=True, lock_cutoff_value=True) }}
+      {% else %}
+      {{ survey_elements.category_result_card(result, loop.index) }}
+      {% endif %}
+      {% endfor %}
+    </div>
+</div>
+{% endblock %}
