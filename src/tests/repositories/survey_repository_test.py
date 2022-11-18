@@ -840,8 +840,12 @@ class TestSurveyRepository(unittest.TestCase):
             answer_two_bad_id = self.repo.create_answer(
                 "The former is not nice.", -5, question_two_id)
 
-            user_group_1_id = self.repo._add_user_group(survey_id=survey_id)
-            user_group_2_id = self.repo._add_user_group(survey_id=survey_id)
+            user_group_1_name = "group1"
+            user_group_1_id = self.repo._add_survey_user_group(group_name=user_group_1_name,
+                                                               survey_id=survey_id)
+            user_group_2_name = "group2"
+            user_group_2_id = self.repo._add_survey_user_group(group_name=user_group_2_name,
+                                                               survey_id=survey_id)
 
             advanced_user_id = self.repo._add_user(
                 email="Advanced", group_id=user_group_1_id)
@@ -922,7 +926,7 @@ class TestSurveyRepository(unittest.TestCase):
             averages = self.repo.calculate_average_scores_by_category(
                 survey_id)
             averages_filter_group_1 = self.repo.calculate_average_scores_by_category(
-                survey_id, user_group_1_id)
+                survey_id, user_group_1_name)
             averages_filter_date_old = self.repo.calculate_average_scores_by_category(
                 survey_id, start_date=start_date_old, end_date=end_date_old)
             averages_filter_date_current = self.repo.calculate_average_scores_by_category(

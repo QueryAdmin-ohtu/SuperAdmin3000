@@ -491,7 +491,7 @@ class SurveyService:
         """
         return self.survey_repository.get_sum_of_user_answer_points_by_question_id(question_id)
 
-    def calculate_average_scores_by_category(self, survey_id, user_group_id=None, start_date=None, end_date=None):
+    def calculate_average_scores_by_category(self, survey_id, user_group_name=None, start_date=None, end_date=None):
         """
         Calculates weighted average scores from the submitted answers of a given survey. An average
         score is calculated for each category of the survey. This value represents how well all
@@ -502,7 +502,7 @@ class SurveyService:
 
         Args:
             survey_id: Id of survey to calculate averages from
-            user_group_id (optional): User group id of answer. Ignored if None. If value present
+            user_group_name (optional): User group name of answer. Ignored if None. If value present
                 filters answers used to calculate average.
             start_date (optional): A datetime for filtering the answers used to calculate averages. Ignored
                 if None. If value present only answers after this datetime are taken into account.
@@ -510,8 +510,10 @@ class SurveyService:
                 if None. If value present only answers before this datetime are taken into account.
 
         Returns:
-            A list of tuples which includes the category id, category name and average score
+            A list of tuples which includes the category id, category name, average score and
+            average score for unfiltered results
             (to the precision of two decimal places) of all user answers in a given survey.
+            (id, name, average, average_of_all)
 
             If dates invalid returns None
         """
@@ -520,8 +522,22 @@ class SurveyService:
             if start_date > end_date or end_date < start_date:
                 return None
 
-        return self.survey_repository.calculate_average_scores_by_category(
-            survey_id, user_group_id, start_date, end_date)
+        all_averages = self.survey_repository.calculate_average_scores_by_category(
+            survey_id)
+        filtered_averages = self.survey_repository.calculate_average_scores_by_category(
+            survey_id, user_group_name, start_date, end_date)
+
+        result = []
+        for average in filtered_averages:
+            for a in all_averages:
+                if a[0] == average[0]:  # Matching id
+                    average_of_all = a[2]
+                    break
+            else:
+                average_of_all = None
+            result.append(average + (average_of_all,))
+
+        return result
 
     def create_category_result(self, category_id: int, text: str, cutoff_from_maxpts: float):
         """Create a new category result
