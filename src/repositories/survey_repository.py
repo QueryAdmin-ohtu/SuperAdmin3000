@@ -1045,10 +1045,6 @@ class SurveyRepository:
         sql = """ DELETE FROM "Survey_results" WHERE id=:result_id """
         values = {"result_id": int(result_id)}
 
-        # TODO: remove
-        print(f"SQL: {sql}", flush=True)
-        print(f"Values: {values}", flush=True)
-
         try:
             self.db_connection.session.execute(sql, values)
             self.db_connection.session.commit()
@@ -1126,3 +1122,34 @@ class SurveyRepository:
                 db.session.execute(sql, values)
         db.session.commit()
         return self.update_survey_updated_at(survey_id)
+
+    def delete_category_result(self, category_result_id):
+        """ Delete the given category result
+
+            Returns True if success, False if error
+        """
+        sql = """ DELETE FROM "Category_results" WHERE id=:category_result_id """
+
+        try:
+            values = {"category_result_id": int(category_result_id)}
+            self.db_connection.session.execute(sql, values)
+            self.db_connection.session.commit()
+        except ValueError or exc.SQLAlchemyError:
+            return False
+        return True
+
+    def get_category_results_from_category_result_id(self, category_result_id):
+        """
+        Selects all category_results linked to a given category_result_id
+        Returns: A list of category_result objects
+        """
+        sql = """
+        SELECT * FROM "Category_results"
+        WHERE "id" = :category_result_id
+        """
+        category_results = self.db_connection.session.execute(
+            sql, {"category_result_id": category_result_id}).fetchall()
+
+        if not category_results:
+            return None
+        return category_results

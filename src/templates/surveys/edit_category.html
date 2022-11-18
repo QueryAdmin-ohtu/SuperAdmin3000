@@ -91,7 +91,7 @@
         <div class="flex flex-col gap-2 w-full">
             {% if category_results %}
                 {% for result in category_results %}
-                    {{results.category_result_field(result)}}
+                    {{results.category_result_field(result, survey_id)}}
                     <div class="flex-grow border-t border-slate-200"></div>
                 {% endfor %}
             {% else %}
