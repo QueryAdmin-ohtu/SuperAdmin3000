@@ -46,7 +46,8 @@ class SurveyService:
         """
 
         self._validate_survey_details(name, title, description)
-        survey_id = self.survey_repository.create_survey(name, title, description)
+        survey_id = self.survey_repository.create_survey(
+            name, title, description)
         if survey_id:
             survey_result_text = "Your skills in this topic are excellent!"
             cutoff_from_maxpts = 1.0
@@ -370,7 +371,7 @@ class SurveyService:
                 category_result_text,
                 cutoff_from_maxpts
             )
-        
+
         return category_id
 
     def add_admin(self, email: str):
@@ -553,12 +554,13 @@ class SurveyService:
 
     def update_survey_results(self, original_results, new_results, survey_id):
         """Updates the original results of a survey to new ones"""
-        return self.survey_repository.update_survey_results(original_results,new_results,survey_id)
+        return self.survey_repository.update_survey_results(original_results, new_results, survey_id)
 
     def delete_category_result(self, category_result_id):
         """ Deletes the category result given as parameter
         """
 
         return self.survey_repository.delete_category_result(category_result_id)
+
 
 survey_service = SurveyService(SurveyRepository())

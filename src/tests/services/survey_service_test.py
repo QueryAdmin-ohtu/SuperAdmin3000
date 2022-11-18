@@ -39,7 +39,6 @@ class TestSurveyService(unittest.TestCase):
             "Your skills in this topic are excellent!",
             1.0
         )
-        
 
     def test_create_survey_with_no_name_does_not_work(self):
         name = ""
@@ -476,13 +475,13 @@ class TestSurveyService(unittest.TestCase):
 
     def test_update_survey_results_calls_repo_correctly(self):
         self.repo_mock.delete_survey_result.return_value = True
-        original_results = [[5,"Bad",0.3],[6,"Good",1.0]]
-        new_results = [[5,"Decent",0.3],[6,"Great",1.0]]
+        original_results = [[5, "Bad", 0.3], [6, "Good", 1.0]]
+        new_results = [[5, "Decent", 0.3], [6, "Great", 1.0]]
         response = self.survey_service.update_survey_results(original_results,
-        new_results,3)
+                                                             new_results, 3)
         self.assertTrue(response)
         self.repo_mock.update_survey_results.assert_called_with(original_results,
-        new_results,3)
+                                                                new_results, 3)
 
     def test_delete_category_result_calls_repo_correctly(self):
         self.repo_mock.delete_category_result.return_value = True

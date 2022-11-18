@@ -868,7 +868,7 @@ class SurveyRepository:
         return 0
 
     def get_sum_of_user_answer_points_by_question_id(self, question_id,
-            user_group_id=None, start_date=None, end_date=None):
+                                                     user_group_id=None, start_date=None, end_date=None):
         """
         Returns the sum of all user answers for a given question.
 

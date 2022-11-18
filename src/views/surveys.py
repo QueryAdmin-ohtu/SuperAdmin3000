@@ -119,7 +119,7 @@ def view_survey(survey_id):
             show_results.append([text, results[0][1]])
         else:
             text = f"{results[i-1][2]*100}%-{results[i][2]*100}% of max points returns user"
-            show_results.append([text,results[i][1]])
+            show_results.append([text, results[i][1]])
     return render_template("surveys/view_survey.html", survey=survey,
                            questions=questions, survey_id=survey_id,
                            ENV=app.config["ENV"], categories=categories,
@@ -441,6 +441,7 @@ def delete_category():
     flash("Could not delete category because it has results linked to it", "error")
     return redirect(f"/surveys/{survey_id}")
 
+
 @surveys.route("/delete_category_result/<category_result_id>", methods=["POST"])
 def delete_category_result(category_result_id):
     """Deletes a category result
@@ -449,6 +450,7 @@ def delete_category_result(category_result_id):
     category_id = request.form["category_id"]
     survey_service.delete_category_result(category_result_id)
     return redirect(f"/edit_category/{survey_id}/{category_id}")
+
 
 @surveys.route("/surveys/<survey_id>/new-survey-result", methods=["GET"])
 def new_survey_result_view(survey_id):
@@ -480,17 +482,19 @@ def new_survey_result_post(survey_id):
             result = request.form[f"result-{i+1}"]
             cutoff = request.form[f"cutoff-{i+1}"]
             cutoff_values.append(cutoff)
-            new_results.append((result_id,result,cutoff))
+            new_results.append((result_id, result, cutoff))
         cutoffs_correct = helper.check_cutoff_points(cutoff_values)
         if cutoffs_correct != "Correct":
             flash(cutoffs_correct, "error")
             return redirect(f"/surveys/{survey_id}/new-survey-result")
         if original_results != new_results:
-            survey_service.update_survey_results(original_results,new_results,survey_id)
+            survey_service.update_survey_results(
+                original_results, new_results, survey_id)
     if text and cutoff_value:
         survey_service.create_survey_result(survey_id, text, cutoff_value)
 
     return redirect(f"/surveys/{survey_id}/new-survey-result")
+
 
 @surveys.route("/delete_survey_result/<result_id>", methods=["POST"])
 def delete_survey_result(result_id):
