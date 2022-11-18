@@ -118,11 +118,12 @@ With Filtering Unfiltered Average Is Shown
     Page Should Contain  Unfiltered average
     Page Should Contain  3.75
 
-Filtering With Group And Email Shows Correct Averages
+Filtering With Email And Group Shows Correct Averages
     Go To Statistics  8
     Select From List By Value  name:filter_group_name  B-ryhmä
     Input Text  filter_email  duser
-    Page Should Contain  1.67   
+    Click Button  Filter    
+    Page Should Contain  1.67
 
 Without Filtering Unfiltered Average Is Not Shown
     Go To Statistics  8
