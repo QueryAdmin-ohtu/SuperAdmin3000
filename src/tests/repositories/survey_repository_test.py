@@ -840,8 +840,12 @@ class TestSurveyRepository(unittest.TestCase):
             answer_two_bad_id = self.repo.create_answer(
                 "The former is not nice.", -5, question_two_id)
 
-            user_group_1_id = self.repo._add_user_group(survey_id=survey_id)
-            user_group_2_id = self.repo._add_user_group(survey_id=survey_id)
+            user_group_1_name = "group1"
+            user_group_1_id = self.repo._add_survey_user_group(group_name=user_group_1_name,
+                                                               survey_id=survey_id)
+            user_group_2_name = "group2"
+            user_group_2_id = self.repo._add_survey_user_group(group_name=user_group_2_name,
+                                                               survey_id=survey_id)
 
             advanced_user_id = self.repo._add_user(
                 email="Advanced", group_id=user_group_1_id)
@@ -922,7 +926,7 @@ class TestSurveyRepository(unittest.TestCase):
             averages = self.repo.calculate_average_scores_by_category(
                 survey_id)
             averages_filter_group_1 = self.repo.calculate_average_scores_by_category(
-                survey_id, user_group_1_id)
+                survey_id, user_group_1_name)
             averages_filter_date_old = self.repo.calculate_average_scores_by_category(
                 survey_id, start_date=start_date_old, end_date=end_date_old)
             averages_filter_date_current = self.repo.calculate_average_scores_by_category(
@@ -1087,10 +1091,10 @@ class TestSurveyRepository(unittest.TestCase):
 
     def test_update_survey_results_updates_results_correctly(self):
         with self.app.app_context():
-            survey_id = self.repo.create_survey("Goodness","How good are you",
-            "Are you good? Or perhaps just decent?")
-            original_results = [["Bad",0.3],["Good",0.6],["Great",1.0]]
-            new_results = [["Decent",0.4],["Great",0.7],["Fantastic",1.0]]
+            survey_id = self.repo.create_survey("Goodness", "How good are you",
+                                                "Are you good? Or perhaps just decent?")
+            original_results = [["Bad", 0.3], ["Good", 0.6], ["Great", 1.0]]
+            new_results = [["Decent", 0.4], ["Great", 0.7], ["Fantastic", 1.0]]
             result_ids = []
             for result in original_results:
                 result_ids.append(self.repo.create_survey_result(
@@ -1098,8 +1102,10 @@ class TestSurveyRepository(unittest.TestCase):
             or2 = []
             nr2 = []
             for i in range(3):
-                or2.append((result_ids[i],original_results[i][0],original_results[i][1]))
-                nr2.append((result_ids[i],new_results[i][0],new_results[i][1]))
-            self.repo.update_survey_results(or2,nr2,survey_id)
+                or2.append(
+                    (result_ids[i], original_results[i][0], original_results[i][1]))
+                nr2.append(
+                    (result_ids[i], new_results[i][0], new_results[i][1]))
+            self.repo.update_survey_results(or2, nr2, survey_id)
             results = self.repo.get_survey_results(survey_id)
             self.assertEqual(results, nr2)

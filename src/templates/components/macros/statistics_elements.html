@@ -1,7 +1,7 @@
 {% import "components/macros/survey_elements.html" as survey %}
 {% import "components/macros/buttons.html" as buttons %}
 
-{% macro category_row(survey_id, category, row_num) %}
+{% macro category_row(survey_id, category, row_num, filtered) %}
 {# A table row displaying categories
     Args:
         survey: The parent survey of the question
@@ -13,12 +13,17 @@
     <td class="p-4 border-r-2 border-slate-300">
         {{ row_num }}
     </td>
-    <td class="p-4 border-r-2 border-slate-300"">
+    <td class="p-4 border-r-2 border-slate-300">
         {{category[1]}}
     </td>
     <td class="p-4 border-r-2 border-slate-300">
         {{category[2]}}
     </td>
+    {% if filtered %}
+    <td class="p-4 border-r-2 border-slate-300">
+        {{category[3]}}
+    </td>
+    {% endif %}
     <td class="p-4">
         {% if row_num != "Null" %}
         <a href="{{ '/edit_category/%s/%s' %(survey_id,category[0]) }}" class="underline text-sky-500"  id="{{ 'edit_button_%s' % category[0] }}">Edit</a>

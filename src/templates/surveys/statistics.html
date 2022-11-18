@@ -48,7 +48,7 @@
                     <!-- value == None could be used to filter-in only users, which doesn't
                        have any group. This is not yet implemented in all repositories, however
                     -->
-                    <option value="{{ key }}" id="{{ key }}">{{ key }}</option>
+                    <option value="{{ value }}" id="{{ key }}">{{ key }}</option>
                     {% endif %}
                     {% endfor %}
                 </select>
@@ -84,6 +84,11 @@
                     <th class="p-4 border-r-2 border-slate-300">
                         Average score
                     </th>
+                    {% if filtered %}
+                    <th class="p-4 border-r-2 border-slate-300">
+                        Unfiltered average
+                    </th>
+                    {% endif %}
                     <th class="p-4 w-20">
                         Edit
                     </th>
@@ -91,7 +96,7 @@
             </thead>
             <tbody>
                 {% for category in categories %}
-                {{ statistics_elements.category_row(survey_id, category, category[0])}}
+                {{ statistics_elements.category_row(survey_id, category, category[0], filtered)}}
                 {% endfor %}
                 {% else %}
                 No related categories found.

@@ -108,3 +108,16 @@ Filtering By Email Filters Users
     Input Text  filter_email  duser
     Click Button  Filter
     Page Should Contain  Users with submissions (2 / 4)
+
+With Filtering Unfiltered Average Is Shown
+    Go To Statistics  8
+    Select From List By Value  name:filter_group_name  B-ryhmä
+    Click Button  Filter
+    Page Should Contain  Average score
+    Page Should Contain  3.33    
+    Page Should Contain  Unfiltered average
+    Page Should Contain  3.75
+
+Without Filtering Unfiltered Averaho Is Not Shown
+    Go To Statistics  8
+    Page Should Not Contain  Unfiltered average    
