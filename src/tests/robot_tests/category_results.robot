@@ -32,6 +32,7 @@ Logged In User Can Delete Category Results
     Page Should Contain Element  delete_17
     
     Click Button  delete_16
+    Handle Alert  Accept
     Page Should Not Contain  To be deleted soon
     
 

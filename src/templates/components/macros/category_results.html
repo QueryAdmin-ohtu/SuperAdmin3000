@@ -21,7 +21,7 @@
             </div>      
             <div class="flex flex-grow">
                 <span style="margin-right: 10px;">{{ form_elements.submit_button("Save", "", "null")}}</span>
-                <form method="POST" onsubmit="return confirm('Are you sure you want to delete this category?')">
+                <form method="POST" onsubmit="return confirm('Are you sure you want to delete this category result?')">
                     <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
                     <input type="hidden" name="survey_id" value="{{survey_id}}">
                     <input type="hidden" name="category_id" value="{{category_result[1]}}">
