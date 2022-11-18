@@ -1103,3 +1103,26 @@ class TestSurveyRepository(unittest.TestCase):
             self.repo.update_survey_results(or2,nr2,survey_id)
             results = self.repo.get_survey_results(survey_id)
             self.assertEqual(results, nr2)
+
+    def test_delete_category_result_deletes_category_result(self):
+        with self.app.app_context():
+            category_id = self.repo.create_category(
+                1, "cat", "cat is for category", [])
+            text = "Category result deletion test"
+            cutoff_from_maxpts = 1.0
+            category_result_id = self.repo.create_category_result(
+                category_id,
+                text,
+                cutoff_from_maxpts)
+
+            response = self.repo.get_category_results_from_category_result_id(category_result_id)
+            self.assertEqual(len(response), 1)
+            
+            response = self.repo.delete_category_result(category_result_id)
+            self.assertTrue(response)
+
+            response = self.repo.get_category_results_from_category_result_id(category_result_id)
+            self.assertIsNone(response)
+            
+            response = self.repo.delete_category_result('xxx')
+            self.assertFalse(response)
