@@ -16,9 +16,9 @@ Logged In User Can View Statistics Page
     Page Should Contain  Category scores
 
 User Can Access Edit Categories Page From Statistics
-    Go To Statistics  1
-    Click Element  edit_button_2
-    Page Should Contain  Static descriptive text about the category 2.
+    Go To Statistics  8
+    Click Element  edit_button_6
+    Page Should Contain  Edit a category in Elephants
 
 Statistics Page Shows the Number Of Users Who Have Answered
     Go To Statistics  8
@@ -94,9 +94,9 @@ Filtering By Group Name Filters Users
     Click Button  Filter
     Page Should Contain  Users with submissions (1 / 4)
 
-Statistics Page Displays Correct Average Value Message When No Answers Are Present
+Statistics Page Displays No Average Values If No Answers Are Present
     Go To Statistics  1
-    Page Should Contain  0.0
+    Page Should Contain  No answers in any category
 
 Statistics Page Displays Correct Average Values
     Go To Statistics  8
@@ -114,7 +114,7 @@ With Filtering Unfiltered Average Is Shown
     Select From List By Value  name:filter_group_name  B-ryhmä
     Click Button  Filter
     Page Should Contain  Average score
-    Page Should Contain  3.33    
+    Page Should Contain  5.0   
     Page Should Contain  Unfiltered average
     Page Should Contain  3.75
 
@@ -123,7 +123,7 @@ Filtering With Email And Group Shows Correct Averages
     Select From List By Value  name:filter_group_name  B-ryhmä
     Input Text  filter_email  duser
     Click Button  Filter    
-    Page Should Contain  1.67
+    Page Should Contain  5.0
 
 Without Filtering Unfiltered Average Is Not Shown
     Go To Statistics  8
