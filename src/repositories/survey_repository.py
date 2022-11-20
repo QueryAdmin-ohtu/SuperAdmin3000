@@ -1125,7 +1125,7 @@ class SurveyRepository:
         db.session.commit()
         return self.update_survey_updated_at(survey_id)
 
-    def update_category_results(self, original_results, new_results, survey_id, category_id):
+    def update_category_results(self, original_results, new_results, survey_id):
         for i in range(len(original_results)):
             if original_results[i] != new_results[i]:
                 sql = """
