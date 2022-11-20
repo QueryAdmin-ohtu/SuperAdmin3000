@@ -400,8 +400,8 @@ def add_category_result(survey_id, category_id):
             survey_service.update_category_results(
                 original_results, new_results, survey_id, category_id)            
     if new_cat_result_text and new_cat_cutoff:
-        survey_service.create_category_result(survey_id, new_cat_result_text, new_cat_cutoff)
-    return redirect(f"/edit_category/{survey_id}/{category_id}")
+        survey_service.create_category_result(category_id, new_cat_result_text, new_cat_cutoff)
+    return redirect(f"/edit_category/{survey_id}/{category_id}/new-category-result")
 
 
 @surveys.route("/edit_category/<survey_id>/<category_id>/new-category-result", methods=["GET"])
@@ -412,7 +412,7 @@ def new_category_result_view(survey_id, category_id):
     results = survey_service.get_category_results_from_category_id(category_id)
     if results:
         return render_template("surveys/edit_category_results.html", survey=survey, category = category, results=results,  ENV=app.config["ENV"])
-    return render_template("surveys/edit_category_results.html", survey=survey_id, first=True, results=[],  ENV=app.config["ENV"])
+    return render_template("surveys/edit_category_results.html", survey=survey_id, first=True, results=[],  ENV=app.config["ENV"]   )
 
 
 @surveys.route("/add_content_link", methods=["POST"])

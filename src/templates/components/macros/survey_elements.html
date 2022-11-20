@@ -147,7 +147,6 @@
     <div class="flex flex-col gap-2">
         <div class="flex flex-grow"></div>
         <div class="flex flex-col gap-2 w-full">
-            {{result}}
             {{ form_elements.label("result-" ~ index, "Result")}}
             {{ form_elements.text_area("result-" ~ index, "Result", "", false, result[1]) }}
         </div>
@@ -160,7 +159,7 @@
         </div>
         <div class="flex flex-grow"></div>
         {% if not hide_delete_button %}
-        {{ form_elements.submit_button("Delete result", "destructive", "/delete_category_result/%s" % (result[0])) }}
+        {{ form_elements.submit_button("Delete result", "destructive", "/delete_category_result/%s" % (result[0]), id="Delete Result") }}
         {% endif %}
     </div>
 </details>

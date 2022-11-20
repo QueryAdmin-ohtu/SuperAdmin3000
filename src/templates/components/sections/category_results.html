@@ -2,8 +2,8 @@
 
 {% call survey_elements.card() %}
 <h2 class="py-6">Category Results</h2>
-<div class="pb-6">
-    {{ buttons.link_button("Manage category results", "/edit_category/%s/%s/new-category-result" % (survey.id,category_id)) }}
+<div class="pb-6">  
+    {{ buttons.link_button("Manage Category Results", "/edit_category/%s/%s/new-category-result" % (survey.id,category_id),  "default", "categoryresults")}}
     <br>
 </div>
 {% if category_results %}

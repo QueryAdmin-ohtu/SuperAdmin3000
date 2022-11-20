@@ -491,3 +491,13 @@ class TestSurveyService(unittest.TestCase):
         response = self.survey_service.delete_category_result(1)
         self.assertTrue(response)
         self.repo_mock.delete_category_result.assert_called_with(1)
+
+    def test_update_category_results_calls_repo_correctly(self):
+        self.repo_mock.delete_survey_result.return_value = True
+        original_results = [[5, "Bad", 0.3], [6, "Good", 1.0]]
+        new_results = [[5, "Decent", 0.3], [6, "Great", 1.0]]
+        response = self.survey_service.update_category_results(original_results,
+                                                             new_results, 3,1)
+        self.assertTrue(response)
+        self.repo_mock.update_category_results.assert_called_with(original_results,
+                                                                new_results, 3,1)
