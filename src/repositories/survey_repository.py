@@ -826,7 +826,12 @@ class SurveyRepository:
         db.session.commit()
         return survey_user_group_id
 
-    def get_count_of_user_answers_to_a_question(self, question_id, user_group_id=None, start_date=None, end_date=None):
+    def get_count_of_user_answers_to_a_question(self,
+                                                question_id,
+                                                user_group_id=None,
+                                                start_date=None,
+                                                end_date=None,
+                                                email=""):
         """
         Retrieve number of submissions to a given question.
 
@@ -837,6 +842,8 @@ class SurveyRepository:
                 if None. If value present only answers after this datetime are taken into account.
             end_date (optional): A datetime for filtering the answers used to calculate the count. Ignored
                 if None. If value present only answers before this datetime are taken into account
+            email (optional) If the user's email doesn't contain the argument, that user's answers are
+                filtered out
 
         Returns:
             Amount of user answers if successful. Else returns 0.
@@ -857,10 +864,15 @@ class SurveyRepository:
             WHERE qa."questionId" = :question_id
                 AND ((:start_date IS NULL AND :end_date IS NULL) OR (ua."createdAt" BETWEEN :start_date AND :end_date))
                 AND ((:group_id IS NULL) OR (u."groupId"=:group_id))
+                AND (u."email" LIKE :email)
             )
         """
-        values = {"question_id": question_id, "group_id": user_group_id,
-                  "start_date": start_date, "end_date": end_date}
+        values = {"question_id": question_id,
+                  "group_id": user_group_id,
+                  "start_date": start_date,
+                  "end_date": end_date,
+                  "email": f"%{email}%"
+                  }
         count_of_answers = self.db_connection.session.execute(sql, values).fetchone()[
             0]
         if count_of_answers:
@@ -868,7 +880,10 @@ class SurveyRepository:
         return 0
 
     def get_sum_of_user_answer_points_by_question_id(self, question_id,
-                                                     user_group_id=None, start_date=None, end_date=None):
+                                                     user_group_id=None,
+                                                     start_date=None,
+                                                     end_date=None,
+                                                     email=""):
         """
         Returns the sum of all user answers for a given question.
 
@@ -879,6 +894,8 @@ class SurveyRepository:
                 if None. If value present only answers after this datetime are taken into account.
             end_date (optional): A datetime for filtering the answers used to calculate the sum. Ignored
                 if None. If value present only answers before this datetime are taken into account.
+            email (optional) If the user's email doesn't contain the argument, that user's answers are
+                filtered out
         """
         # TODO:
         # Handle situation, where we want to filter in only users without any groups
@@ -896,11 +913,16 @@ class SurveyRepository:
         WHERE q.id=:question_id
             AND ((:start_date IS NULL AND :end_date IS NULL) OR (ua."createdAt" BETWEEN :start_date AND :end_date))
             AND ((:group_id IS NULL) OR (u."groupId"=:group_id))
+            AND (u."email" LIKE :email)
         GROUP BY q.id, qa.id
         ORDER BY q.id
         """
-        values = {"question_id": question_id, "group_id": user_group_id,
-                  "start_date": start_date, "end_date": end_date}
+        values = {"question_id": question_id,
+                  "group_id": user_group_id,
+                  "start_date": start_date,
+                  "end_date": end_date,
+                  "email": f"%{email}%"}
+
         sum_of_points = self.db_connection.session.execute(
             sql, values).fetchall()
         db.session.commit()
@@ -911,7 +933,12 @@ class SurveyRepository:
 
         return res
 
-    def calculate_average_scores_by_category(self, survey_id, user_group_name=None, start_date=None, end_date=None):
+    def calculate_average_scores_by_category(self,
+                                             survey_id,
+                                             user_group_name=None,
+                                             start_date=None,
+                                             end_date=None,
+                                             email=""):
         """
         Calculates weighted average scores from the submitted answers of a given survey. An average
         score is calculated for each category of the survey. This value represents how well all
@@ -928,6 +955,9 @@ class SurveyRepository:
                 if None. If value present only answers after this datetime are taken into account.
             end_date (optional): A datetime for filtering the answers used to calculate averages. Ignored
                 if None. If value present only answers before this datetime are taken into account.
+            email (optional) If the user's email doesn't contain the argument, that user's answers are
+                filtered out
+
         Returns:
             A list of tuples which includes the category id, category name and average score
             (to the precision of two decimal places) of all user answers in a given survey.
@@ -944,10 +974,12 @@ class SurveyRepository:
             user_group_id = None
 
         for question in related_questions:
+
             points = self.get_sum_of_user_answer_points_by_question_id(
-                question.id, user_group_id, start_date, end_date)
+                question.id, user_group_id, start_date, end_date, email)
+
             answers = self.get_count_of_user_answers_to_a_question(
-                question.id, user_group_id, start_date, end_date)
+                question.id, user_group_id, start_date, end_date, email)
 
             for category_weight in question.category_weights:
                 if answers != 0:
@@ -964,6 +996,7 @@ class SurveyRepository:
                     question_average = ("Null", str(
                         category_weight['category']) + " - (missing from 'Categories')", weighted_average)
                 question_averages.append(question_average)
+
         return self.calculate_category_averages(question_averages)
 
     def calculate_category_averages(self, question_averages):

@@ -403,7 +403,8 @@ class TestSurveyService(unittest.TestCase):
             survey_id,
             None,
             None,
-            None
+            None,
+            ""
         )
 
     def test_calculate_average_scores_by_category_does_not_call_repo_with_invalid(self):
@@ -421,6 +422,8 @@ class TestSurveyService(unittest.TestCase):
         end_date = datetime.fromisoformat("2021-11-04 00:05:23.283")
         user_group_id = 22
         user_group_name = "Group 1"
+        email = "mail.com"
+
         survey_id = 1
         repo_value_to_return = [(1, "Category 1", 1.0)]
         service_value_to_return = [(1, "Category 1", 1.0, 1.0)]
@@ -429,13 +432,15 @@ class TestSurveyService(unittest.TestCase):
             survey_id,
             user_group_name,
             start_date,
-            end_date
+            end_date,
+            email
         )
         self.repo_mock.calculate_average_scores_by_category.assert_called_with(
             survey_id,
             user_group_name,
             start_date,
-            end_date
+            end_date,
+            email
         )
         self.assertEqual(service_value_to_return, returned_value)
 

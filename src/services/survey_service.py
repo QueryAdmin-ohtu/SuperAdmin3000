@@ -491,7 +491,12 @@ class SurveyService:
         """
         return self.survey_repository.get_sum_of_user_answer_points_by_question_id(question_id)
 
-    def calculate_average_scores_by_category(self, survey_id, user_group_name=None, start_date=None, end_date=None):
+    def calculate_average_scores_by_category(self,
+                                             survey_id,
+                                             user_group_name=None,
+                                             start_date=None,
+                                             end_date=None,
+                                             email=""):
         """
         Calculates weighted average scores from the submitted answers of a given survey. An average
         score is calculated for each category of the survey. This value represents how well all
@@ -508,6 +513,8 @@ class SurveyService:
                 if None. If value present only answers after this datetime are taken into account.
             end_date (optional): A datetime for filtering the answers used to calculate averages. Ignored
                 if None. If value present only answers before this datetime are taken into account.
+            email (optional) If the user's email doesn't contain the argument, that user's answers are
+                filtered out
 
         Returns:
             A list of tuples which includes the category id, category name, average score and
@@ -525,7 +532,7 @@ class SurveyService:
         all_averages = self.survey_repository.calculate_average_scores_by_category(
             survey_id)
         filtered_averages = self.survey_repository.calculate_average_scores_by_category(
-            survey_id, user_group_name, start_date, end_date)
+            survey_id, user_group_name, start_date, end_date, email)
 
         result = []
         for average in filtered_averages:
