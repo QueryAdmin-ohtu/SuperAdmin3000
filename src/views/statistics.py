@@ -92,7 +92,8 @@ def filtered_statistics(survey_id):
     categories = survey_service.calculate_average_scores_by_category(survey_id,
                                                                      filter_group_name,
                                                                      filter_start_date,
-                                                                     filter_end_date)
+                                                                     filter_end_date,
+                                                                     filter_email)
 
     users = survey_service.get_users_who_answered_survey(survey_id)
     users = users if users else []
