@@ -497,7 +497,7 @@ class TestSurveyService(unittest.TestCase):
         original_results = [[5, "Bad", 0.3], [6, "Good", 1.0]]
         new_results = [[5, "Decent", 0.3], [6, "Great", 1.0]]
         response = self.survey_service.update_category_results(original_results,
-                                                             new_results, 3,1)
+                                                             new_results, 3)
         self.assertTrue(response)
         self.repo_mock.update_category_results.assert_called_with(original_results,
-                                                                new_results, 3,1)
+                                                                new_results, 3)

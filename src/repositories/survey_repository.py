@@ -1126,6 +1126,11 @@ class SurveyRepository:
         return self.update_survey_updated_at(survey_id)
 
     def update_category_results(self, original_results, new_results, survey_id):
+        """ Goes through the lists of results and updates each
+        result where the original and new result don't match.
+        This function is not called if there are no differences
+        so the updatedAt of the survey in question will also be
+        updated and True is returned. """
         for i in range(len(original_results)):
             if original_results[i] != new_results[i]:
                 sql = """

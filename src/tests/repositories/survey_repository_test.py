@@ -1149,6 +1149,6 @@ class TestSurveyRepository(unittest.TestCase):
                     (result_ids[i], original_results[i][0], original_results[i][1]))
                 nr2.append(
                     (result_ids[i], new_results[i][0], new_results[i][1]))
-            self.repo.update_category_results(or2, nr2, 1, category_id)
+            self.repo.update_category_results(or2, nr2, 1)
             results = self.repo.get_category_results_from_category_id(category_id)
             self.assertEqual(results, nr2)
