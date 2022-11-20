@@ -68,7 +68,7 @@ User Can Edit A Category Result
     Expand Result Card  1
     Page Should Contain  New Cutoff Text
 
-Survey Result Cannot Be Edited To Have Duplicate Cutoffs
+Category Result Cannot Be Edited To Have Duplicate Cutoffs
     Go To Survey  2
     Click Link  edit_button_7
     Click Element  categoryresults
