@@ -398,7 +398,7 @@ def add_category_result(survey_id, category_id):
             return redirect(f"/edit_category/{survey_id}/{category_id}/new-category-result")
         if original_results != new_results:
             survey_service.update_category_results(
-                original_results, new_results, survey_id, category_id)            
+                original_results, new_results, survey_id)
     if new_cat_result_text and new_cat_cutoff:
         survey_service.create_category_result(category_id, new_cat_result_text, new_cat_cutoff)
     return redirect(f"/edit_category/{survey_id}/{category_id}/new-category-result")
