@@ -1,0 +1,21 @@
+{% import "components/macros/survey_elements.html" as survey_elements %}
+
+{% call survey_elements.card() %}
+<h2 class="py-6">Category Results</h2>
+<div class="pb-6">  
+    {{ buttons.link_button("Manage Category Results", "/edit_category/%s/%s/new-category-result" % (survey.id,category_id),  "default", "categoryresults")}}
+    <br>
+</div>
+{% if category_results %}
+    {% for result in category_results %}
+    
+    <p>{{ result[1]}}
+        <br>{{ result[2] }}</p>
+        <br>
+    {% endfor %}
+{% else %}
+    <p>Survey has no results 🥺</p>
+{% endif %}
+</div>
+
+{% endcall %}

@@ -371,26 +371,48 @@ def edit_category():
         survey_id, name, description, new_content_links_json)
     return redirect(f"/edit_category/{survey_id}/{category_id}")
 
-
-@surveys.route("/add_category_result", methods=["POST"])
-def add_category_result():
+@surveys.route("/edit_category/<survey_id>/<category_id>/new-category-result", methods=["POST"])
+def add_category_result(survey_id, category_id):
     """ Receives the inputs from the edit_category.html template.
     Stores the new category result to the database.
     """
     survey_id = request.form["survey_id"]
     category_id = request.form["category_id"]
-    new_cat_result_text = request.form["new_cat_result_text"]
-    new_cat_cutoff = request.form["new_cat_cutoff"]
-    category_result_id = survey_service.create_category_result(
-        category_id,
-        new_cat_result_text,
-        new_cat_cutoff
-    )
-    if category_result_id is None:
-        flash(
-            f"Category result for cutoff value {new_cat_cutoff} already exists.")
+    new_cat_result_text = request.form["text"]
+    new_cat_cutoff = request.form["cutoff"]
+    cutoff_values = []
+    if new_cat_result_text and new_cat_cutoff:
+        cutoff_values.append(new_cat_cutoff)
+    original_results = eval(request.form["results"])
+    if original_results:
+        new_results = []
+        for i in range(len(original_results)):
+            result_id = original_results[i][0]
+            result = request.form[f"result-{i+1}"]
+            cutoff = request.form[f"cutoff-{i+1}"]
+            cutoff_values.append(cutoff)
+            new_results.append((result_id, result, cutoff))
+        cutoffs_correct = helper.check_cutoff_points(cutoff_values)
+        if cutoffs_correct != "Correct":
+            flash(cutoffs_correct, "error")
+            return redirect(f"/edit_category/{survey_id}/{category_id}/new-category-result")
+        if original_results != new_results:
+            survey_service.update_category_results(
+                original_results, new_results, survey_id)
+    if new_cat_result_text and new_cat_cutoff:
+        survey_service.create_category_result(category_id, new_cat_result_text, new_cat_cutoff)
+    return redirect(f"/edit_category/{survey_id}/{category_id}/new-category-result")
 
-    return redirect(f"/edit_category/{survey_id}/{category_id}")
+
+@surveys.route("/edit_category/<survey_id>/<category_id>/new-category-result", methods=["GET"])
+def new_category_result_view(survey_id, category_id):
+    """Renders the view for creating category results"""
+    survey = survey_service.get_survey(survey_id)
+    category = survey_service.get_category(category_id)
+    results = survey_service.get_category_results_from_category_id(category_id)
+    if results:
+        return render_template("surveys/edit_category_results.html", survey=survey, category = category, results=results,  ENV=app.config["ENV"])
+    return render_template("surveys/edit_category_results.html", survey=survey_id, first=True, results=[],  ENV=app.config["ENV"]   )
 
 
 @surveys.route("/add_content_link", methods=["POST"])

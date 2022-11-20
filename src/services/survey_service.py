@@ -585,5 +585,9 @@ class SurveyService:
 
         return self.survey_repository.delete_category_result(category_result_id)
 
+    def update_category_results(self, original_results, new_results,survey_id):
+        """Updates the original results of a survey to new ones"""
+        return self.survey_repository.update_category_results(original_results, new_results, survey_id)
+
 
 survey_service = SurveyService(SurveyRepository())

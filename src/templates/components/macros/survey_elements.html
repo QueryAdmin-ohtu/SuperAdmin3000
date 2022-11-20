@@ -130,3 +130,39 @@
 </form>
 {% endcall %}
 {% endmacro %}
+
+{% macro category_result_card(result, index, hide_delete_button=False, lock_cutoff_value=False) %}
+{# An expandable card element for displaying category results.
+    Args:
+        result: The survey result object
+        index: The index of the loop rendering the answers (loop.index)
+        hide_delete_button: Do not show delete button (default: False)
+        lock_cutoff_value: Se cutoff field to readonly (default: False)
+#}
+{% call card() %}
+
+
+<details id="expandable-result-{{ index }}">
+    <summary class="text-slate-600 font-medium text-lg" style="cursor: pointer">Result at cutoff point {{ result[2] }}:</summary>
+    <div class="flex flex-col gap-2">
+        <div class="flex flex-grow"></div>
+        <div class="flex flex-col gap-2 w-full">
+            {{ form_elements.label("result-" ~ index, "Result")}}
+            {{ form_elements.text_area("result-" ~ index, "Result", "", false, result[1]) }}
+        </div>
+        <div class="flex flex-col gap-2 w-full">
+            {{ form_elements.label("cutoff-" ~ index, "Cutoff from max points")}}
+            {{ form_elements.number_input("cutoff-" ~ index, "cutoff-" ~ index, "Cutoff from max points", "", false, "0", "1", "0.01",
+            result[2],
+            readonly = lock_cutoff_value
+            ) }}
+        </div>
+        <div class="flex flex-grow"></div>
+        {% if not hide_delete_button %}
+        {{ form_elements.submit_button("Delete result", "destructive", "/delete_category_result/%s" % (result[0]), id="Delete Result") }}
+        {% endif %}
+    </div>
+</details>
+</form>
+{% endcall %}
+{% endmacro %}
