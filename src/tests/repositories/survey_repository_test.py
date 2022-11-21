@@ -933,7 +933,8 @@ class TestSurveyRepository(unittest.TestCase):
                 survey_id, start_date=start_date_current, end_date=end_date_current)
 
             # (Math categories weighted average scores sum) / (count of math categories ):  5.5 / 3 = 1.83
-            self.assertTrue(averages[0] == (category_math_id, 'Math', 1.83))
+            self.assertEqual(averages[0], (category_math_id, 'Math', 1.83))
+            
             # Stats categories weighted average scores sum -3, only one category = -3
             self.assertTrue(averages[1] == (
                 category_stats_id, "Statistics", -3))
@@ -941,11 +942,13 @@ class TestSurveyRepository(unittest.TestCase):
             # (Math categories weighted average scores sum) / (count of math categories ):  12 / 3 = 4
             self.assertTrue(averages_filter_group_1[0] == (
                 category_math_id, 'Math', 4))
+
             # Stats categories weighted average scores sum 4, only one category = 4
             self.assertTrue(averages_filter_group_1[1] == (
                 category_stats_id, "Statistics", 4))
 
             self.assertTrue(averages == averages_filter_date_current)
+            
             self.assertTrue(averages_filter_date_old[0] == (
                 category_math_id, 'Math', 0))
             self.assertTrue(averages_filter_date_old[1] == (

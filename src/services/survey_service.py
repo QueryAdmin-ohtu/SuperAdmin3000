@@ -535,6 +535,7 @@ class SurveyService:
             survey_id, user_group_name, start_date, end_date, email)
 
         result = []
+
         for average in filtered_averages:
             for a in all_averages:
                 if a[0] == average[0]:  # Matching id

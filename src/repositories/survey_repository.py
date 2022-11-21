@@ -863,8 +863,10 @@ class SurveyRepository:
                 ON ua."userId" = u."id"
             WHERE qa."questionId" = :question_id
                 AND ((:start_date IS NULL AND :end_date IS NULL) OR (ua."createdAt" BETWEEN :start_date AND :end_date))
-                AND ((:group_id IS NULL) OR (u."groupId"=:group_id))
-                AND (u."email" LIKE :email)
+            )
+        AND "userId" IN (
+            SELECT id FROM "Users" WHERE (email LIKE :email)
+                AND ((:group_id IS NULL) OR ("groupId" = :group_id))
             )
         """
         values = {"question_id": question_id,
@@ -875,6 +877,7 @@ class SurveyRepository:
                   }
         count_of_answers = self.db_connection.session.execute(sql, values).fetchone()[
             0]
+
         if count_of_answers:
             return count_of_answers
         return 0

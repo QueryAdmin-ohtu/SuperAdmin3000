@@ -66,7 +66,7 @@
 
     <!-- CAETGORY SCORES -->
     <div class="flex flex-row items-center justify-start gap-4">
-        <h2>Category scores</h2>
+        <h2>Category scores in answers</h2>
         <div class="flex-grow border-t border-slate-200"></div>
     </div>
     {% call survey_elements.card() %}
@@ -99,7 +99,7 @@
                 {{ statistics_elements.category_row(survey_id, category, category[0], filtered)}}
                 {% endfor %}
                 {% else %}
-                No related categories found.
+                No answers in any category
                 {% endif %}
             </tbody>
         </table>
