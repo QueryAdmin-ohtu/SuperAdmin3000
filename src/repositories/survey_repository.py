@@ -990,7 +990,6 @@ class SurveyRepository:
                         category_weight['multiplier']
                 else:
                     weighted_average = 0
-                    break # Averages should not be calculated, if there is no answers
                 category_id = self.get_category_id_from_name(
                     survey_id, category_weight['category'])
                 if category_id is not None:

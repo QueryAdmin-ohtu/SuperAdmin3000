@@ -16,9 +16,9 @@ Logged In User Can View Statistics Page
     Page Should Contain  Category scores
 
 User Can Access Edit Categories Page From Statistics
-    Go To Statistics  8
-    Click Element  edit_button_6
-    Page Should Contain  Edit a category in Elephants
+    Go To Statistics  1
+    Click Element  edit_button_2
+    Page Should Contain  Static descriptive text about the category 2
 
 Statistics Page Shows the Number Of Users Who Have Answered
     Go To Statistics  8
@@ -94,9 +94,9 @@ Filtering By Group Name Filters Users
     Click Button  Filter
     Page Should Contain  Users with submissions (1 / 4)
 
-Statistics Page Displays No Average Values If No Answers Are Present
+Statistics Page Displays Average Zero If There Is No Answers
     Go To Statistics  1
-    Page Should Contain  No answers in any category
+    Page Should Contain  0.0
 
 Statistics Page Displays Correct Average Values
     Go To Statistics  8
