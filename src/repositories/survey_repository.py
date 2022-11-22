@@ -28,7 +28,7 @@ class SurveyRepository:
 
     def create_survey(self, name, title, survey_text):
         """ Inserts a survey to table Surveys based
-        on given parameters and returns the id 
+        on given parameters and returns the id
         """
 
         sql = """
@@ -81,7 +81,7 @@ class SurveyRepository:
         on given parameters.
 
         Returns:
-            Id of the new question. 
+            Id of the new question.
         """
         sql = """
         INSERT INTO "Questions"
@@ -103,7 +103,7 @@ class SurveyRepository:
         on given parameters.
 
         Returns:
-            Id of the new answer 
+            Id of the new answer
         """
         sql = """
         INSERT INTO "Question_answers"
@@ -188,8 +188,8 @@ class SurveyRepository:
         return updated
 
     def delete_survey(self, survey_id):
-        """ Deletes a survey from Surveys after deleting all questions, 
-        results and groups which relate to it. After deletion, checks if 
+        """ Deletes a survey from Surveys after deleting all questions,
+        results and groups which relate to it. After deletion, checks if
         survey has been deleted and returns the result
         """
 
@@ -431,7 +431,7 @@ class SurveyRepository:
 
     def get_question(self, question_id):
         """ Gets the text, survey id, category weights,
-        creation and update time of a question 
+        creation and update time of a question
         """
         sql = """ SELECT text, "surveyId", "createdAt", category_weights, "updatedAt"
         FROM "Questions" WHERE id=:question_id """
@@ -444,7 +444,7 @@ class SurveyRepository:
 
         Returns:
             Id of the new category if succesfull.
-            None if not succesfull 
+            None if not succesfull
         """
 
         sql = """
@@ -562,7 +562,7 @@ class SurveyRepository:
         exist already
 
         Returns:
-            Id of the new admin 
+            Id of the new admin
         """
 
         if not self._admin_exists(email):
@@ -588,7 +588,7 @@ class SurveyRepository:
 
         Returns:
             True if yes,
-            False if no 
+            False if no
         """
 
         values = {"email": email}
@@ -611,7 +611,7 @@ class SurveyRepository:
 
         Returns:
             List where each item contains a tuple with the id
-            and email of the authorized user 
+            and email of the authorized user
         """
         sql = """
         SELECT * FROM "Admins"
@@ -649,7 +649,7 @@ class SurveyRepository:
 
     def delete_category(self, category_id: str):
         """ Deletes a category from the database
-        based on the category_id. Returns True if successful. 
+        based on the category_id. Returns True if successful.
         """
 
         category = self.get_category(category_id)
@@ -1167,7 +1167,7 @@ class SurveyRepository:
         result where the original and new result don't match.
         This function is not called if there are no differences
         so the updatedAt of the survey in question will also be
-        updated and True is returned. 
+        updated and True is returned.
         """
 
         for i in range(len(original_results)):
@@ -1193,7 +1193,7 @@ class SurveyRepository:
         result where the original and new result don't match.
         This function is not called if there are no differences
         so the updatedAt of the survey in question will also be
-        updated and True is returned. 
+        updated and True is returned.
         """
         for i in range(len(original_results)):
             if original_results[i] != new_results[i]:

@@ -7,8 +7,8 @@ from services.survey_service import survey_service
 
 stats = Blueprint("stats", __name__)
 
-timeformat = "%d.%m.%Y %H:%M"
-html_date_input_timeformat = "%Y-%m-%dT%H:%M"
+TIMEFORMAT = "%d.%m.%Y %H:%M"
+HTML_DATE_INPUT_TIMEFORMAT = "%Y-%m-%dT%H:%M"
 
 
 @stats.route("/surveys/<survey_id>/statistics", methods=["GET"])
@@ -34,8 +34,8 @@ def statistics(survey_id):
     )
 
     filter_start_date = (datetime.datetime.now() -
-                         datetime.timedelta(days=10*365)).strftime(html_date_input_timeformat)
-    filter_end_date = datetime.datetime.now().strftime(html_date_input_timeformat)
+                         datetime.timedelta(days=10*365)).strftime(HTML_DATE_INPUT_TIMEFORMAT)
+    filter_end_date = datetime.datetime.now().strftime(HTML_DATE_INPUT_TIMEFORMAT)
     filter_group_name = ""
     filter_email = ""
 
@@ -64,9 +64,9 @@ def filtered_statistics(survey_id):
     """
     try:
         filter_start_date = datetime.datetime.strptime(
-            request.form["filter_start_date"], html_date_input_timeformat)
+            request.form["filter_start_date"], HTML_DATE_INPUT_TIMEFORMAT)
         filter_end_date = datetime.datetime.strptime(
-            request.form["filter_end_date"], html_date_input_timeformat)
+            request.form["filter_end_date"], HTML_DATE_INPUT_TIMEFORMAT)
     except ValueError:
         print("Value error!")
         return redirect(f"/surveys/{survey_id}/statistics")
@@ -111,8 +111,8 @@ def filtered_statistics(survey_id):
 
     users = users if users else []
 
-    filter_start_date = filter_start_date.strftime(html_date_input_timeformat)
-    filter_end_date = filter_end_date.strftime(html_date_input_timeformat)
+    filter_start_date = filter_start_date.strftime(HTML_DATE_INPUT_TIMEFORMAT)
+    filter_end_date = filter_end_date.strftime(HTML_DATE_INPUT_TIMEFORMAT)
 
     return render_template("surveys/statistics.html",
                            ENV=app.config["ENV"],
