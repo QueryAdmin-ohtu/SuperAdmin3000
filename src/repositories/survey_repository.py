@@ -16,7 +16,7 @@ class SurveyRepository:
     def authorized_google_login(self, email):
         """ Checks whether a Google account is authorized to access the app.
         """
-        sql = "SELECT id FROM \"Admins\" WHERE email=:email"
+        sql = """SELECT id FROM "Admins" WHERE email=:email"""
         result = self.db_connection.session.execute(sql, {"email": email})
 
         user = result.fetchone()
@@ -28,7 +28,9 @@ class SurveyRepository:
 
     def create_survey(self, name, title, survey_text):
         """ Inserts a survey to table Surveys based
-        on given parameters and returns the id """
+        on given parameters and returns the id 
+        """
+
         sql = """
         INSERT INTO "Surveys"
         (name,"createdAt","updatedAt",title_text,survey_text)
@@ -79,7 +81,8 @@ class SurveyRepository:
         on given parameters.
 
         Returns:
-            Id of the new question. """
+            Id of the new question. 
+        """
         sql = """
         INSERT INTO "Questions"
         ("text", "surveyId", "category_weights", "createdAt","updatedAt")
@@ -100,7 +103,8 @@ class SurveyRepository:
         on given parameters.
 
         Returns:
-            Id of the new answer """
+            Id of the new answer 
+        """
         sql = """
         INSERT INTO "Question_answers"
         ("text", "points", "questionId", "createdAt","updatedAt")
@@ -125,6 +129,7 @@ class SurveyRepository:
         belonging to the question. If these parameters match, nothing is changed
         and False is returned, otherwise the parameters will be updated to match
         the ones given to the function and True will be returned. """
+
         original = self.get_question(question_id)
         sql2 = False
         sql3 = False
@@ -158,7 +163,9 @@ class SurveyRepository:
         """ Goes through the given list of answer ids and
         checks if the current information matches with the
         information from the lists given. If everything
-        matches False is returned and otherwise True """
+        matches False is returned and otherwise True
+        """
+
         updated = False
         for i in range(len(new_answers)):
             if original_answers[i] != new_answers[i]:
@@ -181,10 +188,11 @@ class SurveyRepository:
         return updated
 
     def delete_survey(self, survey_id):
-        """ Deletes a survey from Surveys after deleting all
-        questions, results and groups which relate to it.
-        After deletion, checks if survey has been deleted
-        and returns the result """
+        """ Deletes a survey from Surveys after deleting all questions, 
+        results and groups which relate to it. After deletion, checks if 
+        survey has been deleted and returns the result
+        """
+
         sql = """ DELETE FROM "Questions" WHERE "surveyId"=:id """
         db.session.execute(sql, {"id": survey_id})
         sql = """ DELETE FROM "Survey_results" WHERE "surveyId"=:id """
@@ -200,7 +208,9 @@ class SurveyRepository:
 
     def get_survey(self, survey_id):
         """ Looks up survey information with
-        id and returns it in a list"""
+        id and returns it in a list
+        """
+
         sql = """ SELECT * FROM "Surveys" WHERE id=:id """
         survey = self.db_connection.session.execute(
             sql, {"id": survey_id}).fetchone()
@@ -209,8 +219,7 @@ class SurveyRepository:
         return survey
 
     def get_all_surveys(self):
-        """ Fetches all surveys, counts the questions and
-        submissions for each survey
+        """ Fetches all surveys, counts the questions and submissions for each survey
 
         Returns: List where each item contains the survey
         id, title, question count and submission count
@@ -261,7 +270,7 @@ class SurveyRepository:
         Returns:
             True, id if matching name found, False, None if not
         """
-        sql = "SELECT id, name FROM \"Surveys\" WHERE lower(name)=:survey_name"
+        sql = """SELECT id, name FROM "Surveys" WHERE lower(name)=:survey_name"""
         result = self.db_connection.session.execute(
             sql, {"survey_name": survey_name.lower()})
 
@@ -285,9 +294,9 @@ class SurveyRepository:
         return categories
 
     def get_category(self, category_id):
-        """ Looks up category based on
-        id and returns its data in a list.
-        Return False if category is not found."""
+        """ Looks up category based on id and returns its data in a list.
+        Return False if category is not found.
+        """
         sql = """ SELECT * FROM "Categories" WHERE id=:id """
         try:
             category = self.db_connection.session.execute(
@@ -318,7 +327,7 @@ class SurveyRepository:
         Returns:
             If succeeds: survey_id
         """
-        sql = "Select \"surveyId\" from \"Questions\"  WHERE \"id\"=:question_id"
+        sql = """Select "surveyId" from "Questions"  WHERE id=:question_id"""
         result = self.db_connection.session.execute(
             sql, {"question_id": question_id}).fetchall()
         db.session.commit()
@@ -338,7 +347,7 @@ class SurveyRepository:
         """
         survey_id = self.get_survey_id_from_question_id(question_id)
 
-        sql = "DELETE FROM \"Questions\" WHERE \"id\"=:question_id"
+        sql = """DELETE FROM "Questions" WHERE id=:question_id"""
         result = self.db_connection.session.execute(
             sql, {"question_id": question_id})
         db.session.commit()
@@ -355,7 +364,7 @@ class SurveyRepository:
         Returns:
             If succeeds: question_id
         """
-        sql = "Select \"questionId\" from \"Question_answers\"  WHERE \"id\"=:answer_id"
+        sql = """SELECT "questionId" FROM "Question_answers"  WHERE id=:answer_id"""
         result = self.db_connection.session.execute(
             sql, {"answer_id": answer_id}).fetchall()
         db.session.commit()
@@ -373,7 +382,7 @@ class SurveyRepository:
             If succeeds: True
             If not found: False
         """
-        sql = "DELETE FROM \"Question_answers\" WHERE \"id\"=:answer_id"
+        sql = """DELETE FROM "Question_answers" WHERE id=:answer_id"""
         question_id = self.get_question_id_from_answer_id(answer_id)
         survey_id = self.get_survey_id_from_question_id(question_id)
         result = self.db_connection.session.execute(
@@ -422,7 +431,8 @@ class SurveyRepository:
 
     def get_question(self, question_id):
         """ Gets the text, survey id, category weights,
-        creation and update time of a question """
+        creation and update time of a question 
+        """
         sql = """ SELECT text, "surveyId", "createdAt", category_weights, "updatedAt"
         FROM "Questions" WHERE id=:question_id """
         question = self.db_connection.session.execute(
@@ -434,7 +444,8 @@ class SurveyRepository:
 
         Returns:
             Id of the new category if succesfull.
-            None if not succesfull """
+            None if not succesfull 
+        """
 
         sql = """
         INSERT INTO "Categories"
@@ -458,7 +469,8 @@ class SurveyRepository:
 
     def get_question_answers(self, question_id):
         """ Gets the id:s, texts and points from the answers of
-        the question determined by the question_id given """
+        the question determined by the question_id given
+        """
 
         sql = """ SELECT id, text, points FROM "Question_answers"
         WHERE "questionId"=:question_id """
@@ -468,10 +480,11 @@ class SurveyRepository:
 
     def get_user_answers(self, answer_id):
         """ Gets the id, user id and both question_answer_id AND Question_answer_id of
-        the answer determined by the given answer_id """
+        the answer determined by the given answer_id
+        """
 
-        sql = """ SELECT * FROM \"User_answers\"
-        WHERE "answer_id"=:answer_id"""
+        sql = """ SELECT * FROM "User_answers"
+        WHERE answer_id=:answer_id """
         try:
             answers = self.db_connection.session.execute(
                 sql, {"id": answer_id}).fetchall()
@@ -505,28 +518,28 @@ class SurveyRepository:
         """
         sql = """
         SELECT
-            DISTINCT "u"."id",
-            "u"."email",
-            "sua"."group_name",
-            "ua"."updatedAt" as answer_time
+            DISTINCT u.id,
+            u.email,
+            sua.group_name,
+            ua."updatedAt" as answer_time
         FROM
             "Users" as u
         LEFT JOIN "User_answers" as ua
-            ON "u"."id" = "ua"."userId"
+            ON u.id = ua."userId"
         LEFT JOIN "Question_answers" as qa
-            ON "ua"."questionAnswerId" = "qa"."id"
+            ON ua."questionAnswerId" = qa.id
         LEFT JOIN "Questions" as q
-            ON "q"."id" = "qa"."questionId"
+            ON q.id = qa."questionId"
         LEFT JOIN "Surveys" as s
-            ON "s"."id" = "q"."surveyId"
+            ON s.id = q."surveyId"
         LEFT OUTER JOIN "Survey_user_groups" as sua
-            ON "u"."groupId" = "sua"."id"
-        WHERE "s"."id"=:survey_id
-            AND ((:start_date IS NULL AND :end_date IS NULL) OR ("ua"."updatedAt" > :start_date AND "ua"."updatedAt" < :end_date))
+            ON u."groupId" = sua.id
+        WHERE s.id=:survey_id
+            AND ((:start_date IS NULL AND :end_date IS NULL) OR (ua."updatedAt" > :start_date AND ua."updatedAt" < :end_date))
             AND ((:group_name IS NULL) OR
-                 ((:group_name = 'None') AND ("sua"."group_name" IS NULL)) OR
-                 ("group_name"=:group_name))
-            AND (("email" LIKE :email))
+                 ((:group_name = 'None') AND (sua.group_name IS NULL)) OR
+                 (group_name=:group_name))
+            AND ((email LIKE :email))
         """
         values = {"survey_id": survey_id,
                   "start_date": start_date,
@@ -549,7 +562,8 @@ class SurveyRepository:
         exist already
 
         Returns:
-            Id of the new admin """
+            Id of the new admin 
+        """
 
         if not self._admin_exists(email):
             sql = """
@@ -574,7 +588,8 @@ class SurveyRepository:
 
         Returns:
             True if yes,
-            False if no """
+            False if no 
+        """
 
         values = {"email": email}
         sql = """
@@ -596,7 +611,8 @@ class SurveyRepository:
 
         Returns:
             List where each item contains a tuple with the id
-            and email of the authorized user """
+            and email of the authorized user 
+        """
         sql = """
         SELECT * FROM "Admins"
         ORDER BY id
@@ -609,10 +625,11 @@ class SurveyRepository:
 
     def update_category(self, category_id: str, content_links: list, name: str, description: str):
         """ Updates category in the database.
-        If succesful returns category_id."""
+        If succesful returns category_id.
+        """
 
-        sql = """ UPDATE "Categories" SET "name"=:name, "description"=:description,
-        "content_links"=:content_links, "updatedAt"=:updated 
+        sql = """ UPDATE "Categories" SET name=:name, description=:description,
+        content_links=:content_links, "updatedAt"=:updated 
         WHERE id=:category_id RETURNING id"""
 
         values = {"category_id": category_id, "name": name, "description": description,
@@ -632,7 +649,8 @@ class SurveyRepository:
 
     def delete_category(self, category_id: str):
         """ Deletes a category from the database
-        based on the category_id. Returns True if successful. """
+        based on the category_id. Returns True if successful. 
+        """
 
         category = self.get_category(category_id)
         if not category:
@@ -649,7 +667,8 @@ class SurveyRepository:
 
     def get_number_of_submissions(self, survey_id, user_group_id=None):
         """ Finds and returns the number of distinct users who have
-        submitted answers to a survey."""
+        submitted answers to a survey.
+        """
 
         # TODO:
         # Handle situation, where we want to filter in only users without any groups
@@ -758,6 +777,8 @@ class SurveyRepository:
         return self.get_answer_distribution(survey_id, start_date, end_date, group_id, email)
 
     def _find_user_group_by_name(self, group_name):
+        """Finds and returns user group id by user group name
+        """
         sql = """SELECT id, group_name FROM "Survey_user_groups" WHERE lower(group_name)=:group_name"""
         result = self.db_connection.session.execute(
             sql, {"group_name": group_name.lower()})
@@ -768,9 +789,10 @@ class SurveyRepository:
         return group_id
 
     def _add_user(self, email=None, group_id=None):
-        """Adds a user to database for testing purposes
+        """Helper method: Adds a user to database for testing purposes
 
-        Returns user id"""
+        Returns user id
+        """
 
         sql = """INSERT INTO "Users" ("email", "groupId", "createdAt", "updatedAt")
             VALUES (:email, :group_id, NOW(), NOW()) RETURNING id"""
@@ -780,9 +802,10 @@ class SurveyRepository:
         return user_id
 
     def _add_user_group(self, survey_id):
-        """Adds a user group to database for testing purposes.
+        """Helper method: Adds a user group to database for testing purposes.
 
-        Returns database id"""
+        Returns database id
+        """
         group_id = uuid.uuid4()
         sql = """INSERT INTO "Survey_user_groups" (id, "surveyId", "createdAt", "updatedAt")
             VALUES (:group_id, :survey_id, NOW(), NOW()) RETURNING id"""
@@ -792,7 +815,8 @@ class SurveyRepository:
         return group_id
 
     def _add_user_answers(self, user_id, question_answer_ids: list, answer_time: datetime = None):
-        """Adds user answers to database for testing purposes"""
+        """Helper method: Adds user answers to database for testing purposes
+        """
 
         for qa_id in question_answer_ids:
             sql = """INSERT INTO "User_answers"
@@ -809,14 +833,14 @@ class SurveyRepository:
 
     def _add_survey_user_group(self, group_name, survey_id):
         """
-            Adds a survey user group for testing purposes
+            Helper method: Adds a survey user group for testing purposes
             Returns:
                 Survey_user_groups id (UUID)
         """
 
         sql = """
         INSERT INTO "Survey_user_groups"
-            ("id", "group_name", "surveyId", "createdAt", "updatedAt")
+            (id, group_name, "surveyId", "createdAt", "updatedAt")
         VALUES (gen_random_uuid(), :group_name, :survey_id, NOW(), NOW())
         RETURNING id
         """
@@ -858,9 +882,9 @@ class SurveyRepository:
             SELECT qa.id
             FROM "Question_answers" as qa
             LEFT JOIN "User_answers" AS ua
-                ON ua."questionAnswerId" = qa."id"
+                ON ua."questionAnswerId" = qa.id
             LEFT JOIN "Users" as u
-                ON ua."userId" = u."id"
+                ON ua."userId" = u.id
             WHERE qa."questionId" = :question_id
                 AND ((:start_date IS NULL AND :end_date IS NULL) OR (ua."createdAt" BETWEEN :start_date AND :end_date))
             )
@@ -912,7 +936,7 @@ class SurveyRepository:
         LEFT JOIN "User_answers" AS ua
             ON qa.id = ua."questionAnswerId"
         LEFT JOIN "Users" AS u
-            ON ua."userId" = u."id"
+            ON ua."userId" = u.id
         WHERE q.id=:question_id
             AND ((:start_date IS NULL AND :end_date IS NULL) OR (ua."createdAt" BETWEEN :start_date AND :end_date))
             AND ((:group_id IS NULL) OR (u."groupId"=:group_id))
@@ -1039,7 +1063,8 @@ class SurveyRepository:
     def get_survey_results(self, survey_id):
         """Get the results of a survey
 
-        Return table with columns: id, text, cutoff_from_maxpoints"""
+        Return table with columns: id, text, cutoff_from_maxpoints
+        """
         sql = """
             SELECT id, text, cutoff_from_maxpoints
             FROM "Survey_results"
@@ -1053,7 +1078,8 @@ class SurveyRepository:
     def create_survey_result(self, survey_id, text, cutoff_from_maxpoints):
         """Create a new survey result.
 
-        Results connected to the same survey with duplicate cutoff values will not be created"""
+        Results connected to the same survey with duplicate cutoff values will not be created
+        """
         sql = """
             INSERT INTO "Survey_results"
             ("surveyId", text, cutoff_from_maxpoints, "createdAt", "updatedAt")
@@ -1141,7 +1167,8 @@ class SurveyRepository:
         result where the original and new result don't match.
         This function is not called if there are no differences
         so the updatedAt of the survey in question will also be
-        updated and True is returned. """
+        updated and True is returned. 
+        """
 
         for i in range(len(original_results)):
             if original_results[i] != new_results[i]:
@@ -1166,7 +1193,8 @@ class SurveyRepository:
         result where the original and new result don't match.
         This function is not called if there are no differences
         so the updatedAt of the survey in question will also be
-        updated and True is returned. """
+        updated and True is returned. 
+        """
         for i in range(len(original_results)):
             if original_results[i] != new_results[i]:
                 sql = """
@@ -1207,7 +1235,7 @@ class SurveyRepository:
         """
         sql = """
         SELECT * FROM "Category_results"
-        WHERE "id" = :category_result_id
+        WHERE id = :category_result_id
         """
         category_results = self.db_connection.session.execute(
             sql, {"category_result_id": category_result_id}).fetchall()
