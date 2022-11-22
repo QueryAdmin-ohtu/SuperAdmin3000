@@ -485,7 +485,7 @@ def delete_category_result(category_result_id):
     survey_id = request.form["survey_id"]
     category_id = request.form["category_id"]
     survey_service.delete_category_result(category_result_id)
-    return redirect(f"/edit_category/{survey_id}/{category_id}")
+    return redirect(f"/edit_category/{survey_id}/{category_id}/new-category-result")
 
 
 @surveys.route("/surveys/<survey_id>/new-survey-result", methods=["GET"])

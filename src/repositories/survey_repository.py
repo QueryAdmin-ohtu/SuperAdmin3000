@@ -628,8 +628,9 @@ class SurveyRepository:
         If succesful returns category_id.
         """
         category = self.get_category(category_id)
-        if category[1] != name:
-            self.update_category_in_questions(category[6],category[1],name)
+        if category:
+            if category[1] != name:
+                self.update_category_in_questions(category[6],category[1],name)
 
         sql = """ UPDATE "Categories" SET name=:name, description=:description,
         content_links=:content_links, "updatedAt"=:updated 
