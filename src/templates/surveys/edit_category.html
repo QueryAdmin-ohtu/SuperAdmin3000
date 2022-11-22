@@ -84,7 +84,9 @@
     {% endcall %}
     {% endif %}
     </form>
-    {% include "components/sections/category_results.html" %}
+    {% if category_results %}
+        {% include "components/sections/category_results.html" %}
+    {% endif %}
     
     </div>
 </div>
