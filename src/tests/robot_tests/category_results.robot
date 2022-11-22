@@ -38,7 +38,7 @@ A Category Result Having Cutoff 1.0 Has No Delete Button
 
 User Can Create Subsequent Category Results With Cutoff Values Between 0 And 1
     Go To Survey  2
-    Click Link  edit_button_7
+    Click Link  edit_button_8
     Click Element  categoryresults
     Set Result Text  Category result cutoff 0.5
     Set Result Cutoff  0.5
@@ -48,7 +48,7 @@ User Can Create Subsequent Category Results With Cutoff Values Between 0 And 1
 
 User Can Not Create Category Results With Cutoff Values Above 1
     Go To Survey  2
-    Click Link  edit_button_7
+    Click Link  edit_button_8
     Click Element  categoryresults
     Set Result Text  Invalid cutoff  
     Set Result Cutoff  1.1
@@ -59,7 +59,7 @@ User Can Not Create Category Results With Cutoff Values Above 1
 
 User Can Edit A Category Result
     Go To Survey  2
-    Click Link  edit_button_7
+    Click Link  edit_button_8
     Click Element  categoryresults
     Expand Result Card  1
     Edit Result  New Cutoff Text one  0.2  1
@@ -70,7 +70,7 @@ User Can Edit A Category Result
 
 Category Result Cannot Be Edited To Have Duplicate Cutoffs
     Go To Survey  2
-    Click Link  edit_button_7
+    Click Link  edit_button_8
     Click Element  categoryresults
     Expand Result Card  1
     Page Should Contain  New Cutoff Text one
