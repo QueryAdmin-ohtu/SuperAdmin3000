@@ -78,7 +78,7 @@ Survey Result With Cutoff Value One Can not Be Deleted
 New Survey Has Survey Result For Cutoff Value 1.0
     Click Link  New survey
     Make A Survey
-    Page Should Contain  0%-100.0% of max points returns user
+    Page Should Contain  0%-100% of max points returns user
     Page Should Contain  Your skills in this topic are excellent!
 
 Survey Result Can Be Edited

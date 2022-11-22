@@ -670,7 +670,10 @@ class SurveyRepository:
                     new_categories.append([category[0],new_name,category[2],category[3]])
                 else:
                     new_categories.append(category)
-                multipliers["cat"+str(category[0])] = weights[category[1]]
+                try:
+                    multipliers["cat"+str(category[0])] = weights[category[1]]
+                except KeyError:
+                    multipliers["cat"+str(category[0])] = 0.0
             category_weights = category_weights_as_json(new_categories,multipliers)
             sql = """ UPDATE "Questions" SET category_weights=:category_weights,
             "updatedAt"=:updated WHERE id=:question_id """
