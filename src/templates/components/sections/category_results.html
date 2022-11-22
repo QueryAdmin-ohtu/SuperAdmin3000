@@ -6,13 +6,12 @@
     {{ buttons.link_button("Manage Category Results", "/edit_category/%s/%s/new-category-result" % (survey.id,category_id),  "default", "categoryresults")}}
     <br>
 </div>
-{% if category_results %}
-    {% for result in category_results %}
-    
-    <p>{{ result[1]}}
-        <br>{{ result[2] }}</p>
-        <br>
-    {% endfor %}
+{% if show_results %}
+{% for result in show_results %}
+    <p>{{ result[0]}}
+    <br>{{ result[1] }}</p>
+    <br>
+{% endfor %}
 {% else %}
     <p>Survey has no results 🥺</p>
 {% endif %}
