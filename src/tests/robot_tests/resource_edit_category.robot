@@ -17,11 +17,11 @@ Set Content Link Type
 
 Set Category Result Text
     [Arguments]  ${text}
-    Input Text  new_cat_result_text  ${text}
+    Input Text  text  ${text}
 
 Set Category Result Cutoff Points
     [Arguments]  ${points}
-    Input Text  new_cat_cutoff  ${points}
+    Input Text  cutoff  ${points}
 
 
 Create New Category

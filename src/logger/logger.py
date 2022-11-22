@@ -34,8 +34,8 @@ class Logger:
 
         for (key, value) in request.form.items():
             sensitive_field = False
-            for s in self.sensitive:
-                if s in key:
+            for sens in self.sensitive:
+                if sens in key:
                     sensitive_field = True
                     break
             if not sensitive_field:

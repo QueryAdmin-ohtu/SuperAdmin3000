@@ -34,6 +34,11 @@ class TestSurveyService(unittest.TestCase):
         self.assertEqual(check, 1)
         self.repo_mock.create_survey.assert_called_with(
             name, title, description)
+        self.repo_mock.create_survey_result.assert_called_with(
+            1,
+            "Your skills in this topic are excellent!",
+            1.0
+        )
 
     def test_create_survey_with_no_name_does_not_work(self):
         name = ""
@@ -175,6 +180,11 @@ class TestSurveyService(unittest.TestCase):
         self.assertEqual(check, 1)
         self.repo_mock.create_category.assert_called_with(
             survey_id, name, description, content_links)
+        self.repo_mock.create_category_result.called_with(
+            1,
+            "Your skills in this topic are excellent!",
+            1.0
+        )
 
     def test_add_admin_calls_repo_correctly(self):
         self.repo_mock.add_admin.return_value = 1
@@ -385,14 +395,16 @@ class TestSurveyService(unittest.TestCase):
         self.assertEqual(repo_value_to_return, survey_reponse)
 
     def test_calculate_average_scores_by_category_calls_repo_correctly(self):
-        self.repo_mock.calculate_average_scores_by_category.return_value = "None"
+        value_to_return = [(1, "Category 1", 1.0)]
+        self.repo_mock.calculate_average_scores_by_category.return_value = value_to_return
         survey_id = 1
         self.survey_service.calculate_average_scores_by_category(survey_id)
         self.repo_mock.calculate_average_scores_by_category.assert_called_with(
             survey_id,
             None,
             None,
-            None
+            None,
+            ""
         )
 
     def test_calculate_average_scores_by_category_does_not_call_repo_with_invalid(self):
@@ -409,22 +421,28 @@ class TestSurveyService(unittest.TestCase):
         start_date = datetime.fromisoformat("2020-11-04 00:05:23.283")
         end_date = datetime.fromisoformat("2021-11-04 00:05:23.283")
         user_group_id = 22
+        user_group_name = "Group 1"
+        email = "mail.com"
+
         survey_id = 1
-        value_to_return = "Value"
-        self.repo_mock.calculate_average_scores_by_category.return_value = value_to_return
+        repo_value_to_return = [(1, "Category 1", 1.0)]
+        service_value_to_return = [(1, "Category 1", 1.0, 1.0)]
+        self.repo_mock.calculate_average_scores_by_category.return_value = repo_value_to_return
         returned_value = self.survey_service.calculate_average_scores_by_category(
             survey_id,
-            user_group_id,
+            user_group_name,
             start_date,
-            end_date
+            end_date,
+            email
         )
         self.repo_mock.calculate_average_scores_by_category.assert_called_with(
             survey_id,
-            user_group_id,
+            user_group_name,
             start_date,
-            end_date
+            end_date,
+            email
         )
-        self.assertEqual(value_to_return, returned_value)
+        self.assertEqual(service_value_to_return, returned_value)
 
     def test_create_category_result_calls_repo_correctly(self):
         self.repo_mock.create_category_result.return_value = 1
@@ -462,3 +480,29 @@ class TestSurveyService(unittest.TestCase):
         response = self.survey_service.delete_survey_result(1)
         self.assertTrue(response)
         self.repo_mock.delete_survey_result.assert_called_with(1)
+
+    def test_update_survey_results_calls_repo_correctly(self):
+        self.repo_mock.delete_survey_result.return_value = True
+        original_results = [[5, "Bad", 0.3], [6, "Good", 1.0]]
+        new_results = [[5, "Decent", 0.3], [6, "Great", 1.0]]
+        response = self.survey_service.update_survey_results(original_results,
+                                                             new_results, 3)
+        self.assertTrue(response)
+        self.repo_mock.update_survey_results.assert_called_with(original_results,
+                                                                new_results, 3)
+
+    def test_delete_category_result_calls_repo_correctly(self):
+        self.repo_mock.delete_category_result.return_value = True
+        response = self.survey_service.delete_category_result(1)
+        self.assertTrue(response)
+        self.repo_mock.delete_category_result.assert_called_with(1)
+
+    def test_update_category_results_calls_repo_correctly(self):
+        self.repo_mock.delete_survey_result.return_value = True
+        original_results = [[5, "Bad", 0.3], [6, "Good", 1.0]]
+        new_results = [[5, "Decent", 0.3], [6, "Great", 1.0]]
+        response = self.survey_service.update_category_results(original_results,
+                                                             new_results, 3)
+        self.assertTrue(response)
+        self.repo_mock.update_category_results.assert_called_with(original_results,
+                                                                new_results, 3)

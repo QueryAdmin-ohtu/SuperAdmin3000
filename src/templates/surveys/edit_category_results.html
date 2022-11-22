@@ -6,14 +6,17 @@
 
 {% block content %}
 <div class="flex justify-between">
-    <h1 class="text-slate-700">Survey results for {{ survey.name }}</h1>
+    <h1 class="text-slate-700">Category results for {{ category.name }}</h1>
 </div>
+
+
 {{ buttons.link_button("Back to survey", "/surveys/%s" % survey[0]) }}
 <div class="flex flex-col gap-6 items-start w-full">
     <h1 class="text-slate-700">Add a result</h1>  
-    <form class="w-full" action="/surveys/{{ survey.id }}/new-survey-result" method="POST">
+    <form class="w-full" action="/edit_category/{{survey.id}}/{{category.id}}/new-category-result" method="POST">
         <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
         <input type="hidden" name="survey_id" id="survey_id" value="{{ survey.id }}">
+        <input type="hidden" name="category_id" id="category_id" value="{{category.id}}">
         <input type="hidden" name="results" id="results" value="{{ results }}">
         <div class="grid grid-cols-2 gap-4">
             <div class="flex flex-col gap-6">
@@ -40,9 +43,9 @@
       {% endcall %}
       {% for result in results %}
       {% if result[2] == 1.0 %}     
-      {{ survey_elements.survey_result_card(result, loop.index, hide_delete_button=True, lock_cutoff_value=True) }}
+      {{ survey_elements.category_result_card(result, loop.index, hide_delete_button=True, lock_cutoff_value=True) }}
       {% else %}
-      {{ survey_elements.survey_result_card(result, loop.index) }}
+      {{ survey_elements.category_result_card(result, loop.index) }}
       {% endif %}
       {% endfor %}
     </div>

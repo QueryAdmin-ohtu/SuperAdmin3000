@@ -46,8 +46,16 @@ class SurveyService:
         """
 
         self._validate_survey_details(name, title, description)
+        survey_id = self.survey_repository.create_survey(
+            name, title, description)
+        if survey_id:
+            survey_result_text = "Your skills in this topic are excellent!"
+            cutoff_from_maxpts = 1.0
+            self.create_survey_result(survey_id,
+                                      survey_result_text,
+                                      cutoff_from_maxpts)
 
-        return self.survey_repository.create_survey(name, title, description)
+        return survey_id
 
     def get_survey(self, survey_id: str):
         """
@@ -355,15 +363,15 @@ class SurveyService:
         """
         category_id = self.survey_repository.create_category(
             survey_id, name, description, content_links)
+        if category_id:
+            category_result_text = "Your skills in this topic are excellent!"
+            cutoff_from_maxpts = 1.0
+            self.create_category_result(
+                category_id,
+                category_result_text,
+                cutoff_from_maxpts
+            )
 
-        category_result_text = "Your skills in this topic are excellent!"
-        cutoff_from_maxpts = 1.0
-        self.create_category_result(
-            category_id,
-            category_result_text,
-            cutoff_from_maxpts
-        )
-        
         return category_id
 
     def add_admin(self, email: str):
@@ -483,7 +491,12 @@ class SurveyService:
         """
         return self.survey_repository.get_sum_of_user_answer_points_by_question_id(question_id)
 
-    def calculate_average_scores_by_category(self, survey_id, user_group_id=None, start_date=None, end_date=None):
+    def calculate_average_scores_by_category(self,
+                                             survey_id,
+                                             user_group_name=None,
+                                             start_date=None,
+                                             end_date=None,
+                                             email=""):
         """
         Calculates weighted average scores from the submitted answers of a given survey. An average
         score is calculated for each category of the survey. This value represents how well all
@@ -494,16 +507,20 @@ class SurveyService:
 
         Args:
             survey_id: Id of survey to calculate averages from
-            user_group_id (optional): User group id of answer. Ignored if None. If value present
+            user_group_name (optional): User group name of answer. Ignored if None. If value present
                 filters answers used to calculate average.
             start_date (optional): A datetime for filtering the answers used to calculate averages. Ignored
                 if None. If value present only answers after this datetime are taken into account.
             end_date (optional): A datetime for filtering the answers used to calculate averages. Ignored
                 if None. If value present only answers before this datetime are taken into account.
+            email (optional) If the user's email doesn't contain the argument, that user's answers are
+                filtered out
 
         Returns:
-            A list of tuples which includes the category id, category name and average score 
+            A list of tuples which includes the category id, category name, average score and
+            average score for unfiltered results
             (to the precision of two decimal places) of all user answers in a given survey.
+            (id, name, average, average_of_all)
 
             If dates invalid returns None
         """
@@ -512,11 +529,27 @@ class SurveyService:
             if start_date > end_date or end_date < start_date:
                 return None
 
-        return self.survey_repository.calculate_average_scores_by_category(survey_id, user_group_id, start_date, end_date)
+        all_averages = self.survey_repository.calculate_average_scores_by_category(
+            survey_id)
+        filtered_averages = self.survey_repository.calculate_average_scores_by_category(
+            survey_id, user_group_name, start_date, end_date, email)
+
+        result = []
+
+        for average in filtered_averages:
+            for a in all_averages:
+                if a[0] == average[0]:  # Matching id
+                    average_of_all = a[2]
+                    break
+            else:
+                average_of_all = None
+            result.append(average + (average_of_all,))
+
+        return result
 
     def create_category_result(self, category_id: int, text: str, cutoff_from_maxpts: float):
         """Create a new category result
-        
+
         Returns id of category result"""
         return self.survey_repository.create_category_result(category_id, text, cutoff_from_maxpts)
 
@@ -533,15 +566,29 @@ class SurveyService:
     def get_survey_results(self, survey_id):
         """Fetch the results of the given survey
 
-        Returns a table with columns: id, text, cutoff_from_maxpoints, createdAt, updatedAt, "surveyId"
+        Returns a table with columns: id, text, cutoff_from_maxpoints
         """
         return self.survey_repository.get_survey_results(survey_id)
-
 
     def delete_survey_result(self, result_id):
         """ Deletes the given survey result
         """
 
         return self.survey_repository.delete_survey_result(result_id)
+
+    def update_survey_results(self, original_results, new_results, survey_id):
+        """Updates the original results of a survey to new ones"""
+        return self.survey_repository.update_survey_results(original_results, new_results, survey_id)
+
+    def delete_category_result(self, category_result_id):
+        """ Deletes the category result given as parameter
+        """
+
+        return self.survey_repository.delete_category_result(category_result_id)
+
+    def update_category_results(self, original_results, new_results,survey_id):
+        """Updates the original results of a survey to new ones"""
+        return self.survey_repository.update_category_results(original_results, new_results, survey_id)
+
 
 survey_service = SurveyService(SurveyRepository())

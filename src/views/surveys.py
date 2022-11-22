@@ -109,11 +109,21 @@ def view_survey(survey_id):
     questions = survey_service.get_questions_of_survey(survey_id)
     categories = survey_service.get_categories_of_survey(survey_id)
     results = survey_service.get_survey_results(survey_id)
-    print(categories, flush=True)
+    show_results = []
+    for i in range(len(results)):
+        if i == 0:
+            if float(results[0][2]) == 0.0:
+                text = "0% of max points returns user"
+            else:
+                text = f"0%-{results[0][2]*100}% of max points returns user"
+            show_results.append([text, results[0][1]])
+        else:
+            text = f"{results[i-1][2]*100}%-{results[i][2]*100}% of max points returns user"
+            show_results.append([text, results[i][1]])
     return render_template("surveys/view_survey.html", survey=survey,
                            questions=questions, survey_id=survey_id,
                            ENV=app.config["ENV"], categories=categories,
-                           results=results)
+                           results=results, show_results=show_results)
 
 
 @surveys.route("/surveys/<survey_id>/new-question", methods=["GET"])
@@ -154,6 +164,8 @@ def new_question_post(survey_id):
             answer_id = original_answers[i][0]
             answer = request.form[f"answer-{i+1}"]
             points = request.form[f"points-{i+1}"]
+            if points == "":
+                points = 0
             new_answers.append((answer_id, answer, points))
         survey_service.update_question(
             question_id, text, category_weights, original_answers, new_answers)
@@ -191,10 +203,10 @@ def edit_question(survey_id, question_id):
     show_previous_button = show_next_button = False
     questions = survey_service.get_questions_of_survey(survey_id)
     current_question = int(question_id)
-    for q in questions:
-        if q.id < current_question:
+    for item in questions:
+        if item.id < current_question:
             show_previous_button = True
-        if q.id > current_question:
+        if item.id > current_question:
             show_next_button = True
 
     if not question:
@@ -359,25 +371,48 @@ def edit_category():
         survey_id, name, description, new_content_links_json)
     return redirect(f"/edit_category/{survey_id}/{category_id}")
 
-
-@surveys.route("/add_category_result", methods=["POST"])
-def add_category_result():
+@surveys.route("/edit_category/<survey_id>/<category_id>/new-category-result", methods=["POST"])
+def add_category_result(survey_id, category_id):
     """ Receives the inputs from the edit_category.html template.
     Stores the new category result to the database.
     """
     survey_id = request.form["survey_id"]
     category_id = request.form["category_id"]
-    new_cat_result_text = request.form["new_cat_result_text"]
-    new_cat_cutoff = request.form["new_cat_cutoff"]
-    category_result_id = survey_service.create_category_result(
-        category_id,
-        new_cat_result_text,
-        new_cat_cutoff
-    )
-    if category_result_id is None:
-        flash(f"Category result for cutoff value {new_cat_cutoff} already exists.")
+    new_cat_result_text = request.form["text"]
+    new_cat_cutoff = request.form["cutoff"]
+    cutoff_values = []
+    if new_cat_result_text and new_cat_cutoff:
+        cutoff_values.append(new_cat_cutoff)
+    original_results = eval(request.form["results"])
+    if original_results:
+        new_results = []
+        for i in range(len(original_results)):
+            result_id = original_results[i][0]
+            result = request.form[f"result-{i+1}"]
+            cutoff = request.form[f"cutoff-{i+1}"]
+            cutoff_values.append(cutoff)
+            new_results.append((result_id, result, cutoff))
+        cutoffs_correct = helper.check_cutoff_points(cutoff_values)
+        if cutoffs_correct != "Correct":
+            flash(cutoffs_correct, "error")
+            return redirect(f"/edit_category/{survey_id}/{category_id}/new-category-result")
+        if original_results != new_results:
+            survey_service.update_category_results(
+                original_results, new_results, survey_id)
+    if new_cat_result_text and new_cat_cutoff:
+        survey_service.create_category_result(category_id, new_cat_result_text, new_cat_cutoff)
+    return redirect(f"/edit_category/{survey_id}/{category_id}/new-category-result")
 
-    return redirect(f"/edit_category/{survey_id}/{category_id}")
+
+@surveys.route("/edit_category/<survey_id>/<category_id>/new-category-result", methods=["GET"])
+def new_category_result_view(survey_id, category_id):
+    """Renders the view for creating category results"""
+    survey = survey_service.get_survey(survey_id)
+    category = survey_service.get_category(category_id)
+    results = survey_service.get_category_results_from_category_id(category_id)
+    if results:
+        return render_template("surveys/edit_category_results.html", survey=survey, category = category, results=results,  ENV=app.config["ENV"])
+    return render_template("surveys/edit_category_results.html", survey=survey_id, first=True, results=[],  ENV=app.config["ENV"]   )
 
 
 @surveys.route("/add_content_link", methods=["POST"])
@@ -429,6 +464,16 @@ def delete_category():
     return redirect(f"/surveys/{survey_id}")
 
 
+@surveys.route("/delete_category_result/<category_result_id>", methods=["POST"])
+def delete_category_result(category_result_id):
+    """Deletes a category result
+    """
+    survey_id = request.form["survey_id"]
+    category_id = request.form["category_id"]
+    survey_service.delete_category_result(category_result_id)
+    return redirect(f"/edit_category/{survey_id}/{category_id}")
+
+
 @surveys.route("/surveys/<survey_id>/new-survey-result", methods=["GET"])
 def new_survey_result_view(survey_id):
     """Renders the view for creating survey results"""
@@ -442,35 +487,47 @@ def new_survey_result_view(survey_id):
 
 @surveys.route("/surveys/<survey_id>/new-survey-result", methods=["POST"])
 def new_survey_result_post(survey_id):
-    """Handles creating a new survey result"""
+    """Handles creating a new survey result and updates
+    any edited survey results"""
 
     survey_id = request.form["survey_id"]
     text = request.form["text"]
     cutoff_value = request.form["cutoff"]
-
-    survey_service.create_survey_result(survey_id, text, cutoff_value)
+    cutoff_values = []
+    if text and cutoff_value:
+        cutoff_values.append(cutoff_value)
+    original_results = eval(request.form["results"])
+    if original_results:
+        new_results = []
+        for i in range(len(original_results)):
+            result_id = original_results[i][0]
+            result = request.form[f"result-{i+1}"]
+            cutoff = request.form[f"cutoff-{i+1}"]
+            cutoff_values.append(cutoff)
+            new_results.append((result_id, result, cutoff))
+        cutoffs_correct = helper.check_cutoff_points(cutoff_values)
+        if cutoffs_correct != "Correct":
+            flash(cutoffs_correct, "error")
+            return redirect(f"/surveys/{survey_id}/new-survey-result")
+        if original_results != new_results:
+            survey_service.update_survey_results(
+                original_results, new_results, survey_id)
+    if text and cutoff_value:
+        survey_service.create_survey_result(survey_id, text, cutoff_value)
 
     return redirect(f"/surveys/{survey_id}/new-survey-result")
 
-@surveys.route("/update_survey_result", methods=["POST"])
-def delete_survey_result():
+
+@surveys.route("/delete_survey_result/<result_id>", methods=["POST"])
+def delete_survey_result(result_id):
     """Update or delete the given survey result
     """
-    result_id = request.form["result_id"]
     survey_id = request.form["survey_id"]
-    action = request.form['submit']
-
-    if action == "Delete result":
-        survey_service.delete_survey_result(result_id)
-
-    if action == "Update result":
-        # TODO: Implement result update
-        # survey_service.update_survey_result(result_id)
-        print(f"Update result: {result_id}", flush=True)
+    survey_service.delete_survey_result(result_id)
 
     return redirect(f"/surveys/{survey_id}/new-survey-result")
-    
-        
+
+
 @surveys.route("/surveys")
 def view_surveys():
     """Redirecting method"""
