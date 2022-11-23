@@ -76,8 +76,9 @@ def filtered_statistics(survey_id):
     filter_group_name = request.form["filter_group_name"]
     filter_email = request.form["filter_email"]
 
-    submissions = survey_service.get_number_of_submissions_for_survey(
-        survey_id)
+    # submissions = survey_service.get_number_of_submissions_for_survey(
+    #     survey_id)
+
     answer_distribution = helper.save_question_answer_charts(
         survey_service.get_answer_distribution_for_survey_questions(survey_id,
                                                                     filter_start_date,
@@ -118,7 +119,6 @@ def filtered_statistics(survey_id):
                            ENV=app.config["ENV"],
                            survey=survey,
                            survey_id=survey_id,
-                           submissions=submissions,
                            answer_distribution=answer_distribution,
                            users=users,
                            total_users=total_users,
