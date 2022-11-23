@@ -110,16 +110,17 @@ def view_survey(survey_id):
     categories = survey_service.get_categories_of_survey(survey_id)
     results = survey_service.get_survey_results(survey_id)
     show_results = []
-    for i in range(len(results)):
-        if i == 0:
-            if float(results[0][2]) == 0.0:
-                text = "0% of max points returns user"
+    if results:
+        for i in range(len(results)):
+            if i == 0:
+                if float(results[0][2]) == 0.0:
+                    text = "0% of max points returns user"
+                else:
+                    text = f"0%-{int(results[0][2]*100)}% of max points returns user"
+                show_results.append([text, results[0][1]])
             else:
-                text = f"0%-{results[0][2]*100}% of max points returns user"
-            show_results.append([text, results[0][1]])
-        else:
-            text = f"{results[i-1][2]*100}%-{results[i][2]*100}% of max points returns user"
-            show_results.append([text, results[i][1]])
+                text = f"{int(results[i-1][2]*100)}%-{int(results[i][2]*100)}% of max points returns user"
+                show_results.append([text, results[i][1]])
     return render_template("surveys/view_survey.html", survey=survey,
                            questions=questions, survey_id=survey_id,
                            ENV=app.config["ENV"], categories=categories,
@@ -325,12 +326,25 @@ def edit_category_page(survey_id, category_id):
     content_links = category[3]
     category_results = survey_service.get_category_results_from_category_id(
         category_id)
+    show_results = []
+    if category_results:
+        for i in range(len(category_results)):
+            if i == 0:
+                if float(category_results[0][2]) == 0.0:
+                    text = "0% of max points returns user"
+                else:
+                    text = f"0%-{int(category_results[0][2]*100)}% of max points returns user"
+                show_results.append([text, category_results[0][1]])
+            else:
+                text = f"{int(category_results[i-1][2]*100)}%-{int(category_results[i][2]*100)}% of max points returns user"
+                show_results.append([text, category_results[i][1]])
     return render_template("surveys/edit_category.html",
                            ENV=app.config["ENV"],
                            survey_id=survey_id,
                            survey=survey,
                            category_id=category_id,
                            category_results=category_results,
+                           show_results=show_results,
                            name=name,
                            description=description,
                            content_links=content_links,
@@ -471,7 +485,7 @@ def delete_category_result(category_result_id):
     survey_id = request.form["survey_id"]
     category_id = request.form["category_id"]
     survey_service.delete_category_result(category_result_id)
-    return redirect(f"/edit_category/{survey_id}/{category_id}")
+    return redirect(f"/edit_category/{survey_id}/{category_id}/new-category-result")
 
 
 @surveys.route("/surveys/<survey_id>/new-survey-result", methods=["GET"])
