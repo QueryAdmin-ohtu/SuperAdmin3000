@@ -539,7 +539,7 @@ class SurveyRepository:
             AND ((:group_name IS NULL) OR
                  ((:group_name = 'None') AND (sua.group_name IS NULL)) OR
                  (group_name=:group_name))
-            AND ((email LIKE :email))
+            AND COALESCE (email, '') like :email
         """
         values = {"survey_id": survey_id,
                   "start_date": start_date,
