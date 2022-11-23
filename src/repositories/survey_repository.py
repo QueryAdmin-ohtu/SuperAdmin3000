@@ -1275,8 +1275,7 @@ class SurveyRepository:
             - there are categories without questions
         - 'green' = Survey is complete.
 
-        Returns a list
-        :
+        Returns a list as follows:
         [
             status  : (str) 'red','yellow' or 'green',
             no_survey_results : (bool),
