@@ -924,7 +924,7 @@ class SurveyRepository:
                 AND ((:start_date IS NULL AND :end_date IS NULL) OR (ua."createdAt" BETWEEN :start_date AND :end_date))
             )
         AND "userId" IN (
-            SELECT id FROM "Users" WHERE (email LIKE :email)
+            SELECT id FROM "Users" WHERE (COALESCE (email, '') LIKE :email)
                 AND ((:group_id IS NULL) OR ("groupId" = :group_id))
             )
         """
@@ -975,7 +975,7 @@ class SurveyRepository:
         WHERE q.id=:question_id
             AND ((:start_date IS NULL AND :end_date IS NULL) OR (ua."createdAt" BETWEEN :start_date AND :end_date))
             AND ((:group_id IS NULL) OR (u."groupId"=:group_id))
-            AND (u."email" LIKE :email)
+            AND (COALESCE (u.email, '') LIKE :email)
         GROUP BY q.id, qa.id
         ORDER BY q.id
         """
