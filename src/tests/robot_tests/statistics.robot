@@ -22,7 +22,7 @@ User Can Access Edit Categories Page From Statistics
 
 Statistics Page Shows the Number Of Users Who Have Answered
     Go To Statistics  8
-    Page Should Contain  Total submissions: 4
+    Page Should Contain  Total submissions: 5
 
 Statistics Page Shows Question Names For Charts
     Go To Statistics  8
@@ -82,17 +82,17 @@ Entering Valid Range To Filter Dates Filters Users
     Press Keys  filter_start_date  2+TAB+2+TAB+2002+TAB+12+TAB+00
     Press Keys  filter_end_date  2+TAB+2+TAB+2002+TAB+12+TAB+01
     Click Button  Filter
-    Page Should Contain  Users with submissions (0 / 4)    
+    Page Should Contain  Users with submissions (0 / 5)    
     
 Entering Invalid Date to User Filter Does Not Filter Anything
     Go To Statistics  8
-    Page Should Contain  Total submissions: 4
+    Page Should Contain  Total submissions: 5
 
 Filtering By Group Name Filters Users
     Go To Statistics  8
     Select From List By Value  name:filter_group_name  Supertestaajat
     Click Button  Filter
-    Page Should Contain  Users with submissions (1 / 4)
+    Page Should Contain  Users with submissions (1 / 5)
 
 Statistics Page Displays Average Zero If There Is No Answers
     Go To Statistics  1
@@ -100,14 +100,14 @@ Statistics Page Displays Average Zero If There Is No Answers
 
 Statistics Page Displays Correct Average Values
     Go To Statistics  8
-    Page Should Contain  3.75
-    Page Should Contain  1.25
+    Page Should Contain  3.0
+    Page Should Contain  2.0
 
 Filtering By Email Filters Users
     Go To Statistics  8
     Input Text  filter_email  duser
     Click Button  Filter
-    Page Should Contain  Users with submissions (2 / 4)
+    Page Should Contain  Users with submissions (2 / 5)
 
 With Filtering Unfiltered Average Is Shown
     Go To Statistics  8
@@ -116,7 +116,7 @@ With Filtering Unfiltered Average Is Shown
     Page Should Contain  Average score
     Page Should Contain  5.0   
     Page Should Contain  Unfiltered average
-    Page Should Contain  3.75
+    Page Should Contain  3.0
 
 Filtering With Email And Group Shows Correct Averages
     Go To Statistics  8

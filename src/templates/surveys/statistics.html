@@ -10,8 +10,8 @@
         {{ buttons.link_button("Back to survey", "/surveys/%s" % survey_id) }}
     </div>
     <p class="text-slate-600 font-mono text-sm font-medium">
-        {% if submissions %}
-        Total submissions: {{ submissions }}
+        {% if total_users %}
+        Total submissions: {{ total_users }}
         {% else %}
         Total submissions: 0
         {% endif %}
