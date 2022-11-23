@@ -3,7 +3,7 @@ from datetime import datetime
 from sqlalchemy import exc
 from helper import json_into_dictionary,category_weights_as_json
 from db import db
-
+from helper import json_into_dictionary
 
 class SurveyRepository:
     """
@@ -1278,3 +1278,87 @@ class SurveyRepository:
         if not category_results:
             return None
         return category_results
+
+    def survey_status_handle_questions(self, questions, questions_without_answers, questions_without_categories, categories_with_questions):
+        for question in questions:
+                if self.get_question_answers(question[0]) == []:
+                    questions_without_answers.append(question[1])
+                question_category_weights = json_into_dictionary(question[3])
+                if self.all_category_weights_equal_0(question_category_weights):
+                    questions_without_categories.append(question[1])
+                for key in question_category_weights:
+                    if question_category_weights[key] != float(0.0):
+                        categories_with_questions.append(question[1])
+
+    def all_category_weights_equal_0(self, category_weights_as_dict):
+        """
+        Check if all category_weight values are equal to 0.0
+        """
+        return list(set(list(category_weights_as_dict.values()))) == [0.0]
+
+    def check_survey_status(self, survey_id):
+        """
+        Checks the status of a survey. Returns a list with information and a status where:
+        - 'red' = critical error:
+            - no survey results exist
+            - no category results exist
+            - survey contains no questions
+            - there are questions without answers
+            - survey contains no categories
+        - 'yellow' = missing information:
+            - there are questions without categories
+            - there are categories without questions
+        - 'green' = Survey is complete.
+
+        Returns a list as follows:
+        [
+            status  : (str) 'red','yellow' or 'green',
+            no_survey_results : (bool),
+            no_categories : (bool),
+            categories_without_results : (list) [category names],
+            no_questions : (bool),
+            questions_without_answers :(list) [question names],
+            questions_without_categories :(list) [category names],
+            categories_without_questions : (list) [category names]
+        ]
+        """
+        categories = self.get_categories_of_survey(survey_id)
+        questions = self.get_questions_of_survey(survey_id)
+
+        no_survey_results = self.get_survey_results(survey_id) == []
+        no_categories = self.get_categories_of_survey(survey_id) == []
+        no_questions = self.get_questions_of_survey(survey_id) == []
+
+        categories_without_results = []
+        questions_without_answers = []
+        questions_without_categories = []
+        categories_with_questions = []
+        categories_without_questions = []
+        
+        self.survey_status_handle_questions(questions, questions_without_answers, questions_without_categories,categories_with_questions)
+
+        for category in categories:
+            if self.get_category_results_from_category_id(category[0]) == None:
+                categories_without_results.append(category[1])
+                if category[1] not in categories_with_questions:
+                    categories_without_questions.append(category[1])
+
+        if no_survey_results or categories_without_results or questions_without_answers or no_categories or no_questions:
+            status = "red"
+
+        elif questions_without_categories or categories_without_questions:
+            status = "yellow"
+
+        else:
+            status = "green"
+        
+        return [
+            status, 
+            no_survey_results,
+            no_categories,
+            categories_without_results,
+            no_questions,
+            questions_without_answers,
+            questions_without_categories,
+            categories_without_questions,
+            ]

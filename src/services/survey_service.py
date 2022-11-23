@@ -590,5 +590,16 @@ class SurveyService:
         """Updates the original results of a survey to new ones"""
         return self.survey_repository.update_category_results(original_results, new_results, survey_id)
 
+    def check_survey_status(self, survey_id):
+        """Check the survey status: Returns survey status (red, yellow, green)
+        and information about:
+        - missing survey results
+        - missing categories
+        - missing category results
+        - missing questions
+        - questions without answers
+        - questions without categories
+        - categories without questions"""
+        return self.survey_repository.check_survey_status(survey_id)
 
 survey_service = SurveyService(SurveyRepository())

@@ -624,6 +624,7 @@ INSERT INTO public."Surveys" VALUES (3, 'test', '2022-09-30 06:55:00.222057+00',
 INSERT INTO public."Surveys" VALUES (6, 'Developer survey', '2022-10-10 10:29:40.528707+00', '2022-10-10 10:33:02.23283+00', 'What type of developer are you?', 'Are you more of a energy drink slurping back-end engineer or a coffee connoisseur front-end dev?', NULL);
 INSERT INTO public."Surveys" VALUES (7, 'City survey', '2022-10-10 10:34:07.535414+00', '2022-10-10 10:34:07.535414+00', 'What Finnish city would you be?', 'Are you more of a Hamina or Hanko type of person? Come and find out!', NULL);
 INSERT INTO public."Surveys" VALUES (8, 'Elephants', '2022-11-03 10:28:07.535414+00', '2022-11-03 10:28:07.535414+00', 'What kind of an elephant are you?', 'The amazing elephant survey!', NULL);
+INSERT INTO public."Surveys" VALUES (9, 'Survey without survey_results or category_results ', '2022-11-03 10:28:07.535414+00', '2022-11-03 10:28:07.535414+00', 'Built in schema.sql', 'This should not happen in production', NULL);
 
 
 --
