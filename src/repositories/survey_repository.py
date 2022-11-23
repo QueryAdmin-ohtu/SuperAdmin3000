@@ -1243,3 +1243,27 @@ class SurveyRepository:
         if not category_results:
             return None
         return category_results
+
+    def check_survey_status(self, survey_id):
+        """
+        [status, no_survey_results, categories_without_results, questions_without_answers, questions_without_categories, categories_without_questions].
+        """
+        status = "Red"
+
+        if self.get_survey_results == []:
+            no_survey_results = True
+        else: 
+            no_survey_results = False
+        
+        categories_without_results = []
+        questions_without_answers = []
+        questions_without_categories = []
+        categories_without_questions=[]
+        
+        return [
+            status, 
+            no_survey_results,
+            categories_without_results,
+            questions_without_answers,
+            questions_without_categories,
+            categories_without_questions]

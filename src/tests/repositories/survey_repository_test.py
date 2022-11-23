@@ -190,6 +190,7 @@ class TestSurveyRepository(unittest.TestCase):
 
         with self.app.app_context():
             response = self.repo.get_all_surveys()
+            print(">>>>", response)
         self.assertEqual(len(response), 7)
 
     def test_get_all_surveys_returns_correct_submission_count(self):
@@ -200,8 +201,8 @@ class TestSurveyRepository(unittest.TestCase):
 
         submissions_first_survey = response[0][3]
         self.assertEqual(submissions_first_survey, 0)
-        submissions_last_survey = response[7][3]
-        self.assertEqual(submissions_last_survey, 3)
+        submissions_elephant_survey = response[5][3]
+        self.assertEqual(submissions_elephant_survey, 4)
 
     def test_get_questions_of_survey_returns_questions(self):
 
@@ -1155,3 +1156,5 @@ class TestSurveyRepository(unittest.TestCase):
             self.repo.update_category_results(or2, nr2, 1)
             results = self.repo.get_category_results_from_category_id(category_id)
             self.assertEqual(results, nr2)
+
+    
