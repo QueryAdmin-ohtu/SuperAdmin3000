@@ -624,13 +624,13 @@ class TestSurveyRepository(unittest.TestCase):
             result = self.repo.get_answer_distribution(survey_id)
 
         self.assertEqual(result[0][4], 3)
-        self.assertEqual(result[1][4], 1)
+        self.assertEqual(result[1][4], 2)
 
-    def test_answer_distribution_filtered(self):
+    def test_answer_distribution_filtered_by_email(self):
         with self.app.app_context():
             survey_id = self.repo.survey_exists("Elephants")[1]
-            result = self.repo.get_answer_distribution_filtered(survey_id,
-                                                                None, None, '')
+            result = self.repo.get_answer_distribution_filtered(
+                survey_id, email="@")
 
         self.assertEqual(result[0][4], 3)
         self.assertEqual(result[1][4], 1)

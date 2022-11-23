@@ -774,7 +774,7 @@ class SurveyRepository:
         WHERE s.id=:survey_id
             AND ((:start_date IS NULL AND :end_date IS NULL) OR (ua."createdAt" BETWEEN :start_date AND :end_date))
             AND ((:group_id IS NULL) OR (u."groupId"=:group_id))
-            AND (u."email" LIKE :email)
+            AND (COALESCE (u."email", '') LIKE :email)
         GROUP BY q.id, q.text, qa.id, qa.text
         ORDER BY q.id
         """
