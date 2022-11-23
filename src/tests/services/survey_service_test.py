@@ -506,3 +506,7 @@ class TestSurveyService(unittest.TestCase):
         self.assertTrue(response)
         self.repo_mock.update_category_results.assert_called_with(original_results,
                                                                 new_results, 3)
+
+    def test_check_survey_status_calls_repo_correctly(self):
+        self.survey_service.check_survey_status(1)
+        self.repo_mock.check_survey_status.assert_called_with(1)
