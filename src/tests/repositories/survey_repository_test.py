@@ -201,7 +201,7 @@ class TestSurveyRepository(unittest.TestCase):
         submissions_first_survey = response[0][3]
         self.assertEqual(submissions_first_survey, 0)
         submissions_elephant_survey = response[5][3]
-        self.assertEqual(submissions_elephant_survey, 4)
+        self.assertEqual(submissions_elephant_survey, 5)
 
     def test_get_questions_of_survey_returns_questions(self):
 
