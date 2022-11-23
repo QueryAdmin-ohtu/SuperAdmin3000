@@ -10,7 +10,7 @@
 </div>
 
 
-{{ buttons.link_button("Back to survey", "/surveys/%s" % survey[0]) }}
+{{ buttons.link_button("Back to category", "/edit_category/%s/%s" % (survey.id, category.id)) }}
 <div class="flex flex-col gap-6 items-start w-full">
     <h1 class="text-slate-700">Add a result</h1>  
     <form class="w-full" action="/edit_category/{{survey.id}}/{{category.id}}/new-category-result" method="POST">

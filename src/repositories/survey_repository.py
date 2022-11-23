@@ -1,7 +1,7 @@
 import uuid
 from datetime import datetime
 from sqlalchemy import exc
-
+from helper import json_into_dictionary,category_weights_as_json
 from db import db
 
 
@@ -627,6 +627,10 @@ class SurveyRepository:
         """ Updates category in the database.
         If succesful returns category_id.
         """
+        category = self.get_category(category_id)
+        if category:
+            if category[1] != name:
+                self.update_category_in_questions(category[6],category[1],name)
 
         sql = """ UPDATE "Categories" SET name=:name, description=:description,
         content_links=:content_links, "updatedAt"=:updated 
@@ -642,10 +646,41 @@ class SurveyRepository:
         except exc.SQLAlchemyError:
             return False
         if updated is not None:
-            category = self.get_category(category_id)
             self.update_survey_updated_at(category[6])
             return updated[0]
         return None
+
+    def update_category_in_questions(self, survey_id, original_name, new_name):
+        """ Takes a survey id and goes through every question related to
+        it. In the category weights of those questions, it renames the
+        category with the original name to the new name. The function is
+        only called from update_category and doesn't return anything. """
+        questions = self.get_questions_of_survey(survey_id)
+        categories = self.get_categories_of_survey(survey_id)
+        for question in questions:
+            weights = json_into_dictionary(question[3])
+            try:
+                weights[original_name]
+            except KeyError:
+                continue
+            new_categories = []
+            multipliers = {}
+            for category in categories:
+                if category[1] == original_name:
+                    new_categories.append([category[0],new_name,category[2],category[3]])
+                else:
+                    new_categories.append(category)
+                try:
+                    multipliers["cat"+str(category[0])] = weights[category[1]]
+                except KeyError:
+                    multipliers["cat"+str(category[0])] = 0.0
+            category_weights = category_weights_as_json(new_categories,multipliers)
+            sql = """ UPDATE "Questions" SET category_weights=:category_weights,
+            "updatedAt"=:updated WHERE id=:question_id """
+            values = {"category_weights":category_weights,"updated": "NOW()",
+                    "question_id": question[0]}
+            self.db_connection.session.execute(sql, values)
+        self.db_connection.session.commit()
 
     def delete_category(self, category_id: str):
         """ Deletes a category from the database
