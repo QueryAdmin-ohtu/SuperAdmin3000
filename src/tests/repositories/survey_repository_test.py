@@ -190,8 +190,7 @@ class TestSurveyRepository(unittest.TestCase):
 
         with self.app.app_context():
             response = self.repo.get_all_surveys()
-            print(">>>>", response)
-        self.assertEqual(len(response), 7)
+        self.assertEqual(len(response), 8)
 
     def test_get_all_surveys_returns_correct_submission_count(self):
         self._create_survey_and_add_user_answers()
