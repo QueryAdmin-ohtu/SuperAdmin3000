@@ -100,8 +100,8 @@ Statistics Page Displays Average Zero If There Is No Answers
 
 Statistics Page Displays Correct Average Values
     Go To Statistics  8
-    Page Should Contain  3.75
-    Page Should Contain  1.25
+    Page Should Contain  3.0
+    Page Should Contain  2.0
 
 Filtering By Email Filters Users
     Go To Statistics  8
@@ -116,7 +116,7 @@ With Filtering Unfiltered Average Is Shown
     Page Should Contain  Average score
     Page Should Contain  5.0   
     Page Should Contain  Unfiltered average
-    Page Should Contain  3.75
+    Page Should Contain  3.0
 
 Filtering With Email And Group Shows Correct Averages
     Go To Statistics  8
