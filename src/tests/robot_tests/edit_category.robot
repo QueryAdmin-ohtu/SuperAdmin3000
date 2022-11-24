@@ -98,7 +98,7 @@ Logged In User Can Edit a Content Link
     Go To Survey  1
     Click Link  edit_button_1
     Edit Content Link
-    Click Link  edit_button_1
+    # Click Link  edit_button_1
     Page Should Contain  kissa
     Page Should Contain  koira
 
@@ -107,6 +107,7 @@ Logged In User Can Delete a Content Link
     Click Link  edit_button_1
     Page Should Contain  kissa    
     Click Button  delete_url_0
-    Click Link  edit_button_1
+    Handle Alert  Accept
+    # Click Link  edit_button_1
     Page Should Not Contain  kissa
 
