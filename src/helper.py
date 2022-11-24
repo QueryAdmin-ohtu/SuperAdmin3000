@@ -220,3 +220,25 @@ def check_cutoff_points(cutoffs):
     if len(unique_list) != len(float_cutoffs):
         return "There must not be any identical cutoff values"
     return "Correct"
+
+def questions_where_given_category_is_required(questions, cat_name):
+    """ Checks the category weights for the given questions
+    to see if the given category is can not be deleted """
+    category_required_by = []
+    for question in questions:
+        if only_non_zero_weight_for_question(question, cat_name):
+            category_required_by.append(question[1])
+    return category_required_by
+
+def only_non_zero_weight_for_question(question, cat_name):
+    """ Checks if the given category is included in the only
+    non zero category weight for the given question """
+    non_zero_weights = 0
+    weights = json_into_dictionary(question[3])
+
+    for category, weight in weights.items():
+        if weight != 0:
+            non_zero_weights += 1
+    if non_zero_weights == 1 and weights[cat_name] != 0:
+        return True
+    return False
