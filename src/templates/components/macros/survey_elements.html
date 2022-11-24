@@ -89,7 +89,8 @@
         answer[2]) }}
         </div>      
         <div class="flex flex-grow"></div>
-        {{ form_elements.submit_button("Delete answer", "destructive", "/surveys/%s/question/%s/answers/%s" % (survey.id, question_id, answer.id)) }}
+        {% set delete_confirmation = "document.getElementById('helper').innerHTML='trigger confirmation'" %}
+        {{ form_elements.submit_button("Delete answer", "destructive", "/surveys/%s/question/%s/answers/%s" % (survey.id, question_id, answer.id), onclick=delete_confirmation) }}
     </div>
 </details>
 {% endcall %}
