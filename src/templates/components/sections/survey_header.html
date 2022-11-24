@@ -5,6 +5,7 @@
     <div class="flex flex-col gap-2">
         <p class="text-gray-700 font-light">{{ survey.name }}</p>
         <h1 class="text-gray-900">{{ survey.title_text }}</h1>
+        {% include "components/sections/survey_status.html" %}
     </div>
     <div class="flex items-start md:justify-end gap-2">
         {{ buttons.link_button("Edit survey", "/surveys/%s/edit" % survey[0]) }}
@@ -14,7 +15,7 @@
 </div>
 <div class="grid lg:grid-cols-3 gap-6 lg:gap-8">
     <p class="text-gray-700 text-base mb-4 lg:col-span-2">{{ survey.survey_text }}</p>
-    <p class="text-sky-700 text-base mb-4 lg:col-span-2 hover:text-sky-700 hover:underline font-medium rounded-lg text-sm"><a href="https://student-collaboration-fall2022.herokuapp.com/?survey={{survey[0]}}">Answer the survey</a></p>
+    <p class="text-sky-700 text-base mb-4 lg:col-span-2 hover:text-sky-700 hover:underline font-medium rounded-lg"><a href="https://student-collaboration-fall2022.herokuapp.com/?survey={{survey[0]}}">Answer the survey</a></p>
     {% call survey_elements.card() %}
     <div class="flex justify-between">
         <h5 class="text-gray-900 text-xl leading-tight font-medium mb-2">Statistics</h5>

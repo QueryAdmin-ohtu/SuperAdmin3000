@@ -2,7 +2,19 @@
 {% import "components/macros/survey_elements.html" as survey_elements %}
 {% import "components/macros/buttons.html" as buttons %}
 {% block content %}
-
+{% set survey_status = ["green", true, false, [], true, [], [], []] %}
+{#
+[           
+            status :                        (str) 'red','yellow' or 'green',
+            no_survey_results :               (bool),
+            no_categories :                  (bool),
+            categories_without_results :    (list) [category names],
+            no_questions :                  (bool),
+            questions_without_answers :     (list) [question names],
+            questions_without_categories :  (list) [category names],
+            categories_without_questions :  (list) [category names]
+]
+#}
 {% if survey %}
 <div class="flex flex-col gap-6">
     {% include "components/sections/survey_deletition_modal.html" %}

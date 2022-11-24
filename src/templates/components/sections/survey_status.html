@@ -1,0 +1,61 @@
+{#
+[
+status : (str) 'red','yellow' or 'green',
+no_survey_results : (bool),
+no_categories : (bool),
+categories_without_results : (list) [category names],
+no_questions : (bool),
+questions_without_answers : (list) [question names],
+questions_without_categories : (list) [category names],
+categories_without_questions : (list) [category names]
+]
+#}
+
+{% set survey_status_color = survey_status[0] %}
+
+{% if survey_status_color == "red" %}
+{% set stroke_color = "border-rose-500" %}
+{% set bg_color = "bg-rose-50" %}
+{% set label_text = "Critical error" %}
+
+{% elif survey_status_color == "yellow" %}
+{% set stroke_color = "border-amber-500" %}
+{% set bg_color = "bg-amber-50" %}
+{% set label_text = "Warning" %}
+
+{% else %}
+{% set stroke_color = "border-emerald-500" %}
+{% set bg_color = "bg-emerald-50" %}
+{% set label_text = "All good" %}
+
+{% endif %}
+
+{% macro status_icon_svg() %}
+{% if survey_status_color == "red" %}
+<svg width="21" height="20" viewBox="0 0 21 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path
+        d="M10.6077 8.1235V11.8735M1.30473 15.2495C0.438731 16.7495 1.52173 18.6235 3.25273 18.6235H17.9627C19.6927 18.6235 20.7757 16.7495 19.9107 15.2495L12.5567 2.5015C11.6907 1.0015 9.52473 1.0015 8.65873 2.5015L1.30473 15.2495V15.2495ZM10.6077 14.8735H10.6147V14.8815H10.6077V14.8735Z"
+        stroke="#F43F5E" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+</svg>
+
+{% elif survey_status_color == "yellow" %}
+<svg width="21" height="20" viewBox="0 0 21 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path
+        d="M8.48642 5.519C9.65742 4.494 11.5574 4.494 12.7284 5.519C13.9004 6.544 13.9004 8.206 12.7284 9.231C12.5254 9.41 12.2984 9.557 12.0584 9.673C11.3134 10.034 10.6084 10.672 10.6084 11.5V12.25M19.6074 10C19.6074 11.1819 19.3746 12.3522 18.9223 13.4442C18.47 14.5361 17.8071 15.5282 16.9714 16.364C16.1357 17.1997 15.1435 17.8626 14.0516 18.3149C12.9596 18.7672 11.7893 19 10.6074 19C9.42553 19 8.2552 18.7672 7.16327 18.3149C6.07134 17.8626 5.07919 17.1997 4.24346 16.364C3.40773 15.5282 2.7448 14.5361 2.29251 13.4442C1.84021 12.3522 1.60742 11.1819 1.60742 10C1.60742 7.61305 2.55563 5.32387 4.24346 3.63604C5.93129 1.94821 8.22047 1 10.6074 1C12.9944 1 15.2836 1.94821 16.9714 3.63604C18.6592 5.32387 19.6074 7.61305 19.6074 10ZM10.6074 15.25H10.6154V15.258H10.6074V15.25Z"
+        stroke="#F59E0B" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+</svg>
+
+{% else %}
+<svg width="21" height="20" viewBox="0 0 21 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M7.56233 10.75L9.84617 13L13.6526 7.75M19.7428 10C19.7428 11.1819 19.5065 12.3522 19.0474 13.4442C18.5883 14.5361 17.9154 15.5282 17.0671 16.364C16.2188 17.1997 15.2117 17.8626 14.1034 18.3149C12.995 18.7672 11.8071 19 10.6074 19C9.40778 19 8.21985 18.7672 7.1115 18.3149C6.00315 17.8626 4.99608 17.1997 4.14779 16.364C3.29949 15.5282 2.62659 14.5361 2.16749 13.4442C1.7084 12.3522 1.47211 11.1819 1.47211 10C1.47211 7.61305 2.43458 5.32387 4.14779 3.63604C5.86099 1.94821 8.1846 1 10.6074 1C13.0303 1 15.3539 1.94821 17.0671 3.63604C18.7803 5.32387 19.7428 7.61305 19.7428 10Z" stroke="#10B981" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+    
+
+{% endif %}
+{% endmacro %}
+
+<div
+    class="flex flex-row justify-start items-center w-fit py-2 px-3 gap-3 rounded-lg {{ bg_color }} border-2 {{ stroke_color }} cursor-pointer">
+    {{ status_icon_svg() }}
+    <p class="font-medium capitalize text-sm">{{ label_text }}</p>
+</div>
