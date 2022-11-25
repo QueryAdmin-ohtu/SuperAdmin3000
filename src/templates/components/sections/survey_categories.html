@@ -9,36 +9,34 @@
     </div>
     <div>
         {% if categories %}
-        {% for category in categories %}
-        <!-- {{category[0]}} -->
-        <div class="table-row">
-            <div class="table-cell pr-4">
-                <div class="flex items-center">
-                    <div class="inline-flex" role="group">
-                        <div style="margin-top: 3.5px">
-                            {{ buttons.link_button("Edit", "/edit_category/%s/%s" %(survey[0],category[0]), id="edit_button_%s" % category[0]) }}
-                        </div>
-                        <div>
-                            <form id="delete" class="m-1"       
-                                action="/delete_category" method="POST">
-                                <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
-                                <input type="hidden" name="category_id" value="{{ category[0] }}">
-                                <input type="hidden" name="survey_id" value="{{ survey_id }}">
-                                {{ buttons.form_button("Delete", "delete", "delete", "destructive", id="delete_button_%s" %
-                                category[0]) }}
-                            </form>
+            {% for category in categories %}
+                <div class="table-row">
+                    <div class="table-cell pr-4">
+                        <div class="flex items-center">
+                            <div class="inline-flex" role="group">
+                                <div style="margin-top: 3.5px">
+                                    {{ buttons.link_button("Edit", "/edit_category/%s/%s" %(survey[0],category[0]), id="edit_button_%s" % category[0]) }}
+                                </div>
+                                <div>
+                                    <form id="delete" class="m-1"       
+                                        action="/delete_category" method="POST">
+                                        <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
+                                        <input type="hidden" name="category_id" value="{{ category[0] }}">
+                                        <input type="hidden" name="survey_id" value="{{ survey_id }}">
+                                        {{ buttons.form_button("Delete", "delete", "delete", "destructive", id="delete_button_%s" % category[0]) }}
+                                    </form>
+                                </div>
+                            </div>
                         </div>
                     </div>
+                    <div class="table-cell">
+                        <small style="color: grey;">Name:</small> {{category[1]}} &nbsp&nbsp&nbsp&nbsp <small style="color: grey;">Description:</small> {{category[2]}}
+                    </div>
                 </div>
-            </div>
-            <div class="table-cell">
-                <small style="color: grey;">Id:</small> {{category[0]}} &nbsp&nbsp&nbsp&nbsp <small style="color: grey;">Name:</small> {{category[1]}} &nbsp&nbsp&nbsp&nbsp <small style="color: grey;">Description:</small> {{category[2]}}
-            </div>
-        </div>
-        <hr style="margin-bottom:10px; margin-top:5px">
-        {% endfor %}
+                <hr style="margin-bottom:10px; margin-top:5px">
+            {% endfor %}
         {% else %}
-        <p>Survey has no categories 🥺</p>
+            <p>Survey has no categories 🥺</p>
         {% endif %}
     </div>
 {% endcall %}
