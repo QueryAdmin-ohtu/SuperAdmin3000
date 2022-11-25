@@ -438,3 +438,40 @@ def test_category_required_by_contains_correct_question_names():
         "Category 2"
     )
     assert result == ["Question 2", "Question 4"]
+
+def test_category_is_removed_from_weights():
+    original_weights = [{"category":"dog", "multiplier":"1"}, {"category":"cat", "multiplier":"0"}]
+    result = helper.updated_category_weights_as_json(
+        original_weights,
+        "cat"
+    )
+    assert result == '[{"category": "dog", "multiplier": "1"}]'
+
+def test_updated_question_ids_and_weights_removes_cat_from_all_weights():
+    questions = [
+        (
+            1,
+            None,
+            None,
+            '[{"category":"dog", "multiplier":"1"}, {"category":"cat", "multiplier":"1"}]',
+            None,
+            None
+        ),
+        (
+            2,
+            None,
+            None,
+            '[{"category":"dog", "multiplier":"1"}, {"category":"cat", "multiplier":"0"}, {"category":"bird", "multiplier":"3"}]',
+            None,
+            None
+        )
+    ]
+    question_ids, cat_weights = helper.updated_question_ids_and_weights(
+        questions,
+        "cat"
+    )
+    assert question_ids == [1, 2]
+    assert cat_weights == [
+        '[{"category": "dog", "multiplier": "1"}]',
+        '[{"category": "dog", "multiplier": "1"}, {"category": "bird", "multiplier": "3"}]'
+    ]
