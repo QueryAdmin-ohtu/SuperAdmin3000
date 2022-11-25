@@ -371,13 +371,15 @@ def edit_category():
         for i, item in enumerate(content_links):
             new_content = {
                 'url': request.form[f"url_{i}"], 'type': request.form[f"type_{i}"]}
+            print(new_content, flush=True)
             if new_content['url'] and new_content['type']:
                 new_content_links.append(new_content)
         new_content_links_json = json.dumps(new_content_links)
         survey_service.update_category(
             category_id, new_content_links_json, name, description)
         # Unclear UX question - Where to return the user when saving changes.
-        return redirect(f"/surveys/{survey_id}")
+        # return redirect(f"/surveys/{survey_id}")
+        return redirect(f"/edit_category/{survey_id}/{category_id}")
 
     # Creating a new survey
     new_content_links_json = json.dumps(new_content_links)
