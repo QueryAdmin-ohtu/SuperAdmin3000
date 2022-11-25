@@ -537,3 +537,9 @@ class TestSurveyService(unittest.TestCase):
         )
         call_count = self.repo_mock.remove_category_from_question.call_count
         self.assertEqual(call_count, 3)
+    
+    def test_delete_category_results_for_category_calls_repo_correctly(self):
+        self.repo_mock.delete_category_results_of_category.return_value = True
+        result = self.survey_service.delete_category_results_for_category(1)
+        self.assertTrue(result)
+        self.repo_mock.delete_category_results_of_category.assert_called_with(1)
