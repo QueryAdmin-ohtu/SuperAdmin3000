@@ -62,6 +62,7 @@ Survey Result Can Be Deleted
     Click Link  Manage results
     Expand Result Card  1
     Click Button  Delete result
+    Handle Alert  Accept
     Page Should Not Contain  Result at cutoff point 0.5:
 
 Survey Result With Cutoff Value One Can not Be Deleted
@@ -72,6 +73,7 @@ Survey Result With Cutoff Value One Can not Be Deleted
     Save Result
     Expand Result Card  1
     Click Button  Delete result
+    Handle Alert  Accept
     Expand Result Card  1
     Page Should Not Contain  Delete
 

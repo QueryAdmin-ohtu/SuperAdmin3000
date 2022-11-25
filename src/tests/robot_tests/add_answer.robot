@@ -17,14 +17,19 @@ Logged In User Can Delete Answers
     Click Button  EDIT
     Expand Answer Card  1
     Click Button  Delete answer
+    Handle Alert  Accept
     Expand Answer Card  1
     Click Button  Delete answer
+    Handle Alert  Accept
     Expand Answer Card  1
     Click Button  Delete answer
+    Handle Alert  Accept
     Expand Answer Card  1
     Click Button  Delete answer
+    Handle Alert  Accept
     Expand Answer Card  1
     Click Button  Delete answer
+    Handle Alert  Accept
 
 Logged In User Can Add Answer To New Question
     Go To Survey  1
@@ -72,6 +77,7 @@ Logged In User Can Delete Answer
     Page Should Contain  Hammer
     Expand Answer Card  1
     Click Button  Delete answer
+    Handle Alert  Accept
     Page Should Not Contain  Hammer
 
 Logged In User Can Edit Answers And Question While Creating Answer
