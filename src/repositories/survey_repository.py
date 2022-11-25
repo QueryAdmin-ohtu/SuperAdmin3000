@@ -1301,28 +1301,35 @@ class SurveyRepository:
         """ Go through all questions in a survey and check the category
         names in the weights of the question. If the category name
         can not be found in the categories of the survey, the name
-        is added to the list to be returned.
+        is added to the dictionary to be returned.
 
         Args:
             categories:  All the categories of the survey
             questions:   All the questions of the survey
 
         Returns:
-            A list of category names
+            A dictionary, where the key is the question id,
+            and values are a list of category names:
+            {1: ["foo", "bar"], 5: ["baz"]}
         """
-        result = []
+        result = {}
         category_names = []
-
+        
         for category in categories:
             category_names.append(category[1])
 
         for question in questions:
+            name_list = []
+
             weights_json = question[3]
             weights = json_into_dictionary(weights_json)
 
             for weight_name in weights.keys():
                 if weight_name not in category_names:
-                    result.append(weight_name)
+                    name_list.append(weight_name)
+
+            if name_list != []:
+                result[question[0]] = name_list
 
         return result
 
@@ -1347,7 +1354,8 @@ class SurveyRepository:
             no_survey_results : (bool),
             no_categories : (bool),
             unrelated_categories_in_weights : (list) [category names]
-            categories_without_results : (list) [category names],
+            categories_without_results :
+                (dictionary) {question_id: [category names]},
             no_questions : (bool),
             questions_without_answers :(list) [question names],
             questions_without_categories :(list) [category names],
@@ -1402,8 +1410,8 @@ class SurveyRepository:
             no_categories,
             categories_without_results,
             no_questions,
-            unrelated_categories_in_weights,
             questions_without_answers,
             questions_without_categories,
             categories_without_questions,
+            unrelated_categories_in_weights
             ]
