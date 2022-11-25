@@ -1200,6 +1200,10 @@ class TestSurveyRepository(unittest.TestCase):
             )
             self.assertIsNone(result)
     
+    def test_all_category_results_are_deleted_with_found_id(self):
+        with self.app.app_context():
+            result = self.repo.delete_category_results_of_category(300)
+            self.assertTrue(result)
 
     def test_update_category_in_questions(self):
         with self.app.app_context():
