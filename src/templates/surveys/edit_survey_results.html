@@ -39,13 +39,17 @@
     <div class="w-full">
         <p id="helper" style="display:none">xxx</p>
         {% endcall %}
-        {% for result in results %}
-        {% if result[2] == 1.0 %}     
-        {{ survey_elements.survey_result_card(result, loop.index, hide_delete_button=True, lock_cutoff_value=True) }}
+        {% if results %}
+            {% for result in results %}
+                {% if result[2] == 1.0 %}     
+                    {{ survey_elements.survey_result_card(result, loop.index, hide_delete_button=True, lock_cutoff_value=True) }}
+                {% else %}
+                    {{ survey_elements.survey_result_card(result, loop.index) }}
+                {% endif %}
+            {% endfor %}
         {% else %}
-        {{ survey_elements.survey_result_card(result, loop.index) }}
+            <p>Survey has no results 🥺</p>
         {% endif %}
-        {% endfor %}
     </div>
 </div>
 
@@ -56,7 +60,6 @@
             answer=confirm('Are you sure you want to delete the result?')
         } 
         if (!answer) {
-            // location.reload();
             return false
         }
         return true
