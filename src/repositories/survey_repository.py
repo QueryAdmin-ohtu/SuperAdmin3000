@@ -696,6 +696,7 @@ class SurveyRepository:
         }
         try:
             new_weights = self.db_connection.session.execute(sql, values).fetchone()
+            self.db_connection.session.commit()
         except exc.SQLAlchemyError:
             return None
         return new_weights[0]
@@ -1278,6 +1279,23 @@ class SurveyRepository:
             self.db_connection.session.execute(sql, values)
             self.db_connection.session.commit()
         except ValueError or exc.SQLAlchemyError:
+            return False
+        return True
+    
+    def delete_category_results_of_category(self, category_id):
+        """ Deletes all category results for the given category """
+        sql = """
+        DELETE FROM "Category_results"
+        WHERE "categoryId"=:category_id
+        """
+
+        try:
+            values = {
+                "category_id":category_id
+            }
+            self.db_connection.session.execute(sql, values)
+            self.db_connection.session.commit()
+        except exc.SQLAlchemyError:
             return False
         return True
 
