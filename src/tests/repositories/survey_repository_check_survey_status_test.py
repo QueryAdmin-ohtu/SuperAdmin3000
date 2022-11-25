@@ -119,8 +119,8 @@ class TestSurveyRepository(unittest.TestCase):
                 question_id = self.repo.create_question("Question with answers and so forth!", survey_id, '[{"category": "status category 1", "multiplier": 1.0}]')
                 self.repo.create_answer("Answer to question", 1, question_id)
                 check = self.repo.check_survey_status(survey_id)
-                self.assertEquals(len(check), 8)
-                self.assertEquals(check, ['green', False, False, [], False, [], [], []])
+                self.assertEquals(len(check), 9)
+                self.assertEquals(check, ['green', False, False, [], False, [], [], [], {}])
                 self.deleteSurvey(survey_id)
 
     def test_check_survey_status_returns_red(self):
@@ -152,3 +152,12 @@ class TestSurveyRepository(unittest.TestCase):
 
                 self.assertEquals(self.repo.check_survey_status(survey_id)[0], "yellow")
                 self.deleteSurvey(survey_id)
+
+    def test_get_unrelated_categories_in_weights_returns_unrelated_category_names(self):
+        questions = [(1, 'Q1', 10, [{'category': 'catA', 'multiplier': 1.0}], 2022, 2022),
+                     (2, 'Q2', 10, [{'category': 'missing', 'multiplier': 1.0}], 2022, 2022)]
+        categories = [(101, 'catA', 'description', 10, [], 2022, 2022)]
+
+        result = self.repo.get_unrelated_categories_in_weights(categories, questions)
+
+        self.assertEqual(result, {2: ['missing']})

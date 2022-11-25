@@ -19,14 +19,21 @@ def index():
     will be rendered, otherwise the login page will be displayed.
     """
     if not helper.logged_in():
-        return render_template("home/google_login.html", URI=app.config["GOOGLE_URI"], ENV=app.config["ENV"])
+        return render_template("home/google_login.html",
+                               URI=app.config["GOOGLE_URI"],
+                               ENV=app.config["ENV"])
 
     surveys = survey_service.get_all_surveys()
+
     if surveys is False:
         report = "There are no surveys"
-        return render_template("index.html", no_surveys=report,
+        return render_template("index.html",
+                               no_surveys=report,
                                ENV=app.config["ENV"])
-    return render_template("home/index.html", surveys=surveys, ENV=app.config["ENV"])
+
+    return render_template("home/index.html",
+                           surveys=surveys,
+                           ENV=app.config["ENV"])
 
 
 @home.route("/google_login", methods=["POST"])
