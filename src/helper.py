@@ -99,6 +99,37 @@ def category_weights_as_json(categories: list, form: dict):
 
     return json.dumps(category_list)
 
+def updated_question_ids_and_weights(questions, category_to_remove):
+    """ Removes the given category from every question's
+    category weights json
+    
+    Returns:
+    
+    List of question ids and category weight jsons """
+    question_ids = []
+    category_weights = []
+    for question in questions:
+        weights_dict= json.loads(question[3])
+        updated_weight_json = updated_category_weights_as_json(
+            weights_dict,
+            category_to_remove
+        )
+        question_ids.append(question[0])
+        category_weights.append(updated_weight_json)
+
+    return question_ids, category_weights
+
+def updated_category_weights_as_json(weights, category_to_remove: str):
+    """ Removes the category from the given category weight
+    dictionary and returns a weight json """
+    try:
+        new_weights = []
+        for weight in weights:
+            if weight["category"] != category_to_remove:
+                new_weights.append(weight)
+    except KeyError:
+        print("Category not found in weights")
+    return json.dumps(new_weights)
 
 def json_into_dictionary(json_file):
     """ Takes category weights and makes them into
