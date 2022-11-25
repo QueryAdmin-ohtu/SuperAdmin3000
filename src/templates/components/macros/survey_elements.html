@@ -48,7 +48,7 @@
                 <a href="/surveys/{{ survey.id }}/questions/{{ question.id }}">
                     <button id="edit-question-{{ row_num }}"
                         class="bg-sky-500 hover:bg-sky-700 p-4 rounded w-full h-fit text-lg text-white leading-tight focus:ring-sky-500 focus:border-sky-700 transition duration-150 ease-in-out">
-                        EDIT
+                        Edit
                     </button>
                 </a>
                 <form id="delete-question-{{ row_num }}" name="delete" action="/surveys/delete/{{survey[0]}}/{{question[0]}}" method="POST" onsubmit="return confirm('Are you sure you want to delete this question?');">
