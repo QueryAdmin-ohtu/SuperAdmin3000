@@ -1296,6 +1296,36 @@ class SurveyRepository:
         """
         return list(set(list(category_weights_as_dict.values()))) == [0.0]
 
+
+    def get_unrelated_categories_in_weights(self, categories, questions):
+        """ Go through all questions in a survey and check the category
+        names in the weights of the question. If the category name
+        can not be found in the categories of the survey, the name
+        is added to the list to be returned.
+
+        Args:
+            categories:  All the categories of the survey
+            questions:   All the questions of the survey
+
+        Returns:
+            A list of category names
+        """
+        result = []
+        category_names = []
+
+        for category in categories:
+            category_names.append(category[1])
+
+        for question in questions:
+            weights_json = question[3]
+            weights = json_into_dictionary(weights_json)
+
+            for weight_name in weights.keys():
+                if weight_name not in category_names:
+                    result.append(weight_name)
+
+        return result
+
     def check_survey_status(self, survey_id):
         """
         Checks the status of a survey. Returns a list with information and a status where:
@@ -1305,6 +1335,7 @@ class SurveyRepository:
             - survey contains no questions
             - there are questions without answers
             - survey contains no categories
+            - category weights in questions not found in categories
         - 'yellow' = missing information:
             - there are questions without categories
             - there are categories without questions
@@ -1315,6 +1346,7 @@ class SurveyRepository:
             status  : (str) 'red','yellow' or 'green',
             no_survey_results : (bool),
             no_categories : (bool),
+            unrelated_categories_in_weights : (list) [category names]
             categories_without_results : (list) [category names],
             no_questions : (bool),
             questions_without_answers :(list) [question names],
@@ -1329,21 +1361,33 @@ class SurveyRepository:
         no_categories = self.get_categories_of_survey(survey_id) == []
         no_questions = self.get_questions_of_survey(survey_id) == []
 
+        unrelated_categories_in_weights = \
+            self.get_unrelated_categories_in_weights(categories, questions)
+
         categories_without_results = []
         questions_without_answers = []
         questions_without_categories = []
         categories_with_questions = []
         categories_without_questions = []
         
-        self.survey_status_handle_questions(questions, questions_without_answers, questions_without_categories,categories_with_questions)
+        self.survey_status_handle_questions(questions,
+                                            questions_without_answers,
+                                            questions_without_categories,
+                                            categories_with_questions)
 
         for category in categories:
             if self.get_category_results_from_category_id(category[0]) == None:
+
                 categories_without_results.append(category[1])
+
                 if category[1] not in categories_with_questions:
                     categories_without_questions.append(category[1])
 
-        if no_survey_results or categories_without_results or questions_without_answers or no_categories or no_questions:
+        if no_survey_results or \
+           categories_without_results or \
+           questions_without_answers or \
+           no_categories or \
+           no_questions:
             status = "red"
 
         elif questions_without_categories or categories_without_questions:
@@ -1353,11 +1397,12 @@ class SurveyRepository:
             status = "green"
         
         return [
-            status, 
+            status,
             no_survey_results,
             no_categories,
             categories_without_results,
             no_questions,
+            unrelated_categories_in_weights,
             questions_without_answers,
             questions_without_categories,
             categories_without_questions,
