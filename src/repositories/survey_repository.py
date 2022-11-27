@@ -222,7 +222,11 @@ class SurveyRepository:
         """ Fetches all surveys, counts the questions and submissions for each survey
 
         Returns: List where each item contains the survey
-        id, title, question count and submission count
+        
+        [0] id
+        [1] title
+        [2] question count
+        [3] submission count
         """
         sql = """
         SELECT
@@ -243,6 +247,10 @@ class SurveyRepository:
 
         if not surveys:
             return False
+
+        # convert a list of sqlalchemy row objects to a list of lists
+        surveys[:] = map(list, surveys)
+
         return surveys
 
     def get_questions_of_survey(self, survey_id):

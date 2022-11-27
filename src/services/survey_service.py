@@ -121,15 +121,16 @@ class SurveyService:
         """
 
         surveys = self.survey_repository.get_all_surveys()
+        print(f"SURVEYS TYPE: {type(surveys)}", flush=True)
         result = []
         
         for row in surveys:
+            print(f"ROW TYPE: {type(row)}", flush=True)            
             survey = list(row)
             survey_id = survey[0]
             status = self.check_survey_status(survey_id)
             survey.append(status)
             result.append(survey)
-            print(f"Survey: {survey}", flush=True)            
 
         return result
 

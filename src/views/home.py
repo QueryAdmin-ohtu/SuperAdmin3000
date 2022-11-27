@@ -24,6 +24,7 @@ def index():
                                ENV=app.config["ENV"])
 
     surveys = survey_service.get_all_surveys()
+    print("SURVEYS:", surveys, flush=True)
 
     if surveys is False:
         report = "There are no surveys"
