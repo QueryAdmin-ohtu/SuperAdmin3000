@@ -74,7 +74,6 @@ User Is Shown Error Message When Deleting Category Which Is Only Non Zero Weight
     Go To Survey  1
     Page Should Contain  Survey categories
     Click Button  delete_button_1
-    Handle Alert  Accept
     Notification Is Displayed
     Page Should Contain  Check the following questions category weights before deleting 'Category 1': 'Question 8', 'Why', 'kysymys1'
 

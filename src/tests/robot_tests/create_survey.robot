@@ -18,7 +18,7 @@ Logged In User Can Create Surveys
     Page Should Contain  Testi
     Page Should Contain  Toimiikohan
     Page Should Contain  Surveyn tekeminen testauksessa
-    Page Should Contain  0%-100% of max points returns user
+    Page Should Contain  0% - 100% of the max points
     Page Should Contain  Your skills in this topic are excellent!
 
 Logged In User Cannot Create Surveys Without Name

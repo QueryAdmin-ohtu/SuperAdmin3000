@@ -1,20 +1,19 @@
 {% import "components/macros/survey_elements.html" as survey_elements %}
 
 {% call survey_elements.card() %}
-<h2 class="py-6">Results</h2>
+<h2 class="py-6">Survey results</h2>
 <div class="pb-6">
     {{ buttons.link_button("Manage results", "/surveys/%s/new-survey-result" % survey.id) }}
     <br>
 </div>
-{% if show_results %}
-    {% for result in show_results %}
-    <p>{{ result[0]}}
-    <br>{{ result[1] }}</p>
-    <br>
-    {% endfor %}
-{% else %}
-    <p>Survey has no results 🥺</p>
-{% endif %}
+    {% if show_results %}
+        {% for result in show_results %}
+            <p>{{ result[0]}} <span style="color:grey">of the max points returns the following result to the user:</span></p>
+            <p>"{{ result[1] }}"</p>
+            <hr style="margin-bottom:10px; margin-top:10px">
+        {% endfor %}
+    {% else %}
+        <p>Survey has no results 🥺</p>
+    {% endif %}
 </div>
-
 {% endcall %}
