@@ -114,12 +114,12 @@ def view_survey(survey_id):
         for i in range(len(results)):
             if i == 0:
                 if float(results[0][2]) == 0.0:
-                    text = "0% of max points returns user"
+                    text = "0%"
                 else:
-                    text = f"0%-{int(results[0][2]*100)}% of max points returns user"
+                    text = f"0% - {int(results[0][2]*100)}%"
                 show_results.append([text, results[0][1]])
             else:
-                text = f"{int(results[i-1][2]*100)}%-{int(results[i][2]*100)}% of max points returns user"
+                text = f"{int(results[i-1][2]*100)}% - {int(results[i][2]*100)}%"
                 show_results.append([text, results[i][1]])
     return render_template("surveys/view_survey.html", survey=survey,
                            questions=questions, survey_id=survey_id,
