@@ -1,21 +1,18 @@
 {% import "components/macros/survey_elements.html" as survey_elements %}
 
 {% call survey_elements.card() %}
-<h2 class="py-6">Questions</h2>
-<div class="pb-6">
-    {{ buttons.link_button("Add question", "/surveys/%s/new-question" % survey.id) }}
-    <br>
-</div>
-{% if questions %}
-<div class="table-row-group">
-    {% for question in questions %}
-    {{ survey_elements.question_table_row(survey, question, loop.index) }}
-    <hr>
-    {% endfor %}
+    <h2 class="py-6">Survey questions</h2>
+    <div class="pb-6">
+        {{ buttons.link_button("Add question", "/surveys/%s/new-question" % survey.id) }}<br>
+    </div>
+    <div>
+    {% if questions %}
+        {% for question in questions %}
+            {{ survey_elements.question_table_row(survey, question, loop.index) }}
+            <hr style="margin-bottom:10px; margin-top:5px">
+        {% endfor %}
     {% else %}
-    <p>Survey has no questions 🥺</p>
+        <p>Survey has no questions 🥺</p>
     {% endif %}
-
-</div>
-
+    </div>
 {% endcall %}

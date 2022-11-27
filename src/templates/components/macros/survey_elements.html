@@ -51,29 +51,31 @@
         row_num: Row numebr of table
 #}
 <div class="table-row">
-    <div class="table-cell pr-4">{{ row_num }}</div>
-
+    <div class="table-cell pr-4">
+        <span style="color:grey"><small>{{ row_num }}</small></span>
+    </div>
     <div class="table-cell pr-4">
         <div class="flex items-center">
             <div class="inline-flex" role="group">
-                <a href="/surveys/{{ survey.id }}/questions/{{ question.id }}">
-                    <button id="edit-question-{{ row_num }}"
-                        class="bg-sky-500 hover:bg-sky-700 p-4 rounded w-full h-fit text-lg text-white leading-tight focus:ring-sky-500 focus:border-sky-700 transition duration-150 ease-in-out">
-                        EDIT
+                <div style="margin-top: 3.5px">
+                    {{ buttons.link_button("Edit", "/surveys/%s/questions/%s" %(survey.id, question.id), id="edit-question-%s" % row_num ) }}
+                </div>
+                <div>
+                    <form class="m-1" id="delete-question-{{ row_num }}" name="delete" action="/surveys/delete/{{survey[0]}}/{{question[0]}}" method="POST" onsubmit="return confirm('Are you sure you want to delete this question?');">
+                    <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
+                    <button
+                        class="bg-rose-500 hover:bg-rose-700 p-2 block rounded w-fit h-fit text-sm text-white leading-tight font-medium focus:ring-rose-500 focus:border-rose-500 transition duration-150 ease-in-out"
+                        type="submit" name="submit">
+                        Delete
                     </button>
-                </a>
-                <form id="delete-question-{{ row_num }}" name="delete" action="/surveys/delete/{{survey[0]}}/{{question[0]}}" method="POST" onsubmit="return confirm('Are you sure you want to delete this question?');">
-                  <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
-                  {{ form_elements.submit_button("DELETE", type="destructive") }}
-                </form>
-
+                    </form>
+                </div>
             </div>
         </div>
     </div>
-    <div class="table-cell">
+    <div class="table-cell pr-4">
         <p>{{ question.text }}</p>
     </div>
-    </tr>
 </div>
 {% endmacro %}
 
