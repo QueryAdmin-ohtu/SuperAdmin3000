@@ -68,7 +68,7 @@ Logged Out User Cannot Create Categories
     Go To Survey  1
     Page Should Contain  Please login
 
-Logged In User Cannot Delete a Category With Results
+User Is Shown Error Message When Deleting Category Which Is Only Non Zero Weight For Questions
     Go To Backdoor Login Page
     Login With Correct Credentials
     Go To Survey  1
@@ -76,8 +76,14 @@ Logged In User Cannot Delete a Category With Results
     Click Button  delete_button_1
     Handle Alert  Accept
     Notification Is Displayed
-    Page Should Contain  Could not delete category because it has results linked to it
+    Page Should Contain  Check the following questions category weights before deleting 'Category 1': 'Question 8', 'Why', 'kysymys1'
 
+User Can Delete Category Which Is Not The Only Non Zero Weight For Questions
+    Go To Survey  1
+    Click Button  delete_button_4
+    Handle Alert  Accept
+    Notification Is Displayed
+    Page Should Contain  Successfully deleted category
 
 Logged In User Can Edit Category Name and Description
     Go To Survey  1
