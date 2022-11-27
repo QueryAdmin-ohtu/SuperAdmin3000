@@ -109,7 +109,7 @@ def updated_question_ids_and_weights(questions, category_to_remove):
     question_ids = []
     category_weights = []
     for question in questions:
-        weights_dict= json.loads(question[3])
+        weights_dict= question[3]
         updated_weight_json = updated_category_weights_as_json(
             weights_dict,
             category_to_remove
@@ -270,6 +270,6 @@ def only_non_zero_weight_for_question(question, cat_name):
     for category, weight in weights.items():
         if weight != 0:
             non_zero_weights += 1
-    if non_zero_weights == 1 and weights[cat_name] != 0:
+    if cat_name in weights.keys() and non_zero_weights == 1 and weights[cat_name] != 0:
         return True
     return False
