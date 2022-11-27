@@ -24,7 +24,6 @@ def index():
                                ENV=app.config["ENV"])
 
     surveys = survey_service.get_all_surveys()
-    print("SURVEYS:", surveys, flush=True)
 
     if surveys is False:
         report = "There are no surveys"
@@ -41,8 +40,6 @@ def index():
 def google_login():
     """ Login with a Google account.
     """
-    print("Google login...", flush=True)
-
     try:
         csrf_token_cookie = request.cookies.get('g_csrf_token')
         if not csrf_token_cookie:
@@ -70,7 +67,6 @@ def google_login():
         first_name = idinfo['given_name']
         if survey_service.check_if_authorized_google_login(email):
             helper.update_session(email, first_name, csrf_token_cookie)
-            print("Google login OK", flush=True)
             return redirect("/")
 
     except ValueError:
