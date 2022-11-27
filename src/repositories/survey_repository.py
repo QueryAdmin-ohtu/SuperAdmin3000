@@ -1349,18 +1349,19 @@ class SurveyRepository:
         - 'green' = Survey is complete.
 
         Returns a list as follows:
-        [
-            status  : (str) 'red','yellow' or 'green',
-            no_survey_results : (bool),
-            no_categories : (bool),
-            unrelated_categories_in_weights : (list) [category names]
-            categories_without_results :
+        
+        [0]    status  : (str) 'red','yellow' or 'green',
+        [1]    no_survey_results : (bool),
+        [2]    no_categories : (bool),
+        [3]    unrelated_categories_in_weights : (list) [category names]
+        [4]    no_questions : (bool),
+        [5]    questions_without_answers :(list) [question names],
+        [6]    questions_without_categories :(list) [category names],
+        [7]    categories_without_questions : (list) [category names]
+        [8]    categories_without_results :
                 (dictionary) {question_id: [category names]},
-            no_questions : (bool),
-            questions_without_answers :(list) [question names],
-            questions_without_categories :(list) [category names],
-            categories_without_questions : (list) [category names]
-        ]
+
+        
         """
         categories = self.get_categories_of_survey(survey_id)
         questions = self.get_questions_of_survey(survey_id)
@@ -1398,7 +1399,9 @@ class SurveyRepository:
            no_questions:
             status = "red"
 
-        elif questions_without_categories or categories_without_questions:
+        elif questions_without_categories or \
+             categories_without_questions or \
+             unrelated_categories_in_weights:
             status = "yellow"
 
         else:
