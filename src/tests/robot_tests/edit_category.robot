@@ -80,7 +80,6 @@ User Is Shown Error Message When Deleting Category Which Is Only Non Zero Weight
 User Can Delete Category Which Is Not The Only Non Zero Weight For Questions
     Go To Survey  1
     Click Button  delete_button_4
-    Handle Alert  Accept
     Notification Is Displayed
     Page Should Contain  Successfully deleted category
 
