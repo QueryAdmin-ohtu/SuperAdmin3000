@@ -453,7 +453,7 @@ def test_updated_question_ids_and_weights_removes_cat_from_all_weights():
             1,
             None,
             None,
-            '[{"category":"dog", "multiplier":"1"}, {"category":"cat", "multiplier":"1"}]',
+            [{"category":"dog", "multiplier":"1"}, {"category":"cat", "multiplier":"1"}],
             None,
             None
         ),
@@ -461,7 +461,7 @@ def test_updated_question_ids_and_weights_removes_cat_from_all_weights():
             2,
             None,
             None,
-            '[{"category":"dog", "multiplier":"1"}, {"category":"cat", "multiplier":"0"}, {"category":"bird", "multiplier":"3"}]',
+            [{"category":"dog", "multiplier":"1"}, {"category":"cat", "multiplier":"0"}, {"category":"bird", "multiplier":"3"}],
             None,
             None
         )
