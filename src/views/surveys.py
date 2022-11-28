@@ -109,6 +109,7 @@ def view_survey(survey_id):
     questions = survey_service.get_questions_of_survey(survey_id)
     categories = survey_service.get_categories_of_survey(survey_id)
     results = survey_service.get_survey_results(survey_id)
+    survey_status = survey_service.check_survey_status(survey_id)
     show_results = []
     if results:
         for i in range(len(results)):
@@ -124,7 +125,8 @@ def view_survey(survey_id):
     return render_template("surveys/view_survey.html", survey=survey,
                            questions=questions, survey_id=survey_id,
                            ENV=app.config["ENV"], categories=categories,
-                           results=results, show_results=show_results)
+                           results=results, show_results=show_results,
+                           survey_status=survey_status)
 
 
 @surveys.route("/surveys/<survey_id>/new-question", methods=["GET"])
