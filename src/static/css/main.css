@@ -827,6 +827,12 @@ p {
   max-width: 56rem;
 }
 
+.max-w-min {
+  max-width: -webkit-min-content;
+  max-width: -moz-min-content;
+  max-width: min-content;
+}
+
 .flex-shrink {
   flex-shrink: 1;
 }
@@ -925,6 +931,10 @@ p {
   margin-bottom: calc(1.25rem * var(--tw-space-y-reverse));
 }
 
+.place-self-end {
+  place-self: end;
+}
+
 .overflow-hidden {
   overflow: hidden;
 }
@@ -965,6 +975,10 @@ p {
 
 .rounded-md {
   border-radius: 0.375rem;
+}
+
+.rounded-full {
+  border-radius: 9999px;
 }
 
 .rounded-t-md {
@@ -1107,6 +1121,11 @@ p {
   stroke: #f43f5e;
 }
 
+.object-right-top {
+  -o-object-position: right top;
+     object-position: right top;
+}
+
 .p-8 {
   padding: 2rem;
 }
@@ -1206,6 +1225,11 @@ p {
 .text-xl {
   font-size: 1.25rem;
   line-height: 1.75rem;
+}
+
+.text-3xl {
+  font-size: 1.875rem;
+  line-height: 2.25rem;
 }
 
 .font-medium {

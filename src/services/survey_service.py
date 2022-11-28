@@ -112,10 +112,25 @@ class SurveyService:
         for each survey and the amount of submissions
         related to the survey returning a list
 
-        Returns: Array containing the survey id, title,
-        question count and submission count """
+        Returns: A list containing:
+            [0] survey id
+            [1] title,
+            [2] question count
+            [3] submission count
+            [4] survey status
+        """
 
-        return self.survey_repository.get_all_surveys()
+        surveys = self.survey_repository.get_all_surveys()
+        result = []
+        
+        for row in surveys:
+            survey = list(row)
+            survey_id = survey[0]
+            status = self.check_survey_status(survey_id)
+            survey.append(status)
+            result.append(survey)
+
+        return result
 
     def get_questions_of_survey(self, survey_id: str):
         """ Fetches questions of a given survey
@@ -608,15 +623,22 @@ class SurveyService:
         return self.survey_repository.update_category_results(original_results, new_results, survey_id)
 
     def check_survey_status(self, survey_id):
-        """Check the survey status: Returns survey status (red, yellow, green)
-        and information about:
-        - missing survey results
-        - missing categories
-        - missing category results
-        - missing questions
-        - questions without answers
-        - questions without categories
-        - categories without questions"""
+        """Check the survey status: Returns a list containing survey status 
+        and detailed information about the checks
+
+        [0]    status  : (str) 'red','yellow' or 'green',
+        [1]    no_survey_results : (bool),
+        [2]    no_categories : (bool),
+        [3]    unrelated_categories_in_weights : (list) [category names]
+        [4]    no_questions : (bool),
+        [5]    questions_without_answers :(list) [question names],
+        [6]    questions_without_categories :(list) [category names],
+        [7]    categories_without_questions : (list) [category names]
+        [8]    categories_without_results :
+                (dictionary) {question_id: [category names]},
+        """
+        
         return self.survey_repository.check_survey_status(survey_id)
+
 
 survey_service = SurveyService(SurveyRepository())
