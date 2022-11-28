@@ -447,6 +447,13 @@ def test_category_is_removed_from_weights():
     )
     assert result == '[{"category": "dog", "multiplier": "1"}]'
 
+def test_updated_category_weights_as_json_returns_none_with_empty_weights():
+    result = helper.updated_category_weights_as_json(
+        None,
+        "cat"
+    )
+    assert result is None
+
 def test_updated_question_ids_and_weights_removes_cat_from_all_weights():
     questions = [
         (
