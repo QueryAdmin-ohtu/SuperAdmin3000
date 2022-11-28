@@ -6,6 +6,7 @@
 {% set questions_without_answers = survey_status[5] %}
 {% set questions_without_categories = survey_status[6] %}
 {% set categories_without_questions = survey_status[7] %}
+{% set questions_contain_null_categories = survey_status[8] %}
 
 {% if survey_status_color == "red" %}
 {% set bg_color = "bg-rose-500" %}
@@ -27,6 +28,21 @@
     <li>{{ item }}</li>
     {% endfor %}
 </ul>
+{% endmacro %}
+
+{% macro display_dictionary_and_label(dictionary, label) %}
+{% if dictionary.items()|length > 0 %}
+<p class="font-medium">{{ label }}</p>
+<ul class="list-disc list-inside">
+{% for  key, value in dictionary.items() %}
+    <li>{{ key }}</li>
+    {% for category in value %}
+    <li class="ml-4 font-light">{{ category }}</li>
+    {% endfor %}
+{% endfor %}
+</ul>
+{% endif %}
+
 {% endmacro %}
 
 {% macro display_list_and_label(list, label) %}
@@ -68,6 +84,7 @@
         {{ display_list_and_label(questions_without_answers, "Questions without answers") }}
         {{ display_list_and_label(questions_without_categories, "Questions without categories") }}
         {{ display_list_and_label(categories_without_questions, "Categories with no questions") }}
+        {{ display_dictionary_and_label(questions_contain_null_categories, "Question ids with null categories")}}
         {% endif %}
     </div>
 </div>

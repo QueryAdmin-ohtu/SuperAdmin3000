@@ -3,20 +3,13 @@
 {% import "components/macros/buttons.html" as buttons %}
 {% block content %}
 
+
 {#
-    {% set survey_status = ["red", false, false, [], false, [], [], ["Habitat"]] %}
-    {% set survey_status = ["green", false, false, [], false, [], [], []] %}
-[           
-            status :                        (str) 'red','yellow' or 'green',
-            no_survey_results :               (bool),
-            no_categories :                  (bool),
-            categories_without_results :    (list) [category names],
-            no_questions :                  (bool),
-            questions_without_answers :     (list) [question names],
-            questions_without_categories :  (list) [category names],
-            categories_without_questions :  (list) [category names]
-]
+    For survey status testing
+    {% set survey_status = ["red", false, false, [], false, [], [], ["Habitat"], {1: ["foo", "bar"], 5: ["baz"]}] %}
+    {% set survey_status = ["green", false, false, [], false, [], [], [], {}] %}
 #}
+
 {% if survey %}
 <div class="flex flex-col gap-6">
     {% include "components/sections/survey_deletition_modal.html" %}

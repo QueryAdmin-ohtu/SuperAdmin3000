@@ -55,7 +55,7 @@ categories_without_questions : (list) [category names]
 {% endmacro %}
 
 <div
-    class="flex flex-row justify-start items-center w-fit py-2 px-3 gap-3 rounded-lg {{ bg_color }} border-2 {{ stroke_color }} cursor-pointer hover:shadow transition-all" onclick="openModal('survey-status-modal')">
+    id="status-badge-{{ survey_status_color }}" class="flex flex-row justify-start items-center w-fit py-2 px-3 gap-3 rounded-lg {{ bg_color }} border-2 {{ stroke_color }} cursor-pointer hover:shadow transition-all" onclick="openModal('survey-status-modal')">
     {{ status_icon_svg() }}
     <p class="font-medium capitalize text-sm">{{ label_text }}</p>
 </div>
