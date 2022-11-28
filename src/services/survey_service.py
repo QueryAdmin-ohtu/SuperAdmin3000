@@ -442,14 +442,11 @@ class SurveyService:
     def delete_category_in_questions(self, question_ids: list, questions_weights: list):
         """ Deletes the category from category weights
         in the questions from the repository """
-        try:
-            for question_id, weights in zip(question_ids, questions_weights):
-                self.survey_repository.remove_category_from_question(
-                    question_id,
-                    weights
-                )
-        except Exception:
-            return False
+        for question_id, weights in zip(question_ids, questions_weights):
+            self.survey_repository.remove_category_from_question(
+                question_id,
+                weights
+            )
         return True
 
     def delete_category(self, category_id: str):
