@@ -65,7 +65,7 @@ class SurveyService:
             survey_id: Db id of survey
 
         Returns:
-            If succeeds: Survey
+            If succeeds: Survey (fields: id, name, createdAt, updatedAt, title_text, survey_text)
             Not found: False
         """
 
@@ -138,7 +138,8 @@ class SurveyService:
           survey_id: Id of the survey
 
         Returns:
-          An array containing each question object
+          An array containing each question object;
+          question object fields: id, text, surveyId, category_weights, createdAt, updatedAt
         """
         return self.survey_repository.get_questions_of_survey(survey_id)
 

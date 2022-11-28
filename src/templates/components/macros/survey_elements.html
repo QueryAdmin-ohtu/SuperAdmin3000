@@ -46,8 +46,10 @@
 {# A table row displaying question
     Args:
         survey: The parent survey of the question
+            fields: id, name, createdAt, updatedAt, title_text, survey_text
         question: The question object
-        row_num: Row numebr of table
+            fields: id, text, surveyId, category_weights, createdAt, updatedAt
+        row_num: Row number of table
 #}
 <div class="table-row">
     <div class="table-cell pr-4">
@@ -148,6 +150,7 @@
 {# An expandable card element for displaying category results.
     Args:
         result: The survey result object
+            fields: id, text, cutoff_from_maxpoints
         index: The index of the loop rendering the answers (loop.index)
         hide_delete_button: Do not show delete button (default: False)
         lock_cutoff_value: Se cutoff field to readonly (default: False)

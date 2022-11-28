@@ -207,8 +207,9 @@ class SurveyRepository:
         return False
 
     def get_survey(self, survey_id):
-        """ Looks up survey information with
-        id and returns it in a list
+        """ Fetches survey data by id
+
+        Returns: survey object (fields: id, name, createdAt, updatedAt, title_text, survey_text)
         """
 
         sql = """ SELECT * FROM "Surveys" WHERE id=:id """
@@ -259,9 +260,10 @@ class SurveyRepository:
           survey_id: Id of the survey
 
         Returns:
-          An array containing each question object
+          An array containing each question object;
+          question object fields: id, text, surveyId, category_weights, createdAt, updatedAt
         """
-        sql = "SELECT * FROM \"Questions\" WHERE \"Questions\".\"surveyId\"=:survey_id ORDER BY id"
+        sql = """SELECT * FROM "Questions" WHERE "Questions"."surveyId"=:survey_id ORDER BY id"""
         result = self.db_connection.session.execute(
             sql, {"survey_id": survey_id})
 
