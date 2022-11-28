@@ -471,9 +471,28 @@ def delete_category():
 
     category_id = request.form["category_id"]
     survey_id = request.form["survey_id"]
+    cat_name = request.form["cat_name"]
+    questions = survey_service.get_questions_of_survey(survey_id)
+    category_required_by = helper.questions_where_given_category_is_required(questions, cat_name)
+
+    if len(category_required_by) != 0:
+        message = f"Check the following questions category weights before deleting '{cat_name}': '"
+        message += "', '".join(category_required_by)
+        message += "'"
+        flash(message, "error")
+        return redirect(f"/surveys/{survey_id}")
+    
+    question_ids, weights = helper.updated_question_ids_and_weights(
+        questions,
+        cat_name
+    )
+    if not survey_service.delete_category_in_questions(question_ids, weights):
+        flash("Category could not be removed from category weights of questions", "warning")
+
     return_value = survey_service.delete_category(category_id)
     if return_value is True:
-        flash("Succesfully deleted category", "confirmation")
+        survey_service.delete_category_results_for_category(category_id)
+        flash("Successfully deleted category", "confirmation")
         return redirect(f"/surveys/{survey_id}")
 
     flash("Could not delete category because it has results linked to it", "error")

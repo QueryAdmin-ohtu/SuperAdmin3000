@@ -190,7 +190,7 @@ class TestSurveyRepository(unittest.TestCase):
 
         with self.app.app_context():
             response = self.repo.get_all_surveys()
-        self.assertEqual(len(response), 8)
+        self.assertEqual(len(response), 9)
 
     def test_get_all_surveys_returns_correct_submission_count(self):
         self._create_survey_and_add_user_answers()
@@ -1154,9 +1154,56 @@ class TestSurveyRepository(unittest.TestCase):
             self.repo.update_category_results(or2, nr2, 1)
             results = self.repo.get_category_results_from_category_id(category_id)
             self.assertEqual(results, nr2)
-
-
     
+    
+    def test_category_is_removed_from_question_with_correct_input(self):
+        with self.app.app_context():
+            survey_id = self.repo.create_survey(
+                "cat weight removal test",
+                "test removal",
+                "test removal"
+            )
+            category_weights = '[{"category": "Koira", "multiplier": 5.0}, {"category": "Cat", "multiplier": -5.0}]'
+            question_id = self.repo.create_question(
+                "test for category weight removal",
+                survey_id,
+                category_weights
+            )
+            new_weights = '[{"category": "Koira", "multiplier": 5.0}]'
+            result = self.repo.remove_category_from_question(
+                question_id,
+                new_weights
+            )
+            self.assertEqual(
+                result,
+                [{"category": "Koira", "multiplier": 5.0}]
+            )
+    
+
+    def test_removing_category_from_question_returns_none_with_invalid_input(self):
+        with self.app.app_context():
+            survey_id = self.repo.create_survey(
+                "cat weight removal test",
+                "test removal",
+                "test removal"
+            )
+            category_weights = '[{"category": "Koira", "multiplier": 5.0}, {"category": "Cat", "multiplier": -5.0}]'
+            question_id = self.repo.create_question(
+                "test for category weight removal",
+                survey_id,
+                category_weights
+            )
+            new_weights = [{"category": "Koira", "multiplier": 2}]
+            result = self.repo.remove_category_from_question(
+                question_id,
+                new_weights
+            )
+            self.assertIsNone(result)
+    
+    def test_all_category_results_are_deleted_with_found_id(self):
+        with self.app.app_context():
+            result = self.repo.delete_category_results_of_category(300)
+            self.assertTrue(result)
 
     def test_update_category_in_questions(self):
         with self.app.app_context():

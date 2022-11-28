@@ -23,6 +23,7 @@
                                         <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
                                         <input type="hidden" name="category_id" value="{{ category[0] }}">
                                         <input type="hidden" name="survey_id" value="{{ survey_id }}">
+                                        <input type="hidden" name="cat_name" value="{{ category[1] }}">
                                         {{ buttons.form_button("Delete", "delete", "delete", "destructive", id="delete_button_%s" % category[0]) }}
                                     </form>
                                 </div>
