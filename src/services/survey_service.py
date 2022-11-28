@@ -499,12 +499,13 @@ class SurveyService:
         Returns a table with question id and text, answer
         id and text, number of user answers
         """
+        group_id = self.survey_repository.find_user_group_by_name(group_name)
 
-        result = self.survey_repository.get_answer_distribution_filtered(survey_id,
-                                                                         start_date,
-                                                                         end_date,
-                                                                         group_name,
-                                                                         email)
+        result = self.survey_repository.get_answer_distribution(survey_id,
+                                                                start_date,
+                                                                end_date,
+                                                                group_id,
+                                                                email)
 
         return result
 

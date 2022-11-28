@@ -629,7 +629,7 @@ class TestSurveyRepository(unittest.TestCase):
     def test_answer_distribution_filtered_by_email(self):
         with self.app.app_context():
             survey_id = self.repo.survey_exists("Elephants")[1]
-            result = self.repo.get_answer_distribution_filtered(
+            result = self.repo.get_answer_distribution(
                 survey_id, email="@")
 
         self.assertEqual(result[0][4], 3)
@@ -638,7 +638,7 @@ class TestSurveyRepository(unittest.TestCase):
     def test_answer_distribution_per_user_group(self):
         with self.app.app_context():
             survey_id = self.repo.survey_exists("Elephants")[1]
-            group_id = self.repo._find_user_group_by_name("Supertestaajat")
+            group_id = self.repo.find_user_group_by_name("Supertestaajat")
             result = self.repo.get_answer_distribution(
                 survey_id, user_group_id=group_id)
 

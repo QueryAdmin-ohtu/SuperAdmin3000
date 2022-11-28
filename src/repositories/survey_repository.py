@@ -821,26 +821,7 @@ class SurveyRepository:
         except exc.SQLAlchemyError as exception:
             return exception
 
-    def get_answer_distribution_filtered(self, survey_id,
-                                         start_date: datetime = None,
-                                         end_date: datetime = None,
-                                         group_name: str = "",
-                                         email: str = ""):
-        """ Finds and returns the distribution of user answers
-        over the answer options of a survey.
-
-        Filtering by date range and/or user group and/or email. Start and end
-        dates are included in the query.
-
-        Returns a table where each row contains:
-        question id, question text, answer id, answer text, user answer counts
-        """
-
-        group_id = self._find_user_group_by_name(group_name)
-
-        return self.get_answer_distribution(survey_id, start_date, end_date, group_id, email)
-
-    def _find_user_group_by_name(self, group_name):
+    def find_user_group_by_name(self, group_name):
         """Finds and returns user group id by user group name
         """
         sql = """SELECT id, group_name FROM "Survey_user_groups" WHERE lower(group_name)=:group_name"""
@@ -1060,7 +1041,7 @@ class SurveyRepository:
         related_questions = self.get_questions_of_survey(survey_id)
 
         if user_group_name:
-            user_group_id = self._find_user_group_by_name(user_group_name)
+            user_group_id = self.find_user_group_by_name(user_group_name)
         else:
             user_group_id = None
 
