@@ -2,7 +2,7 @@
 {% import "components/macros/form_elements.html" as form_elements %}
 
 {% macro survey_card(survey) %}
-{# Creates a clickable card containing info about the provied survey
+{# Creates a clickable card containing info about the provided survey
     Args:
         survey: A survey object containing
             0: Survey id
@@ -16,11 +16,11 @@
   {% set status=survey[4][0] %}
   <div id="survey-{{ survey[0] }}-status" class="text-3xl max-w-min rounded-full border">
     {% if status == "red" %}
-    &#10060 <!- Cross mark -->
+    &#10060 <!-- Cross mark -->
     {% elif status == "yellow" %}
-    &#9888 <!- Exclamation mark -->
+    &#9888 <!-- Exclamation mark -->
     {% else %}
-    &#10003 <!- Check mark -->
+    &#10003 <!-- Check mark -->
     {% endif %}
   </div>
     <h3 class="text-gray-900 leading-tight">{{survey[1]}}</h3>
