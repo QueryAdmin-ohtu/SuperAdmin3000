@@ -71,11 +71,17 @@ class TestSurveyService(unittest.TestCase):
         self.repo_mock.get_survey.assert_called_with(survey_id)
 
     def test_get_all_surveys_calls_repo_correctly(self):
-        surveys_to_return = [{"name": "survey_name", "title": "survey_title",
-                              "description": "survey_description", "questions": 12, "submissions": 2}]
+        surveys_to_return = [[1, "title1", 12, 2],
+                             [2, "title2", 5, 10]]
+        surveys_with_status = [[1, "title1", 12, 2, ["red"]],
+                               [2, "title2", 5, 10, ["red"]]]
+
         self.repo_mock.get_all_surveys.return_value = surveys_to_return
-        check = self.survey_service.get_all_surveys()
-        self.assertEqual(surveys_to_return, check)
+        self.repo_mock.check_survey_status.return_value = ["red"]        
+        result = self.survey_service.get_all_surveys()
+        
+        self.assertEqual(surveys_with_status, result)
+        self.repo_mock.check_survey_status.assert_called_with(2)
         self.repo_mock.get_all_surveys.assert_called_once()
 
     def test_get_questions_of_survey_calls_repo_correctly(self):
@@ -510,3 +516,36 @@ class TestSurveyService(unittest.TestCase):
     def test_check_survey_status_calls_repo_correctly(self):
         self.survey_service.check_survey_status(1)
         self.repo_mock.check_survey_status.assert_called_with(1)
+    
+    def test_delete_category_in_questions_calls_repo_correctly(self):
+        self.repo_mock.remove_category_from_question.return_value = "test"
+        question_ids = [1, 2, 3]
+        questions_weights = ['[{"category": "Koira", "multiplier": 5.0}, {"category": "Cat", "multiplier": -5.0}]',
+                             '[{"category": "Koira", "multiplier": 5.0}, {"category": "Cat", "multiplier": -5.0}]',
+                             '[{"category": "Koira", "multiplier": 5.0}, {"category": "Cat", "multiplier": -5.0}]']
+
+        response = self.survey_service.delete_category_in_questions(
+            question_ids,
+            questions_weights
+        )
+        self.assertTrue(response)
+        self.repo_mock.remove_category_from_question.assert_any_call(
+            question_ids[0],
+            questions_weights[0]
+        )
+        self.repo_mock.remove_category_from_question.assert_any_call(
+            question_ids[1],
+            questions_weights[1]
+        )
+        self.repo_mock.remove_category_from_question.assert_any_call(
+            question_ids[2],
+            questions_weights[2]
+        )
+        call_count = self.repo_mock.remove_category_from_question.call_count
+        self.assertEqual(call_count, 3)
+    
+    def test_delete_category_results_for_category_calls_repo_correctly(self):
+        self.repo_mock.delete_category_results_of_category.return_value = True
+        result = self.survey_service.delete_category_results_for_category(1)
+        self.assertTrue(result)
+        self.repo_mock.delete_category_results_of_category.assert_called_with(1)

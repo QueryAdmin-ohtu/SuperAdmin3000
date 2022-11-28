@@ -367,3 +367,118 @@ def test_check_cutoff_points():
     assert helper.check_cutoff_points(
         empty_cutoff) == "There is a result without a cutoff value"
     assert helper.check_cutoff_points(all_good_man) == "Correct"
+
+def test_return_true_if_category_weight_is_only_non_zero_for_question():
+    weight_json = [{"category": "Category 1", "multiplier": 0},
+                   {"category": "Category 2", "multiplier": 1},
+                   {"category": "Category 3", "multiplier": 0},
+                   {"category": "Category 4", "multiplier": 0},
+                   {"category": "Category 5", "multiplier": 0}]
+    question = [2,
+                'Question 2',
+                1,
+                weight_json,
+                datetime.now(),
+                datetime.now()]
+    cat_name = "Category 2"
+    result = helper.only_non_zero_weight_for_question(question, cat_name)
+    assert result == True
+
+def test_return_false_if_category_weight_is_not_only_non_zero_for_question():
+    weight_json = [{"category": "Category 1", "multiplier": 0},
+                   {"category": "Category 2", "multiplier": 0},
+                   {"category": "Category 3", "multiplier": 1},
+                   {"category": "Category 4", "multiplier": 0},
+                   {"category": "Category 5", "multiplier": 0}]
+    question = [2,
+                'Question 2',
+                1,
+                weight_json,
+                datetime.now(),
+                datetime.now()]
+    cat_name = "Category 2"
+    result = helper.only_non_zero_weight_for_question(question, cat_name)
+    assert result == False
+
+def test_category_required_by_contains_correct_question_names():
+    weight_json = [{"category": "Category 1", "multiplier": 0},
+                   {"category": "Category 2", "multiplier": 1},
+                   {"category": "Category 3", "multiplier": 0},
+                   {"category": "Category 4", "multiplier": 0},
+                   {"category": "Category 5", "multiplier": 0}]
+    weight_json_2 = [{"category": "Category 1", "multiplier": 0},
+                     {"category": "Category 2", "multiplier": 1},
+                     {"category": "Category 3", "multiplier": 1},
+                     {"category": "Category 4", "multiplier": 0},
+                     {"category": "Category 5", "multiplier": 0}]
+    requires_cat = [2,
+                    "Question 2",
+                    1,
+                    weight_json,
+                    datetime.now(),
+                    datetime.now()]
+    doesnt_require_cat = [3,
+                          "Question 3",
+                          1,
+                          weight_json_2,
+                          datetime.now(),
+                          datetime.now()]
+    requires_cat_2 = [4,
+                      "Question 4",
+                      1,
+                      weight_json,
+                      datetime.now(),
+                      datetime.now()]
+    questions = [requires_cat,
+                 doesnt_require_cat,
+                 requires_cat_2]
+    
+    result = helper.questions_where_given_category_is_required(
+        questions,
+        "Category 2"
+    )
+    assert result == ["Question 2", "Question 4"]
+
+def test_category_is_removed_from_weights():
+    original_weights = [{"category":"dog", "multiplier":"1"}, {"category":"cat", "multiplier":"0"}]
+    result = helper.updated_category_weights_as_json(
+        original_weights,
+        "cat"
+    )
+    assert result == '[{"category": "dog", "multiplier": "1"}]'
+
+def test_updated_category_weights_as_json_returns_none_with_empty_weights():
+    result = helper.updated_category_weights_as_json(
+        None,
+        "cat"
+    )
+    assert result is None
+
+def test_updated_question_ids_and_weights_removes_cat_from_all_weights():
+    questions = [
+        (
+            1,
+            None,
+            None,
+            [{"category":"dog", "multiplier":"1"}, {"category":"cat", "multiplier":"1"}],
+            None,
+            None
+        ),
+        (
+            2,
+            None,
+            None,
+            [{"category":"dog", "multiplier":"1"}, {"category":"cat", "multiplier":"0"}, {"category":"bird", "multiplier":"3"}],
+            None,
+            None
+        )
+    ]
+    question_ids, cat_weights = helper.updated_question_ids_and_weights(
+        questions,
+        "cat"
+    )
+    assert question_ids == [1, 2]
+    assert cat_weights == [
+        '[{"category": "dog", "multiplier": "1"}]',
+        '[{"category": "dog", "multiplier": "1"}, {"category": "bird", "multiplier": "3"}]'
+    ]
