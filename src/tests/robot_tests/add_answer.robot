@@ -14,17 +14,22 @@ Logged In User Can Delete Answers
     Go To Backdoor Login Page
     Login With Correct Credentials
     Go To Survey  1
-    Click Button  EDIT
+    Click Link  edit-question-1
     Expand Answer Card  1
     Click Button  Delete answer
+    Handle Alert  Accept
     Expand Answer Card  1
     Click Button  Delete answer
+    Handle Alert  Accept
     Expand Answer Card  1
     Click Button  Delete answer
+    Handle Alert  Accept
     Expand Answer Card  1
     Click Button  Delete answer
+    Handle Alert  Accept
     Expand Answer Card  1
     Click Button  Delete answer
+    Handle Alert  Accept
 
 Logged In User Can Add Answer To New Question
     Go To Survey  1
@@ -42,7 +47,7 @@ Logged In User Can Add Answer To New Question
 
 Logged In User Can Add Answer While Editing Question
     Go To Survey  1
-    Click Button  EDIT
+    Click Link  edit-question-1
     Add New Answer  Hammer  11
     Expand Answer Card  1
     Page Should Contain  Hammer
@@ -68,10 +73,11 @@ Empty Points Are Interpreted As Zeros
 
 Logged In User Can Delete Answer
     Go To Survey  1
-    Click Button  EDIT
+    Click Link  edit-question-1
     Page Should Contain  Hammer
     Expand Answer Card  1
     Click Button  Delete answer
+    Handle Alert  Accept
     Page Should Not Contain  Hammer
 
 Logged In User Can Edit Answers And Question While Creating Answer

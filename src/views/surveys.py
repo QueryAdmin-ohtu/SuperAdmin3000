@@ -114,12 +114,12 @@ def view_survey(survey_id):
         for i in range(len(results)):
             if i == 0:
                 if float(results[0][2]) == 0.0:
-                    text = "0% of max points returns user"
+                    text = "0%"
                 else:
-                    text = f"0%-{int(results[0][2]*100)}% of max points returns user"
+                    text = f"0% - {int(results[0][2]*100)}%"
                 show_results.append([text, results[0][1]])
             else:
-                text = f"{int(results[i-1][2]*100)}%-{int(results[i][2]*100)}% of max points returns user"
+                text = f"{int(results[i-1][2]*100)}% - {int(results[i][2]*100)}%"
                 show_results.append([text, results[i][1]])
     return render_template("surveys/view_survey.html", survey=survey,
                            questions=questions, survey_id=survey_id,
@@ -371,13 +371,15 @@ def edit_category():
         for i, item in enumerate(content_links):
             new_content = {
                 'url': request.form[f"url_{i}"], 'type': request.form[f"type_{i}"]}
+            print(new_content, flush=True)
             if new_content['url'] and new_content['type']:
                 new_content_links.append(new_content)
         new_content_links_json = json.dumps(new_content_links)
         survey_service.update_category(
             category_id, new_content_links_json, name, description)
         # Unclear UX question - Where to return the user when saving changes.
-        return redirect(f"/surveys/{survey_id}")
+        # return redirect(f"/surveys/{survey_id}")
+        return redirect(f"/edit_category/{survey_id}/{category_id}")
 
     # Creating a new survey
     new_content_links_json = json.dumps(new_content_links)

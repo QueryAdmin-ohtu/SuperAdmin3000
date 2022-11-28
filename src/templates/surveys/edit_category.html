@@ -16,7 +16,7 @@
 </div>
 <div class="grid lg:grid-cols-2 grid-cols-1 gap-4 items-start">
 {% call survey_elements.card() %}
-    <form action="/edit_category" method="POST">
+    <form action="/edit_category" method="POST" onsubmit="return confirmationCheck()">
         <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
         <input type="hidden" name="survey_id" id="survey_id" value={{survey_id}}>
         <input type="hidden" name="category_id" id="category_id" value={{category_id}}>
@@ -52,9 +52,10 @@
                     </div>
                     <!-- Delete button clears the url and submits the form.
                          The form handler wont add a content link with an empty url field -->
-                    {% set clear_url = "document.getElementsByName('url_" ~ loop.index0 ~ "')[0].value=''" %}
+                    <p id="helper" style="display:none"></p>
+                    {% set on_click = " document.getElementById('helper').innerHTML='trigger confirmation'; document.getElementsByName('url_" ~ loop.index0 ~ "')[0].value=''" %}
                     {% set button_id = "delete_url_" ~ loop.index0 %}
-                    {{ form_elements.submit_button("Delete", type="destructive", onclick=clear_url, id=button_id) }}
+                    {{ form_elements.submit_button("Delete", type="destructive", onclick=on_click, id=button_id) }}
                     {% endfor %}
                 </div>
             {% endif %}
@@ -87,7 +88,21 @@
     {% if category_results %}
         {% include "components/sections/category_results.html" %}
     {% endif %}
-    
     </div>
 </div>
+
+<script>  
+    function confirmationCheck() {   
+        command=document.getElementById('helper').innerHTML
+        if (command == 'trigger confirmation') {
+            answer=confirm('Are you sure you want to delete the content link?')
+        } 
+        if (!answer) {
+            location.reload();
+            return false
+        }
+        return true
+    }  
+</script>  
+
 {% endblock %}

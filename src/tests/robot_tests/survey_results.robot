@@ -62,6 +62,7 @@ Survey Result Can Be Deleted
     Click Link  Manage results
     Expand Result Card  1
     Click Button  Delete result
+    Handle Alert  Accept
     Page Should Not Contain  Result at cutoff point 0.5:
 
 Survey Result With Cutoff Value One Can not Be Deleted
@@ -72,13 +73,14 @@ Survey Result With Cutoff Value One Can not Be Deleted
     Save Result
     Expand Result Card  1
     Click Button  Delete result
+    Handle Alert  Accept
     Expand Result Card  1
     Page Should Not Contain  Delete
 
 New Survey Has Survey Result For Cutoff Value 1.0
     Click Link  New survey
     Make A Survey
-    Page Should Contain  0%-100% of max points returns user
+    Page Should Contain  0% - 100% of the max points
     Page Should Contain  Your skills in this topic are excellent!
 
 Survey Result Can Be Edited

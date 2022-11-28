@@ -38,7 +38,7 @@
     </div>
 </div>
 <div class="flex flex-col gap-6 items-start w-full">
-    <form class="w-full" action="/surveys/{{ survey.id }}/new-question" method="POST">
+    <form class="w-full" action="/surveys/{{ survey.id }}/new-question" method="POST" onsubmit="return confirmationCheck()">
         <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
         <input type="hidden" name="survey_id" id="survey_id" value="{{ survey.id }}">
         <input type="hidden" name="question_id" id="question_id" value="{{ question_id }}">
@@ -70,9 +70,10 @@
                             {% endfor %}
                         </div>
                     </fieldset>
-                    {{ form_elements.submit_button("Save changes") }}
                 </div>
                 {% endcall %}
+                {{ form_elements.submit_button("Save changes") }}
+                <p id="helper" style="display:none"></p>
                 {% for answer in answers %}
                 {{ survey_elements.answer_card(survey, answer, question_id, loop.index) }}
                 {% endfor %}
@@ -96,11 +97,22 @@
                 {% endcall %}
             </div>
             {% endif %}
-
         </div>
     </form>
     {% if edit %}
         {{ buttons.link_button("Back to survey", "/surveys/%s" % survey[0]) }}
     {% endif %}
 </div>
+
+<script>  
+    function confirmationCheck() {   
+        command=document.getElementById('helper').innerHTML
+        if (command == 'trigger confirmation') {
+            answer=confirm('Are you sure you want to delete the answer?')
+        } 
+        if (!answer) {return false}
+        return true
+    }  
+</script> 
+
 {% endblock %}
