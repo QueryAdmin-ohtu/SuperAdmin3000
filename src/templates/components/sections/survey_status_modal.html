@@ -10,7 +10,7 @@
 
 {% if survey_status_color == "red" %}
 {% set bg_color = "bg-rose-500" %}
-{% set label_text = "Critical error" %}
+{% set label_text = "Attention required" %}
 
 {% elif survey_status_color == "yellow" %}
 {% set bg_color = "bg-amber-500" %}
@@ -23,6 +23,7 @@
 {% endif %}
 
 {% macro make_a_list(list) %}
+{# Renders a given list #}
 <ul class="list-disc list-inside">
     {% for item in list %}
     <li>{{ item }}</li>
@@ -31,6 +32,7 @@
 {% endmacro %}
 
 {% macro display_dictionary_and_label(dictionary, label) %}
+{# Renders a given dictionary if it contains values #}
 {% if dictionary.items()|length > 0 %}
 <p class="font-medium">{{ label }}</p>
 <ul class="list-disc list-inside">
@@ -46,6 +48,7 @@
 {% endmacro %}
 
 {% macro display_list_and_label(list, label) %}
+{# Renders a list if list contains cells #}
 {% if list|length > 0 %}
 <p class="font-medium">{{ label }}:</p>
 {{ make_a_list(list) }}
@@ -53,6 +56,7 @@
 {% endmacro %}
 
 {% macro display_label(display, label) %}
+{# Renders a label if display is true #}
 {% if display %}
 <p class="font-medium">{{ label }}</p>
 {% endif %}
