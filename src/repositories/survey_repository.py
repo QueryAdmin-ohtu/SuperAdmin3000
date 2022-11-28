@@ -689,6 +689,25 @@ class SurveyRepository:
                     "question_id": question[0]}
             self.db_connection.session.execute(sql, values)
         self.db_connection.session.commit()
+    
+    def remove_category_from_question(self, question_id, weights):
+        """ Updates the category weights in the given question """
+
+        sql = """ 
+        UPDATE "Questions"
+        SET category_weights=:category_weights, "updatedAt"=NOW()
+        WHERE id=:question_id 
+        RETURNING category_weights"""
+        values = {
+            "category_weights":weights,
+            "question_id":question_id
+        }
+        try:
+            new_weights = self.db_connection.session.execute(sql, values).fetchone()
+            self.db_connection.session.commit()
+        except exc.SQLAlchemyError:
+            return None
+        return new_weights[0]
 
     def delete_category(self, category_id: str):
         """ Deletes a category from the database
@@ -1268,6 +1287,23 @@ class SurveyRepository:
             self.db_connection.session.execute(sql, values)
             self.db_connection.session.commit()
         except ValueError or exc.SQLAlchemyError:
+            return False
+        return True
+    
+    def delete_category_results_of_category(self, category_id):
+        """ Deletes all category results for the given category """
+        sql = """
+        DELETE FROM "Category_results"
+        WHERE "categoryId"=:category_id
+        """
+
+        try:
+            values = {
+                "category_id":category_id
+            }
+            self.db_connection.session.execute(sql, values)
+            self.db_connection.session.commit()
+        except exc.SQLAlchemyError:
             return False
         return True
 

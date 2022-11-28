@@ -438,6 +438,16 @@ class SurveyService:
             description = category[2]
 
         return self.survey_repository.update_category(category_id, content_links, name, description)
+    
+    def delete_category_in_questions(self, question_ids: list, questions_weights: list):
+        """ Deletes the category from category weights
+        in the questions from the repository """
+        for question_id, weights in zip(question_ids, questions_weights):
+            self.survey_repository.remove_category_from_question(
+                question_id,
+                weights
+            )
+        return True
 
     def delete_category(self, category_id: str):
         """
@@ -450,8 +460,12 @@ class SurveyService:
             If succeeds: True
             If not: Database exception
         """
-
         return self.survey_repository.delete_category(category_id)
+    
+    def delete_category_results_for_category(self, category_id):
+        """ Deletes all category results for the given
+        category from the repository """
+        return self.survey_repository.delete_category_results_of_category(category_id)
 
     def get_number_of_submissions_for_survey(self, survey_id):
         """

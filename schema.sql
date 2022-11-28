@@ -485,7 +485,6 @@ INSERT INTO public."Categories" VALUES (5, 'Category 5', 'Static descriptive tex
 INSERT INTO public."Categories" VALUES (6, 'Size', 'Static descriptive text about elephant size.', '[{"url":"https://www.eficode.com/cases/hansen","type":"Case Study"},{"url":"https://www.eficode.com/cases/basware","type":"Case Study"}]', '2022-09-26 14:03:28.613+00', '2022-09-26 14:03:28.613+00', 8);
 INSERT INTO public."Categories" VALUES (7, 'Habitat', 'Static descriptive text about elephant habitats.', '[{"url":"https://www.eficode.com/cases/hansen","type":"Case Study"},{"url":"https://www.eficode.com/cases/basware","type":"Case Study"}]', '2022-09-26 14:03:28.613+00', '2022-09-26 14:03:28.613+00', 8);
 
-
 --
 -- Data for Name: Category_results; Type: TABLE DATA; Schema: public; Owner: -
 --
@@ -505,6 +504,9 @@ INSERT INTO public."Category_results" VALUES (7, 3, 'Dynamically fetched feedbac
 INSERT INTO public."Category_results" VALUES (8, 3, 'Dynamically fetched feedback text for category score.', 0.8, '2022-09-26 14:17:29.755+00', '2022-09-26 14:17:29.755+00');
 INSERT INTO public."Category_results" VALUES (9, 3, 'Dynamically fetched feedback text for category score.', 1, '2022-09-26 14:17:29.755+00', '2022-09-26 14:17:29.755+00');
 INSERT INTO public."Category_results" VALUES (10, 4, 'Dynamically fetched feedback text for category score.', 0.4, '2022-09-26 14:17:29.755+00', '2022-09-26 14:17:29.755+00');
+INSERT INTO public."Category_results" VALUES (300, 300, 'Dynamically fetched feedback text for category score.', 0.8, '2022-09-26 14:17:29.755+00', '2022-09-26 14:17:29.755+00');
+INSERT INTO public."Category_results" VALUES (301, 300, 'Dynamically fetched feedback text for category score.', 1, '2022-09-26 14:17:29.755+00', '2022-09-26 14:17:29.755+00');
+INSERT INTO public."Category_results" VALUES (302, 300, 'Dynamically fetched feedback text for category score.', 0.4, '2022-09-26 14:17:29.755+00', '2022-09-26 14:17:29.755+00');
 
 
 --
