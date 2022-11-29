@@ -36,7 +36,8 @@ Statistics Page Shows Answer Distribution Charts
 
 Statistics Page Shows Filtered Charts After Applying Filter
     Go To Statistics  8
-    Select From List By Value  name:filter_group_name  B-ryhmä
+    # Choose user group B-ryhmä
+    Select From List By Value  name:filter_group_id  bb2ce58d-f27b-4ade-9e31-e8aca8c7ca20
     Click Button  Filter
     Element Should Be Visible  chart_23_filtered
     Element Should Be Visible  chart_24_filtered
@@ -55,7 +56,8 @@ Toggle Filter For Charts Works When Only Time Filter Applied
 
 Statistics Page Shows Unfiltered Charts After Toggling Filter First Time
     Go To Statistics  8
-    Select From List By Value  name:filter_group_name  B-ryhmä
+    # Choose user group B-ryhmä
+    Select From List By Value  name:filter_group_id  bb2ce58d-f27b-4ade-9e31-e8aca8c7ca20
     Click Button  Filter
     Click Button  toggle_filter_chart_23
     Click Button  toggle_filter_chart_24
@@ -66,7 +68,8 @@ Statistics Page Shows Unfiltered Charts After Toggling Filter First Time
 
 Statistics Page Shows Filtered Charts After Toggling Filter Second Time
     Go To Statistics  8
-    Select From List By Value  name:filter_group_name  B-ryhmä
+    # Choose user group B-ryhmä
+    Select From List By Value  name:filter_group_id  bb2ce58d-f27b-4ade-9e31-e8aca8c7ca20
     Click Button  Filter
     Click Button  toggle_filter_chart_23
     Click Button  toggle_filter_chart_23
@@ -90,7 +93,8 @@ Entering Invalid Date to User Filter Does Not Filter Anything
 
 Filtering By Group Name Filters Users
     Go To Statistics  8
-    Select From List By Value  name:filter_group_name  Supertestaajat
+    # Choose user group Supertestaajat
+    Select From List By Value  name:filter_group_id  737cdf09-cc6f-47de-adcd-e7aaab0adc39
     Click Button  Filter
     Page Should Contain  Users with submissions (1 / 5)
 
@@ -111,7 +115,8 @@ Filtering By Email Filters Users
 
 With Filtering Unfiltered Average Is Shown
     Go To Statistics  8
-    Select From List By Value  name:filter_group_name  B-ryhmä
+    # Choose user group B-ryhmä
+    Select From List By Value  name:filter_group_id  bb2ce58d-f27b-4ade-9e31-e8aca8c7ca20
     Click Button  Filter
     Page Should Contain  Average score
     Page Should Contain  5.0   
@@ -120,7 +125,8 @@ With Filtering Unfiltered Average Is Shown
 
 Filtering With Email And Group Shows Correct Averages
     Go To Statistics  8
-    Select From List By Value  name:filter_group_name  B-ryhmä
+    # Choose user group B-ryhmä
+    Select From List By Value  name:filter_group_id  bb2ce58d-f27b-4ade-9e31-e8aca8c7ca20
     Input Text  filter_email  duser
     Click Button  Filter    
     Page Should Contain  5.0
