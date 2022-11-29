@@ -2,29 +2,30 @@
 {% import "components/macros/buttons.html" as buttons %}
 
 <div class="grid md:grid-cols-2 gap-6 lg:gap-8 items-center">
-    <div class="flex flex-col gap-2">
+    <div class="flex flex-col gap-4">
         <p class="text-gray-700 font-light">{{ survey.name }}</p>
         <h1 class="text-gray-900">{{ survey.title_text }}</h1>
+        <p class="text-gray-700">{{ survey.survey_text }}</p>
+        {% include "components/sections/survey_status.html" %}
+        <p class="text-sky-700 text-base mb-4 lg:col-span-2 hover:text-sky-700 hover:underline font-medium rounded-lg">
+            <a href="https://student-collaboration-fall2022.herokuapp.com/?survey={{survey[0]}}">Answer the survey</a>
+        </p>
     </div>
-    <div class="flex items-start md:justify-end gap-2">
-        {{ buttons.link_button("Edit survey", "/surveys/%s/edit" % survey[0]) }}
-        {{ buttons.modal_button("Delete survey", "delete", "survey-delete-button", "modal", "destructive") }}
+    <div class="flex flex-col gap-4">
+        <div class="flex items-start md:justify-end gap-2">
+            {{ buttons.link_button("Edit survey", "/surveys/%s/edit" % survey[0]) }}
+            {{ buttons.modal_button("Delete survey", "delete", "survey-delete-button", "modal", "destructive") }}
+        </div>
+        {% call survey_elements.card() %}
+        <div class="flex justify-between">
+            <h5 class="text-gray-900 text-xl leading-tight font-medium mb-2">Statistics</h5>
+            {{ buttons.link_button("Detailed statistics", "/surveys/%s/statistics" % survey_id) }}
+        </div>
+        <p class="text-gray-900 text-base mb-4">
+        <ul>
+            <li class="font-mono text-sm">Created {{ survey[2] }}</li>
+            <li class="font-mono text-sm" id="updated">Last updated {{ survey[3] }}</li>
+        </ul>
+        {% endcall %}
     </div>
-
-</div>
-<div class="grid lg:grid-cols-3 gap-6 lg:gap-8">
-    <p class="text-gray-700 text-base mb-4 lg:col-span-2">{{ survey.survey_text }}</p>
-    <p class="text-sky-700 text-base mb-4 lg:col-span-2 hover:text-sky-700 hover:underline font-medium rounded-lg text-sm"><a href="https://student-collaboration-fall2022.herokuapp.com/?survey={{survey[0]}}">Answer the survey</a></p>
-    {% call survey_elements.card() %}
-    <div class="flex justify-between">
-        <h5 class="text-gray-900 text-xl leading-tight font-medium mb-2">Statistics</h5>
-        {{ buttons.link_button("Detailed statistics", "/surveys/%s/statistics" % survey_id) }}
-    </div>
-    <p class="text-gray-900 text-base mb-4">
-    <ul>
-        <li class="font-mono text-sm">Created {{ survey[2] }}</li>
-        <li class="font-mono text-sm" id="updated">Last updated {{ survey[3] }}</li>
-    </ul>
-    {% endcall %}
-
 </div>

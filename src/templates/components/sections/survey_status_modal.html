@@ -1,0 +1,119 @@
+{% set survey_status_color = survey_status[0] %}
+{% set no_survey_results = survey_status[1] %}
+{% set no_categories = survey_status[2] %}
+{% set categories_without_results = survey_status[3] %}
+{% set no_questions = survey_status[4] %}
+{% set questions_without_answers = survey_status[5] %}
+{% set questions_without_categories = survey_status[6] %}
+{% set categories_without_questions = survey_status[7] %}
+{% set questions_contain_null_categories = survey_status[8] %}
+
+{% if survey_status_color == "red" %}
+{% set bg_color = "bg-rose-500" %}
+{% set label_text = "Attention required" %}
+
+{% elif survey_status_color == "yellow" %}
+{% set bg_color = "bg-amber-500" %}
+{% set label_text = "Warning" %}
+
+{% else %}
+{% set bg_color = "bg-emerald-500" %}
+{% set label_text = "All good" %}
+
+{% endif %}
+
+{% macro make_a_list(list) %}
+{# Renders a given list #}
+<ul class="list-disc list-inside">
+    {% for item in list %}
+    <li>{{ item }}</li>
+    {% endfor %}
+</ul>
+{% endmacro %}
+
+{% macro display_dictionary_and_label(dictionary, label) %}
+{# Renders a given dictionary if it contains values #}
+{% if dictionary.items()|length > 0 %}
+<p class="font-medium">{{ label }}</p>
+<ul class="list-disc list-inside">
+{% for  key, value in dictionary.items() %}
+    <li>{{ key }}</li>
+    {% for category in value %}
+    <li class="ml-4 font-light">{{ category }}</li>
+    {% endfor %}
+{% endfor %}
+</ul>
+{% endif %}
+
+{% endmacro %}
+
+{% macro display_list_and_label(list, label) %}
+{# Renders a list if list contains cells #}
+{% if list|length > 0 %}
+<p class="font-medium">{{ label }}:</p>
+{{ make_a_list(list) }}
+{% endif %}
+{% endmacro %}
+
+{% macro display_label(display, label) %}
+{# Renders a label if display is true #}
+{% if display %}
+<p class="font-medium">{{ label }}</p>
+{% endif %}
+{% endmacro %}
+
+{#
+[           
+            status :                        (str) 'red','yellow' or 'green',
+            no_survey_results :               (bool),
+            no_categories :                  (bool),
+            categories_without_results :    (list) [category names],
+            no_questions :                  (bool),
+            questions_without_answers :     (list) [question names],
+            questions_without_categories :  (list) [category names],
+            categories_without_questions :  (list) [category names]
+]
+#}
+
+{% macro survey_status_modal_content() %}
+<div class="max-h-48 overflow-y-scroll">
+    <div class="w-full px-4 flex flex-col gap-2 py-2">
+        {% if survey_status_color == "green" %}
+        <p>No errors found 🙂</p>
+        {% else %}
+        {{ display_label(no_survey_results, "Survey has no results") }}
+        {{ display_label(no_categories, "Survey has no categories") }}
+        {{ display_label(no_questions, "Survey has no questions") }}
+        {{ display_list_and_label(categories_without_results, "Categories with no results") }}
+        {{ display_list_and_label(questions_without_answers, "Questions without answers") }}
+        {{ display_list_and_label(questions_without_categories, "Questions without categories") }}
+        {{ display_list_and_label(categories_without_questions, "Categories with no questions") }}
+        {{ display_dictionary_and_label(questions_contain_null_categories, "Question ids with null categories")}}
+        {% endif %}
+    </div>
+</div>
+{% endmacro %}
+
+<div id="survey-status-modal"
+    class="fixed hidden z-50 inset-0 bg-slate-900 bg-opacity-60 overflow-y-auto h-full w-full modal tansition-all backdrop-blur-sm">
+    <div class="relative top-40 mx-auto shadow-xl rounded-md bg-white max-w-md">
+        <div class="flex flex-col gap-2">
+            <!-- Modal header -->
+            <div class="flex justify-between items-center {{ bg_color }} text-white text-xl rounded-t-md py-2 px-4 capitalize">
+                <h3>{{ label_text }}</h3>
+            </div>
+
+            <!-- Modal body -->
+            {{ survey_status_modal_content() }}
+
+            <div class="py-2 px-4 bg-slate-100 flex rounded-md items-center gap-2">
+                <button
+                    class="bg-slate-50 m-0 hover:bg-slate-200 border-slate-200 border-2 p-4 rounded w-full h-fit text-lg text-slate-700 leading-tight focus:ring-slate-200 focus:border-slate-500 transition duration-150 ease-in-out"
+                    type="button" onclick="closeModal('survey-status-modal')" id="modal-cancel-button">
+                    Close
+                </button>
+            </div>
+        </div>
+
+    </div>
+</div>
