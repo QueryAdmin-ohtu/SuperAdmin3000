@@ -939,37 +939,40 @@ class SurveyRepository:
         # TODO:
         # Handle situation, where we want to filter in only users without any groups
         # currently group id None lists all users
-        # if start_date != None and end_date != None:
-        sql = """
-        SELECT id
-        FROM "User_answers"
-        WHERE "createdAt" BETWEEN :start_date AND :end_date
-        AND "questionAnswerId" IN (
-            SELECT qa.id
-            FROM "Question_answers" as qa
-            LEFT JOIN "User_answers" AS ua
-                ON ua."questionAnswerId" = qa.id
-            WHERE qa."questionId" = :question_id
-            AND "userId" IN (
-                SELECT id FROM "Users" WHERE (COALESCE (email, '') LIKE :email)
-                    AND ((:group_id IS NULL) OR ("groupId" = :group_id))
-                ))
-        """
-        # else:
-        #     sql = """
-        #     SELECT id
-        #     FROM "User_answers"
-        #     WHERE "questionAnswerId" IN (
-        #         SELECT qa.id
-        #         FROM "Question_answers" as qa
-        #         LEFT JOIN "User_answers" AS ua
-        #             ON ua."questionAnswerId" = qa.id
-        #         WHERE qa."questionId" = :question_id
-        #         AND "userId" IN (
-        #             SELECT id FROM "Users" WHERE (COALESCE (email, '') LIKE :email)
-        #                 AND ((:group_id IS NULL) OR ("groupId" = :group_id))
-        #             ))
-        #     """
+
+        if start_date != None and end_date != None:
+            print("not none", flush=True)
+            sql = """
+            SELECT COUNT(id)
+            FROM "User_answers"
+            WHERE "createdAt" BETWEEN :start_date AND :end_date
+            AND "questionAnswerId" IN (
+                SELECT qa.id
+                FROM "Question_answers" as qa
+                LEFT JOIN "User_answers" AS ua
+                    ON ua."questionAnswerId" = qa.id
+                WHERE qa."questionId" = :question_id
+                AND "userId" IN (
+                    SELECT id FROM "Users" WHERE (COALESCE (email, '') LIKE :email)
+                        AND ((:group_id IS NULL) OR ("groupId" = :group_id))
+                    ))
+            """
+        else:
+            print("is none", flush=True)
+            sql = """
+            SELECT COUNT(id)
+            FROM "User_answers"
+            WHERE "questionAnswerId" IN (
+                SELECT qa.id
+                FROM "Question_answers" as qa
+                LEFT JOIN "User_answers" AS ua
+                    ON ua."questionAnswerId" = qa.id
+                WHERE qa."questionId" = :question_id
+                AND "userId" IN (
+                    SELECT id FROM "Users" WHERE (COALESCE (email, '') LIKE :email)
+                        AND ((:group_id IS NULL) OR ("groupId" = :group_id))
+                    ))
+            """
         
         values = {"question_id": question_id,
                   "group_id": user_group_id,
@@ -978,12 +981,10 @@ class SurveyRepository:
                   "email": f"%{email}%"
                   }
         
-        count_of_answers = self.db_connection.session.execute(sql, values).fetchall()
+        count_of_answers = self.db_connection.session.execute(sql, values).fetchone()[0]
         
-        print("count_of_answers", count_of_answers, flush=True)
-
-        # if count_of_answers:
-        #     return count_of_answers
+        if count_of_answers:
+            return count_of_answers
         return 0
 
     def get_sum_of_user_answer_points_by_question_id(self, question_id,
