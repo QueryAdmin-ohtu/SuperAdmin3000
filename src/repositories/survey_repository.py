@@ -939,28 +939,45 @@ class SurveyRepository:
         # TODO:
         # Handle situation, where we want to filter in only users without any groups
         # currently group id None lists all users
+        # if start_date != None and end_date != None:
         sql = """
         SELECT id
         FROM "User_answers"
-        WHERE (:start_date IS NULL AND :end_date IS NULL) OR ("createdAt" BETWEEN :start_date AND :end_date)
+        WHERE "createdAt" BETWEEN :start_date AND :end_date
         AND "questionAnswerId" IN (
             SELECT qa.id
             FROM "Question_answers" as qa
             LEFT JOIN "User_answers" AS ua
                 ON ua."questionAnswerId" = qa.id
             WHERE qa."questionId" = :question_id
-            AND ((:start_date IS NULL AND :end_date IS NULL) OR (ua."createdAt" BETWEEN :start_date AND :end_date))
             AND "userId" IN (
                 SELECT id FROM "Users" WHERE (COALESCE (email, '') LIKE :email)
                     AND ((:group_id IS NULL) OR ("groupId" = :group_id))
                 ))
         """
+        # else:
+        #     sql = """
+        #     SELECT id
+        #     FROM "User_answers"
+        #     WHERE "questionAnswerId" IN (
+        #         SELECT qa.id
+        #         FROM "Question_answers" as qa
+        #         LEFT JOIN "User_answers" AS ua
+        #             ON ua."questionAnswerId" = qa.id
+        #         WHERE qa."questionId" = :question_id
+        #         AND "userId" IN (
+        #             SELECT id FROM "Users" WHERE (COALESCE (email, '') LIKE :email)
+        #                 AND ((:group_id IS NULL) OR ("groupId" = :group_id))
+        #             ))
+        #     """
+        
         values = {"question_id": question_id,
                   "group_id": user_group_id,
                   "start_date": start_date,
                   "end_date": end_date,
                   "email": f"%{email}%"
                   }
+        
         count_of_answers = self.db_connection.session.execute(sql, values).fetchall()
         
         print("count_of_answers", count_of_answers, flush=True)
