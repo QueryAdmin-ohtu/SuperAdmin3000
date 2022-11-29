@@ -42,9 +42,9 @@
                 <select name="filter_group_id" id="filter_group_id"
                     class="bg-white border border-slate-300 text-gray-900 text-sm rounded-lg focus:invalid:border-rose-500 focus:ring-sky-500 focus:border-sky-500 block w-full p-2 appearance-none">
                     {% for key, value in group_names.items() %}
-                    {% if value == filter_group_id %}
+                    {% if key == filter_group_id %}
                     <option value="{{ key }}" id="{{ key }}" selected>{{ value }}</option>
-                    {% elif value != None %}
+                    {% elif key != None %}
                     <!-- value == None could be used to filter-in only users, which doesn't
                        have any group. This is not yet implemented in all repositories, however
                     -->
@@ -64,7 +64,7 @@
     </form>
     {% endcall %}
 
-    <!-- CAETGORY SCORES -->
+    <!-- CATEGORY SCORES -->
     <div class="flex flex-row items-center justify-start gap-4">
         <h2>Category scores in answers</h2>
         <div class="flex-grow border-t border-slate-200"></div>
