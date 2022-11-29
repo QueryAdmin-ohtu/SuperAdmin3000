@@ -380,6 +380,7 @@ class SurveyService:
             cutoff_from_maxpts = 1.0
             self.create_category_result(
                 category_id,
+                survey_id,
                 category_result_text,
                 cutoff_from_maxpts
             )
@@ -459,9 +460,10 @@ class SurveyService:
         """
         return self.survey_repository.delete_category(category_id)
     
-    def delete_category_results_for_category(self, category_id):
+    def delete_category_results_for_category(self, category_id, survey_id):
         """ Deletes all category results for the given
         category from the repository """
+        self.update_category_and_survey_updated_at(category_id, survey_id)
         return self.survey_repository.delete_category_results_of_category(category_id)
 
     def get_number_of_submissions_for_survey(self, survey_id):
@@ -573,10 +575,18 @@ class SurveyService:
 
         return result
 
-    def create_category_result(self, category_id: int, text: str, cutoff_from_maxpts: float):
+    
+    def update_category_and_survey_updated_at(self, category_id, survey_id):
+        """ Updates the updatedAt of a category and survey based on category_id
+        """
+        self.survey_repository.update_category_and_survey_updated_at(category_id, survey_id)
+
+    
+    def create_category_result(self, category_id: int, survey_id: int, text: str, cutoff_from_maxpts: float):
         """Create a new category result
 
         Returns id of category result"""
+        self.update_category_and_survey_updated_at(category_id, survey_id)
         return self.survey_repository.create_category_result(category_id, text, cutoff_from_maxpts)
 
     def get_category_results_from_category_id(self, category_id):
@@ -606,14 +616,15 @@ class SurveyService:
         """Updates the original results of a survey to new ones"""
         return self.survey_repository.update_survey_results(original_results, new_results, survey_id)
 
-    def delete_category_result(self, category_result_id):
+    def delete_category_result(self, category_result_id, category_id, survey_id):
         """ Deletes the category result given as parameter
         """
-
+        self.update_category_and_survey_updated_at(category_id, survey_id)
         return self.survey_repository.delete_category_result(category_result_id)
 
-    def update_category_results(self, original_results, new_results,survey_id):
+    def update_category_results(self, original_results, new_results, survey_id, category_id):
         """Updates the original results of a survey to new ones"""
+        self.update_category_and_survey_updated_at(category_id, survey_id)
         return self.survey_repository.update_category_results(original_results, new_results, survey_id)
 
     def check_survey_status(self, survey_id):

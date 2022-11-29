@@ -1184,6 +1184,32 @@ class SurveyRepository:
             return category_result_id[0]
         return None
 
+    def update_category_and_survey_updated_at(self, category_id, survey_id):
+        """
+        Updates the updated_at fields of a given category and survey
+        """
+        sql1 = """
+        UPDATE "Categories"
+        SET
+            "updatedAt"=NOW()
+        WHERE id=:category_id
+        """
+        values1 = {
+            "category_id": category_id}
+
+        sql2 = """
+        UPDATE "Surveys"
+        SET
+            "updatedAt"=NOW()
+        WHERE id=:survey_id
+        """
+        values2 = {
+            "survey_id": survey_id}
+
+        db.session.execute(sql1, values1)
+        db.session.execute(sql2, values2)
+        db.session.commit()        
+    
     def get_category_results_from_category_id(self, category_id):
         """
         Selects id, text and cutoff from all category_results linked to a given category_id
