@@ -298,7 +298,7 @@ class SurveyService:
                                                survey_id: int,
                                                start_date: datetime,
                                                end_date: datetime,
-                                               group_name,
+                                               group_id,
                                                email):
         """ Returns a list of users who have answered a given survey in a given timerange,
         belonging the given group and having a matching email address
@@ -311,7 +311,7 @@ class SurveyService:
 
         Returns:
            On succeed: A list of lists where each element contains
-               [id, email, group_name, answer_time]
+               [id, email, group_id, group_name, answer_time]
            On error / no users who answered found:
                None
         """
@@ -319,14 +319,10 @@ class SurveyService:
         if start_date > end_date or end_date < start_date:
             return None
 
-        # Changes an empty string ("") value to None
-        if not group_name:
-            group_name = None
-
         return self.survey_repository.get_users_who_answered_survey(survey_id,
                                                                     start_date,
                                                                     end_date,
-                                                                    group_name,
+                                                                    group_id,
                                                                     email)
 
     def get_users_who_answered_survey_in_timerange(self, survey_id: int, start_date: datetime, end_date: datetime):

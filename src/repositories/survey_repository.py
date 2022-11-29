@@ -506,7 +506,7 @@ class SurveyRepository:
                                       survey_id: int,
                                       start_date: datetime = None,
                                       end_date: datetime = None,
-                                      group_name=None,
+                                      group_id=None,
                                       email=""):
         """ Returns a list of users who have answered a given survey.
         Results can be filtered by a timerange, group name and email address.
@@ -514,7 +514,7 @@ class SurveyRepository:
             survey_id: Id of the survey
             start_time: Start of timerange to filter by (optional)
             end_time: End of timerange to filter by (optional)
-            group_name: User group to filter by (optional)
+            group_id: User group to filter by (optional)
                         If the group is None, all users all listed. If the
                         group is string "None", only users without any group
                         are listed.
@@ -547,15 +547,14 @@ class SurveyRepository:
             ON u."groupId" = sua.id
         WHERE s.id=:survey_id
             AND ((:start_date IS NULL AND :end_date IS NULL) OR (ua."updatedAt" > :start_date AND ua."updatedAt" < :end_date))
-            AND ((:group_name IS NULL) OR
-                 ((:group_name = 'None') AND (sua.group_name IS NULL)) OR
-                 (group_name=:group_name))
+            AND ((:group_id IS NULL) OR
+                 (sua.id=:group_id))
             AND COALESCE (email, '') like :email
         """
         values = {"survey_id": survey_id,
                   "start_date": start_date,
                   "end_date": end_date,
-                  "group_name": group_name,
+                  "group_id": group_id,
                   "email": f"%{email}%"}
 
         try:

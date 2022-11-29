@@ -73,13 +73,14 @@ def filtered_statistics(survey_id):
 
     survey = survey_service.get_survey(survey_id)
 
-    filter_group_id_str = request.form["filter_group_id"]
+    filter_group_id = request.form["filter_group_id"]
     filter_email = request.form["filter_email"]
 
-    if filter_group_id_str == "All":
+    if filter_group_id == "All":
         filter_group_id = None
     else:
-        filter_group_id = uuid.UUID(filter_group_id_str)
+        filter_group_id = uuid.UUID(filter_group_id)
+
     # submissions = survey_service.get_number_of_submissions_for_survey(
     #     survey_id)
 
@@ -121,6 +122,9 @@ def filtered_statistics(survey_id):
     filter_start_date = filter_start_date.strftime(HTML_DATE_INPUT_TIMEFORMAT)
     filter_end_date = filter_end_date.strftime(HTML_DATE_INPUT_TIMEFORMAT)
 
+    if not filter_group_id:
+        filter_group_id = "All"
+
     return render_template("surveys/statistics.html",
                            ENV=app.config["ENV"],
                            survey=survey,
@@ -131,7 +135,7 @@ def filtered_statistics(survey_id):
                            categories=categories,
                            filter_start_date=filter_start_date,
                            filter_end_date=filter_end_date,
-                           filter_group_id=filter_group_id_str,
+                           filter_group_id=filter_group_id,
                            filter_group_name=filter_group_name,
                            filter_email=filter_email,
                            group_names=group_names,
