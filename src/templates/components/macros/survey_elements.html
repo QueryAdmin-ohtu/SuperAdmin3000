@@ -12,7 +12,7 @@
             4: Survey status
 #}
 <div id="survey-{{ survey[0] }}" style="cursor: pointer;" onclick="location.href='/surveys/{{ survey[0] }}';"
-    class="flex flex-row max-w-full rounded-lg border border-slate-300 hover:border-slate-400 hover:shadow-sm transition overflow-hidden">
+    class="flex flex-row max-w-full rounded-lg border border-slate-300 hover:border-slate-400 hover:shadow-sm transition overflow-hidden bg-white">
     {% set status_description = survey[4][0] %}
     {% if status_description == "red" %}
     {% set card_accent_color = "rose" %}
@@ -22,7 +22,7 @@
     {% set card_accent_color = "emerald" %}
     {% endif %}
     <div id="survey-{{ survey[0] }}-status" class="bg-{{ card_accent_color }}-500 w-5"></div>
-    <div class="flex flex-col max-w-full bg-white py-4 pr-4 pl-3 gap-2">
+    <div class="flex flex-col max-w-full py-4 pr-4 pl-3 gap-2">
         <h3 class="text-gray-900 leading-tight">{{survey[1]}}</h3>
         <div class="grow h-14"></div>
         <p class="text-slate-600 font-mono text-sm font-medium">Questions: {{ survey[2] }}</p>
