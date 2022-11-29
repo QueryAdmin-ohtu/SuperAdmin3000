@@ -331,12 +331,12 @@ def edit_category_page(survey_id, category_id):
         for i in range(len(category_results)):
             if i == 0:
                 if float(category_results[0][2]) == 0.0:
-                    text = "0% of max points returns user"
+                    text = "0 %"
                 else:
-                    text = f"0%-{int(category_results[0][2]*100)}% of max points returns user"
+                    text = f"0% - {int(category_results[0][2]*100)}%"
                 show_results.append([text, category_results[0][1]])
             else:
-                text = f"{int(category_results[i-1][2]*100)}%-{int(category_results[i][2]*100)}% of max points returns user"
+                text = f"{int(category_results[i-1][2]*100)}% - {int(category_results[i][2]*100)}%"
                 show_results.append([text, category_results[i][1]])
     return render_template("surveys/edit_category.html",
                            ENV=app.config["ENV"],
@@ -428,7 +428,7 @@ def new_category_result_view(survey_id, category_id):
     results = survey_service.get_category_results_from_category_id(category_id)
     if results:
         return render_template("surveys/edit_category_results.html", survey=survey, category = category, results=results,  ENV=app.config["ENV"])
-    return render_template("surveys/edit_category_results.html", survey=survey_id, first=True, results=[],  ENV=app.config["ENV"]   )
+    return render_template("surveys/edit_category_results.html", survey=survey, category = category, first=True, results=[],  ENV=app.config["ENV"]   )
 
 
 @surveys.route("/add_content_link", methods=["POST"])
