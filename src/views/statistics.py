@@ -1,4 +1,5 @@
 import datetime
+import uuid
 
 from flask import render_template, redirect, request, Blueprint, flash, abort
 from flask import current_app as app
@@ -36,7 +37,6 @@ def statistics(survey_id):
     filter_start_date = (datetime.datetime.now() -
                          datetime.timedelta(days=10*365)).strftime(HTML_DATE_INPUT_TIMEFORMAT)
     filter_end_date = datetime.datetime.now().strftime(HTML_DATE_INPUT_TIMEFORMAT)
-    filter_group_name = ""
     filter_email = ""
 
     return render_template("surveys/statistics.html",
@@ -50,7 +50,7 @@ def statistics(survey_id):
                            answer_distribution=answer_distribution,
                            filter_start_date=filter_start_date,
                            filter_end_date=filter_end_date,
-                           filter_group_name=filter_group_name,
+                           filter_group_id="",
                            filter_email=filter_email,
                            group_names=group_names,
                            show_userlist=False,
@@ -73,17 +73,27 @@ def filtered_statistics(survey_id):
 
     survey = survey_service.get_survey(survey_id)
 
-    filter_group_name = request.form["filter_group_name"]
+    filter_group_id = uuid.UUID(request.form["filter_group_id"])
     filter_email = request.form["filter_email"]
 
     # submissions = survey_service.get_number_of_submissions_for_survey(
     #     survey_id)
 
+    users = survey_service.get_users_who_answered_survey(survey_id)
+    users = users if users else []
+    total_users = len(users)
+
+    group_names = {"All": "All user groups"}
+    for user in users:
+        group_names[user.group_id] = user.group_name
+
+    filter_group_name = group_names[filter_group_id]
+
     answer_distribution = helper.save_question_answer_charts(
         survey_service.get_answer_distribution_for_survey_questions(survey_id,
                                                                     filter_start_date,
                                                                     filter_end_date,
-                                                                    filter_group_name,
+                                                                    filter_group_id,
                                                                     filter_email),
         filter_group_name,
         filter_start_date,
@@ -91,23 +101,15 @@ def filtered_statistics(survey_id):
     )
 
     categories = survey_service.calculate_average_scores_by_category(survey_id,
-                                                                     filter_group_name,
+                                                                     filter_group_id,
                                                                      filter_start_date,
                                                                      filter_end_date,
                                                                      filter_email)
 
-    users = survey_service.get_users_who_answered_survey(survey_id)
-    users = users if users else []
-    total_users = len(users)
-
-    group_names = {"All user groups": ""}
-    for user in users:
-        group_names[user.group_name] = user.group_name
-
     users = survey_service.get_users_who_answered_survey_filtered(survey_id,
                                                                   filter_start_date,
                                                                   filter_end_date,
-                                                                  filter_group_name,
+                                                                  filter_group_id,
                                                                   filter_email)
 
     users = users if users else []
@@ -125,7 +127,7 @@ def filtered_statistics(survey_id):
                            categories=categories,
                            filter_start_date=filter_start_date,
                            filter_end_date=filter_end_date,
-                           filter_group_name=filter_group_name,
+                           filter_group_id=filter_group_id,
                            filter_email=filter_email,
                            group_names=group_names,
                            show_userlist=True,
