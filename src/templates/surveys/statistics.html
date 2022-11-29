@@ -38,17 +38,17 @@
                 {{ form_elements.text_input("filter_email", "", "", false, filter_email) }}
             </div>
             <div class="flex flex-col gap-2 w-full">
-                {{ form_elements.label("filter_group_name", "User group") }}
-                <select name="filter_group_name" id="filter_group_name"
+                {{ form_elements.label("filter_group_id", "User group") }}
+                <select name="filter_group_id" id="filter_group_id"
                     class="bg-white border border-slate-300 text-gray-900 text-sm rounded-lg focus:invalid:border-rose-500 focus:ring-sky-500 focus:border-sky-500 block w-full p-2 appearance-none">
                     {% for key, value in group_names.items() %}
-                    {% if value == filter_group_name %}
-                    <option value="{{ value }}" id="{{ key }}" selected>{{ key }}</option>
+                    {% if value == filter_group_id %}
+                    <option value="{{ key }}" id="{{ key }}" selected>{{ value }}</option>
                     {% elif value != None %}
                     <!-- value == None could be used to filter-in only users, which doesn't
                        have any group. This is not yet implemented in all repositories, however
                     -->
-                    <option value="{{ value }}" id="{{ key }}">{{ key }}</option>
+                    <option value="{{ key }}" id="{{ key }}">{{ value }}</option>
                     {% endif %}
                     {% endfor %}
                 </select>

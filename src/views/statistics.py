@@ -25,9 +25,9 @@ def statistics(survey_id):
     users = users if users else []
     total_users = len(users)
 
-    group_names = {"All user groups": ""}
+    group_names = {"All": "All user groups"}
     for user in users:
-        group_names[user.group_name] = user.group_name
+        group_names[user.group_id] = user.group_name
 
     answer_distribution = helper.save_question_answer_charts(
         survey_service.get_answer_distribution_for_survey_questions(survey_id)
