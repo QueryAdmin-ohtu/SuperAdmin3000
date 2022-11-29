@@ -8,9 +8,12 @@
 </div>
 {% if show_results %}
 {% for result in show_results %}
-    <p>{{ result[0]}}
-    <br>{{ result[1] }}</p>
-    <br>
+    <p>{{ result[0]}} <span style="color:grey">of the max points returns the following result to the user:</span></p>
+    <p>"{{ result[1] }}"</p>
+    <hr style="margin-bottom:10px; margin-top:10px">
+    <!-- <p>AA: {{ result[0]}}
+    <br>BB: {{ result[1] }}</p>
+    <br> -->
 {% endfor %}
 {% else %}
     <p>Survey has no results 🥺</p>

@@ -15,7 +15,7 @@ Logged In User Can View Category Results
     Login With Correct Credentials
     Go To Survey  1
     Click Link  edit_button_1
-    Page Should Contain  0%-40% of max points returns user
+    Page Should Contain  0% - 40% of the max points
     Page Should Contain  Dynamically fetched feedback text for category score.
     Click Element  categoryresults
     Page Should Contain   Category results for Category 1
