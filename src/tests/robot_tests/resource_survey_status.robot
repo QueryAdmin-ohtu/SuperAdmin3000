@@ -55,7 +55,7 @@ Set Question Text
 
 Set Category Weight
     [Arguments]  ${weight}
-    Input Text  cat-8-weight  ${weight}
+    Input Text  xpath://input[@type="number"]  ${weight}
 
 Submit Question
     Click Button  submit
