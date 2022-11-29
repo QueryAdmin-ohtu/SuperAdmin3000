@@ -10,73 +10,71 @@
 </head>
 
 <body>
+    <div class="w-full bg-slate-100">
+        <div class="container mx-auto overflow-hidden">
+            <div class="flex flex-row items-center justify-start gap-8 h-36">
+                <header class="min-w-fit flex flex-col gap">
+                    <h1 class="text-slate-800"><a href="/">🤖 Super Admin 3000</a></h1>
+                    <p class="text-slate-400 font-mono"><i><small>Environment: {{ENV}}</small></i></p>
+                </header>
 
-    <div class="max-w-md mx-auto bg-slate-100 rounded-xl overflow-hidden md:max-w-4xl border">
-        <div class="md:flex">
-            <div class="md:shrink-0">
-                <div class="p-8">
-                    <header>
-                        <h1 class="text-slate-800"><a href="/">🤖 Super Admin 3000</a></h1>
-                        <p class="text-slate-400 font-mono"><i><small>Environment: {{ENV}}</small></i></p>
-                    </header>
-                </div>
-            </div>
-            <div class="p-8">
-
-                <nav class="flex flex-row gap-4 items-center justify-end">
+                <nav class="flex flex-row gap-4 justify-start items-center w-full h-full">
                     <div>
                         {% if (
-                            (('surveys' in url_for(request.endpoint, **request.view_args) and (url_for(request.endpoint, **request.view_args) != '/surveys/new-survey')) 
-                            or (url_for(request.endpoint, **request.view_args) == '/'))
-                            or ('edit' in url_for(request.endpoint, **request.view_args))
-                            ) 
+                        (('surveys' in url_for(request.endpoint, **request.view_args) and (url_for(request.endpoint,
+                        **request.view_args) != '/surveys/new-survey'))
+                        or (url_for(request.endpoint, **request.view_args) == '/'))
+                        or ('edit' in url_for(request.endpoint, **request.view_args))
+                        )
                         %}
 
                         <a href="/"
                             class="text-sky-900 hover:text-sky-700 hover:underline font-medium rounded-lg text-sm"><strong>Surveys</strong></a>
 
                         {% else %}
-                        
+
                         <a href="/"
-                            class="text-sky-600 hover:text-sky-700 hover:underline font-medium rounded-lg text-sm">Surveys</a> 
-                        
+                            class="text-sky-600 hover:text-sky-700 hover:underline font-medium rounded-lg text-sm">Surveys</a>
+
                         {% endif %}
                     </div>
 
                     <div>
-                        {% if  url_for(request.endpoint, **request.view_args) == '/surveys/new-survey' %}
+                        {% if url_for(request.endpoint, **request.view_args) == '/surveys/new-survey' %}
 
-                            <a href="/surveys/new-survey"
-                                class="text-sky-900 hover:text-sky-700 hover:underline font-medium rounded-lg text-sm"><strong>New survey</strong></a>
-                        
+                        <a href="/surveys/new-survey"
+                            class="text-sky-900 hover:text-sky-700 hover:underline font-medium rounded-lg text-sm"><strong>New
+                                survey</strong></a>
+
                         {% else %}
-                        
-                                <a href="/surveys/new-survey"
-                                class="text-sky-600 hover:text-sky-700 hover:underline font-medium rounded-lg text-sm">New survey</a>
-                        
+
+                        <a href="/surveys/new-survey"
+                            class="text-sky-600 hover:text-sky-700 hover:underline font-medium rounded-lg text-sm">New
+                            survey</a>
+
                         {% endif %}
                     </div>
 
                     <div>
-                        {% if  url_for(request.endpoint, **request.view_args) == '/admins' %}
+                        {% if url_for(request.endpoint, **request.view_args) == '/admins' %}
 
                         <a href="/admins"
-                        class="text-sky-900 hover:text-sky-700 hover:underline font-medium rounded-lg text-sm"><Strong>Admins</Strong></a>
-                        
+                            class="text-sky-900 hover:text-sky-700 hover:underline font-medium rounded-lg text-sm"><Strong>Admins</Strong></a>
+
                         {% else %}
-                        
+
                         <a href="/admins"
                             class="text-sky-600 hover:text-sky-700 hover:underline font-medium rounded-lg text-sm">Admins</a>
-                        
+
                         {% endif %}
                     </div>
 
                     <div>
-                        {% if  url_for(request.endpoint, **request.view_args) == '/logs' %}
+                        {% if url_for(request.endpoint, **request.view_args) == '/logs' %}
 
                         <a href="/logs"
-                            class="text-sky-900 hover:text-sky-700 hover:underline font-medium rounded-lg text-sm"><strong>Logs</strong></a>    
-                        
+                            class="text-sky-900 hover:text-sky-700 hover:underline font-medium rounded-lg text-sm"><strong>Logs</strong</a>
+
                         {% else %}
 
                         <a href="/logs"
@@ -84,10 +82,10 @@
 
                         {% endif %}
                     </div>
-
-                    <div>
-                        Logged in as <b>{{ session.username }}</b>
-                        <form action="/logout" method="POST" class="m-1">
+                    <div class="grow"></div>
+                    <div class="flex flex-col items-end justify-center justify-start gap h-full">
+                        <p>Logged in as {{ session.username }}</p>
+                        <form action="/logout" method="POST" class="">
                             <button type="submit"
                                 class=" text-sky-600 hover:text-sky-700 hover:underline focus:ring-4 font-medium rounded-lg text-sm">Logout</button>
                             <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
