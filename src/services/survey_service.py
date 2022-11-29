@@ -288,7 +288,7 @@ class SurveyService:
 
         Returns:
             On succeed: A list of lists where each element contains
-                [id, email, group_name, answer_time]
+                [id, email, group_id, group_name, answer_time]
             On error / no users who answered found:
                 None
         """

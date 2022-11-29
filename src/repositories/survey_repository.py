@@ -522,7 +522,7 @@ class SurveyRepository:
 
         Returns:
             On succeed: A list of lists where each element contains
-                [id, email, group_name, answer_time]
+                [id, email, group_id, group_name, answer_time]
             On error / no users who answered found:
                 None
         """
@@ -530,6 +530,7 @@ class SurveyRepository:
         SELECT
             DISTINCT u.id,
             u.email,
+            sua.id as group_id,
             sua.group_name,
             ua."updatedAt" as answer_time
         FROM
