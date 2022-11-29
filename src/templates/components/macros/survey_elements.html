@@ -12,21 +12,22 @@
             4: Survey status
 #}
 <div id="survey-{{ survey[0] }}" style="cursor: pointer;" onclick="location.href='/surveys/{{ survey[0] }}';"
-     class="flex-col max-w-full bg-white p-4 gap-2 rounded-lg border border-slate-300 hover:border-slate-400 hover:shadow-sm transition">
-  {% set status=survey[4][0] %}
-  <div id="survey-{{ survey[0] }}-status" class="text-3xl max-w-min rounded-full border">
-    {% if status == "red" %}
-    &#10060 <!-- Cross mark -->
-    {% elif status == "yellow" %}
-    &#9888 <!-- Exclamation mark -->
+    class="flex flex-row max-w-full rounded-lg border border-slate-300 hover:border-slate-400 hover:shadow-sm transition overflow-hidden">
+    {% set status_description = survey[4][0] %}
+    {% if status_description == "red" %}
+    {% set card_accent_color = "rose" %}
+    {% elif status_decription == "yellow" %}
+    {% set card_accent_color = "amber" %}
     {% else %}
-    &#10003 <!-- Check mark -->
+    {% set card_accent_color = "emerald" %}
     {% endif %}
-  </div>
-    <h3 class="text-gray-900 leading-tight">{{survey[1]}}</h3>
-    <div class="grow h-14"></div>
-    <p class="text-slate-600 font-mono text-sm font-medium">Questions: {{ survey[2] }}</p>
-    <p class="text-slate-600 font-mono text-sm font-medium">Submissions: {{ survey[3] }}</p>
+    <div id="survey-{{ survey[0] }}-status" class="bg-{{ card_accent_color }}-500 w-5"></div>
+    <div class="flex flex-col max-w-full bg-white py-4 pr-4 pl-3 gap-2">
+        <h3 class="text-gray-900 leading-tight">{{survey[1]}}</h3>
+        <div class="grow h-14"></div>
+        <p class="text-slate-600 font-mono text-sm font-medium">Questions: {{ survey[2] }}</p>
+        <p class="text-slate-600 font-mono text-sm font-medium">Submissions: {{ survey[3] }}</p>
+    </div>
 </div>
 {% endmacro %}
 
