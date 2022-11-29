@@ -1008,7 +1008,7 @@ class SurveyRepository:
 
     def calculate_average_scores_by_category(self,
                                              survey_id,
-                                             user_group_name=None,
+                                             user_group_id=None,
                                              start_date=None,
                                              end_date=None,
                                              email=""):
@@ -1040,11 +1040,6 @@ class SurveyRepository:
         # currently group id None lists all users
         question_averages = []
         related_questions = self.get_questions_of_survey(survey_id)
-
-        if user_group_name:
-            user_group_id = self.find_user_group_by_name(user_group_name)
-        else:
-            user_group_id = None
 
         for question in related_questions:
 

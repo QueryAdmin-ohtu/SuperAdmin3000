@@ -523,7 +523,7 @@ class SurveyService:
 
     def calculate_average_scores_by_category(self,
                                              survey_id,
-                                             user_group_name=None,
+                                             user_group_id=None,
                                              start_date=None,
                                              end_date=None,
                                              email=""):
@@ -562,7 +562,7 @@ class SurveyService:
         all_averages = self.survey_repository.calculate_average_scores_by_category(
             survey_id)
         filtered_averages = self.survey_repository.calculate_average_scores_by_category(
-            survey_id, user_group_name, start_date, end_date, email)
+            survey_id, user_group_id, start_date, end_date, email)
 
         result = []
 
