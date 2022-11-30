@@ -288,7 +288,7 @@ class SurveyService:
 
         Returns:
             On succeed: A list of lists where each element contains
-                [id, email, group_name, answer_time]
+                [id, email, group_id, group_name, answer_time]
             On error / no users who answered found:
                 None
         """
@@ -298,7 +298,7 @@ class SurveyService:
                                                survey_id: int,
                                                start_date: datetime,
                                                end_date: datetime,
-                                               group_name,
+                                               group_id,
                                                email):
         """ Returns a list of users who have answered a given survey in a given timerange,
         belonging the given group and having a matching email address
@@ -311,7 +311,7 @@ class SurveyService:
 
         Returns:
            On succeed: A list of lists where each element contains
-               [id, email, group_name, answer_time]
+               [id, email, group_id, group_name, answer_time]
            On error / no users who answered found:
                None
         """
@@ -319,14 +319,10 @@ class SurveyService:
         if start_date > end_date or end_date < start_date:
             return None
 
-        # Changes an empty string ("") value to None
-        if not group_name:
-            group_name = None
-
         return self.survey_repository.get_users_who_answered_survey(survey_id,
                                                                     start_date,
                                                                     end_date,
-                                                                    group_name,
+                                                                    group_id,
                                                                     email)
 
     def get_users_who_answered_survey_in_timerange(self, survey_id: int, start_date: datetime, end_date: datetime):
@@ -485,7 +481,7 @@ class SurveyService:
                                                      survey_id,
                                                      start_date: datetime = None,
                                                      end_date: datetime = None,
-                                                     group_name: str = "",
+                                                     group_id=None,
                                                      email: str = ""):
         """
         Fetches the distribution of user answers over the
@@ -495,18 +491,18 @@ class SurveyService:
             survey_id   The id of the survey
             start_date  Filter out answers before this date (optional)
             end_date    Filter out answers after this date (optional)
-            group_name  Filter out answers from user, who doen't belong to this group (optional)
-            email       Filter in answers from user, who's email matches (optional)
+            group_id    Filter out answers from users not in this group (optional)
+            email       Filter in answers from users whose email matches (optional)
 
         Returns a table with question id and text, answer
         id and text, number of user answers
         """
 
-        result = self.survey_repository.get_answer_distribution_filtered(survey_id,
-                                                                         start_date,
-                                                                         end_date,
-                                                                         group_name,
-                                                                         email)
+        result = self.survey_repository.get_answer_distribution(survey_id,
+                                                                start_date,
+                                                                end_date,
+                                                                group_id,
+                                                                email)
 
         return result
 
@@ -525,7 +521,7 @@ class SurveyService:
 
     def calculate_average_scores_by_category(self,
                                              survey_id,
-                                             user_group_name=None,
+                                             user_group_id=None,
                                              start_date=None,
                                              end_date=None,
                                              email=""):
@@ -564,7 +560,7 @@ class SurveyService:
         all_averages = self.survey_repository.calculate_average_scores_by_category(
             survey_id)
         filtered_averages = self.survey_repository.calculate_average_scores_by_category(
-            survey_id, user_group_name, start_date, end_date, email)
+            survey_id, user_group_id, start_date, end_date, email)
 
         result = []
 
