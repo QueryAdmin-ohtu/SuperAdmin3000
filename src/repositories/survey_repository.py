@@ -946,16 +946,14 @@ class SurveyRepository:
             SELECT COUNT(id)
             FROM "User_answers"
             WHERE "createdAt" BETWEEN :start_date AND :end_date
+            AND "userId" IN (SELECT id FROM "Users" WHERE (COALESCE (email, '') LIKE :email) AND ((:group_id IS NULL) OR ("groupId" = :group_id)))
             AND "questionAnswerId" IN (
                 SELECT qa.id
                 FROM "Question_answers" as qa
                 LEFT JOIN "User_answers" AS ua
                     ON ua."questionAnswerId" = qa.id
                 WHERE qa."questionId" = :question_id
-                AND "userId" IN (
-                    SELECT id FROM "Users" WHERE (COALESCE (email, '') LIKE :email)
-                        AND ((:group_id IS NULL) OR ("groupId" = :group_id))
-                    ))
+                )
             """
         else:
             print("is none", flush=True)
@@ -983,6 +981,8 @@ class SurveyRepository:
         
         count_of_answers = self.db_connection.session.execute(sql, values).fetchone()[0]
         
+        print("count_of_answers", count_of_answers, flush=True)
+
         if count_of_answers:
             return count_of_answers
         return 0
