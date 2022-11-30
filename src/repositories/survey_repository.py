@@ -506,7 +506,7 @@ class SurveyRepository:
                                       survey_id: int,
                                       start_date: datetime = None,
                                       end_date: datetime = None,
-                                      group_name=None,
+                                      group_id=None,
                                       email=""):
         """ Returns a list of users who have answered a given survey.
         Results can be filtered by a timerange, group name and email address.
@@ -514,7 +514,7 @@ class SurveyRepository:
             survey_id: Id of the survey
             start_time: Start of timerange to filter by (optional)
             end_time: End of timerange to filter by (optional)
-            group_name: User group to filter by (optional)
+            group_id: User group to filter by (optional)
                         If the group is None, all users all listed. If the
                         group is string "None", only users without any group
                         are listed.
@@ -522,7 +522,7 @@ class SurveyRepository:
 
         Returns:
             On succeed: A list of lists where each element contains
-                [id, email, group_name, answer_time]
+                [id, email, group_id, group_name, answer_time]
             On error / no users who answered found:
                 None
         """
@@ -530,6 +530,7 @@ class SurveyRepository:
         SELECT
             DISTINCT u.id,
             u.email,
+            sua.id as group_id,
             sua.group_name,
             ua."updatedAt" as answer_time
         FROM
@@ -546,15 +547,14 @@ class SurveyRepository:
             ON u."groupId" = sua.id
         WHERE s.id=:survey_id
             AND ((:start_date IS NULL AND :end_date IS NULL) OR (ua."updatedAt" > :start_date AND ua."updatedAt" < :end_date))
-            AND ((:group_name IS NULL) OR
-                 ((:group_name = 'None') AND (sua.group_name IS NULL)) OR
-                 (group_name=:group_name))
+            AND ((:group_id IS NULL) OR
+                 (sua.id=:group_id))
             AND COALESCE (email, '') like :email
         """
         values = {"survey_id": survey_id,
                   "start_date": start_date,
                   "end_date": end_date,
-                  "group_name": group_name,
+                  "group_id": group_id,
                   "email": f"%{email}%"}
 
         try:
@@ -821,26 +821,7 @@ class SurveyRepository:
         except exc.SQLAlchemyError as exception:
             return exception
 
-    def get_answer_distribution_filtered(self, survey_id,
-                                         start_date: datetime = None,
-                                         end_date: datetime = None,
-                                         group_name: str = "",
-                                         email: str = ""):
-        """ Finds and returns the distribution of user answers
-        over the answer options of a survey.
-
-        Filtering by date range and/or user group and/or email. Start and end
-        dates are included in the query.
-
-        Returns a table where each row contains:
-        question id, question text, answer id, answer text, user answer counts
-        """
-
-        group_id = self._find_user_group_by_name(group_name)
-
-        return self.get_answer_distribution(survey_id, start_date, end_date, group_id, email)
-
-    def _find_user_group_by_name(self, group_name):
+    def find_user_group_by_name(self, group_name):
         """Finds and returns user group id by user group name
         """
         sql = """SELECT id, group_name FROM "Survey_user_groups" WHERE lower(group_name)=:group_name"""
@@ -1043,7 +1024,7 @@ class SurveyRepository:
 
     def calculate_average_scores_by_category(self,
                                              survey_id,
-                                             user_group_name=None,
+                                             user_group_id=None,
                                              start_date=None,
                                              end_date=None,
                                              email=""):
@@ -1075,11 +1056,6 @@ class SurveyRepository:
         # currently group id None lists all users
         question_averages = []
         related_questions = self.get_questions_of_survey(survey_id)
-
-        if user_group_name:
-            user_group_id = self._find_user_group_by_name(user_group_name)
-        else:
-            user_group_id = None
 
         for question in related_questions:
 
