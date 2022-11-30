@@ -1,18 +1,14 @@
 {% extends "layout.html" %}
 {% import "components/macros/survey_elements.html" as survey_elements %}
+{% import "components/macros/basic_elements.html" as basic_elements %}
 {% import "components/macros/buttons.html" as buttons %}
 {% block content %}
 <container class="flex flex-col gap-4">
-    <div class="flex flex-col gap-1">
-        <h2>Surveys</h2>
-        <div class="flex flex-row gap-2 items-end">
-            <p class="text-gray-700 text-base">
-                Here you can see the active surveys. Click on the survey to view
-                additional information!
-            </p>
-            <div class="grow h-14"></div>
-            {{ buttons.link_button("New survey", "/surveys/new-survey") }}
-        </div>
+    {{ basic_elements.headline(text_to_display = "Surveys") }}
+
+    <div class="flex flex-row gap-2 items-end">
+        <div class="grow"></div>
+        {{ buttons.link_button("New survey", "/surveys/new-survey") }}
     </div>
 
     <div class="grid lg:grid-cols-3 md:grid-cols-2 gird-cols-1 gap-4">
