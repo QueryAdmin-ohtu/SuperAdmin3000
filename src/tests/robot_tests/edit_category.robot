@@ -11,7 +11,7 @@ Test Setup  Go To Home Page
 Logged In User Can Create Categories
     Login Through Backdoor
     Go To Survey  1
-    Page Should Contain  Survey categories
+    Page Should Contain  Categories
     Click Link  Add category
     Create New Category
     Page Should Contain  nimi
@@ -72,7 +72,7 @@ User Is Shown Error Message When Deleting Category Which Is Only Non Zero Weight
     Go To Backdoor Login Page
     Login With Correct Credentials
     Go To Survey  1
-    Page Should Contain  Survey categories
+    Page Should Contain  Categories
     Click Button  delete_button_1
     Notification Is Displayed
     Page Should Contain  Check the following questions category weights before deleting 'Category 1': 'Question 8', 'Why', 'kysymys1'
