@@ -629,7 +629,7 @@ class TestSurveyRepository(unittest.TestCase):
     def test_answer_distribution_filtered_by_email(self):
         with self.app.app_context():
             survey_id = self.repo.survey_exists("Elephants")[1]
-            result = self.repo.get_answer_distribution_filtered(
+            result = self.repo.get_answer_distribution(
                 survey_id, email="@")
 
         self.assertEqual(result[0][4], 3)
@@ -638,7 +638,7 @@ class TestSurveyRepository(unittest.TestCase):
     def test_answer_distribution_per_user_group(self):
         with self.app.app_context():
             survey_id = self.repo.survey_exists("Elephants")[1]
-            group_id = self.repo._find_user_group_by_name("Supertestaajat")
+            group_id = self.repo.find_user_group_by_name("Supertestaajat")
             result = self.repo.get_answer_distribution(
                 survey_id, user_group_id=group_id)
 
@@ -806,7 +806,7 @@ class TestSurveyRepository(unittest.TestCase):
             users_non_filtered = self.repo.get_users_who_answered_survey(
                 survey_id)
             users_filtered = self.repo.get_users_who_answered_survey(
-                survey_id, group_name="Presidentes")
+                survey_id, group_id=survey_user_group_id_1)
 
         self.assertEqual(len(users_non_filtered), 2)
         self.assertEqual(len(users_filtered), 1)
@@ -925,7 +925,7 @@ class TestSurveyRepository(unittest.TestCase):
             averages = self.repo.calculate_average_scores_by_category(
                 survey_id)
             averages_filter_group_1 = self.repo.calculate_average_scores_by_category(
-                survey_id, user_group_1_name)
+                survey_id, user_group_1_id)
             averages_filter_date_old = self.repo.calculate_average_scores_by_category(
                 survey_id, start_date=start_date_old, end_date=end_date_old)
             averages_filter_date_current = self.repo.calculate_average_scores_by_category(
