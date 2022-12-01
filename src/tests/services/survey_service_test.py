@@ -1,5 +1,6 @@
 import unittest
 from datetime import datetime
+from collections import namedtuple
 from unittest.mock import Mock
 from services.survey_service import SurveyService, UserInputError
 
@@ -310,12 +311,35 @@ class TestSurveyService(unittest.TestCase):
         )
 
     def test_get_answer_distribution_for_survey_questions_calls_repo_correctly(self):
-        self.repo_mock.get_answer_distribution.return_value = None
+        Row = namedtuple("Row", "q_id q_text a_id a_text count")
+        self.repo_mock.get_answer_distribution.return_value = [Row(1, "What is love?", 3, 
+                                                                "Baby don't hurt me", 2)]
         survey_id = 1
         self.survey_service.get_answer_distribution_for_survey_questions(
             survey_id)
         self.repo_mock.get_answer_distribution.assert_called_with(
             survey_id, None, None, None, '')
+
+    def test_answer_distribution_of_unanswered_survey(self):
+        Row = namedtuple("Row", "q_id q_text a_id a_text count")
+        self.repo_mock.get_answer_distribution.return_value = [
+            Row(1, "What is love?", 3, "Baby don't hurt me", 0),
+            Row(2, "Do they know it's Christmas?", 5, "No", 0)]
+        result = self.survey_service.get_answer_distribution_for_survey_questions(1)
+        self.assertIsNone(result)
+
+    def test_answer_distribution_no_submissions_match_filters(self):
+        self.repo_mock.get_answer_distribution.return_value = None
+        result = self.survey_service.get_answer_distribution_for_survey_questions(2)
+        self.assertIsNone(result)
+
+    def test_answer_distribution_of_survey_with_submissions(self):
+        Row = namedtuple("Row", "q_id q_text a_id a_text count")
+        self.repo_mock.get_answer_distribution.return_value = [
+            Row(1, "What is love?", 3, "Baby don't hurt me", 0),
+            Row(2, "Do they know it's Christmas?", 5, "No", 3)]
+        result = self.survey_service.get_answer_distribution_for_survey_questions(1)
+        self.assertTrue(result)
 
     def test_get_users_who_answered_survey_in_timerange_returns_none_with_invalid_timerage(self):
         start_date_1 = datetime.fromisoformat("2011-11-04 00:05:23.283")

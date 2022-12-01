@@ -122,7 +122,7 @@ class SurveyService:
 
         surveys = self.survey_repository.get_all_surveys()
         result = []
-        
+
         for row in surveys:
             survey = list(row)
             survey_id = survey[0]
@@ -436,7 +436,7 @@ class SurveyService:
             description = category[2]
 
         return self.survey_repository.update_category(category_id, content_links, name, description)
-    
+
     def delete_category_in_questions(self, question_ids: list, questions_weights: list):
         """ Deletes the category from category weights
         in the questions from the repository """
@@ -459,7 +459,7 @@ class SurveyService:
             If not: Database exception
         """
         return self.survey_repository.delete_category(category_id)
-    
+
     def delete_category_results_for_category(self, category_id, survey_id):
         """ Deletes all category results for the given
         category from the repository """
@@ -485,7 +485,7 @@ class SurveyService:
                                                      email: str = ""):
         """
         Fetches the distribution of user answers over the
-        answer options of a survey
+        answer options of a survey. Checks if there are user answers.
 
         Args:
             survey_id   The id of the survey
@@ -494,8 +494,9 @@ class SurveyService:
             group_id    Filter out answers from users not in this group (optional)
             email       Filter in answers from users whose email matches (optional)
 
-        Returns a table with question id and text, answer
-        id and text, number of user answers
+        Returns: a list of sqlalchemy.engine.row.Row objects: fields question_id, question,
+        answer_id, answer, count (of user answers);
+        None if there are no user answers
         """
 
         result = self.survey_repository.get_answer_distribution(survey_id,
@@ -504,7 +505,22 @@ class SurveyService:
                                                                 group_id,
                                                                 email)
 
-        return result
+        if not result:
+            return None
+        if self._user_submissions(result):
+            return result
+        return None
+
+    def _user_submissions(self, answer_distribution):
+        """
+        Check if there are user submissions in a set of answer distribution
+
+        Returns boolean
+        """
+        for question in answer_distribution:
+            if question.count > 0:
+                return True
+        return False
 
     def get_count_of_user_answers_to_a_question(self, question_id):
         """
@@ -575,13 +591,13 @@ class SurveyService:
 
         return result
 
-    
+
     def update_category_and_survey_updated_at(self, category_id, survey_id):
         """ Updates the updatedAt of a category and survey based on category_id
         """
         self.survey_repository.update_category_and_survey_updated_at(category_id, survey_id)
 
-    
+
     def create_category_result(self, category_id: int, survey_id: int, text: str, cutoff_from_maxpts: float):
         """Create a new category result
 
@@ -628,7 +644,7 @@ class SurveyService:
         return self.survey_repository.update_category_results(original_results, new_results, survey_id)
 
     def check_survey_status(self, survey_id):
-        """Check the survey status: Returns a list containing survey status 
+        """Check the survey status: Returns a list containing survey status
         and detailed information about the checks
 
         [0]    status  : (str) 'red','yellow' or 'green',
@@ -642,7 +658,7 @@ class SurveyService:
         [8]    categories_without_results :
                 (dictionary) {question_id: [category names]},
         """
-        
+
         return self.survey_repository.check_survey_status(survey_id)
 
 

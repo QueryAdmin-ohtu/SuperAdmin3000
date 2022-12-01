@@ -1,9 +1,8 @@
 import uuid
 from datetime import datetime
 from sqlalchemy import exc
-from helper import json_into_dictionary,category_weights_as_json
+from helper import json_into_dictionary, category_weights_as_json
 from db import db
-from helper import json_into_dictionary
 
 class SurveyRepository:
     """
@@ -223,7 +222,7 @@ class SurveyRepository:
         """ Fetches all surveys, counts the questions and submissions for each survey
 
         Returns: List where each item contains the survey
-        
+
         [0] id
         [1] title
         [2] question count
@@ -691,11 +690,11 @@ class SurveyRepository:
                     "question_id": question[0]}
             self.db_connection.session.execute(sql, values)
         self.db_connection.session.commit()
-    
+
     def remove_category_from_question(self, question_id, weights):
         """ Updates the category weights in the given question """
 
-        sql = """ 
+        sql = """
         UPDATE "Questions"
         SET category_weights=:category_weights, "updatedAt"=NOW()
         WHERE id=:question_id 
@@ -952,16 +951,16 @@ class SurveyRepository:
                         AND ((:group_id IS NULL) OR ("groupId" = :group_id))
                     ))
             """
-        
+
         values = {"question_id": question_id,
                   "group_id": user_group_id,
                   "start_date": start_date,
                   "end_date": end_date,
                   "email": f"%{email}%"
                   }
-        
+
         count_of_answers = self.db_connection.session.execute(sql, values).fetchone()[0]
-        
+
         print("count_of_answers", count_of_answers, flush=True)
 
         if count_of_answers:
@@ -1225,8 +1224,8 @@ class SurveyRepository:
 
         db.session.execute(sql1, values1)
         db.session.execute(sql2, values2)
-        db.session.commit()        
-    
+        db.session.commit()
+
     def get_category_results_from_category_id(self, category_id):
         """
         Selects id, text and cutoff from all category_results linked to a given category_id
@@ -1310,7 +1309,7 @@ class SurveyRepository:
         except ValueError or exc.SQLAlchemyError:
             return False
         return True
-    
+
     def delete_category_results_of_category(self, category_id):
         """ Deletes all category results for the given category """
         sql = """
@@ -1344,16 +1343,17 @@ class SurveyRepository:
             return None
         return category_results
 
-    def survey_status_handle_questions(self, questions, questions_without_answers, questions_without_categories, categories_with_questions):
+    def survey_status_handle_questions(self, questions, questions_without_answers, 
+        questions_without_categories, categories_with_questions):
         for question in questions:
-                if self.get_question_answers(question[0]) == []:
-                    questions_without_answers.append(question[1])
-                question_category_weights = json_into_dictionary(question[3])
-                if self.all_category_weights_equal_0(question_category_weights):
-                    questions_without_categories.append(question[1])
-                for key in question_category_weights:
-                    if question_category_weights[key] != float(0.0):
-                        categories_with_questions.append(question[1])
+            if self.get_question_answers(question[0]) == []:
+                questions_without_answers.append(question[1])
+            question_category_weights = json_into_dictionary(question[3])
+            if self.all_category_weights_equal_0(question_category_weights):
+                questions_without_categories.append(question[1])
+            for key in question_category_weights:
+                if question_category_weights[key] != float(0.0):
+                    categories_with_questions.append(question[1])
 
     def all_category_weights_equal_0(self, category_weights_as_dict):
         """
@@ -1379,7 +1379,7 @@ class SurveyRepository:
         """
         result = {}
         category_names = []
-        
+
         for category in categories:
             category_names.append(category[1])
 
@@ -1414,7 +1414,7 @@ class SurveyRepository:
         - 'green' = Survey is complete.
 
         Returns a list as follows:
-        
+
         [0]    status  : (str) 'red','yellow' or 'green',
         [1]    no_survey_results : (bool),
         [2]    no_categories : (bool),
@@ -1426,7 +1426,7 @@ class SurveyRepository:
         [8]    categories_without_results :
                 (dictionary) {question_id: [category names]},
 
-        
+
         """
         categories = self.get_categories_of_survey(survey_id)
         questions = self.get_questions_of_survey(survey_id)
@@ -1443,7 +1443,7 @@ class SurveyRepository:
         questions_without_categories = []
         categories_with_questions = []
         categories_without_questions = []
-        
+
         self.survey_status_handle_questions(questions,
                                             questions_without_answers,
                                             questions_without_categories,
@@ -1471,7 +1471,7 @@ class SurveyRepository:
 
         else:
             status = "green"
-        
+
         return [
             status,
             no_survey_results,
