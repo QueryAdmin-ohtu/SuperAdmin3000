@@ -1,0 +1,13 @@
+
+{% macro headline(text_to_display) %}
+{# A headline consisting of a title text and a divider line 
+    Args:
+        text_to_display: Text to show in headline
+#}
+{% if text_to_display %}
+<div class="flex flex-row items-center justify-start gap-4">
+    <h2>{{ text_to_display }}</h2>
+    <div class="flex-grow border-t border-slate-200"></div>
+</div>
+{% endif %}
+{% endmacro %}
