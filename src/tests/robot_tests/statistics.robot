@@ -133,4 +133,8 @@ Filtering With Email And Group Shows Correct Averages
 
 Without Filtering Unfiltered Average Is Not Shown
     Go To Statistics  8
-    Page Should Not Contain  Unfiltered average    
+    Page Should Not Contain  Unfiltered average
+
+No Charts Are Shown When There Is No Submission Data To Shown
+    Go To Statistics  1
+    Page Should Contain  No answers yet
