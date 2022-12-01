@@ -117,8 +117,8 @@
         <div class="flex-grow border-t border-slate-200"></div>
     </div>
     <div class="grid grid-cols-2 gap-4">
-        {% if not filtered and answer_distribution %}
-        {% for q_name, q_id in answer_distribution %}
+        {% if not filtered and answer_charts %}
+        {% for q_name, q_id in answer_charts %}
         {% call survey_elements.card() %}
         <div class="overflow-hidden">
             <p class="font-medium">{{ loop.index }}) {{ q_name }}</p>
@@ -127,8 +127,8 @@
         </div>
         {% endcall %}
         {% endfor %}
-        {% elif filtered and answer_distribution %}
-        {% for q_name, q_id in answer_distribution %}
+        {% elif filtered and answer_charts %}
+        {% for q_name, q_id in answer_charts %}
         <div class="base-1/2">
             {% call survey_elements.card() %}
             <div class="flex flex-row w-full justify-between">

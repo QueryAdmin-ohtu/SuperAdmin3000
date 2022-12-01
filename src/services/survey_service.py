@@ -485,7 +485,7 @@ class SurveyService:
                                                      email: str = ""):
         """
         Fetches the distribution of user answers over the
-        answer options of a survey
+        answer options of a survey. Checks if there are user answers.
 
         Args:
             survey_id   The id of the survey
@@ -494,8 +494,9 @@ class SurveyService:
             group_id    Filter out answers from users not in this group (optional)
             email       Filter in answers from users whose email matches (optional)
 
-        Returns a table with question id and text, answer
-        id and text, number of user answers
+        Returns: a list of sqlalchemy.engine.row.Row objects: fields question_id, question, 
+        answer_id, answer, count (of user answers);
+        None if there are no user answers
         """
 
         result = self.survey_repository.get_answer_distribution(survey_id,
@@ -504,7 +505,22 @@ class SurveyService:
                                                                 group_id,
                                                                 email)
 
-        return result
+        if not result:
+            return None
+        if self._user_submissions(result):
+            return result
+        return None
+
+    def _user_submissions(self, answer_distribution):
+        """
+        Check if there are user submissions in a set of answer distribution
+        
+        Returns boolean
+        """
+        for question in answer_distribution:
+            if question.count > 0:
+                return True
+        return False
 
     def get_count_of_user_answers_to_a_question(self, question_id):
         """
