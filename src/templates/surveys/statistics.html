@@ -9,12 +9,11 @@
         <h1 class="text-gray-900 leading-tight">{{ survey.title_text }}</h1>
         {{ buttons.link_button("Back to survey", "/surveys/%s" % survey_id) }}
     </div>
-    <p class="text-slate-600 font-mono text-sm font-medium">
-        {% if total_users %}
-        Total submissions: {{ total_users }}
-        {% else %}
-        Total submissions: 0
-        {% endif %}
+
+    <!-- The filter form is shown only if there is at least 1 submission for the survey -->
+    {% if total_users %}
+    <p class="text-slate-600 font-mono text-sm font-medium">    
+      Total submissions: {{ total_users }}
     </p>
     <!-- FILTER -->
     <div id="answered" class="flex flex-row items-center justify-start gap-4">
@@ -63,6 +62,12 @@
         </div>
     </form>
     {% endcall %}
+    <!-- END FILTER -->
+    {% else %}
+    <p class="text-slate-600 font-mono text-sm font-medium">
+      Total submissions: 0
+    </p>
+    {% endif %}
 
     <!-- CATEGORY SCORES -->
     <div class="flex flex-row items-center justify-start gap-4">
