@@ -18,7 +18,10 @@ Logged In User Can Create Categories
     Page Should Contain  kuvaus
 
 Category Result Module Not Displayed When Creating Category
-    Page Should Not Contain  Category Results
+    Go To Survey  1
+    Click Link  Add category
+    Page Should Contain  Category has no results
+    Page Should Not Contain  Manage Category Results
 
 Category Edit View Should Display Survey Name
     Go To Survey  1
