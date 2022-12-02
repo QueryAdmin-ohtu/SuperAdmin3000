@@ -190,7 +190,7 @@ class TestSurveyRepository(unittest.TestCase):
 
         with self.app.app_context():
             response = self.repo.get_all_surveys()
-        self.assertEqual(len(response), 9)
+        self.assertEqual(len(response), 11)
 
     def test_get_all_surveys_returns_correct_submission_count(self):
         self._create_survey_and_add_user_answers()
@@ -821,9 +821,7 @@ class TestSurveyRepository(unittest.TestCase):
             question_two_id = self.repo.create_question(
                 "What is the difference between the mean and the median?", survey_id,
                 '[{"category": "Math", "multiplier": 1.0}, {"category": "Statistics", "multiplier": 2.0}]')
-            question_with_no_answers_id = self.repo.create_question(
-                "Are there any graphs on n vertices whose representation requires more than floor(n/2) copies of each letter?", survey_id,
-                '[{"category": "Math", "multiplier": 5.0}]')
+           
             category_math_id = self.repo.create_category(
                 survey_id, "Math", "I'm the operator of my pocket calculator", '[]')
             category_stats_id = self.repo.create_category(
@@ -899,8 +897,6 @@ class TestSurveyRepository(unittest.TestCase):
                 question_one_id, start_date=start_date_old, end_date=end_date_old)
             count_answers_for_question_one_filter_date_current = self.repo.get_count_of_user_answers_to_a_question(
                 question_one_id, start_date=start_date_current, end_date=end_date_current)
-            count_answers_for_question_three = self.repo.get_count_of_user_answers_to_a_question(
-                question_with_no_answers_id)
             count_answers_for_question_one_filter_group_1 = self.repo.get_count_of_user_answers_to_a_question(
                 question_one_id, user_group_1_id)
             count_answers_for_question_one_filter_group_2 = self.repo.get_count_of_user_answers_to_a_question(
@@ -920,7 +916,6 @@ class TestSurveyRepository(unittest.TestCase):
             self.assertEquals(count_answers_for_question_one_filter_group_2, 1)
             self.assertEquals(count_answers_for_question_two_filter_group_1, 1)
             self.assertEquals(count_answers_for_question_two_filter_group_2, 1)
-            self.assertEquals(count_answers_for_question_three, 0)
 
             averages = self.repo.calculate_average_scores_by_category(
                 survey_id)
@@ -931,16 +926,17 @@ class TestSurveyRepository(unittest.TestCase):
             averages_filter_date_current = self.repo.calculate_average_scores_by_category(
                 survey_id, start_date=start_date_current, end_date=end_date_current)
 
-            # (Math categories weighted average scores sum) / (count of math categories ):  5.5 / 3 = 1.83
-            self.assertEqual(averages[0], (category_math_id, 'Math', 1.83))
+            # (Math categories weighted average scores sum) / (count of math categories ):  5.5 / 2 = 2.75
+            print("Cats in survey:", self.repo.get_categories_of_survey(survey_id),"\ņ", averages)
+            self.assertEqual(averages[0], (category_math_id, 'Math', 2.75))
             
             # Stats categories weighted average scores sum -3, only one category = -3
             self.assertTrue(averages[1] == (
                 category_stats_id, "Statistics", -3))
 
-            # (Math categories weighted average scores sum) / (count of math categories ):  12 / 3 = 4
+            # (Math categories weighted average scores sum) / (count of math categories ):  12 / 2 = 6
             self.assertTrue(averages_filter_group_1[0] == (
-                category_math_id, 'Math', 4))
+                category_math_id, 'Math', 6))
 
             # Stats categories weighted average scores sum 4, only one category = 4
             self.assertTrue(averages_filter_group_1[1] == (
@@ -949,9 +945,9 @@ class TestSurveyRepository(unittest.TestCase):
             self.assertTrue(averages == averages_filter_date_current)
             
             self.assertTrue(averages_filter_date_old[0] == (
-                category_math_id, 'Math', 0))
+                category_math_id, 'Math', None))
             self.assertTrue(averages_filter_date_old[1] == (
-                category_stats_id, 'Statistics', 0))
+                category_stats_id, 'Statistics', None))
 
     def test_get_user_answer_sum_of_points_and_count_answers_two(self):
 

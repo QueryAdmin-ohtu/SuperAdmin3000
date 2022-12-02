@@ -100,7 +100,7 @@ Filtering By Group Name Filters Users
 
 Statistics Page Displays Average Zero If There Is No Answers
     Go To Statistics  1
-    Page Should Contain  0.0
+    Page Should Contain  None
 
 Statistics Page Displays Correct Average Values
     Go To Statistics  8
