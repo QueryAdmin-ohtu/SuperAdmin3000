@@ -4,6 +4,7 @@ from sqlalchemy import exc
 from helper import json_into_dictionary, category_weights_as_json
 from db import db
 
+
 class SurveyRepository:
     """
     A class for interacting with the survey database
@@ -639,7 +640,8 @@ class SurveyRepository:
         category = self.get_category(category_id)
         if category:
             if category[1] != name:
-                self.update_category_in_questions(category[6],category[1],name)
+                self.update_category_in_questions(
+                    category[6], category[1], name)
 
         sql = """ UPDATE "Categories" SET name=:name, description=:description,
         content_links=:content_links, "updatedAt"=:updated 
@@ -676,18 +678,20 @@ class SurveyRepository:
             multipliers = {}
             for category in categories:
                 if category[1] == original_name:
-                    new_categories.append([category[0],new_name,category[2],category[3]])
+                    new_categories.append(
+                        [category[0], new_name, category[2], category[3]])
                 else:
                     new_categories.append(category)
                 try:
                     multipliers["cat"+str(category[0])] = weights[category[1]]
                 except KeyError:
                     multipliers["cat"+str(category[0])] = 0.0
-            category_weights = category_weights_as_json(new_categories,multipliers)
+            category_weights = category_weights_as_json(
+                new_categories, multipliers)
             sql = """ UPDATE "Questions" SET category_weights=:category_weights,
             "updatedAt"=:updated WHERE id=:question_id """
-            values = {"category_weights":category_weights,"updated": "NOW()",
-                    "question_id": question[0]}
+            values = {"category_weights": category_weights, "updated": "NOW()",
+                      "question_id": question[0]}
             self.db_connection.session.execute(sql, values)
         self.db_connection.session.commit()
 
@@ -700,11 +704,12 @@ class SurveyRepository:
         WHERE id=:question_id 
         RETURNING category_weights"""
         values = {
-            "category_weights":weights,
-            "question_id":question_id
+            "category_weights": weights,
+            "question_id": question_id
         }
         try:
-            new_weights = self.db_connection.session.execute(sql, values).fetchone()
+            new_weights = self.db_connection.session.execute(
+                sql, values).fetchone()
             self.db_connection.session.commit()
         except exc.SQLAlchemyError:
             return None
@@ -959,7 +964,8 @@ class SurveyRepository:
                   "email": f"%{email}%"
                   }
 
-        count_of_answers = self.db_connection.session.execute(sql, values).fetchone()[0]
+        count_of_answers = self.db_connection.session.execute(sql, values).fetchone()[
+            0]
 
         print("count_of_answers", count_of_answers, flush=True)
 
@@ -1319,7 +1325,7 @@ class SurveyRepository:
 
         try:
             values = {
-                "category_id":category_id
+                "category_id": category_id
             }
             self.db_connection.session.execute(sql, values)
             self.db_connection.session.commit()
@@ -1343,8 +1349,8 @@ class SurveyRepository:
             return None
         return category_results
 
-    def survey_status_handle_questions(self, questions, questions_without_answers, 
-        questions_without_categories, categories_with_questions):
+    def survey_status_handle_questions(self, questions, questions_without_answers,
+                                       questions_without_categories, categories_with_questions):
         for question in questions:
             if self.get_question_answers(question[0]) == []:
                 questions_without_answers.append(question[1])
@@ -1360,7 +1366,6 @@ class SurveyRepository:
         Check if all category_weight values are equal to 0.0
         """
         return list(set(list(category_weights_as_dict.values()))) == [0.0]
-
 
     def get_unrelated_categories_in_weights(self, categories, questions):
         """ Go through all questions in a survey and check the category
@@ -1465,8 +1470,8 @@ class SurveyRepository:
             status = "red"
 
         elif questions_without_categories or \
-             categories_without_questions or \
-             unrelated_categories_in_weights:
+                categories_without_questions or \
+                unrelated_categories_in_weights:
             status = "yellow"
 
         else:
@@ -1482,4 +1487,4 @@ class SurveyRepository:
             questions_without_categories,
             categories_without_questions,
             unrelated_categories_in_weights
-            ]
+        ]
