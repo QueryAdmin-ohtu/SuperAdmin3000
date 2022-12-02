@@ -1,18 +1,35 @@
 {% extends "layout.html" %}
 {% import "components/macros/survey_elements.html" as survey_elements %}
 {% import "components/macros/buttons.html" as buttons %}
+{% import "components/macros/basic_elements.html" as basic_elements %}
 {% block content %}
 
+
+{#
+For survey status testing
+{% set survey_status = ["red", false, false, [], false, [], [], ["Habitat"], {1: ["foo", "bar"], 5: ["baz"]}] %}
+{% set survey_status = ["green", false, false, [], false, [], [], [], {}] %}
+#}
+
 {% if survey %}
-<div class="flex flex-col gap-6">
+<div class="flex flex-col gap-8">
     {% include "components/sections/survey_deletition_modal.html" %}
     {% include "components/sections/survey_header.html" %}
-    {% include "components/sections/survey_categories.html" %}
-    {% include "components/sections/survey_questions.html" %}
-    {% include "components/sections/survey_results.html" %}
+    <div class="flex flex-col gap-4">
+        {{ basic_elements.headline(text_to_display = "Categories") }}
+        {% include "components/sections/survey_categories.html" %}
+    </div>
+    <div class="flex flex-col gap-4">
+        {{ basic_elements.headline(text_to_display = "Questions") }}
+        {% include "components/sections/survey_questions.html" %}
+    </div>
+    <div class="flex flex-col gap-4">
+        {{ basic_elements.headline(text_to_display = "Results") }}
+        {% include "components/sections/survey_results.html" %}
+    </div>
 </div>
 {% else %}
-There is no survey with ID: {{ survey_id }}
+<p>There is no survey with ID: {{ survey_id }}</p>
 {% endif %}
 
 {% endblock %}

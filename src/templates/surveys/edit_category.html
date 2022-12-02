@@ -14,7 +14,7 @@
         {{ buttons.link_button("Back to survey", "/surveys/%s" % survey_id) }}
     {% endif %}
 </div>
-<div class="grid lg:grid-cols-2 grid-cols-1 gap-4 items-start">
+<div class="grid lg:grid-cols-2 grid-cols-1 gap-8 items-start">
 {% call survey_elements.card() %}
     <form action="/edit_category" method="POST" onsubmit="return confirmationCheck()">
         <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
@@ -85,9 +85,7 @@
     {% endcall %}
     {% endif %}
     </form>
-    {% if category_results %}
-        {% include "components/sections/category_results.html" %}
-    {% endif %}
+    {% include "components/sections/category_results.html" %}
     </div>
 </div>
 

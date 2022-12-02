@@ -1,5 +1,6 @@
 import unittest
 from datetime import datetime
+from collections import namedtuple
 from unittest.mock import Mock
 from services.survey_service import SurveyService, UserInputError
 
@@ -177,6 +178,7 @@ class TestSurveyService(unittest.TestCase):
     def test_create_category_calls_repo_correctly(self):
         self.repo_mock.create_category.return_value = 1
         survey_id = "1"
+        category_id="1"
         name = "name"
         description = "description"
         content_links = [{"url": "https://www.eficode.com/cases/hansen", "type": "Case Study"},
@@ -187,6 +189,7 @@ class TestSurveyService(unittest.TestCase):
         self.repo_mock.create_category.assert_called_with(
             survey_id, name, description, content_links)
         self.repo_mock.create_category_result.called_with(
+            1,
             1,
             "Your skills in this topic are excellent!",
             1.0
@@ -308,12 +311,35 @@ class TestSurveyService(unittest.TestCase):
         )
 
     def test_get_answer_distribution_for_survey_questions_calls_repo_correctly(self):
-        self.repo_mock.get_answer_distribution.return_value = "None"
+        Row = namedtuple("Row", "q_id q_text a_id a_text count")
+        self.repo_mock.get_answer_distribution.return_value = [Row(1, "What is love?", 3, 
+                                                                "Baby don't hurt me", 2)]
         survey_id = 1
         self.survey_service.get_answer_distribution_for_survey_questions(
             survey_id)
-        self.repo_mock.get_answer_distribution_filtered.assert_called_with(
-            survey_id, None, None, '', '')
+        self.repo_mock.get_answer_distribution.assert_called_with(
+            survey_id, None, None, None, '')
+
+    def test_answer_distribution_of_unanswered_survey(self):
+        Row = namedtuple("Row", "q_id q_text a_id a_text count")
+        self.repo_mock.get_answer_distribution.return_value = [
+            Row(1, "What is love?", 3, "Baby don't hurt me", 0),
+            Row(2, "Do they know it's Christmas?", 5, "No", 0)]
+        result = self.survey_service.get_answer_distribution_for_survey_questions(1)
+        self.assertIsNone(result)
+
+    def test_answer_distribution_no_submissions_match_filters(self):
+        self.repo_mock.get_answer_distribution.return_value = None
+        result = self.survey_service.get_answer_distribution_for_survey_questions(2)
+        self.assertIsNone(result)
+
+    def test_answer_distribution_of_survey_with_submissions(self):
+        Row = namedtuple("Row", "q_id q_text a_id a_text count")
+        self.repo_mock.get_answer_distribution.return_value = [
+            Row(1, "What is love?", 3, "Baby don't hurt me", 0),
+            Row(2, "Do they know it's Christmas?", 5, "No", 3)]
+        result = self.survey_service.get_answer_distribution_for_survey_questions(1)
+        self.assertTrue(result)
 
     def test_get_users_who_answered_survey_in_timerange_returns_none_with_invalid_timerage(self):
         start_date_1 = datetime.fromisoformat("2011-11-04 00:05:23.283")
@@ -384,7 +410,7 @@ class TestSurveyService(unittest.TestCase):
 
         self.repo_mock.get_users_who_answered_survey.assert_not_called()
 
-    def test_get_users_who_answered_survey_filtered_works_with_empty_string_as_group(self):
+    def test_get_users_who_answered_survey_filtered_works_with_no_group(self):
         survey_id = 1
         start_date = datetime.fromisoformat("2020-11-04 00:05:23.283")
         end_date = datetime.fromisoformat("2021-11-04 00:05:23.283")
@@ -394,7 +420,7 @@ class TestSurveyService(unittest.TestCase):
         self.repo_mock.get_users_who_answered_survey.return_value = repo_value_to_return
 
         survey_reponse = self.survey_service.get_users_who_answered_survey_filtered(
-            survey_id, start_date, end_date, "", "")
+            survey_id, start_date, end_date, None, "")
 
         self.repo_mock.get_users_who_answered_survey.assert_called_once_with(
             survey_id, start_date, end_date, None, "")
@@ -453,10 +479,12 @@ class TestSurveyService(unittest.TestCase):
     def test_create_category_result_calls_repo_correctly(self):
         self.repo_mock.create_category_result.return_value = 1
         category_id = 1
+        survey_id = 1
         text = "Dynamically fetched category result text"
         cutoff_from_maxpts = 1.0
         response = self.survey_service.create_category_result(
             category_id,
+            survey_id,
             text,
             cutoff_from_maxpts)
         self.assertEqual(response, category_id)
@@ -499,7 +527,7 @@ class TestSurveyService(unittest.TestCase):
 
     def test_delete_category_result_calls_repo_correctly(self):
         self.repo_mock.delete_category_result.return_value = True
-        response = self.survey_service.delete_category_result(1)
+        response = self.survey_service.delete_category_result(1,1,1)
         self.assertTrue(response)
         self.repo_mock.delete_category_result.assert_called_with(1)
 
@@ -508,7 +536,7 @@ class TestSurveyService(unittest.TestCase):
         original_results = [[5, "Bad", 0.3], [6, "Good", 1.0]]
         new_results = [[5, "Decent", 0.3], [6, "Great", 1.0]]
         response = self.survey_service.update_category_results(original_results,
-                                                             new_results, 3)
+                                                             new_results, 3, 1)
         self.assertTrue(response)
         self.repo_mock.update_category_results.assert_called_with(original_results,
                                                                 new_results, 3)
@@ -546,6 +574,6 @@ class TestSurveyService(unittest.TestCase):
     
     def test_delete_category_results_for_category_calls_repo_correctly(self):
         self.repo_mock.delete_category_results_of_category.return_value = True
-        result = self.survey_service.delete_category_results_for_category(1)
+        result = self.survey_service.delete_category_results_for_category(1,1)
         self.assertTrue(result)
         self.repo_mock.delete_category_results_of_category.assert_called_with(1)

@@ -65,7 +65,7 @@ class SurveyService:
             survey_id: Db id of survey
 
         Returns:
-            If succeeds: Survey
+            If succeeds: Survey (fields: id, name, createdAt, updatedAt, title_text, survey_text)
             Not found: False
         """
 
@@ -122,7 +122,7 @@ class SurveyService:
 
         surveys = self.survey_repository.get_all_surveys()
         result = []
-        
+
         for row in surveys:
             survey = list(row)
             survey_id = survey[0]
@@ -138,7 +138,8 @@ class SurveyService:
           survey_id: Id of the survey
 
         Returns:
-          An array containing each question object
+          An array containing each question object;
+          question object fields: id, text, surveyId, category_weights, createdAt, updatedAt
         """
         return self.survey_repository.get_questions_of_survey(survey_id)
 
@@ -287,7 +288,7 @@ class SurveyService:
 
         Returns:
             On succeed: A list of lists where each element contains
-                [id, email, group_name, answer_time]
+                [id, email, group_id, group_name, answer_time]
             On error / no users who answered found:
                 None
         """
@@ -297,7 +298,7 @@ class SurveyService:
                                                survey_id: int,
                                                start_date: datetime,
                                                end_date: datetime,
-                                               group_name,
+                                               group_id,
                                                email):
         """ Returns a list of users who have answered a given survey in a given timerange,
         belonging the given group and having a matching email address
@@ -310,7 +311,7 @@ class SurveyService:
 
         Returns:
            On succeed: A list of lists where each element contains
-               [id, email, group_name, answer_time]
+               [id, email, group_id, group_name, answer_time]
            On error / no users who answered found:
                None
         """
@@ -318,14 +319,10 @@ class SurveyService:
         if start_date > end_date or end_date < start_date:
             return None
 
-        # Changes an empty string ("") value to None
-        if not group_name:
-            group_name = None
-
         return self.survey_repository.get_users_who_answered_survey(survey_id,
                                                                     start_date,
                                                                     end_date,
-                                                                    group_name,
+                                                                    group_id,
                                                                     email)
 
     def get_users_who_answered_survey_in_timerange(self, survey_id: int, start_date: datetime, end_date: datetime):
@@ -383,6 +380,7 @@ class SurveyService:
             cutoff_from_maxpts = 1.0
             self.create_category_result(
                 category_id,
+                survey_id,
                 category_result_text,
                 cutoff_from_maxpts
             )
@@ -438,7 +436,7 @@ class SurveyService:
             description = category[2]
 
         return self.survey_repository.update_category(category_id, content_links, name, description)
-    
+
     def delete_category_in_questions(self, question_ids: list, questions_weights: list):
         """ Deletes the category from category weights
         in the questions from the repository """
@@ -461,10 +459,11 @@ class SurveyService:
             If not: Database exception
         """
         return self.survey_repository.delete_category(category_id)
-    
-    def delete_category_results_for_category(self, category_id):
+
+    def delete_category_results_for_category(self, category_id, survey_id):
         """ Deletes all category results for the given
         category from the repository """
+        self.update_category_and_survey_updated_at(category_id, survey_id)
         return self.survey_repository.delete_category_results_of_category(category_id)
 
     def get_number_of_submissions_for_survey(self, survey_id):
@@ -482,30 +481,46 @@ class SurveyService:
                                                      survey_id,
                                                      start_date: datetime = None,
                                                      end_date: datetime = None,
-                                                     group_name: str = "",
+                                                     group_id=None,
                                                      email: str = ""):
         """
         Fetches the distribution of user answers over the
-        answer options of a survey
+        answer options of a survey. Checks if there are user answers.
 
         Args:
             survey_id   The id of the survey
             start_date  Filter out answers before this date (optional)
             end_date    Filter out answers after this date (optional)
-            group_name  Filter out answers from user, who doen't belong to this group (optional)
-            email       Filter in answers from user, who's email matches (optional)
+            group_id    Filter out answers from users not in this group (optional)
+            email       Filter in answers from users whose email matches (optional)
 
-        Returns a table with question id and text, answer
-        id and text, number of user answers
+        Returns: a list of sqlalchemy.engine.row.Row objects: fields question_id, question,
+        answer_id, answer, count (of user answers);
+        None if there are no user answers
         """
 
-        result = self.survey_repository.get_answer_distribution_filtered(survey_id,
-                                                                         start_date,
-                                                                         end_date,
-                                                                         group_name,
-                                                                         email)
+        result = self.survey_repository.get_answer_distribution(survey_id,
+                                                                start_date,
+                                                                end_date,
+                                                                group_id,
+                                                                email)
 
-        return result
+        if not result:
+            return None
+        if self._user_submissions(result):
+            return result
+        return None
+
+    def _user_submissions(self, answer_distribution):
+        """
+        Check if there are user submissions in a set of answer distribution
+
+        Returns boolean
+        """
+        for question in answer_distribution:
+            if question.count > 0:
+                return True
+        return False
 
     def get_count_of_user_answers_to_a_question(self, question_id):
         """
@@ -522,7 +537,7 @@ class SurveyService:
 
     def calculate_average_scores_by_category(self,
                                              survey_id,
-                                             user_group_name=None,
+                                             user_group_id=None,
                                              start_date=None,
                                              end_date=None,
                                              email=""):
@@ -561,7 +576,7 @@ class SurveyService:
         all_averages = self.survey_repository.calculate_average_scores_by_category(
             survey_id)
         filtered_averages = self.survey_repository.calculate_average_scores_by_category(
-            survey_id, user_group_name, start_date, end_date, email)
+            survey_id, user_group_id, start_date, end_date, email)
 
         result = []
 
@@ -576,10 +591,18 @@ class SurveyService:
 
         return result
 
-    def create_category_result(self, category_id: int, text: str, cutoff_from_maxpts: float):
+
+    def update_category_and_survey_updated_at(self, category_id, survey_id):
+        """ Updates the updatedAt of a category and survey based on category_id
+        """
+        self.survey_repository.update_category_and_survey_updated_at(category_id, survey_id)
+
+
+    def create_category_result(self, category_id: int, survey_id: int, text: str, cutoff_from_maxpts: float):
         """Create a new category result
 
         Returns id of category result"""
+        self.update_category_and_survey_updated_at(category_id, survey_id)
         return self.survey_repository.create_category_result(category_id, text, cutoff_from_maxpts)
 
     def get_category_results_from_category_id(self, category_id):
@@ -609,18 +632,19 @@ class SurveyService:
         """Updates the original results of a survey to new ones"""
         return self.survey_repository.update_survey_results(original_results, new_results, survey_id)
 
-    def delete_category_result(self, category_result_id):
+    def delete_category_result(self, category_result_id, category_id, survey_id):
         """ Deletes the category result given as parameter
         """
-
+        self.update_category_and_survey_updated_at(category_id, survey_id)
         return self.survey_repository.delete_category_result(category_result_id)
 
-    def update_category_results(self, original_results, new_results,survey_id):
+    def update_category_results(self, original_results, new_results, survey_id, category_id):
         """Updates the original results of a survey to new ones"""
+        self.update_category_and_survey_updated_at(category_id, survey_id)
         return self.survey_repository.update_category_results(original_results, new_results, survey_id)
 
     def check_survey_status(self, survey_id):
-        """Check the survey status: Returns a list containing survey status 
+        """Check the survey status: Returns a list containing survey status
         and detailed information about the checks
 
         [0]    status  : (str) 'red','yellow' or 'green',
@@ -634,7 +658,7 @@ class SurveyService:
         [8]    categories_without_results :
                 (dictionary) {question_id: [category names]},
         """
-        
+
         return self.survey_repository.check_survey_status(survey_id)
 
 

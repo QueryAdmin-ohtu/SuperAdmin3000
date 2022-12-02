@@ -102,9 +102,9 @@ def category_weights_as_json(categories: list, form: dict):
 def updated_question_ids_and_weights(questions: list, category_to_remove: str):
     """ Removes the given category from every question's
     category weights json
-    
+
     Returns:
-    
+
     List of question ids and category weight jsons """
     question_ids = []
     category_weights = []
@@ -121,7 +121,7 @@ def updated_question_ids_and_weights(questions: list, category_to_remove: str):
     return question_ids, category_weights
 
 def updated_category_weights_as_json(weights: list, category_to_remove: str):
-    """ Removes the category from the given list of category 
+    """ Removes the category from the given list of category
     weight dictionaries and returns a weight json """
     try:
         new_weights = []

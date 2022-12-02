@@ -1,9 +1,8 @@
 import uuid
 from datetime import datetime
 from sqlalchemy import exc
-from helper import json_into_dictionary,category_weights_as_json
+from helper import json_into_dictionary, category_weights_as_json
 from db import db
-from helper import json_into_dictionary
 
 class SurveyRepository:
     """
@@ -207,8 +206,9 @@ class SurveyRepository:
         return False
 
     def get_survey(self, survey_id):
-        """ Looks up survey information with
-        id and returns it in a list
+        """ Fetches survey data by id
+
+        Returns: survey object (fields: id, name, createdAt, updatedAt, title_text, survey_text)
         """
 
         sql = """ SELECT * FROM "Surveys" WHERE id=:id """
@@ -222,7 +222,7 @@ class SurveyRepository:
         """ Fetches all surveys, counts the questions and submissions for each survey
 
         Returns: List where each item contains the survey
-        
+
         [0] id
         [1] title
         [2] question count
@@ -259,9 +259,10 @@ class SurveyRepository:
           survey_id: Id of the survey
 
         Returns:
-          An array containing each question object
+          An array containing each question object;
+          question object fields: id, text, surveyId, category_weights, createdAt, updatedAt
         """
-        sql = "SELECT * FROM \"Questions\" WHERE \"Questions\".\"surveyId\"=:survey_id ORDER BY id"
+        sql = """SELECT * FROM "Questions" WHERE "Questions"."surveyId"=:survey_id ORDER BY id"""
         result = self.db_connection.session.execute(
             sql, {"survey_id": survey_id})
 
@@ -504,7 +505,7 @@ class SurveyRepository:
                                       survey_id: int,
                                       start_date: datetime = None,
                                       end_date: datetime = None,
-                                      group_name=None,
+                                      group_id=None,
                                       email=""):
         """ Returns a list of users who have answered a given survey.
         Results can be filtered by a timerange, group name and email address.
@@ -512,7 +513,7 @@ class SurveyRepository:
             survey_id: Id of the survey
             start_time: Start of timerange to filter by (optional)
             end_time: End of timerange to filter by (optional)
-            group_name: User group to filter by (optional)
+            group_id: User group to filter by (optional)
                         If the group is None, all users all listed. If the
                         group is string "None", only users without any group
                         are listed.
@@ -520,7 +521,7 @@ class SurveyRepository:
 
         Returns:
             On succeed: A list of lists where each element contains
-                [id, email, group_name, answer_time]
+                [id, email, group_id, group_name, answer_time]
             On error / no users who answered found:
                 None
         """
@@ -528,6 +529,7 @@ class SurveyRepository:
         SELECT
             DISTINCT u.id,
             u.email,
+            sua.id as group_id,
             sua.group_name,
             ua."updatedAt" as answer_time
         FROM
@@ -544,15 +546,14 @@ class SurveyRepository:
             ON u."groupId" = sua.id
         WHERE s.id=:survey_id
             AND ((:start_date IS NULL AND :end_date IS NULL) OR (ua."updatedAt" > :start_date AND ua."updatedAt" < :end_date))
-            AND ((:group_name IS NULL) OR
-                 ((:group_name = 'None') AND (sua.group_name IS NULL)) OR
-                 (group_name=:group_name))
+            AND ((:group_id IS NULL) OR
+                 (sua.id=:group_id))
             AND COALESCE (email, '') like :email
         """
         values = {"survey_id": survey_id,
                   "start_date": start_date,
                   "end_date": end_date,
-                  "group_name": group_name,
+                  "group_id": group_id,
                   "email": f"%{email}%"}
 
         try:
@@ -689,11 +690,11 @@ class SurveyRepository:
                     "question_id": question[0]}
             self.db_connection.session.execute(sql, values)
         self.db_connection.session.commit()
-    
+
     def remove_category_from_question(self, question_id, weights):
         """ Updates the category weights in the given question """
 
-        sql = """ 
+        sql = """
         UPDATE "Questions"
         SET category_weights=:category_weights, "updatedAt"=NOW()
         WHERE id=:question_id 
@@ -819,26 +820,7 @@ class SurveyRepository:
         except exc.SQLAlchemyError as exception:
             return exception
 
-    def get_answer_distribution_filtered(self, survey_id,
-                                         start_date: datetime = None,
-                                         end_date: datetime = None,
-                                         group_name: str = "",
-                                         email: str = ""):
-        """ Finds and returns the distribution of user answers
-        over the answer options of a survey.
-
-        Filtering by date range and/or user group and/or email. Start and end
-        dates are included in the query.
-
-        Returns a table where each row contains:
-        question id, question text, answer id, answer text, user answer counts
-        """
-
-        group_id = self._find_user_group_by_name(group_name)
-
-        return self.get_answer_distribution(survey_id, start_date, end_date, group_id, email)
-
-    def _find_user_group_by_name(self, group_name):
+    def find_user_group_by_name(self, group_name):
         """Finds and returns user group id by user group name
         """
         sql = """SELECT id, group_name FROM "Survey_user_groups" WHERE lower(group_name)=:group_name"""
@@ -937,32 +919,49 @@ class SurveyRepository:
         # TODO:
         # Handle situation, where we want to filter in only users without any groups
         # currently group id None lists all users
-        sql = """
-        SELECT COUNT(id)
-        FROM "User_answers"
-        WHERE "questionAnswerId" IN (
-            SELECT qa.id
-            FROM "Question_answers" as qa
-            LEFT JOIN "User_answers" AS ua
-                ON ua."questionAnswerId" = qa.id
-            LEFT JOIN "Users" as u
-                ON ua."userId" = u.id
-            WHERE qa."questionId" = :question_id
-                AND ((:start_date IS NULL AND :end_date IS NULL) OR (ua."createdAt" BETWEEN :start_date AND :end_date))
-            )
-        AND "userId" IN (
-            SELECT id FROM "Users" WHERE (COALESCE (email, '') LIKE :email)
-                AND ((:group_id IS NULL) OR ("groupId" = :group_id))
-            )
-        """
+
+        if start_date != None and end_date != None:
+            print("not none", flush=True)
+            sql = """
+            SELECT COUNT(id)
+            FROM "User_answers"
+            WHERE "createdAt" BETWEEN :start_date AND :end_date
+            AND "userId" IN (SELECT id FROM "Users" WHERE (COALESCE (email, '') LIKE :email) AND ((:group_id IS NULL) OR ("groupId" = :group_id)))
+            AND "questionAnswerId" IN (
+                SELECT qa.id
+                FROM "Question_answers" as qa
+                LEFT JOIN "User_answers" AS ua
+                    ON ua."questionAnswerId" = qa.id
+                WHERE qa."questionId" = :question_id
+                )
+            """
+        else:
+            print("is none", flush=True)
+            sql = """
+            SELECT COUNT(id)
+            FROM "User_answers"
+            WHERE "questionAnswerId" IN (
+                SELECT qa.id
+                FROM "Question_answers" as qa
+                LEFT JOIN "User_answers" AS ua
+                    ON ua."questionAnswerId" = qa.id
+                WHERE qa."questionId" = :question_id
+                AND "userId" IN (
+                    SELECT id FROM "Users" WHERE (COALESCE (email, '') LIKE :email)
+                        AND ((:group_id IS NULL) OR ("groupId" = :group_id))
+                    ))
+            """
+
         values = {"question_id": question_id,
                   "group_id": user_group_id,
                   "start_date": start_date,
                   "end_date": end_date,
                   "email": f"%{email}%"
                   }
-        count_of_answers = self.db_connection.session.execute(sql, values).fetchone()[
-            0]
+
+        count_of_answers = self.db_connection.session.execute(sql, values).fetchone()[0]
+
+        print("count_of_answers", count_of_answers, flush=True)
 
         if count_of_answers:
             return count_of_answers
@@ -1024,7 +1023,7 @@ class SurveyRepository:
 
     def calculate_average_scores_by_category(self,
                                              survey_id,
-                                             user_group_name=None,
+                                             user_group_id=None,
                                              start_date=None,
                                              end_date=None,
                                              email=""):
@@ -1056,11 +1055,6 @@ class SurveyRepository:
         # currently group id None lists all users
         question_averages = []
         related_questions = self.get_questions_of_survey(survey_id)
-
-        if user_group_name:
-            user_group_id = self._find_user_group_by_name(user_group_name)
-        else:
-            user_group_id = None
 
         for question in related_questions:
 
@@ -1206,6 +1200,32 @@ class SurveyRepository:
             return category_result_id[0]
         return None
 
+    def update_category_and_survey_updated_at(self, category_id, survey_id):
+        """
+        Updates the updated_at fields of a given category and survey
+        """
+        sql1 = """
+        UPDATE "Categories"
+        SET
+            "updatedAt"=NOW()
+        WHERE id=:category_id
+        """
+        values1 = {
+            "category_id": category_id}
+
+        sql2 = """
+        UPDATE "Surveys"
+        SET
+            "updatedAt"=NOW()
+        WHERE id=:survey_id
+        """
+        values2 = {
+            "survey_id": survey_id}
+
+        db.session.execute(sql1, values1)
+        db.session.execute(sql2, values2)
+        db.session.commit()
+
     def get_category_results_from_category_id(self, category_id):
         """
         Selects id, text and cutoff from all category_results linked to a given category_id
@@ -1289,7 +1309,7 @@ class SurveyRepository:
         except ValueError or exc.SQLAlchemyError:
             return False
         return True
-    
+
     def delete_category_results_of_category(self, category_id):
         """ Deletes all category results for the given category """
         sql = """
@@ -1323,16 +1343,17 @@ class SurveyRepository:
             return None
         return category_results
 
-    def survey_status_handle_questions(self, questions, questions_without_answers, questions_without_categories, categories_with_questions):
+    def survey_status_handle_questions(self, questions, questions_without_answers, 
+        questions_without_categories, categories_with_questions):
         for question in questions:
-                if self.get_question_answers(question[0]) == []:
-                    questions_without_answers.append(question[1])
-                question_category_weights = json_into_dictionary(question[3])
-                if self.all_category_weights_equal_0(question_category_weights):
-                    questions_without_categories.append(question[1])
-                for key in question_category_weights:
-                    if question_category_weights[key] != float(0.0):
-                        categories_with_questions.append(question[1])
+            if self.get_question_answers(question[0]) == []:
+                questions_without_answers.append(question[1])
+            question_category_weights = json_into_dictionary(question[3])
+            if self.all_category_weights_equal_0(question_category_weights):
+                questions_without_categories.append(question[1])
+            for key in question_category_weights:
+                if question_category_weights[key] != float(0.0):
+                    categories_with_questions.append(question[1])
 
     def all_category_weights_equal_0(self, category_weights_as_dict):
         """
@@ -1358,7 +1379,7 @@ class SurveyRepository:
         """
         result = {}
         category_names = []
-        
+
         for category in categories:
             category_names.append(category[1])
 
@@ -1393,7 +1414,7 @@ class SurveyRepository:
         - 'green' = Survey is complete.
 
         Returns a list as follows:
-        
+
         [0]    status  : (str) 'red','yellow' or 'green',
         [1]    no_survey_results : (bool),
         [2]    no_categories : (bool),
@@ -1405,7 +1426,7 @@ class SurveyRepository:
         [8]    categories_without_results :
                 (dictionary) {question_id: [category names]},
 
-        
+
         """
         categories = self.get_categories_of_survey(survey_id)
         questions = self.get_questions_of_survey(survey_id)
@@ -1422,7 +1443,7 @@ class SurveyRepository:
         questions_without_categories = []
         categories_with_questions = []
         categories_without_questions = []
-        
+
         self.survey_status_handle_questions(questions,
                                             questions_without_answers,
                                             questions_without_categories,
@@ -1450,7 +1471,7 @@ class SurveyRepository:
 
         else:
             status = "green"
-        
+
         return [
             status,
             no_survey_results,

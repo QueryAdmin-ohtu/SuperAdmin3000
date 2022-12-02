@@ -109,6 +109,7 @@ def view_survey(survey_id):
     questions = survey_service.get_questions_of_survey(survey_id)
     categories = survey_service.get_categories_of_survey(survey_id)
     results = survey_service.get_survey_results(survey_id)
+    survey_status = survey_service.check_survey_status(survey_id)
     show_results = []
     if results:
         for i in range(len(results)):
@@ -124,7 +125,8 @@ def view_survey(survey_id):
     return render_template("surveys/view_survey.html", survey=survey,
                            questions=questions, survey_id=survey_id,
                            ENV=app.config["ENV"], categories=categories,
-                           results=results, show_results=show_results)
+                           results=results, show_results=show_results,
+                           survey_status=survey_status)
 
 
 @surveys.route("/surveys/<survey_id>/new-question", methods=["GET"])
@@ -331,12 +333,12 @@ def edit_category_page(survey_id, category_id):
         for i in range(len(category_results)):
             if i == 0:
                 if float(category_results[0][2]) == 0.0:
-                    text = "0% of max points returns user"
+                    text = "0 %"
                 else:
-                    text = f"0%-{int(category_results[0][2]*100)}% of max points returns user"
+                    text = f"0% - {int(category_results[0][2]*100)}%"
                 show_results.append([text, category_results[0][1]])
             else:
-                text = f"{int(category_results[i-1][2]*100)}%-{int(category_results[i][2]*100)}% of max points returns user"
+                text = f"{int(category_results[i-1][2]*100)}% - {int(category_results[i][2]*100)}%"
                 show_results.append([text, category_results[i][1]])
     return render_template("surveys/edit_category.html",
                            ENV=app.config["ENV"],
@@ -414,9 +416,9 @@ def add_category_result(survey_id, category_id):
             return redirect(f"/edit_category/{survey_id}/{category_id}/new-category-result")
         if original_results != new_results:
             survey_service.update_category_results(
-                original_results, new_results, survey_id)
+                original_results, new_results, survey_id, category_id)
     if new_cat_result_text and new_cat_cutoff:
-        survey_service.create_category_result(category_id, new_cat_result_text, new_cat_cutoff)
+        survey_service.create_category_result(category_id, survey_id, new_cat_result_text, new_cat_cutoff)
     return redirect(f"/edit_category/{survey_id}/{category_id}/new-category-result")
 
 
@@ -428,7 +430,7 @@ def new_category_result_view(survey_id, category_id):
     results = survey_service.get_category_results_from_category_id(category_id)
     if results:
         return render_template("surveys/edit_category_results.html", survey=survey, category = category, results=results,  ENV=app.config["ENV"])
-    return render_template("surveys/edit_category_results.html", survey=survey_id, first=True, results=[],  ENV=app.config["ENV"]   )
+    return render_template("surveys/edit_category_results.html", survey=survey, category = category, first=True, results=[],  ENV=app.config["ENV"]   )
 
 
 @surveys.route("/add_content_link", methods=["POST"])
@@ -505,7 +507,7 @@ def delete_category_result(category_result_id):
     """
     survey_id = request.form["survey_id"]
     category_id = request.form["category_id"]
-    survey_service.delete_category_result(category_result_id)
+    survey_service.delete_category_result(category_result_id, category_id, survey_id)
     return redirect(f"/edit_category/{survey_id}/{category_id}/new-category-result")
 
 
