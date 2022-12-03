@@ -1394,7 +1394,7 @@ class SurveyRepository:
                     name_list.append(weight_name)
 
             if name_list != []:
-                result[question[0]] = name_list
+                result[question[1]] = name_list
 
         return result
 

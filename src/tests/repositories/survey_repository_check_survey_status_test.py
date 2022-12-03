@@ -160,4 +160,4 @@ class TestSurveyRepository(unittest.TestCase):
 
         result = self.repo.get_unrelated_categories_in_weights(categories, questions)
 
-        self.assertEqual(result, {2: ['missing']})
+        self.assertEqual(result, {'Q2': ['missing']})
