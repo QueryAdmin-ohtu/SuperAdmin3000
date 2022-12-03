@@ -464,7 +464,7 @@ class TestSurveyRepository(unittest.TestCase):
         with self.app.app_context():
             categories = self.repo.get_all_categories()
             category_id = categories[0][0]
-            content_links = '[{"url":"https://www.eficode.com/cases/hansen","type":"Case Study"},{"url":"https://www.eficode.com/cases/basware","type":"Case Study"}]'            
+            content_links = '[{"url":"https://www.eficode.com/cases/hansen","type":"Case Study"},{"url":"https://www.eficode.com/cases/basware","type":"Case Study"}]'
             response = self.repo.update_category(
                 category_id,
                 "name",
@@ -927,9 +927,8 @@ class TestSurveyRepository(unittest.TestCase):
                 survey_id, start_date=start_date_current, end_date=end_date_current)
 
             # (Math categories weighted average scores sum) / (count of math categories ):  5.5 / 2 = 2.75
-            print("Cats in survey:", self.repo.get_categories_of_survey(survey_id),"\ņ", averages)
             self.assertEqual(averages[0], (category_math_id, 'Math', 2.75))
-            
+
             # Stats categories weighted average scores sum -3, only one category = -3
             self.assertTrue(averages[1] == (
                 category_stats_id, "Statistics", -3))
@@ -943,7 +942,7 @@ class TestSurveyRepository(unittest.TestCase):
                 category_stats_id, "Statistics", 4))
 
             self.assertTrue(averages == averages_filter_date_current)
-            
+
             self.assertTrue(averages_filter_date_old[0] == (
                 category_math_id, 'Math', None))
             self.assertTrue(averages_filter_date_old[1] == (
@@ -1000,7 +999,8 @@ class TestSurveyRepository(unittest.TestCase):
                 category_id,
                 text,
                 cutoff_from_maxpts)
-            related_category_results = self.repo.get_category_results_from_category_id(category_id)[0]
+            related_category_results = self.repo.get_category_results_from_category_id(category_id)[
+                0]
             print(related_category_results, " - ", related_category_results[0])
             self.assertEquals(related_category_results[0], category_result_id)
             self.assertEquals(
@@ -1133,7 +1133,8 @@ class TestSurveyRepository(unittest.TestCase):
 
     def test_update_category_result(self):
         with self.app.app_context():
-            category_id = self.repo.create_category(1, "category containing category results", "resulting in successful testing", [])
+            category_id = self.repo.create_category(
+                1, "category containing category results", "resulting in successful testing", [])
             original_results = [["Bad", 0.3], ["Good", 0.6], ["Great", 1.0]]
             new_results = [["Decent", 0.4], ["Great", 0.7], ["Fantastic", 1.0]]
             result_ids = []
@@ -1148,10 +1149,10 @@ class TestSurveyRepository(unittest.TestCase):
                 nr2.append(
                     (result_ids[i], new_results[i][0], new_results[i][1]))
             self.repo.update_category_results(or2, nr2, 1)
-            results = self.repo.get_category_results_from_category_id(category_id)
+            results = self.repo.get_category_results_from_category_id(
+                category_id)
             self.assertEqual(results, nr2)
-    
-    
+
     def test_category_is_removed_from_question_with_correct_input(self):
         with self.app.app_context():
             survey_id = self.repo.create_survey(
@@ -1174,7 +1175,6 @@ class TestSurveyRepository(unittest.TestCase):
                 result,
                 [{"category": "Koira", "multiplier": 5.0}]
             )
-    
 
     def test_removing_category_from_question_returns_none_with_invalid_input(self):
         with self.app.app_context():
@@ -1195,7 +1195,7 @@ class TestSurveyRepository(unittest.TestCase):
                 new_weights
             )
             self.assertIsNone(result)
-    
+
     def test_all_category_results_are_deleted_with_found_id(self):
         with self.app.app_context():
             result = self.repo.delete_category_results_of_category(300)
@@ -1203,15 +1203,17 @@ class TestSurveyRepository(unittest.TestCase):
 
     def test_update_category_in_questions(self):
         with self.app.app_context():
-            survey_id = self.repo.create_survey("Pets","What is the best pet?",
-                "Are you more of a cat or a dog person?")
-            category_id = self.repo.create_category(survey_id,"Koira",
-                "You are a dog person",[])
-            self.repo.create_category(survey_id,"Cat",
-                "You are a cat person",[])
+            survey_id = self.repo.create_survey("Pets", "What is the best pet?",
+                                                "Are you more of a cat or a dog person?")
+            category_id = self.repo.create_category(survey_id, "Koira",
+                                                    "You are a dog person", [])
+            self.repo.create_category(survey_id, "Cat",
+                                      "You are a cat person", [])
             category_weights = '[{"category": "Koira", "multiplier": 5.0}, {"category": "Cat", "multiplier": -5.0}]'
             question_id = self.repo.create_question("Do you like to train your pet?",
-                survey_id, category_weights)
-            self.repo.update_category(category_id,[],"Dog","You are a dog person")
+                                                    survey_id, category_weights)
+            self.repo.update_category(
+                category_id, [], "Dog", "You are a dog person")
             question = self.repo.get_question(question_id)
-            assert question[3] == [{"category": "Dog", "multiplier": 5.0}, {"category": "Cat", "multiplier": -5.0}]
+            assert question[3] == [{"category": "Dog", "multiplier": 5.0}, {
+                "category": "Cat", "multiplier": -5.0}]

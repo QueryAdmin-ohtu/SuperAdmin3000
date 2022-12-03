@@ -78,9 +78,9 @@ class TestSurveyService(unittest.TestCase):
                                [2, "title2", 5, 10, ["red"]]]
 
         self.repo_mock.get_all_surveys.return_value = surveys_to_return
-        self.repo_mock.check_survey_status.return_value = ["red"]        
+        self.repo_mock.check_survey_status.return_value = ["red"]
         result = self.survey_service.get_all_surveys()
-        
+
         self.assertEqual(surveys_with_status, result)
         self.repo_mock.check_survey_status.assert_called_with(2)
         self.repo_mock.get_all_surveys.assert_called_once()
@@ -178,7 +178,7 @@ class TestSurveyService(unittest.TestCase):
     def test_create_category_calls_repo_correctly(self):
         self.repo_mock.create_category.return_value = 1
         survey_id = "1"
-        category_id="1"
+        category_id = "1"
         name = "name"
         description = "description"
         content_links = [{"url": "https://www.eficode.com/cases/hansen", "type": "Case Study"},
@@ -312,8 +312,8 @@ class TestSurveyService(unittest.TestCase):
 
     def test_get_answer_distribution_for_survey_questions_calls_repo_correctly(self):
         Row = namedtuple("Row", "q_id q_text a_id a_text count")
-        self.repo_mock.get_answer_distribution.return_value = [Row(1, "What is love?", 3, 
-                                                                "Baby don't hurt me", 2)]
+        self.repo_mock.get_answer_distribution.return_value = [Row(1, "What is love?", 3,
+                                                                   "Baby don't hurt me", 2)]
         survey_id = 1
         self.survey_service.get_answer_distribution_for_survey_questions(
             survey_id)
@@ -325,12 +325,14 @@ class TestSurveyService(unittest.TestCase):
         self.repo_mock.get_answer_distribution.return_value = [
             Row(1, "What is love?", 3, "Baby don't hurt me", 0),
             Row(2, "Do they know it's Christmas?", 5, "No", 0)]
-        result = self.survey_service.get_answer_distribution_for_survey_questions(1)
+        result = self.survey_service.get_answer_distribution_for_survey_questions(
+            1)
         self.assertIsNone(result)
 
     def test_answer_distribution_no_submissions_match_filters(self):
         self.repo_mock.get_answer_distribution.return_value = None
-        result = self.survey_service.get_answer_distribution_for_survey_questions(2)
+        result = self.survey_service.get_answer_distribution_for_survey_questions(
+            2)
         self.assertIsNone(result)
 
     def test_answer_distribution_of_survey_with_submissions(self):
@@ -338,7 +340,8 @@ class TestSurveyService(unittest.TestCase):
         self.repo_mock.get_answer_distribution.return_value = [
             Row(1, "What is love?", 3, "Baby don't hurt me", 0),
             Row(2, "Do they know it's Christmas?", 5, "No", 3)]
-        result = self.survey_service.get_answer_distribution_for_survey_questions(1)
+        result = self.survey_service.get_answer_distribution_for_survey_questions(
+            1)
         self.assertTrue(result)
 
     def test_get_users_who_answered_survey_in_timerange_returns_none_with_invalid_timerage(self):
@@ -527,7 +530,7 @@ class TestSurveyService(unittest.TestCase):
 
     def test_delete_category_result_calls_repo_correctly(self):
         self.repo_mock.delete_category_result.return_value = True
-        response = self.survey_service.delete_category_result(1,1,1)
+        response = self.survey_service.delete_category_result(1, 1, 1)
         self.assertTrue(response)
         self.repo_mock.delete_category_result.assert_called_with(1)
 
@@ -536,15 +539,15 @@ class TestSurveyService(unittest.TestCase):
         original_results = [[5, "Bad", 0.3], [6, "Good", 1.0]]
         new_results = [[5, "Decent", 0.3], [6, "Great", 1.0]]
         response = self.survey_service.update_category_results(original_results,
-                                                             new_results, 3, 1)
+                                                               new_results, 3, 1)
         self.assertTrue(response)
         self.repo_mock.update_category_results.assert_called_with(original_results,
-                                                                new_results, 3)
+                                                                  new_results, 3)
 
     def test_check_survey_status_calls_repo_correctly(self):
         self.survey_service.check_survey_status(1)
         self.repo_mock.check_survey_status.assert_called_with(1)
-    
+
     def test_delete_category_in_questions_calls_repo_correctly(self):
         self.repo_mock.remove_category_from_question.return_value = "test"
         question_ids = [1, 2, 3]
@@ -571,9 +574,10 @@ class TestSurveyService(unittest.TestCase):
         )
         call_count = self.repo_mock.remove_category_from_question.call_count
         self.assertEqual(call_count, 3)
-    
+
     def test_delete_category_results_for_category_calls_repo_correctly(self):
         self.repo_mock.delete_category_results_of_category.return_value = True
-        result = self.survey_service.delete_category_results_for_category(1,1)
+        result = self.survey_service.delete_category_results_for_category(1, 1)
         self.assertTrue(result)
-        self.repo_mock.delete_category_results_of_category.assert_called_with(1)
+        self.repo_mock.delete_category_results_of_category.assert_called_with(
+            1)
