@@ -218,4 +218,4 @@ class StatisticService:
         return self.statistic_repository.get_users_who_answered_survey(survey_id, group_name=group_name)
 
 
-survey_service = StatisticService(StatisticRepository())
+statistic_service = StatisticService(StatisticRepository())
