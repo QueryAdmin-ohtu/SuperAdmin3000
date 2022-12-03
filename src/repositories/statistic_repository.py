@@ -2,6 +2,7 @@ import uuid
 from datetime import datetime
 from sqlalchemy import exc
 from db import db
+from repositories.survey_repository import SurveyRepository
 
 
 class StatisticRepository:
@@ -426,7 +427,7 @@ class StatisticRepository:
         # Handle situation, where we want to filter in only users without any groups
         # currently group id None lists all users
         question_averages = []
-        related_questions = self.get_questions_of_survey(survey_id)
+        related_questions = SurveyRepository.get_questions_of_survey(survey_id)
 
         for question in related_questions:
 
@@ -442,7 +443,7 @@ class StatisticRepository:
                         category_weight['multiplier']
                 else:
                     weighted_average = 0
-                category_id = self.get_category_id_from_name(
+                category_id = SurveyRepository.get_category_id_from_name(
                     survey_id, category_weight['category'])
                 if category_id is not None:
                     question_average = (

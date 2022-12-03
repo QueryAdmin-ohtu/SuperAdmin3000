@@ -214,8 +214,8 @@ class SurveyRepository:
         return updated
 
     def delete_survey(self, survey_id):
-        """ Deletes a survey from Surveys after deleting all questions,
-        results and groups which relate to it. After deletion, checks that
+        """ Deletes a survey from Surveys after deleting all questions, answers,
+        categories, results and groups which relate to it. After deletion, checks that
         the survey has been deleted
 
         Returns:
@@ -223,12 +223,31 @@ class SurveyRepository:
             False otherwise
         """
 
+        questions = self.get_questions_of_survey(survey_id)
+        for question in questions:
+            answers = self.get_question_answers(question[0])
+            for answer in answers:
+                sql = """ DELETE FROM "User_answers" WHERE "QuestionAnswerId"=:id """
+                db.session.execute(sql, {"id": answer[0]})
+                sql = """ DELETE FROM "User_answers" WHERE "questionAnswerId"=:id """
+                db.session.execute(sql, {"id": answer[0]})
+            sql = """ DELETE FROM "Question_answers" WHERE "questionId"=:id """
+            db.session.execute(sql, {"id": question[0]})
+
+        categories = self.get_categories_of_survey(survey_id)
+        for category in categories:
+            sql = """ DELETE FROM "Category_results" WHERE "categoryId"=:id """
+            db.session.execute(sql, {"id": category[0]})
+
+        sql = """ DELETE FROM "Categories" WHERE "surveyId"=:id """
+        db.session.execute(sql, {"id": survey_id})
         sql = """ DELETE FROM "Questions" WHERE "surveyId"=:id """
         db.session.execute(sql, {"id": survey_id})
         sql = """ DELETE FROM "Survey_results" WHERE "surveyId"=:id """
         db.session.execute(sql, {"id": survey_id})
         sql = """ DELETE FROM "Survey_user_groups" WHERE "surveyId"=:id """
         db.session.execute(sql, {"id": survey_id})
+
         sql = """ DELETE FROM "Surveys" WHERE "id"=:id """
         db.session.execute(sql, {"id": survey_id})
         db.session.commit()
@@ -248,7 +267,7 @@ class SurveyRepository:
         if not survey:
             return False
         return survey
-    
+
     def get_all_surveys(self):
         """ Fetches all surveys, counts the questions and submissions for each survey
 
@@ -527,20 +546,19 @@ class SurveyRepository:
             sql, {"question_id": question_id}).fetchall()
         return answers
 
-    # is this used anywhere?
-    #def get_user_answers(self, answer_id):
-    #    """ Gets the id, user id and both question_answer_id AND Question_answer_id of
-    #    the answer determined by the given answer_id
-    #    """
+    def get_user_answers(self, answer_id):
+        """ Gets the id, user id and both question_answer_id AND Question_answer_id of
+        the answer determined by the given answer_id
+        """
 
-    #    sql = """ SELECT * FROM "User_answers"
-    #    WHERE answer_id=:answer_id """
-    #    try:
-    #        answers = self.db_connection.session.execute(
-    #            sql, {"id": answer_id}).fetchall()
-    #    except exc.SQLAlchemyError:
-    #        return None
-    #    return answers
+        sql = """ SELECT * FROM "User_answers"
+        WHERE answer_id=:answer_id """
+        try:
+            answers = self.db_connection.session.execute(
+                sql, {"id": answer_id}).fetchall()
+        except exc.SQLAlchemyError:
+            return None
+        return answers
 
     def add_admin(self, email: str):
         """ Inserts a new admin to the Admin table if it does not

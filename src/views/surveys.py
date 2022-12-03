@@ -493,7 +493,7 @@ def delete_category():
     )
     if not survey_service.delete_category_in_questions(question_ids, weights):
         flash("Category could not be removed from category weights of questions", "warning")
-    
+
     survey_service.delete_category_results_for_category(category_id, survey_id)
     return_value = survey_service.delete_category(category_id)
     if return_value is True:

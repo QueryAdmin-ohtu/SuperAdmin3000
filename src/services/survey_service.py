@@ -1,5 +1,4 @@
 import re
-from datetime import datetime
 from repositories.survey_repository import SurveyRepository
 
 
@@ -276,11 +275,10 @@ class SurveyService:
         from the question specified by the id given """
         return self.survey_repository.get_question_answers(question_id)
 
-    # is this used anywhere?
-    #def get_user_answers(self, answer_id):
-    #    "" """ Gets the id, user id and both question_answer_id AND Question_answer_id of
-    #    the answer determined by the given answer_id """
-    #    return self.survey_repository.get_user_answers(answer_id)
+    def get_user_answers(self, answer_id):
+        "" """ Gets the id, user id and both question_answer_id AND Question_answer_id of
+        the answer determined by the given answer_id """
+        return self.survey_repository.get_user_answers(answer_id)
 
     def create_category(self, survey_id: str, name: str, description: str, content_links: list):
         """

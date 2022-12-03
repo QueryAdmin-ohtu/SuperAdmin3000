@@ -5,6 +5,7 @@ from flask import render_template, redirect, request, Blueprint, flash, abort
 from flask import current_app as app
 import helper
 from services.statistic_service import statistic_service
+from services.survey_service import survey_service
 
 stats = Blueprint("stats", __name__)
 
@@ -16,7 +17,7 @@ HTML_DATE_INPUT_TIMEFORMAT = "%Y-%m-%dT%H:%M"
 def statistics(survey_id):
     """Shows the statistics for the specific survey"""
 
-    survey = statistic_service.get_survey(survey_id)
+    survey = survey_service.get_survey(survey_id)
     submissions = statistic_service.get_number_of_submissions_for_survey(
         survey_id)
     categories = statistic_service.calculate_average_scores_by_category(survey_id)
@@ -74,7 +75,7 @@ def filtered_statistics(survey_id):
         print("Value error!")
         return redirect(f"/surveys/{survey_id}/statistics")
 
-    survey = statistic_service.get_survey(survey_id)
+    survey = survey_service.get_survey(survey_id)
 
     filter_group_id = request.form["filter_group_id"]
     filter_email = request.form["filter_email"]
