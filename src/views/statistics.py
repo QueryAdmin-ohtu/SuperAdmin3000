@@ -30,12 +30,12 @@ def statistics(survey_id):
     for user in users:
         group_names[user.group_id] = user.group_name
 
-    answer_distribution = survey_service.get_answer_distribution_for_survey_questions(survey_id)
+    answer_distribution = survey_service.get_answer_distribution_for_survey_questions(
+        survey_id)
 
     answer_charts = helper.save_question_answer_charts(
         answer_distribution
     )
-
 
     filter_start_date = (datetime.datetime.now() -
                          datetime.timedelta(days=10*365)).strftime(HTML_DATE_INPUT_TIMEFORMAT)
@@ -98,10 +98,10 @@ def filtered_statistics(survey_id):
     filter_group_name = group_names[filter_group_id]
 
     answer_distribution = survey_service.get_answer_distribution_for_survey_questions(survey_id,
-                                                                    filter_start_date,
-                                                                    filter_end_date,
-                                                                    filter_group_id,
-                                                                    filter_email)
+                                                                                      filter_start_date,
+                                                                                      filter_end_date,
+                                                                                      filter_group_id,
+                                                                                      filter_email)
     answer_charts = helper.save_question_answer_charts(
         answer_distribution,
         filter_group_name,

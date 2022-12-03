@@ -99,6 +99,7 @@ def category_weights_as_json(categories: list, form: dict):
 
     return json.dumps(category_list)
 
+
 def updated_question_ids_and_weights(questions: list, category_to_remove: str):
     """ Removes the given category from every question's
     category weights json
@@ -109,7 +110,7 @@ def updated_question_ids_and_weights(questions: list, category_to_remove: str):
     question_ids = []
     category_weights = []
     for question in questions:
-        weights_dict= question[3]
+        weights_dict = question[3]
         updated_weight_json = updated_category_weights_as_json(
             weights_dict,
             category_to_remove
@@ -119,6 +120,7 @@ def updated_question_ids_and_weights(questions: list, category_to_remove: str):
             category_weights.append(updated_weight_json)
 
     return question_ids, category_weights
+
 
 def updated_category_weights_as_json(weights: list, category_to_remove: str):
     """ Removes the category from the given list of category
@@ -131,6 +133,7 @@ def updated_category_weights_as_json(weights: list, category_to_remove: str):
     except TypeError:
         return None
     return json.dumps(new_weights)
+
 
 def json_into_dictionary(json_file):
     """ Takes category weights and makes them into
@@ -253,6 +256,7 @@ def check_cutoff_points(cutoffs):
         return "There must not be any identical cutoff values"
     return "Correct"
 
+
 def questions_where_given_category_is_required(questions, cat_name):
     """ Checks the category weights for the given questions
     to see if the given category is can not be deleted """
@@ -261,6 +265,7 @@ def questions_where_given_category_is_required(questions, cat_name):
         if only_non_zero_weight_for_question(question, cat_name):
             category_required_by.append(question[1])
     return category_required_by
+
 
 def only_non_zero_weight_for_question(question, cat_name):
     """ Checks if the given category is included in the only

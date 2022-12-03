@@ -591,12 +591,11 @@ class SurveyService:
 
         return result
 
-
     def update_category_and_survey_updated_at(self, category_id, survey_id):
         """ Updates the updatedAt of a category and survey based on category_id
         """
-        self.survey_repository.update_category_and_survey_updated_at(category_id, survey_id)
-
+        self.survey_repository.update_category_and_survey_updated_at(
+            category_id, survey_id)
 
     def create_category_result(self, category_id: int, survey_id: int, text: str, cutoff_from_maxpts: float):
         """Create a new category result
