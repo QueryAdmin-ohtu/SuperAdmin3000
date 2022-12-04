@@ -9,6 +9,9 @@ class TestSurveyRepository(unittest.TestCase):
         self.app = create_app()
         self.repo = SurveyRepository()
 
+    def tearDown(self):
+        self.app.db.get_engine(self.app).dispose()
+
     def createSurvey(self, title):
         """
         Creates a survey with two user groups and three users
