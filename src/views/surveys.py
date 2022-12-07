@@ -430,8 +430,10 @@ def new_category_result_view(survey_id, category_id):
     category = survey_service.get_category(category_id)
     results = survey_service.get_category_results_from_category_id(category_id)
     if results:
-        return render_template("surveys/edit_category_results.html", survey=survey, category=category, results=results,  ENV=app.config["ENV"])
-    return render_template("surveys/edit_category_results.html", survey=survey, category=category, first=True, results=[],  ENV=app.config["ENV"])
+        return render_template(
+            "surveys/edit_category_results.html", survey=survey, category=category, results=results,  ENV=app.config["ENV"])
+    return render_template(
+        "surveys/edit_category_results.html", survey=survey, category=category, first=True, results=[],  ENV=app.config["ENV"])
 
 
 @surveys.route("/add_content_link", methods=["POST"])
@@ -492,7 +494,7 @@ def delete_category():
     )
     if not survey_service.delete_category_in_questions(question_ids, weights):
         flash("Category could not be removed from category weights of questions", "warning")
-    
+
     survey_service.delete_category_results_for_category(category_id, survey_id)
     return_value = survey_service.delete_category(category_id)
     if return_value is True:
