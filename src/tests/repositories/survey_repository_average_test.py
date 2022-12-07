@@ -1,6 +1,12 @@
 import unittest
 
 from repositories.survey_repository import SurveyRepository
+from repositories.statistic_repository import StatisticRepository
+import unittest
+
+from repositories.survey_repository import SurveyRepository
+from repositories.statistic_repository import StatisticRepository
+
 
 from app import create_app
 
@@ -8,7 +14,7 @@ class TestSurveyRepository(unittest.TestCase):
     def setUp(self):
         self.app = create_app()
         self.repo = SurveyRepository()
-
+        self.srepo = StatisticRepository()
     def tearDown(self):
         self.app.db.get_engine(self.app).dispose()
 
@@ -31,11 +37,11 @@ class TestSurveyRepository(unittest.TestCase):
             beginner_user_id}
         """
         survey_id = self.repo.create_survey("Mock Survey", title, "")
-        user_group_1_id = self.repo._add_survey_user_group("user_group_one", survey_id)
-        user_group_2_id = self.repo._add_survey_user_group("user_group_two", survey_id)
-        advanced_user_id = self.repo._add_user(email="Advanced@domain.invalid", group_id=user_group_1_id)
-        mediocre_user_id = self.repo._add_user(email="Mediocre@domain.invalid", group_id=user_group_1_id)
-        beginner_user_id = self.repo._add_user(email="Beginner@domain.invalid", group_id=user_group_2_id)
+        user_group_1_id = self.srepo._add_survey_user_group("user_group_one", survey_id)
+        user_group_2_id = self.srepo._add_survey_user_group("user_group_two", survey_id)
+        advanced_user_id = self.srepo._add_user(email="Advanced@domain.invalid", group_id=user_group_1_id)
+        mediocre_user_id = self.srepo._add_user(email="Mediocre@domain.invalid", group_id=user_group_1_id)
+        beginner_user_id = self.srepo._add_user(email="Beginner@domain.invalid", group_id=user_group_2_id)
        
 
         return {"survey_id":survey_id,
@@ -60,14 +66,14 @@ class TestSurveyRepository(unittest.TestCase):
             
             answer_one_bad_id = self.repo.create_answer(
                 "Next question, please", 0, question_id)
-            self.repo._add_user_answers(
+            self.srepo._add_user_answers(
                 survey['advanced_user_id'], [answer_one_good_id])
-            self.repo._add_user_answers(
+            self.srepo._add_user_answers(
                 survey['mediocre_user_id'], [answer_one_good_id])
-            self.repo._add_user_answers(
+            self.srepo._add_user_answers(
                 survey['beginner_user_id'], [answer_one_bad_id])
 
-            category_averages = self.repo.calculate_average_scores_by_category(survey_id)
+            category_averages = self.srepo.calculate_average_scores_by_category(survey_id)
             self.assertEquals(len(category_averages), 1)
             self.assertEquals(category_averages, [(category_math_id, 'Math', 3.33)])
 
@@ -88,14 +94,12 @@ class TestSurveyRepository(unittest.TestCase):
             answer_B_good_id = self.repo.create_answer("Good", 10, question_B_id)
             answer_B_bad_id = self.repo.create_answer("None", 0, question_B_id)
             
-            self.repo._add_user_answers(
+            self.srepo._add_user_answers(
                 survey['advanced_user_id'], [answer_A_good_id, answer_B_good_id])
-            self.repo._add_user_answers(
+            self.srepo._add_user_answers(
                 survey['mediocre_user_id'], [answer_A_bad_id, answer_B_bad_id])
-            self.repo._add_user_answers(
+            self.srepo._add_user_answers(
                 survey['beginner_user_id'], [answer_A_bad_id])
-            averages = self.repo.calculate_average_scores_by_category(survey_id)
+            averages = self.srepo.calculate_average_scores_by_category(survey_id)
             
             self.assertEquals(averages, [(category_A_id,'A', 3.33), (category_B_id, 'B', 5.0)])
-
-   

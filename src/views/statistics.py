@@ -4,6 +4,7 @@ import uuid
 from flask import render_template, redirect, request, Blueprint, flash, abort
 from flask import current_app as app
 import helper
+from services.statistic_service import statistic_service
 from services.survey_service import survey_service
 
 stats = Blueprint("stats", __name__)
@@ -17,11 +18,11 @@ def statistics(survey_id):
     """Shows the statistics for the specific survey"""
 
     survey = survey_service.get_survey(survey_id)
-    submissions = survey_service.get_number_of_submissions_for_survey(
+    submissions = statistic_service.get_number_of_submissions_for_survey(
         survey_id)
-    categories = survey_service.calculate_average_scores_by_category(survey_id)
+    categories = statistic_service.calculate_average_scores_by_category(survey_id)
 
-    users = survey_service.get_users_who_answered_survey(survey_id)
+    users = statistic_service.get_users_who_answered_survey(survey_id)
 
     users = users if users else []
     total_users = len(users)
@@ -30,7 +31,7 @@ def statistics(survey_id):
     for user in users:
         group_names[user.group_id] = user.group_name
 
-    answer_distribution = survey_service.get_answer_distribution_for_survey_questions(
+    answer_distribution = statistic_service.get_answer_distribution_for_survey_questions(
         survey_id)
 
     answer_charts = helper.save_question_answer_charts(
@@ -87,7 +88,7 @@ def filtered_statistics(survey_id):
     # submissions = survey_service.get_number_of_submissions_for_survey(
     #     survey_id)
 
-    users = survey_service.get_users_who_answered_survey(survey_id)
+    users = statistic_service.get_users_who_answered_survey(survey_id)
     users = users if users else []
     total_users = len(users)
 
@@ -97,7 +98,7 @@ def filtered_statistics(survey_id):
 
     filter_group_name = group_names[filter_group_id]
 
-    answer_distribution = survey_service.get_answer_distribution_for_survey_questions(survey_id,
+    answer_distribution = statistic_service.get_answer_distribution_for_survey_questions(survey_id,
                                                                                       filter_start_date,
                                                                                       filter_end_date,
                                                                                       filter_group_id,
@@ -109,13 +110,13 @@ def filtered_statistics(survey_id):
         filter_end_date
     )
 
-    categories = survey_service.calculate_average_scores_by_category(survey_id,
+    categories = statistic_service.calculate_average_scores_by_category(survey_id,
                                                                      filter_group_id,
                                                                      filter_start_date,
                                                                      filter_end_date,
                                                                      filter_email)
 
-    users = survey_service.get_users_who_answered_survey_filtered(survey_id,
+    users = statistic_service.get_users_who_answered_survey_filtered(survey_id,
                                                                   filter_start_date,
                                                                   filter_end_date,
                                                                   filter_group_id,
