@@ -19,7 +19,7 @@ def create_app():
     app.register_blueprint(log)
 
     db.init_app(app)
-
+    app.db = db
     return app
 
 

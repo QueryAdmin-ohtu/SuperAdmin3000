@@ -13,7 +13,7 @@ class StatisticRepository:
 
     def __init__(self, db_connection=db):
         self.db_connection = db_connection
-
+        self.repo = SurveyRepository()
 
     def get_users_who_answered_survey(self,
                                       survey_id: int,
@@ -427,7 +427,7 @@ class StatisticRepository:
         # Handle situation, where we want to filter in only users without any groups
         # currently group id None lists all users
         question_averages = []
-        related_questions = SurveyRepository.get_questions_of_survey(survey_id)
+        related_questions = self.repo.get_questions_of_survey(survey_id)
 
         for question in related_questions:
 
@@ -443,7 +443,7 @@ class StatisticRepository:
                         category_weight['multiplier']
                 else:
                     weighted_average = 0
-                category_id = SurveyRepository.get_category_id_from_name(
+                category_id = self.repo.get_category_id_from_name(
                     survey_id, category_weight['category'])
                 if category_id is not None:
                     question_average = (

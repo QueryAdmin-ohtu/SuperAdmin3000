@@ -190,7 +190,7 @@ class TestSurveyRepository(unittest.TestCase):
 
         with self.app.app_context():
             response = self.repo.get_all_surveys()
-        self.assertEqual(len(response), 9)
+        self.assertEqual(len(response), 19)
 
     def test_get_questions_of_survey_returns_questions(self):
 

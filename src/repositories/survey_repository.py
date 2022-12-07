@@ -745,7 +745,7 @@ class SurveyRepository:
         Else returns None.
         """
         sql = """
-            SELECT c.id FROM "Categories" AS c, "Surveys" as s WHERE c.name = :category_name and s.id = :survey_id
+            SELECT c.id FROM "Categories" AS c, "Surveys" as s WHERE c.name = :category_name AND c."surveyId" = :survey_id AND s.id = :survey_id
         """
         values = {"category_name": category_name, "survey_id": survey_id}
         found_id = self.db_connection.session.execute(sql, values).fetchone()
