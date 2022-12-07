@@ -349,9 +349,7 @@ class TestStatisticRepository(unittest.TestCase):
             self.assertEquals(count_answers_for_question_one_filter_group_2, 1)
             self.assertEquals(count_answers_for_question_two_filter_group_1, 1)
             self.assertEquals(count_answers_for_question_two_filter_group_2, 1)
-            print(">>>>>>>>>>>>", survey_id)
             averages = self.srepo.calculate_average_scores_by_category(11)
-            print(">>>>>>>>>>>>", averages)
             averages_filter_group_1 = self.srepo.calculate_average_scores_by_category(
                 survey_id, user_group_1_id)
             averages_filter_date_old = self.srepo.calculate_average_scores_by_category(
@@ -377,9 +375,9 @@ class TestStatisticRepository(unittest.TestCase):
             self.assertTrue(averages == averages_filter_date_current)
 
             self.assertTrue(averages_filter_date_old[0] == (
-                category_math_id, 'Math', 0))
+                category_math_id, 'Math', None))
             self.assertTrue(averages_filter_date_old[1] == (
-                category_stats_id, 'Statistics', 0))
+                category_stats_id, 'Statistics', None))
 
     def test_get_user_answer_sum_of_points_and_count_answers_two(self):
 

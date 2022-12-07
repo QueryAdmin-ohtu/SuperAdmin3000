@@ -396,7 +396,7 @@ class StatisticRepository:
 
     def calculate_average_scores_by_category(self,
                                              survey_id,
-                                             user_group_id=None,
+                                             user_group_name=None,
                                              start_date=None,
                                              end_date=None,
                                              email=""):
@@ -404,10 +404,17 @@ class StatisticRepository:
         Calculates weighted average scores from the submitted answers of a given survey. An average
         score is calculated for each category of the survey. This value represents how well all
         reponders did on each category.
-
         Method creates a list of tuples which contain weighted averages for all answered questions.
         A helper method is used to calculate the final category averages.
-
+        Order of operations:
+            - Get all the questions in the survey
+                - For each question:
+                        - Get the count of user answers [Filtered]
+                        - Get the sum of user answer points [Filtered]
+                        - Go through each category weight in the question
+                            - For each category weight, calulate a weighted average score for the question. Append to list.
+                            - If no answers are present, set weighted average score to None. Append to list.
+                        - Handle the list of weighted average scores in the helper method 
         Args:
             survey_id: Id of survey to calculate averages from
             user_group_name (optional): User group name of answer. Ignored if None. If value present
@@ -418,10 +425,10 @@ class StatisticRepository:
                 if None. If value present only answers before this datetime are taken into account.
             email (optional) If the user's email doesn't contain the argument, that user's answers are
                 filtered out
-
         Returns:
             A list of tuples which includes the category id, category name and average score
-            (to the precision of two decimal places) of all user answers in a given survey.
+            (to the precision of two decimal places) of all user answers in a given category.
+            If no answers to a category exist, the average value is contains a value of None.
         """
         # TODO:
         # Handle situation, where we want to filter in only users without any groups
@@ -432,25 +439,22 @@ class StatisticRepository:
         for question in related_questions:
 
             points = self.get_sum_of_user_answer_points_by_question_id(
-                question.id, user_group_id, start_date, end_date, email)
+                question.id,user_group_name, start_date, end_date, email)
 
             answers = self.get_count_of_user_answers_to_a_question(
-                question.id, user_group_id, start_date, end_date, email)
+                question.id, user_group_name, start_date, end_date, email)
 
             for category_weight in question.category_weights:
                 if answers != 0:
                     weighted_average = points / answers * \
                         category_weight['multiplier']
                 else:
-                    weighted_average = 0
+                    weighted_average = None
                 category_id = self.repo.get_category_id_from_name(
                     survey_id, category_weight['category'])
-                if category_id is not None:
-                    question_average = (
+                
+                question_average = (
                         category_id, category_weight['category'], weighted_average)
-                else:
-                    question_average = ("Null", str(
-                        category_weight['category']) + " - (missing from 'Categories')", weighted_average)
                 question_averages.append(question_average)
 
         return self.calculate_category_averages(question_averages)
@@ -458,7 +462,17 @@ class StatisticRepository:
     def calculate_category_averages(self, question_averages):
         """
         Helper method to calculate category averages.
-
+        Example:
+            Category A has 3 answers whose sum of weighted averages equals 10
+            Category B has 2 answers whose sum of weighted averages equals 10
+            Method returns the following list:
+                [
+                    (Category_id_A, 'Category A', 3.33),
+                    (Category_id_A, 'Category A', 5.00),
+                ]
+        
+        Each item in the question_averages list consists of:
+            (category_id, category_name, weighted_average)
         Returns a list of tuples as follows:
         (category_id, category_name, category average score)
         """
@@ -466,11 +480,19 @@ class StatisticRepository:
         occurences = {}
         names = {}
         for item in question_averages:
-            sums[item[0]] = sums.setdefault(item[0], 0) + item[2]
-            occurences[item[0]] = occurences.setdefault(item[0], 0) + 1
-            names[item[0]] = item[1]
+            if (item[2] == None):
+                sums[item[0]] = None
+                occurences[item[0]] = occurences.setdefault(item[0], 0)
+                names[item[0]] = item[1]
+            else:
+                sums[item[0]] = sums.setdefault(item[0], 0) + item[2]
+                occurences[item[0]] = occurences.setdefault(item[0], 0) + 1
+                names[item[0]] = item[1]
         results = []
         for key in sums:
-            results.append((key, names[key], float(
-                "{:.2f}".format(sums[key]/occurences[key]))))
+            if (sums[key] == None):
+                results.append((key, names[key], None))
+            else:
+                results.append((key, names[key], float(
+                    "{:.2f}".format(sums[key]/occurences[key]))))
         return results
