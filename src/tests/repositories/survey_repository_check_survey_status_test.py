@@ -13,6 +13,9 @@ class TestSurveyRepository(unittest.TestCase):
         self.app = create_app()
         self.repo = SurveyRepository()
 
+    def tearDown(self):
+        self.app.db.get_engine(self.app).dispose()
+
     def createSurvey(self, title):
         survey_id = self.repo.create_survey(
             "Survey Status Should Be Ok!", title, "This will return a list")

@@ -16,6 +16,9 @@ class TestSurveyRepository(unittest.TestCase):
         self.app = create_app()
         self.repo = SurveyRepository()
 
+    def tearDown(self):
+        self.app.db.get_engine(self.app).dispose()
+
     def test_authorized_google_login_with_valid_email_succeeds(self):
 
         valid_email = "jatufin@gmail.com"
