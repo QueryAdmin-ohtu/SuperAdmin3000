@@ -1,5 +1,5 @@
-from repositories.statistic_repository import StatisticRepository
 from datetime import datetime
+from repositories.statistic_repository import StatisticRepository
 
 class UserInputError(Exception):
     pass

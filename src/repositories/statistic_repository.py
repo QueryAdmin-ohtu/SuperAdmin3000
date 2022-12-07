@@ -290,7 +290,7 @@ class StatisticRepository:
         # Handle situation, where we want to filter in only users without any groups
         # currently group id None lists all users
 
-        if start_date != None and end_date != None:
+        if start_date is not None and end_date is not None:
             print("not none", flush=True)
             sql = """
             SELECT COUNT(id)

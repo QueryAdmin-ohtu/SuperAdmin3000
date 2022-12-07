@@ -1105,7 +1105,7 @@ class SurveyRepository:
                                             categories_with_questions)
 
         for category in categories:
-            if self.get_category_results_from_category_id(category[0]) == None:
+            if self.get_category_results_from_category_id(category[0]) is None:
 
                 categories_without_results.append(category[1])
 
