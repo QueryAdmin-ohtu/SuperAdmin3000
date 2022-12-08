@@ -11,7 +11,7 @@ categories_without_questions : (list) [category names]
 ]
 #}
 
-{% set survey_status_color = survey_status[0] %}
+{% set survey_status_color = survey_status.status_color %}
 
 {% if survey_status_color == "red" %}
 {% set stroke_color = "border-rose-500" %}

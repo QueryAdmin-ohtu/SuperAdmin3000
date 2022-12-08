@@ -442,7 +442,7 @@ class SurveyService:
         """Check the survey status: Returns a list containing survey status
         and detailed information about the checks
 
-        [0]    status  : (str) 'red','yellow' or 'green',
+        [0]    status_color  : (str) 'red','yellow' or 'green',
         [1]    no_survey_results : (bool),
         [2]    no_categories : (bool),
         [3]    unrelated_categories_in_weights : (list) [category names]
@@ -454,7 +454,20 @@ class SurveyService:
                 (dictionary) {question_id: [category names]},
         """
 
-        return self.survey_repository.check_survey_status(survey_id)
+        survey_status_array = self.survey_repository.check_survey_status(survey_id)
+        survey_status_dictionary = {
+            "status_color": survey_status_array[0],
+            "no_survey_results": survey_status_array[1],
+            "no_categories": survey_status_array[2],
+            "unrelated_categories_in_weights": survey_status_array[3],
+            "no_questions": survey_status_array[4],
+            "questions_without_answers": survey_status_array[5],
+            "questions_without_categories": survey_status_array[6],
+            "categories_without_questions": survey_status_array[7],
+            "categories_without_results": survey_status_array[8]
+        }
+
+        return survey_status_dictionary
 
 
 survey_service = SurveyService(SurveyRepository())
