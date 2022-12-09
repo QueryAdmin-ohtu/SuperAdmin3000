@@ -4,7 +4,7 @@ Surveys are complex and feature many different fields of information. To ensure 
 ### All Good (green)
 The survey will function correctly in the survey application
 
-### Warning (yellow
+### Warning (yellow)
 The warning status indicates that the survey has some defects. The survey will not break the survey application, but the defects should be addressed. Warning status is displayed when:
 - There are questions that do not affect any category
 - There are categories that do not affect any question
