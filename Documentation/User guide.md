@@ -1,5 +1,11 @@
 # User's guide to SuperAdmin3000
 
+- [Create a new survey](#create-a-new-survey)
+  - [Create and edit categories](#create-and-edit-categories)
+  - [Create and edit questions](#create-and-edit-questions)
+  - [Create and edit survey results](#create-and-edit-survey-results)
+  - [Manage survey](#manage-survey)
+
 ## Create a new survey
 
 On main page click "New survey".
@@ -32,21 +38,33 @@ To edit the category itself or the content links, do the changes and click "Save
 
 To create and edit category results, click "Manage category results". Each category result includes a result text and a cutoff value. The cutoff value is the maximum score in this category that will give this result. For example, if the cutoff values are set at 0.5 and 1.0, the results will be returned at 0-50 % and 50-100% of the maximum category score, respectively.
 
-A category result at cutoff value 1.0 is automatically created, and the cutoff value of this result cannot be edited. This is to ensure there is always at least one category result applicable to any score.
+A category result at cutoff value 1.0 is automatically created, and the cutoff value of this result cannot be edited. This is to ensure there is always at least one category result applicable to any score. If there are multiple results, this will be the result for the highest score.
 
-Save your changes by clicking "Save changes".
+Save any changes you made by clicking "Save changes".
 
 NB: When deleting category results, remember to save any other changes made to the results before deleting a result.
 
 ![kuva](https://user-images.githubusercontent.com/44512829/206712690-8de60de6-f6ec-4c3b-bc5c-3932688d14d1.png)
 
-## Create and edit questions
+### Create and edit questions
 
 Once you have created the categories, your survey needs questions. Return to the survey page and click "Add question". Enter the question and its category weights (these are multipliers that determine how much the question affects each category score). After clicking "Save changes" you can start adding answer options. Click "Save changes" to save any new answer options or edits.
 
 NB: You can delete answer options but make sure to save any edits before deleting an answer option.
 
 <img src="https://user-images.githubusercontent.com/44512829/206720761-d2372631-d8bb-474c-b0a0-5024bafa71a1.png" width=720 />
+
+### Create and edit survey results
+
+Now all you need is some results to show based on total survey score. Go to the survey page and click "Manage results". Similar to category results, one result is automatically added at cutoff value 1.0; you can edit the text of this result to your liking.
+
+![kuva](https://user-images.githubusercontent.com/44512829/206725136-17d66dfd-cf00-4679-990d-f314ba043656.png)
+
+### Manage survey
+
+When you've created the categories, questions and results, you can see your survey at a glance on the survey page. Here you can edit any of the elements as well as the basic survey information or even delete the whole survey.
+
+<img src="https://user-images.githubusercontent.com/44512829/206726848-326112e5-3c9a-43c2-9f8d-a0a117ee612b.png" width=720 />
 
 
 
