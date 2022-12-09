@@ -439,22 +439,39 @@ class SurveyService:
         return self.survey_repository.update_category_results(original_results, new_results, survey_id)
 
     def check_survey_status(self, survey_id):
-        """Check the survey status: Returns a list containing survey status
+        """Check the survey status: Returns a dictionary containing survey status
         and detailed information about the checks
 
-        [0]    status  : (str) 'red','yellow' or 'green',
-        [1]    no_survey_results : (bool),
-        [2]    no_categories : (bool),
-        [3]    unrelated_categories_in_weights : (list) [category names]
-        [4]    no_questions : (bool),
-        [5]    questions_without_answers :(list) [question names],
-        [6]    questions_without_categories :(list) [category names],
-        [7]    categories_without_questions : (list) [category names]
-        [8]    categories_without_results :
-                (dictionary) {question_id: [category names]},
+        Args:
+            survey_id: Id of survey to check status on
+
+        Returns:
+            A dictionary with the following fields
+                status_color  : (str) 'red','yellow' or 'green',
+                no_survey_results : (bool),
+                no_categories : (bool),
+                unrelated_categories_in_weights : (list) [category names]
+                no_questions : (bool),
+                questions_without_answers :(list) [question names],
+                questions_without_categories :(list) [category names],
+                categories_without_questions : (list) [category names]
+                categories_without_results :  (dictionary) {question_id: [category names]}
         """
 
-        return self.survey_repository.check_survey_status(survey_id)
+        survey_status_array = self.survey_repository.check_survey_status(survey_id)
+        survey_status_dictionary = {
+            "status_color": survey_status_array[0],
+            "no_survey_results": survey_status_array[1],
+            "no_categories": survey_status_array[2],
+            "unrelated_categories_in_weights": survey_status_array[3],
+            "no_questions": survey_status_array[4],
+            "questions_without_answers": survey_status_array[5],
+            "questions_without_categories": survey_status_array[6],
+            "categories_without_questions": survey_status_array[7],
+            "categories_without_results": survey_status_array[8]
+        }
+
+        return survey_status_dictionary
 
 
 survey_service = SurveyService(SurveyRepository())
