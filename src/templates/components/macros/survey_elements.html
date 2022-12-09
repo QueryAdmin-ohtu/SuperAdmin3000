@@ -13,7 +13,7 @@
 #}
 <div id="survey-{{ survey[0] }}" style="cursor: pointer;" onclick="location.href='/surveys/{{ survey[0] }}';"
     class="flex flex-row max-w-full rounded-lg border border-slate-300 hover:border-slate-400 hover:shadow-sm transition overflow-hidden bg-white">
-    {% set status_description = survey[4][0] %}
+    {% set status_description = survey[4].status_color %}
     {% if status_description == "red" %}
     {% set card_accent_color = "rose" %}
     {% elif status_decription == "yellow" %}
