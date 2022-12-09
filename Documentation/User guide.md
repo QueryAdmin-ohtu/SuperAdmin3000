@@ -40,4 +40,14 @@ NB: When deleting category results, remember to save any other changes made to t
 
 ![kuva](https://user-images.githubusercontent.com/44512829/206712690-8de60de6-f6ec-4c3b-bc5c-3932688d14d1.png)
 
+## Create and edit questions
+
+Once you have created the categories, your survey needs questions. Return to the survey page and click "Add question". Enter the question and its category weights (these are multipliers that determine how much the question affects each category score). After clicking "Save changes" you can start adding answer options. Click "Save changes" to save any new answer options or edits.
+
+NB: You can delete answer options but make sure to save any edits before deleting an answer option.
+
+<img src="https://user-images.githubusercontent.com/44512829/206720761-d2372631-d8bb-474c-b0a0-5024bafa71a1.png" width=720 />
+
+
+
 
