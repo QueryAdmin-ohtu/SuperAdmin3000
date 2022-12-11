@@ -8,26 +8,27 @@
 $ poetry shell
 $ invoke start
 ```
+A PostgreSQL database server needs to be up an running for local use.
 
 ### Dependency management
 
 - Poetry is used to manage and install dependencies
-- The `pyproject.toml` file contains project requirements
+- The [`pyproject.toml`](https://github.com/QueryAdmin-ohtu/SuperAdmin3000/blob/main/pyproject.toml) file contains project requirements
 - Other systems, such as PIP, should be avoided during the development to avoid conflicts
 
 ### PIP dependencies
 
 For environments which don't support Poetry, (such as Heroku) the PIP dependency `requirements.txt` file can be generated manually from `pyproject.toml` file by running following comand inside Poetry shell:
 ```
-pip list --format freeze > requirements.txt
+$ pip list --format freeze > requirements.txt
 ```
 ## Continuous Integration
 
-- Github Actions has been used for CI/CP pipeline
+- Github Actions has been used for CI/CD pipeline
 - Github builds a Docker image
 - The docker image is pushed to Heroku
 - There are two Heroku environments: One for testing and one for product deployment
-- The process goes ass follows:
+- The process goes as follows:
 
 1. A developer runs all tests locally
 1. The developer pushes pull request to Github. The branch name starts with "dev_"
@@ -55,39 +56,26 @@ To run the container locally:
 ```
 When the container is succesfully running the application can be accessed at [http://localhost:3000](http://localhost:3000)
 
-## Database rebuild
-
-
-PostgreSQL database server should be up and running. It can be started with command:
-```
-start-pg.sh
-```
-
 ## Database initialization and counter reset
 
 ### Shortcuts
 
 Executing the database initializations described below can be run before app launch:
 ```
-invoke reset-and-start localdb
-invoke reset-and-test localdb
-```
-
-PostgreSQL database server should be up and running. It can be started with command:
-```
-start-pg.sh
+$ invoke reset-and-start <localdb>
+$ invoke reset-and-test <localdb>
+$ invoke reset-and-e2etests <localdb>
 ```
 
 The database tables can be initialized with the following command in Poetry environment:
 ```
-invoke init_db localdb
+$ invoke init_db <localdb>
 ```
 
 If the database copy `schema.sql` should be created with `pg_dump` command, selectors `--inserts` and `--no-owner` should be set:
 
-
 ```
-pg_dump --inserts --no-owner postgresql://username:password@server:5432/database
+$ pg_dump --inserts --no-owner postgresql://username:password@server:5432/database
 ```
 
 ### Database index reset
