@@ -1,0 +1,23 @@
+name: Deploy_to_test
+
+on:
+  push:
+    branches: 
+      - dev_*
+    paths:
+      - 'Documentation/**'
+      - 'README.md'
+      
+jobs:
+  build_and_unit_test:
+    runs-on: ubuntu-latest
+    steps:
+      - run: 'echo "No build required"'
+  deploy_to_heroku_test:
+    runs-on: ubuntu-latest
+    steps:
+      - run: 'echo "No build required"'
+  e2e_tests_on_heroku_test_environment:
+    runs-on: ubuntu-latest
+    steps:
+      - run: 'echo "No build required"'
