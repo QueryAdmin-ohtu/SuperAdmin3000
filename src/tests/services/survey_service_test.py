@@ -74,11 +74,28 @@ class TestSurveyService(unittest.TestCase):
     def test_get_all_surveys_calls_repo_correctly(self):
         surveys_to_return = [[1, "title1", 12, 2],
                              [2, "title2", 5, 10]]
-        surveys_with_status = [[1, "title1", 12, 2, ["red"]],
-                               [2, "title2", 5, 10, ["red"]]]
+
+        survey_status_array = ["red", False, True, [], True, [], [], [], {}]
 
         self.repo_mock.get_all_surveys.return_value = surveys_to_return
-        self.repo_mock.check_survey_status.return_value = ["red"]
+        self.repo_mock.check_survey_status.return_value = survey_status_array
+
+        survey_status_to_expect = {
+            "status_color": survey_status_array[0],
+            "no_survey_results": survey_status_array[1],
+            "no_categories": survey_status_array[2],
+            "unrelated_categories_in_weights": survey_status_array[3],
+            "no_questions": survey_status_array[4],
+            "questions_without_answers": survey_status_array[5],
+            "questions_without_categories": survey_status_array[6],
+            "categories_without_questions": survey_status_array[7],
+            "categories_without_results": {}
+        }
+
+        surveys_with_status = [[1, "title1", 12, 2, survey_status_to_expect],
+                               [2, "title2", 5, 10, survey_status_to_expect]]
+
+        
         result = self.survey_service.get_all_surveys()
 
         self.assertEqual(surveys_with_status, result)
@@ -357,8 +374,25 @@ class TestSurveyService(unittest.TestCase):
                                                                   new_results, 3)
 
     def test_check_survey_status_calls_repo_correctly(self):
-        self.survey_service.check_survey_status(1)
+
+        survey_status_array = ["red", False, True, [], True, [], [], [], {}]
+        self.repo_mock.check_survey_status.return_value = survey_status_array
+
+        survey_status_to_expect = {
+            "status_color": survey_status_array[0],
+            "no_survey_results": survey_status_array[1],
+            "no_categories": survey_status_array[2],
+            "unrelated_categories_in_weights": survey_status_array[3],
+            "no_questions": survey_status_array[4],
+            "questions_without_answers": survey_status_array[5],
+            "questions_without_categories": survey_status_array[6],
+            "categories_without_questions": survey_status_array[7],
+            "categories_without_results": {}
+        }
+
+        returned_value = self.survey_service.check_survey_status(1)
         self.repo_mock.check_survey_status.assert_called_with(1)
+        self.assertEquals(survey_status_to_expect, returned_value)
 
     def test_delete_category_in_questions_calls_repo_correctly(self):
         self.repo_mock.remove_category_from_question.return_value = "test"
