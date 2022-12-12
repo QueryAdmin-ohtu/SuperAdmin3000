@@ -1,8 +1,10 @@
 # Backend API
 
-Backend provides Flask API for managing the surveys stored in the PostgreSQL database.
+Backend provides Flask API for managing the surveys stored in the PostgreSQL database and displaying various statistics related to those surveys.
 
-## API endpoints
+## API routes
+
+`ENV` is passed to every template.
 
 | URI                       | METHOD |  DESCRIPTION                                                                                                                                                                                                                                                                                                                                                          |
 | ------------------------- | ------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
