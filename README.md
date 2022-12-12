@@ -38,3 +38,10 @@ Every developer commits to creating unit tests and E2E-tests using robot framewo
 * [Architecture](Documentation/Architecture.md)
 * [Testing](Documentation/Tests.md)
 * [Deployment](Documentation/Deployment.md)
+
+### Diagrams
+
+Original `.dia` files have been created with the [Dia](https://wiki.gnome.org/Apps/Dia/) software and can be found in the Documents folder.
+
+* [Structure](Documentation/Structure.pdf)
+* [ER diagram](Documentation/ER-diagram.pdf)
