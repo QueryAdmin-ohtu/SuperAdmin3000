@@ -2,8 +2,6 @@ name: Deploy_to_test
 
 on:
   push:
-    branches: 
-      - dev_*
     paths:
       - 'Documentation/**'
       - 'README.md'
