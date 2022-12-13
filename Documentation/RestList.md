@@ -1,5 +1,5 @@
 # Notes for further development
-During the development project carried out in Sep-Dec 2022, the following items/ideas for further development were noted down but were not prioritized due to time constraints. The items are not in any specific order.  
+During the development project carried out in Sep-Dec 2022, the following items/ideas for further development were noted down, but not prioritized due to time constraints. The items are not in any specific order.  
 - Delete user answers when deleting survey. ([details](https://github.com/QueryAdmin-ohtu/SuperAdmin3000/issues/461))  
 - Adjust content link deletion button to be more clearly for content links instead of the category as a whole. ([details](https://github.com/QueryAdmin-ohtu/SuperAdmin3000/issues/318))  
 - Check text overflow. ([details](https://github.com/QueryAdmin-ohtu/SuperAdmin3000/issues/458))  
