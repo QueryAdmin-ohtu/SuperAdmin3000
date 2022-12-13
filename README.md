@@ -36,7 +36,8 @@ Every developer commits to creating unit tests and E2E-tests using robot framewo
 ## Documentation
 
 * [Architecture](Documentation/Architecture.md)
-* [Backend API](Documentation/Deployment.md)
+* [Backend API](Documentation/BackendAPI.md)
+* [CI-CD Workflow](Documentation/DevelopmentWorkflow.png)
 * [Database diagram](Documentation/ER-diagram.dia)
 * [Deployment](Documentation/Deployment.md)
 * [Design](Documentation/DesignDocument.png)
@@ -46,5 +47,5 @@ Every developer commits to creating unit tests and E2E-tests using robot framewo
 * [Restlist](Documentation/RestList.md)
 * [Tooltips](Documentation/Tooltips.md)
 * [User guide](Documentation/UserGuide.md)
-* [Workflow](Documentation/DevelopmentWorkflow.png)
+
 
