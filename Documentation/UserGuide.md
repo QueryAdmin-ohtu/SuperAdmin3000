@@ -10,7 +10,7 @@
 Login to the application with your Google account.  
   
 
-<img src="google-login.png" width=260 />  
+<img src="Images/GoogleLogin.png" width=260 />  
   
 Note that in order for the Google login to work properly, the application has to be offered and accessed through https. For example, an address like https://superadmin3000.herokuapp.com/ is ok, whereas http://superadmin3000.herokuapp.com/ would not be ok.
 

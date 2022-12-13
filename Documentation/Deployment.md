@@ -41,9 +41,9 @@ $ pip list --format freeze > requirements.txt
 1. Pull request is accepted and merged manually to the main branch
 1. Github builds the docker image in main branch
 1. Githup deploys the image to Heroku  
-<img src="https://github.com/QueryAdmin-ohtu/SuperAdmin3000/blob/rami/Documentation/DevelopmentWorkflow.png" width=720 />
-
-
+  
+<img src="Images/DevelopmentWorkflow.png" width=720 />
+  
 ## Docker
 The preliminary docker image can be built with
 ```
