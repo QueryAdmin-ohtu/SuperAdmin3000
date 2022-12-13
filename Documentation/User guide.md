@@ -1,10 +1,14 @@
 # User's guide to SuperAdmin3000
-
+- [Login](#login)
 - [Create a new survey](#create-a-new-survey)
   - [Create and edit categories](#create-and-edit-categories)
   - [Create and edit questions](#create-and-edit-questions)
   - [Create and edit survey results](#create-and-edit-survey-results)
   - [Manage survey](#manage-survey)
+
+## Login
+Login to the application with your Google account.
+<img src="https://user-images.githubusercontent.com/44512829/206696786-126d6ab4-a1e6-4c03-8c46-38b82aec77b1.png" width=720 />
 
 ## Create a new survey
 

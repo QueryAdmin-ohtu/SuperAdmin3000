@@ -8,7 +8,7 @@
 $ poetry shell
 $ invoke start
 ```
-A PostgreSQL database server needs to be up an running for local use.
+A PostgreSQL database server needs to be up and running for local use.
 
 ### Dependency management
 
