@@ -7,8 +7,12 @@
   - [Manage survey](#manage-survey)
 
 ## Login
-Login to the application with your Google account.
-<img src="https://user-images.githubusercontent.com/44512829/206696786-126d6ab4-a1e6-4c03-8c46-38b82aec77b1.png" width=720 />
+Login to the application with your Google account.  
+  
+
+<img src="google-login.png" width=260 />  
+  
+Note that in order for the Google login to work properly, the application has to be offered and accessed through https. For example, an address like https://superadmin3000.herokuapp.com/ is ok, whereas http://superadmin3000.herokuapp.com/ would not be ok.
 
 ## Create a new survey
 

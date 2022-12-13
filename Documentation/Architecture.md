@@ -101,3 +101,4 @@ The address of the Google login  POST reuqest destination, when running system i
 ```
 LOCAL_GOOGLE_URI="http://localhost:5000/google_login"
 ```
+In order for the Google login to work properly, the application has to be offered and accessed through https.
