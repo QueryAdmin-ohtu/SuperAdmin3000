@@ -409,6 +409,15 @@ class SurveyRepository:
             If not found: False
         """
         survey_id = self.get_survey_id_from_question_id(question_id)
+        answers = self.get_question_answers(question_id)
+        for answer in answers:
+            sql = """ DELETE FROM "User_answers WHERE QuestionAnswerId=:answer_id """
+            self.db_connection.session.execute(sql, {"answer_id": answer[0]})
+            sql = """ DELETE FROM "User_answers WHERE questionAnswerId=:answer_id """
+            self.db_connection.session.execute(sql, {"answer_id": answer[0]})
+
+        sql = """ DELETE FROM "Question_answers WHERE questionId=:question_id """
+        self.db_connection.session.execute(sql, {"question_id": question_id})
 
         sql = """DELETE FROM "Questions" WHERE id=:question_id"""
         result = self.db_connection.session.execute(
