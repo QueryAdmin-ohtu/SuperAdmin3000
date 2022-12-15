@@ -1,10 +1,18 @@
 # User's guide to SuperAdmin3000
-
+- [Login](#login)
 - [Create a new survey](#create-a-new-survey)
   - [Create and edit categories](#create-and-edit-categories)
   - [Create and edit questions](#create-and-edit-questions)
   - [Create and edit survey results](#create-and-edit-survey-results)
   - [Manage survey](#manage-survey)
+
+## Login
+Login to the application with your Google account.  
+  
+
+<img src="Images/GoogleLogin.png" width=260 />  
+  
+Note that in order for the Google login to work properly, the application has to be offered and accessed through https. For example, an address like https://superadmin3000.herokuapp.com/ is ok, whereas http://superadmin3000.herokuapp.com/ would not be ok.
 
 ## Create a new survey
 

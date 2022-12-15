@@ -8,7 +8,7 @@
 $ poetry shell
 $ invoke start
 ```
-A PostgreSQL database server needs to be up an running for local use.
+A PostgreSQL database server needs to be up and running for local use.
 
 ### Dependency management
 
@@ -40,9 +40,10 @@ $ pip list --format freeze > requirements.txt
 1. Heroku return test results to Github
 1. Pull request is accepted and merged manually to the main branch
 1. Github builds the docker image in main branch
-1. Githup deploys the image to Heroku
-
-
+1. Githup deploys the image to Heroku  
+  
+<img src="Images/DevelopmentWorkflow.png" width=720 />
+  
 ## Docker
 The preliminary docker image can be built with
 ```

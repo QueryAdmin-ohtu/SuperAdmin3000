@@ -24,17 +24,22 @@ pip list --format freeze > requirements.txt
 
 ## Definition of done
 
-The definition of done for sprint 1 or until the minimum viable product (MVP) has been developed is as follows:
-- The source code is peer reviewed and linted
-- The source code is deployed onto the ‘master’ branch 
-- The source code is unit tested with a code coverage of 70%
-
-Sprint 2 / MVP onwards:
-
 Every developer commits to creating unit tests and E2E-tests using robot framework (when applicable) before deployment. The deployed code should be documented. Also all code submitted to the main branch should be peer reviewed utilising pull requests. The automated tests should reach a code coverage of 75%. 
 
-## Documentation
+## Documentation and diagrams
 
 * [Architecture](Documentation/Architecture.md)
-* [Testing](Documentation/Tests.md)
+* [Backend API](Documentation/BackendAPI.md)
 * [Deployment](Documentation/Deployment.md)
+* [Design](Documentation/DesignDocument.png)
+* [ER diagram](Documentation/ER-diagram.pdf)
+* [Functional scope](Documentation/FunctionalScope.md)
+* [Structure](Documentation/Structure.pdf)
+* [Survey status](Documentation/SurveyStatus.md)
+* [Testing](Documentation/Tests.md)
+* [Restlist](Documentation/RestList.md)
+* [Tooltips](Documentation/Tooltips.md)
+* [User guide](Documentation/UserGuide.md)
+
+_* Original `.dia` files have been created with the [Dia](https://wiki.gnome.org/Apps/Dia/) software and can be found in the Documents folder._
+
