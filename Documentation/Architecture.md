@@ -101,3 +101,8 @@ The address of the Google login  POST reuqest destination, when running system i
 ```
 LOCAL_GOOGLE_URI="http://localhost:5000/google_login"
 ```
+### `DATABASE_URI`
+
+Points to the local database
+```
+DATABASE_URI="postgresql:///yourlocaldbname"
